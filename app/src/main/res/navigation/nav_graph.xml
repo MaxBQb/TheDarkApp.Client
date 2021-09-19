@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/RecognitionTaskList">
+
+    <fragment
+        android:id="@+id/RecognitionTaskList"
+        android:name="lab.maxb.dark.Presentation.View.RecognitionTaskListView"
+        android:label="recognition_task_list_fragment"
+        tools:layout="@layout/recognition_task_list_fragment" >
+        <action
+            android:id="@+id/action_recognitionTaskList_to_addRecognitionTask"
+            app:destination="@id/addRecognitionTask" />
+    </fragment>
+    <fragment
+        android:id="@+id/addRecognitionTask"
+        android:name="lab.maxb.dark.Presentation.View.AddRecognitionTaskView"
+        android:label="add_recognition_task_fragment"
+        tools:layout="@layout/add_recognition_task_fragment" />
+</navigation>
