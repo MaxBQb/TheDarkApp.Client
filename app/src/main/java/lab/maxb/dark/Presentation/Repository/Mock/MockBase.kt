@@ -24,12 +24,12 @@ class MockBase : RepositoryTasks {
     override fun getAllRecognitionTasks(): LiveData<List<RecognitionTask>?>
         = recognitionTasks
 
-    override fun <T : RecognitionTask> addRecognitionTask(task: T) {
+    override suspend fun <T : RecognitionTask> addRecognitionTask(task: T) {
         data!!.add(task)
         reloadAllRecognitionTasks()
     }
 
-    override fun <T : RecognitionTask> deleteRecognitionTask(task: T) {
+    override suspend fun <T : RecognitionTask> deleteRecognitionTask(task: T) {
         data!!.remove(task)
         reloadAllRecognitionTasks()
     }

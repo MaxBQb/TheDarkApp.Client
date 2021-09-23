@@ -1,12 +1,12 @@
 package lab.maxb.dark.Presentation.Room
 
 import android.content.Context
-import androidx.room.*
-import lab.maxb.dark.Presentation.Room.Model.RecognitionTaskDTO
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import lab.maxb.dark.Presentation.Room.DAO.RecognitionTaskDAO
-import kotlin.jvm.Volatile
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
+import lab.maxb.dark.Presentation.Room.Model.RecognitionTaskDTO
 
 @Database(entities = [RecognitionTaskDTO::class],
           version = 1, exportSchema = false)
@@ -17,22 +17,16 @@ abstract class LocalDatabase : RoomDatabase() {
     companion object {
         @Volatile
         private var INSTANCE: LocalDatabase? = null
-        private const val NUMBER_OF_THREADS = 4
-        val databaseWriteExecutor: ExecutorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS)
-        fun getDatabase(context: Context): LocalDatabase? {
-            if (INSTANCE == null) {
-                synchronized(LocalDatabase::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE = Room.databaseBuilder(
-                            context.applicationContext,
-                            LocalDatabase::class.java, "dark_database"
-                        ).fallbackToDestructiveMigration()
-                         .allowMainThreadQueries()
-                         .build()
-                    }
-                }
+
+        fun getDatabase(context: Context): LocalDatabase
+            = INSTANCE ?: synchronized(this) {
+                INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
             }
-            return INSTANCE
-        }
+
+        private fun buildDatabase(context: Context)
+            = Room.databaseBuilder(
+                context.applicationContext,
+                LocalDatabase::class.java, "dark_database"
+            ).fallbackToDestructiveMigration().build()
     }
 }
