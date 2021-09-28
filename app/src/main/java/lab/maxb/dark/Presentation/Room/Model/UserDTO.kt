@@ -6,14 +6,14 @@ import lab.maxb.dark.Domain.Model.User
 
 @Entity(tableName = "user")
 data class UserDTO(
-    override var name: String,
-    override var rating: Int,
     @PrimaryKey
     override var id: String,
+    override var name: String,
+    override var rating: Int,
 ): User(name=name, rating=rating) {
     constructor(user: User) : this(
+        user.id,
         user.name,
         user.rating,
-        user.id
     )
 }

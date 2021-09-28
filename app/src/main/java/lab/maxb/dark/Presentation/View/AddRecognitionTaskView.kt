@@ -28,11 +28,11 @@ class AddRecognitionTaskView : Fragment() {
         }
 
         mBinding!!.fab.setOnClickListener { v ->
-            if (mViewModel!!.addRecognitionTask(
+            if (mViewModel!!.addRecognitionTask(listOf(
                     mBinding!!.taskName1.text.toString(),
                     mBinding!!.taskName2.text.toString(),
                     mBinding!!.taskName3.text.toString(),
-                ))
+                )))
                 Navigation.findNavController(v).popBackStack()
             else
                 Toast.makeText(context, "Вы ввели не все данные", Toast.LENGTH_SHORT).show()

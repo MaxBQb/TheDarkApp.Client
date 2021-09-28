@@ -8,8 +8,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import lab.maxb.dark.Domain.Model.RecognitionTask
-import lab.maxb.dark.Domain.Model.User
+import lab.maxb.dark.Domain.Operations.createRecognitionTask
 import lab.maxb.dark.Presentation.Repository.Repository
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -21,21 +20,12 @@ class AddRecognitionTaskViewModel(application: Application) : AndroidViewModel(a
     private val thumbnailSize: Int = 1200
     var imageUri: Uri? = null
 
-    fun addRecognitionTask(vararg names: String): Boolean {
-        val namesSet = names.map { it.trim().lowercase() }
-                     .filter { it.isNotBlank() }
-                     .toSet()
-
-        if (namesSet.isEmpty())
-            return false
-
+    fun addRecognitionTask(names: List<String>): Boolean {
         val image = getThumbnail(imageUri) ?: return false
-
+        val task = createRecognitionTask(names, image, null) ?: return false
         viewModelScope.launch {
             try {
-                Repository.recognitionTasks.addRecognitionTask(RecognitionTask(
-                   namesSet, image, User("", 0, "UUID")
-                ))
+                Repository.recognitionTasks.addRecognitionTask(task)
             } catch (exc: Throwable) {
                 Log.e("AddRecognitionTask", exc.localizedMessage ?: "")
             }

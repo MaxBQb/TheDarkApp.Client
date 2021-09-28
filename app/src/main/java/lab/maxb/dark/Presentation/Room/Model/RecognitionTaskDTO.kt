@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import lab.maxb.dark.Domain.Model.RecognitionTask
-import lab.maxb.dark.Domain.Model.User
 
 @Entity(tableName = "recognition_task",
         ignoredColumns = ["owner", "names"],
@@ -22,11 +21,8 @@ data class RecognitionTaskDTO(
     @PrimaryKey
     override var id: String,
     val owner_id: String,
-    override val image: Bitmap?,
+    override var image: Bitmap?,
 ): RecognitionTask(image=image, id=id) {
-    override var names: Set<String>? = null
-    override var owner: User? = null
-
     constructor(task: RecognitionTask) : this(
         task.id,
         task.owner!!.id,
