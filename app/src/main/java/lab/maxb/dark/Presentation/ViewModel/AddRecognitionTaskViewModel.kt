@@ -2,14 +2,15 @@ package lab.maxb.dark.Presentation.ViewModel
 
 import android.app.Application
 import android.graphics.Bitmap
-import android.net.Uri
-import lab.maxb.dark.Domain.Model.RecognitionTask
-import lab.maxb.dark.Domain.Model.User
-import lab.maxb.dark.Presentation.Repository.Repository
 import android.graphics.BitmapFactory
+import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import lab.maxb.dark.Domain.Model.RecognitionTask
+import lab.maxb.dark.Domain.Model.User
+import lab.maxb.dark.Presentation.Repository.Repository
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStream
@@ -31,9 +32,13 @@ class AddRecognitionTaskViewModel(application: Application) : AndroidViewModel(a
         val image = getThumbnail(imageUri) ?: return false
 
         viewModelScope.launch {
-            Repository.getRepository().addRecognitionTask(RecognitionTask(
-               namesSet, image, User("CURRENT_USER", 0)
-            ))
+            try {
+                Repository.recognitionTasks.addRecognitionTask(RecognitionTask(
+                   namesSet, image, User("", 0, "UUID")
+                ))
+            } catch (exc: Throwable) {
+                Log.e("AddRecognitionTask", exc.localizedMessage ?: "")
+            }
         }
         return true
     }

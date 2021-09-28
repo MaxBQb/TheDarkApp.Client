@@ -5,9 +5,9 @@ import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import lab.maxb.dark.Domain.Model.User
-import lab.maxb.dark.Presentation.Repository.RepositoryTasks
+import lab.maxb.dark.Presentation.Repository.IRecognitionTasksRepository
 
-class MockBase : RepositoryTasks {
+class MockBase : IRecognitionTasksRepository {
     private var data: MutableList<RecognitionTask>? = mutableListOf(
         RecognitionTask(
             setOf("Пусто", "пусто", "пустота"),

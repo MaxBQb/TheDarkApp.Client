@@ -1,6 +1,9 @@
 package lab.maxb.dark.Domain.Model
 
-data class User(
-    var name: String,
-    var rating: Int
+import java.util.*
+
+open class User(
+    open var name: String,
+    open var rating: Int,
+    open val id: String = UUID.randomUUID().toString(),
 )

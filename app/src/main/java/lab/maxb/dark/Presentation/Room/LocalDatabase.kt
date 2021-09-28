@@ -6,13 +6,20 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import lab.maxb.dark.Presentation.Room.DAO.RecognitionTaskDAO
+import lab.maxb.dark.Presentation.Room.DAO.UserDAO
 import lab.maxb.dark.Presentation.Room.Model.RecognitionTaskDTO
+import lab.maxb.dark.Presentation.Room.Model.RecognitionTaskName
+import lab.maxb.dark.Presentation.Room.Model.UserDTO
 
-@Database(entities = [RecognitionTaskDTO::class],
-          version = 1, exportSchema = false)
+@Database(entities = [
+            UserDTO::class,
+            RecognitionTaskDTO::class,
+            RecognitionTaskName::class,
+          ], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class LocalDatabase : RoomDatabase() {
     abstract fun recognitionTaskDao(): RecognitionTaskDAO
+    abstract fun userDao(): UserDAO
 
     companion object {
         @Volatile
@@ -27,6 +34,8 @@ abstract class LocalDatabase : RoomDatabase() {
             = Room.databaseBuilder(
                 context.applicationContext,
                 LocalDatabase::class.java, "dark_database"
-            ).fallbackToDestructiveMigration().build()
+            ).allowMainThreadQueries()
+            .fallbackToDestructiveMigration()
+            .build()
     }
 }

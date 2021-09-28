@@ -9,7 +9,7 @@ import java.lang.Exception
 
 class Converters {
     @TypeConverter
-    fun bitMapToString(bitmap: Bitmap?): ByteArray? {
+    fun bitMapToByteArray(bitmap: Bitmap?): ByteArray? {
         if (bitmap == null)
             return null
         ByteArrayOutputStream().let{
@@ -19,12 +19,10 @@ class Converters {
     }
 
     @TypeConverter
-    fun byteArrayToBitMap(bytes: ByteArray?): Bitmap? {
-        return try {
-            BitmapFactory.decodeByteArray(bytes, 0, bytes!!.size)
-        } catch (e: Exception) {
-            e.message
-            null
-        }
+    fun byteArrayToBitMap(bytes: ByteArray?): Bitmap? = try {
+        BitmapFactory.decodeByteArray(bytes, 0, bytes!!.size)
+    } catch (e: Exception) {
+        e.message
+        null
     }
 }
