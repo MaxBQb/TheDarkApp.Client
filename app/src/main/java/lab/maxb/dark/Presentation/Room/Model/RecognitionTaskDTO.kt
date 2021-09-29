@@ -21,7 +21,7 @@ data class RecognitionTaskDTO(
     @PrimaryKey
     override var id: String,
     val owner_id: String,
-    override var image: Bitmap?,
+    override var image: String?,
 ): RecognitionTask(image=image, id=id) {
     constructor(task: RecognitionTask) : this(
         task.id,

@@ -6,7 +6,7 @@ import lab.maxb.dark.Domain.Model.User
 
 fun createRecognitionTask(
     names: List<String>,
-    image: Bitmap,
+    image: String,
     owner: User?
 ): RecognitionTask? {
     val namesSet = names.map { it.trim().lowercase() }

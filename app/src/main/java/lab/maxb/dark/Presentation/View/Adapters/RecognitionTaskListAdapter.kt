@@ -1,12 +1,15 @@
 package lab.maxb.dark.Presentation.View.Adapters
 
+import android.net.Uri
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import androidx.recyclerview.widget.RecyclerView
 import lab.maxb.dark.Presentation.View.Adapters.RecognitionTaskListAdapter.RecognitionTaskViewHolder
 import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
+import lab.maxb.dark.Presentation.Extra.toBitmap
 import lab.maxb.dark.databinding.RecognitionTaskListElementBinding
+import java.io.FileNotFoundException
 
 class RecognitionTaskListAdapter(data: List<RecognitionTask>?) :
       RecyclerView.Adapter<RecognitionTaskViewHolder>() {
@@ -28,7 +31,15 @@ class RecognitionTaskListAdapter(data: List<RecognitionTask>?) :
     override fun onBindViewHolder(holder: RecognitionTaskViewHolder, position: Int) {
         val item = data[position]
         holder.binding.taskOwnerName.text = item.owner?.name
-        holder.binding.taskImage.setImageBitmap(item.image)
+        try {
+            holder.binding.taskImage.setImageBitmap(
+                Uri.parse(item.image).toBitmap(
+                    holder.itemView.context,
+                    holder.binding.taskImage.layoutParams.width,
+                    holder.binding.taskImage.layoutParams.height,
+                )
+            )
+        } catch (ignored: FileNotFoundException) {}
         holder.itemView.setOnClickListener { v ->
             onElementClickListener(v, item)
         }

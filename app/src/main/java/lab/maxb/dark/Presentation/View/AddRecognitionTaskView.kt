@@ -11,6 +11,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import lab.maxb.dark.Presentation.Extra.takePersistablePermission
+import lab.maxb.dark.Presentation.Extra.toBitmap
 import lab.maxb.dark.databinding.AddRecognitionTaskFragmentBinding
 
 class AddRecognitionTaskView : Fragment() {
@@ -22,11 +24,7 @@ class AddRecognitionTaskView : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mBinding = AddRecognitionTaskFragmentBinding.inflate(layoutInflater, container, false)
-
-        mBinding!!.loadTaskImage.setOnClickListener { v ->
-            getContent.launch("image/*")
-        }
-
+        mBinding!!.loadTaskImage.setOnClickListener { getContent.launch(arrayOf("image/*")) }
         mBinding!!.fab.setOnClickListener { v ->
             if (mViewModel!!.addRecognitionTask(listOf(
                     mBinding!!.taskName1.text.toString(),
@@ -53,8 +51,17 @@ class AddRecognitionTaskView : Fragment() {
         mViewModel = null
     }
 
-    private val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        mViewModel?.imageUri = uri
-        mBinding?.taskImage?.setImageURI(uri)
+    private val getContent = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+        uri?.let {
+            val context = activity?.applicationContext ?: return@let
+            val imageHolder = mBinding?.taskImage ?: return@let
+            it.takePersistablePermission(context)
+            imageHolder.setImageBitmap(it.toBitmap(
+                context,
+                imageHolder.measuredWidth,
+                imageHolder.measuredHeight
+            ) ?: return@let)
+            mViewModel?.imageUri = it
+        }
     }
 }

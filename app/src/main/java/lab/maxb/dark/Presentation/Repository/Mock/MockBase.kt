@@ -11,7 +11,7 @@ class MockBase : IRecognitionTasksRepository {
     private var data: MutableList<RecognitionTask>? = mutableListOf(
         RecognitionTask(
             setOf("Пусто", "пусто", "пустота"),
-            Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888),
+            "",
             User("Максим", 0)
         )
     )
