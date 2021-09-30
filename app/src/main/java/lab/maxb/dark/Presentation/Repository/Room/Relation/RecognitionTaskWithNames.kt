@@ -1,9 +1,9 @@
-package lab.maxb.dark.Presentation.Room.Relation
+package lab.maxb.dark.Presentation.Repository.Room.Relation
 import androidx.room.Embedded
 import androidx.room.Relation
 import lab.maxb.dark.Domain.Model.RecognitionTask
-import lab.maxb.dark.Presentation.Room.Model.RecognitionTaskDTO
-import lab.maxb.dark.Presentation.Room.Model.RecognitionTaskName
+import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskDTO
+import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskName
 
 data class RecognitionTaskWithNames(
     @Embedded val recognition_task: RecognitionTaskDTO,

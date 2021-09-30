@@ -1,15 +1,15 @@
-package lab.maxb.dark.Presentation.Room
+package lab.maxb.dark.Presentation.Repository.Room
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import lab.maxb.dark.Presentation.Room.DAO.RecognitionTaskDAO
-import lab.maxb.dark.Presentation.Room.DAO.UserDAO
-import lab.maxb.dark.Presentation.Room.Model.RecognitionTaskDTO
-import lab.maxb.dark.Presentation.Room.Model.RecognitionTaskName
-import lab.maxb.dark.Presentation.Room.Model.UserDTO
+import lab.maxb.dark.Presentation.Repository.Room.DAO.RecognitionTaskDAO
+import lab.maxb.dark.Presentation.Repository.Room.DAO.UserDAO
+import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskDTO
+import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskName
+import lab.maxb.dark.Presentation.Repository.Room.Model.UserDTO
 
 @Database(entities = [
             UserDTO::class,

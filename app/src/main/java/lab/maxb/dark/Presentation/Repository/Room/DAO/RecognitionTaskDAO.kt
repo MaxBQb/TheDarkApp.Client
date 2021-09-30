@@ -1,12 +1,12 @@
-package lab.maxb.dark.Presentation.Room.DAO
+package lab.maxb.dark.Presentation.Repository.Room.DAO
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import kotlinx.coroutines.runBlocking
-import lab.maxb.dark.Presentation.Room.Model.RecognitionTaskDTO
-import lab.maxb.dark.Presentation.Room.Model.RecognitionTaskName
-import lab.maxb.dark.Presentation.Room.Relation.RecognitionTaskWithNames
-import lab.maxb.dark.Presentation.Room.Relation.RecognitionTaskWithOwner
+import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskDTO
+import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskName
+import lab.maxb.dark.Presentation.Repository.Room.Relation.RecognitionTaskWithNames
+import lab.maxb.dark.Presentation.Repository.Room.Relation.RecognitionTaskWithOwner
 
 @Dao
 interface RecognitionTaskDAO {

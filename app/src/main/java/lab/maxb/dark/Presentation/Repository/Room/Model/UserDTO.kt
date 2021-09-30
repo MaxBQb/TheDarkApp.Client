@@ -1,4 +1,4 @@
-package lab.maxb.dark.Presentation.Room.Model
+package lab.maxb.dark.Presentation.Repository.Room.Model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

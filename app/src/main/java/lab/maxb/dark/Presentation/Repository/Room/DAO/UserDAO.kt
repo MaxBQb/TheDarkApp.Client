@@ -1,4 +1,4 @@
-package lab.maxb.dark.Presentation.Room.DAO
+package lab.maxb.dark.Presentation.Repository.Room.DAO
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -6,7 +6,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.IGNORE
 import androidx.room.Query
-import lab.maxb.dark.Presentation.Room.Model.UserDTO
+import lab.maxb.dark.Presentation.Repository.Room.Model.UserDTO
 
 @Dao
 interface UserDAO {

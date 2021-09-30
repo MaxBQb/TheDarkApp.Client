@@ -1,13 +1,13 @@
 package lab.maxb.dark.Presentation.Repository
 
 import android.content.Context
-import lab.maxb.dark.Presentation.Room.LocalDatabase.Companion.getDatabase
+import lab.maxb.dark.Presentation.Repository.Room.LocalDatabase.Companion.getDatabase
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import lab.maxb.dark.Presentation.Room.DAO.RecognitionTaskDAO
-import lab.maxb.dark.Presentation.Room.Model.RecognitionTaskDTO
+import lab.maxb.dark.Presentation.Repository.Room.DAO.RecognitionTaskDAO
+import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskDTO
 import lab.maxb.dark.Domain.Model.RecognitionTask
-import lab.maxb.dark.Presentation.Room.Model.RecognitionTaskName
+import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskName
 
 class RecognitionTasksRepository(applicationContext: Context) : IRecognitionTasksRepository {
     private val mRecognitionTaskDao: RecognitionTaskDAO

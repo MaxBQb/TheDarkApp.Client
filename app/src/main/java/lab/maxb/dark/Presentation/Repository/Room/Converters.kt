@@ -1,4 +1,4 @@
-package lab.maxb.dark.Presentation.Room
+package lab.maxb.dark.Presentation.Repository.Room
 
 import androidx.room.TypeConverter
 import android.graphics.BitmapFactory
