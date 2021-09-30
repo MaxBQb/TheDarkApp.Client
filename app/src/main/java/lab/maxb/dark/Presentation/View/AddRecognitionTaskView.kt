@@ -31,7 +31,7 @@ class AddRecognitionTaskView : Fragment() {
                     mBinding!!.taskName2.text.toString(),
                     mBinding!!.taskName3.text.toString(),
                 )))
-                Navigation.findNavController(v).popBackStack()
+                activity?.onBackPressed()
             else
                 Toast.makeText(context, "Вы ввели не все данные", Toast.LENGTH_SHORT).show()
         }
