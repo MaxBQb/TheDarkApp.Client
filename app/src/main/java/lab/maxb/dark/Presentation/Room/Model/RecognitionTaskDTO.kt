@@ -1,6 +1,5 @@
 package lab.maxb.dark.Presentation.Room.Model
 
-import android.graphics.Bitmap
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey

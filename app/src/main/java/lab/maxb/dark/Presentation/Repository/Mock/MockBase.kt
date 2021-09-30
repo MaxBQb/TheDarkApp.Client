@@ -1,9 +1,8 @@
 package lab.maxb.dark.Presentation.Repository.Mock
 
-import lab.maxb.dark.Domain.Model.RecognitionTask
-import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.Domain.Model.User
 import lab.maxb.dark.Presentation.Repository.IRecognitionTasksRepository
 
