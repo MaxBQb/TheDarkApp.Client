@@ -1,9 +1,10 @@
-package lab.maxb.dark.Presentation.Repository
+package lab.maxb.dark.Presentation.Repository.Implementation
 
 import android.content.Context
 import lab.maxb.dark.Presentation.Repository.Room.LocalDatabase.Companion.getDatabase
 import androidx.lifecycle.LiveData
 import lab.maxb.dark.Domain.Model.User
+import lab.maxb.dark.Presentation.Repository.Interfaces.IUsersRepository
 import lab.maxb.dark.Presentation.Repository.Room.DAO.UserDAO
 import lab.maxb.dark.Presentation.Repository.Room.Model.UserDTO
 

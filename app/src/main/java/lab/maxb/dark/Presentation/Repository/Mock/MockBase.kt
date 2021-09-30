@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.Domain.Model.User
-import lab.maxb.dark.Presentation.Repository.IRecognitionTasksRepository
+import lab.maxb.dark.Presentation.Repository.Interfaces.IRecognitionTasksRepository
 
 class MockBase : IRecognitionTasksRepository {
     private var data: MutableList<RecognitionTask>? = mutableListOf(

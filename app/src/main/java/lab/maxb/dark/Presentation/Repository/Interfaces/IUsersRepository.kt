@@ -1,4 +1,4 @@
-package lab.maxb.dark.Presentation.Repository
+package lab.maxb.dark.Presentation.Repository.Interfaces
 
 import androidx.lifecycle.LiveData
 import lab.maxb.dark.Domain.Model.User
