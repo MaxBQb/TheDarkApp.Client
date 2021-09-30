@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Presentation.View.AddRecognitionTaskView"
+    android:orientation="vertical">
+        <TextView
+            android:id="@+id/label"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/halfMargin"
+            android:text="@string/solve_recognition_task"
+            android:textSize="18sp" />
+        <ImageView
+            android:id="@+id/task_image"
+            android:layout_below="@id/label"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:adjustViewBounds="true"/>
+        <LinearLayout
+            android:layout_below="@id/task_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/normalMargin"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/answer"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:inputType="textAutoCorrect|textAutoComplete"
+                android:hint="@string/recognition_task_name_answer"
+                android:layout_marginHorizontal="@dimen/halfMargin"/>
+            <Button
+                android:id="@+id/check_answer"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/halfMargin"
+                android:text="@string/check_recognition_task_solution"
+                app:cornerRadius="8dp" />
+        </LinearLayout>
+</RelativeLayout>

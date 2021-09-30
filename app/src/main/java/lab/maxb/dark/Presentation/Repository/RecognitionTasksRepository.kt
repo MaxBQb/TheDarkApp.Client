@@ -25,6 +25,11 @@ class RecognitionTasksRepository(applicationContext: Context) : IRecognitionTask
     override fun getAllRecognitionTasks(): LiveData<List<RecognitionTask>?>
         = recognitionTasks
 
+    override fun getRecognitionTask(id: String): LiveData<RecognitionTask?>
+        = Transformations.map(mRecognitionTaskDao.getRecognitionTask(id)) {
+            it?.toRecognitionTask()
+        }
+
     override suspend fun <T : RecognitionTask> addRecognitionTask(task: T) {
         mRecognitionTaskDao.addRecognitionTask(
             RecognitionTaskDTO(task),

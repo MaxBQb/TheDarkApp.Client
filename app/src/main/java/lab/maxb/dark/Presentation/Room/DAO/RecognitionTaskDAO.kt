@@ -5,6 +5,7 @@ import androidx.room.*
 import kotlinx.coroutines.runBlocking
 import lab.maxb.dark.Presentation.Room.Model.RecognitionTaskDTO
 import lab.maxb.dark.Presentation.Room.Model.RecognitionTaskName
+import lab.maxb.dark.Presentation.Room.Relation.RecognitionTaskWithNames
 import lab.maxb.dark.Presentation.Room.Relation.RecognitionTaskWithOwner
 
 @Dao
@@ -28,4 +29,8 @@ interface RecognitionTaskDAO {
     @Transaction
     @Query("SELECT * FROM recognition_task")
     fun getAllRecognitionTasks(): LiveData<List<RecognitionTaskWithOwner>?>
+
+    @Transaction
+    @Query("SELECT * FROM recognition_task WHERE id = :id")
+    fun getRecognitionTask(id: String): LiveData<RecognitionTaskWithNames?>
 }

@@ -2,4 +2,7 @@
     <string name="app_name">Тёмная</string>
     <string name="add_recognition_task_label">Добавить новую картинку</string>
     <string name="load_image_btn">Загрузить картинку</string>
+    <string name="solve_recognition_task">Что здесь изображено?</string>
+    <string name="check_recognition_task_solution">Проверить</string>
+    <string name="recognition_task_name_answer">Ваш ответ</string>
 </resources>

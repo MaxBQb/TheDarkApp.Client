@@ -33,4 +33,8 @@ class MockBase : IRecognitionTasksRepository {
         data!!.remove(task)
         reloadAllRecognitionTasks()
     }
+
+    override fun getRecognitionTask(id: String): LiveData<RecognitionTask?> {
+        return MutableLiveData(data?.get(0))
+    }
 }

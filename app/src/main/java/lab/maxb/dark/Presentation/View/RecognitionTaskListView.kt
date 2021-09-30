@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import lab.maxb.dark.R
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import lab.maxb.dark.Domain.Model.RecognitionTask
@@ -40,12 +39,16 @@ class RecognitionTaskListView : Fragment() {
         )
 
         mViewModel!!.recognitionTaskList.observe(viewLifecycleOwner, {
-            recognitionTasks: List<RecognitionTask>? ->
-                mAdapter = RecognitionTaskListAdapter(recognitionTasks)
-                mBinding!!.recognitionTaskListRecycler.adapter = mAdapter
-                mAdapter!!.onElementClickListener = { _: View, task: RecognitionTask ->
-                    mViewModel!!.removeRecognitionTask(task)
-                }
+                recognitionTasks: List<RecognitionTask>? ->
+            mAdapter = RecognitionTaskListAdapter(recognitionTasks)
+            mBinding!!.recognitionTaskListRecycler.adapter = mAdapter
+            mAdapter!!.onElementClickListener = { v: View, task: RecognitionTask ->
+                v.findNavController().navigate(
+                    RecognitionTaskListViewDirections.solveRecognitionTask(
+                        task.id
+                    )
+                )
+            }
         })
     }
 

@@ -24,9 +24,8 @@ class RecognitionTaskListAdapter(data: List<RecognitionTask>?) :
         return RecognitionTaskViewHolder(binding)
     }
 
-    var onElementClickListener: (view: View, item: RecognitionTask) -> Unit
-            = { view: View, item: RecognitionTask -> }
-
+    var onElementClickListener: ((view: View, item: RecognitionTask) -> Unit)?
+        = null
 
     override fun onBindViewHolder(holder: RecognitionTaskViewHolder, position: Int) {
         val item = data[position]
@@ -41,7 +40,8 @@ class RecognitionTaskListAdapter(data: List<RecognitionTask>?) :
             )
         } catch (ignored: FileNotFoundException) {}
         holder.itemView.setOnClickListener { v ->
-            onElementClickListener(v, item)
+            if (position != RecyclerView.NO_POSITION)
+                onElementClickListener?.invoke(v, item)
         }
     }
 

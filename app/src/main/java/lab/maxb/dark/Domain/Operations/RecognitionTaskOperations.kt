@@ -1,6 +1,5 @@
 package lab.maxb.dark.Domain.Operations
 
-import android.graphics.Bitmap
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.Domain.Model.User
 
@@ -22,3 +21,6 @@ fun createRecognitionTask(
         owner ?: User("", 0, "UUID")
     )
 }
+
+fun RecognitionTask.solve(name: String)
+    = names?.contains(name) ?: false
