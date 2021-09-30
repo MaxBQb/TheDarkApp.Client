@@ -11,7 +11,7 @@
         android:label="recognition_task_list_fragment"
         tools:layout="@layout/recognition_task_list_fragment" >
         <action
-            android:id="@+id/action_recognitionTaskList_to_addRecognitionTask"
+            android:id="@+id/addRecognitionTask"
             app:destination="@id/addRecognitionTask" />
     </fragment>
     <fragment

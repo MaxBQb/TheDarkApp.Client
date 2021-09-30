@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import lab.maxb.dark.R
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.Presentation.View.Adapters.RecognitionTaskListAdapter
 import lab.maxb.dark.databinding.RecognitionTaskListFragmentBinding
@@ -26,7 +26,9 @@ class RecognitionTaskListView : Fragment() {
         mBinding = RecognitionTaskListFragmentBinding.inflate(layoutInflater, container, false)
         mBinding!!.recognitionTaskListRecycler.layoutManager = LinearLayoutManager(context)
         mBinding!!.fab.setOnClickListener { v ->
-            Navigation.findNavController(v).navigate(R.id.action_recognitionTaskList_to_addRecognitionTask)
+            v.findNavController().navigate(
+                RecognitionTaskListViewDirections.addRecognitionTask()
+            )
         }
         return mBinding!!.root
     }
