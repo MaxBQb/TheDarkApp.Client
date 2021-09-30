@@ -15,7 +15,7 @@ import lab.maxb.dark.Presentation.Extra.toBitmap
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.AddRecognitionTaskFragmentBinding
 
-class AddRecognitionTaskView : Fragment() {
+class AddRecognitionTaskFragment : Fragment() {
     private val mViewModel: AddRecognitionTaskViewModel by viewModels()
     private var mBinding: AddRecognitionTaskFragmentBinding by autoCleaned()
 

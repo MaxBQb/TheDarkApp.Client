@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/RecognitionTaskList"
-        android:name="lab.maxb.dark.Presentation.View.RecognitionTaskListView"
+        android:name="lab.maxb.dark.Presentation.View.RecognitionTaskListFragment"
         android:label="@string/available_recognition_tasks"
         tools:layout="@layout/recognition_task_list_fragment" >
         <action
@@ -19,12 +19,12 @@
     </fragment>
     <fragment
         android:id="@+id/addRecognitionTask"
-        android:name="lab.maxb.dark.Presentation.View.AddRecognitionTaskView"
+        android:name="lab.maxb.dark.Presentation.View.AddRecognitionTaskFragment"
         android:label="@string/add_recognition_task_label"
         tools:layout="@layout/add_recognition_task_fragment" />
     <fragment
         android:id="@+id/solveRecognitionTask"
-        android:name="lab.maxb.dark.Presentation.View.SolveRecognitionTaskView"
+        android:name="lab.maxb.dark.Presentation.View.SolveRecognitionTaskFragment"
         android:label="@string/solve_recognition_task_label"
         tools:layout="@layout/solve_recognition_task_fragment">
         <argument

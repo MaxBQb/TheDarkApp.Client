@@ -15,7 +15,7 @@ import lab.maxb.dark.Presentation.View.Adapters.RecognitionTaskListAdapter
 import lab.maxb.dark.databinding.RecognitionTaskListFragmentBinding
 
 
-class RecognitionTaskListView : Fragment() {
+class RecognitionTaskListFragment : Fragment() {
     private val mViewModel: RecognitionTaskListViewModel by viewModels()
     private var mBinding: RecognitionTaskListFragmentBinding by autoCleaned()
     private var mAdapter: RecognitionTaskListAdapter by autoCleaned()
@@ -27,7 +27,7 @@ class RecognitionTaskListView : Fragment() {
         mBinding.recognitionTaskListRecycler.layoutManager = LinearLayoutManager(context)
         mBinding.fab.setOnClickListener { v ->
             v.findNavController().navigate(
-                RecognitionTaskListViewDirections.addRecognitionTask()
+                RecognitionTaskListFragmentDirections.addRecognitionTask()
             )
         }
         return mBinding.root
@@ -41,7 +41,7 @@ class RecognitionTaskListView : Fragment() {
             mBinding.recognitionTaskListRecycler.adapter = mAdapter
             mAdapter.onElementClickListener = { v: View, task: RecognitionTask ->
                 v.findNavController().navigate(
-                    RecognitionTaskListViewDirections.solveRecognitionTask(
+                    RecognitionTaskListFragmentDirections.solveRecognitionTask(
                         task.id
                     )
                 )

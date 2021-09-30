@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Presentation.View.AddRecognitionTaskView"
+    tools:context=".Presentation.View.AddRecognitionTaskFragment"
     android:orientation="vertical">
         <ImageView
             android:id="@+id/task_image"

@@ -16,10 +16,10 @@ import lab.maxb.dark.Presentation.ViewModel.SolveRecognitionTaskViewModel
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.SolveRecognitionTaskFragmentBinding
 
-class SolveRecognitionTaskView : Fragment() {
+class SolveRecognitionTaskFragment : Fragment() {
     private val mViewModel: SolveRecognitionTaskViewModel by viewModels()
     private var mBinding: SolveRecognitionTaskFragmentBinding by autoCleaned()
-    private val args: SolveRecognitionTaskViewArgs by navArgs()
+    private val args: SolveRecognitionTaskFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
