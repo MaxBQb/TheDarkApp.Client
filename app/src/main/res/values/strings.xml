@@ -7,4 +7,5 @@
     <string name="add_recognition_task_label">Добавление задачи</string>
     <string name="solve_recognition_task_label">Что это?</string>
     <string name="share_button">Поделиться</string>
+    <string name="submit_button">Утвердить</string>
 </resources>

@@ -14,19 +14,19 @@ import lab.maxb.dark.Presentation.Repository.Repository
 import lab.maxb.dark.databinding.MainActivityBinding
 
 class MainActivity : AppCompatActivity() {
-    private val mBinding: MainActivityBinding by lazy {
+    val binding: MainActivityBinding by lazy {
         MainActivityBinding.inflate(layoutInflater)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(mBinding.root)
+        setContentView(binding.root)
         AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
 
-        setSupportActionBar(mBinding.toolbar)
+        setSupportActionBar(binding.toolbar)
         val navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
         val appBarConfiguration = AppBarConfiguration(navController.graph)
-        mBinding.toolbar.setupWithNavController(navController, appBarConfiguration)
+        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
 
         Repository.init(application)
 
