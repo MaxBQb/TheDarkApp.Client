@@ -2,11 +2,8 @@ package lab.maxb.dark.Presentation.View
 
 import android.content.Intent
 import android.net.Uri
-import lab.maxb.dark.Presentation.ViewModel.SolveRecognitionTaskViewModel
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.os.Bundle
-import android.view.View
+import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,6 +12,8 @@ import androidx.navigation.fragment.navArgs
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
 import lab.maxb.dark.Presentation.Extra.toBitmap
+import lab.maxb.dark.Presentation.ViewModel.SolveRecognitionTaskViewModel
+import lab.maxb.dark.R
 import lab.maxb.dark.databinding.SolveRecognitionTaskFragmentBinding
 
 class SolveRecognitionTaskView : Fragment() {
@@ -28,18 +27,6 @@ class SolveRecognitionTaskView : Fragment() {
     ): View {
         mBinding = SolveRecognitionTaskFragmentBinding.inflate(layoutInflater, container, false)
         mViewModel.id = args.id
-        mBinding.share.setOnClickListener {
-            startActivity(Intent.createChooser(Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(
-                    Intent.EXTRA_TEXT,
-                    "https://dark/task/" +
-                            (mViewModel.recognitionTask.value?.id
-                                ?: return@setOnClickListener)
-                )
-                type = "text/plain"
-            }, null))
-        }
         mBinding.checkAnswer.setOnClickListener { v ->
             if (mViewModel.solveRecognitionTask(
                     mBinding.answer.text.toString()
@@ -58,5 +45,37 @@ class SolveRecognitionTaskView : Fragment() {
             } ?: activity?.onBackPressed()
         })
         return mBinding.root
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.share_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean
+        = when (item.itemId) {
+            R.id.share -> {
+                shareTask()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+
+    private fun shareTask() {
+        startActivity(Intent.createChooser(Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT,
+            "https://dark/task/" + (
+                     mViewModel.recognitionTask.value?.id
+                     ?: return
+                 )
+            )
+            type = "text/plain"
+        }, null))
     }
 }
