@@ -14,7 +14,7 @@ class AddRecognitionTaskViewModel(application: Application) : AndroidViewModel(a
     var imageUri: Uri? = null
 
     fun addRecognitionTask(names: List<String>): Boolean {
-        val task = createRecognitionTask(names, imageUri.toString(), null) ?: return false
+        val task = createRecognitionTask(names, (imageUri ?: return false).toString(), null) ?: return false
         viewModelScope.launch {
             try {
                 Repository.recognitionTasks.addRecognitionTask(task)

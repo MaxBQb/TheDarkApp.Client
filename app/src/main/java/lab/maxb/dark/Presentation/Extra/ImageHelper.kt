@@ -32,7 +32,7 @@ fun Uri.toBitmap(
     reqHeight: Int
 ): Bitmap?
     // First decode with inJustDecodeBounds=true to check dimensions
-    = BitmapFactory.Options().run {
+    = try {BitmapFactory.Options().run {
         inJustDecodeBounds = true
         bitmapFromUri(this@toBitmap, context, this)
 
@@ -43,7 +43,7 @@ fun Uri.toBitmap(
         inJustDecodeBounds = false
 
         bitmapFromUri(this@toBitmap, context, this) ?: return null
-    }
+    }} catch (exception: Throwable) { null }
 
 private fun calculateInSampleSize(options: BitmapFactory.Options,
                                   reqWidth: Int,
