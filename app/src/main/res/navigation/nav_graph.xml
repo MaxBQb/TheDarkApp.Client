@@ -30,5 +30,8 @@
         <argument
             android:name="id"
             app:argType="string" />
+        <deepLink
+            android:id="@+id/task_link"
+            app:uri="https://dark/task/{id}" />
     </fragment>
 </navigation>

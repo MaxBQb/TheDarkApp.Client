@@ -1,5 +1,6 @@
 package lab.maxb.dark.Presentation.View
 
+import android.content.Intent
 import android.net.Uri
 import lab.maxb.dark.Presentation.ViewModel.SolveRecognitionTaskViewModel
 import android.view.LayoutInflater
@@ -29,6 +30,18 @@ class SolveRecognitionTaskView : Fragment() {
     ): View {
         mBinding = SolveRecognitionTaskFragmentBinding.inflate(layoutInflater, container, false)
         mViewModel.id = args.id
+        mBinding!!.share.setOnClickListener { v ->
+            startActivity(Intent.createChooser(Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(
+                    Intent.EXTRA_TEXT,
+                    "https://dark/task/" +
+                            (mViewModel.recognitionTask.value?.id
+                                ?: return@setOnClickListener)
+                )
+                type = "text/plain"
+            }, null))
+        }
         mBinding!!.checkAnswer.setOnClickListener { v ->
             if (mViewModel.solveRecognitionTask(
                     mBinding!!.answer.text.toString()
@@ -40,8 +53,8 @@ class SolveRecognitionTaskView : Fragment() {
         mViewModel.recognitionTask.observe(viewLifecycleOwner, { task: RecognitionTask? ->
             mBinding!!.taskImage.setImageBitmap(Uri.parse(task?.image).toBitmap(
                 requireContext(),
-                mBinding!!.taskImage.measuredWidth,
-                mBinding!!.taskImage.measuredHeight
+                mBinding!!.taskImage.layoutParams.width,
+                mBinding!!.taskImage.layoutParams.height
             ))
         })
         return mBinding!!.root

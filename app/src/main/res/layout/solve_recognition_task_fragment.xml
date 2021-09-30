@@ -22,6 +22,7 @@
             android:layout_height="300dp"
             android:adjustViewBounds="true"/>
         <LinearLayout
+            android:id="@+id/main_controls"
             android:layout_below="@id/task_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,4 +46,11 @@
                 android:text="@string/check_recognition_task_solution"
                 app:cornerRadius="8dp" />
         </LinearLayout>
+        <Button
+            android:id="@+id/share"
+            android:layout_below="@id/main_controls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Поделиться"
+            app:cornerRadius="8dp" />
 </RelativeLayout>
