@@ -18,10 +18,8 @@ class EditableImageSliderAdapter(
         position: Int
     ) {
         if (images[position] == null) {
-            if (maxAmount in 1..position)
-                holder.binding.addImageButton.isEnabled = false
-            else
-                holder.binding.addImageButton.setOnClickListener { v: View ->
+            holder.binding.addImageButton.isEnabled = maxAmount !in 1 until images.size
+            holder.binding.addImageButton.setOnClickListener { v: View ->
                 if (position != RecyclerView.NO_POSITION)
                     getContent.launch(arrayOf("image/*"))
             }
@@ -30,6 +28,11 @@ class EditableImageSliderAdapter(
         } else {
             holder.binding.addImageButton.visibility = View.GONE
             holder.binding.imageContent.visibility = View.VISIBLE
+            holder.itemView.setOnLongClickListener {
+                images.removeAt(position)
+                notifyDataSetChanged()
+                true
+            }
             super.onBindViewHolder(holder, position)
         }
     }
