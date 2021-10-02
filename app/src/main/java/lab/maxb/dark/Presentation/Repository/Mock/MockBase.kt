@@ -10,7 +10,7 @@ class MockBase : IRecognitionTasksRepository {
     private var data: MutableList<RecognitionTask>? = mutableListOf(
         RecognitionTask(
             setOf("Пусто", "пусто", "пустота"),
-            "",
+            listOf(""),
             User("Максим", 0)
         )
     )

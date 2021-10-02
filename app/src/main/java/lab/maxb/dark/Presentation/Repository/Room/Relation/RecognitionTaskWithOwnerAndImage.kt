@@ -5,18 +5,25 @@ import androidx.room.Relation
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.Domain.Model.User
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskDTO
+import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskImage
 import lab.maxb.dark.Presentation.Repository.Room.Model.UserDTO
 
-data class RecognitionTaskWithOwner(
+data class RecognitionTaskWithOwnerAndImage(
     @Embedded val recognition_task: RecognitionTaskDTO,
     @Relation(
         parentColumn = "owner_id",
         entityColumn = "id",
         entity = UserDTO::class
     )
-    val owner: User?
+    val owner: User?,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "recognition_task"
+    )
+    val image: RecognitionTaskImage
 ) {
     fun toRecognitionTask() = recognition_task.also {
         it.owner = owner
+        it.images = listOf(image.image)
     } as RecognitionTask
 }

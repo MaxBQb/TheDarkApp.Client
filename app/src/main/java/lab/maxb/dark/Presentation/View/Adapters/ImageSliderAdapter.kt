@@ -77,9 +77,8 @@ class ImageSliderAdapter(
         RecyclerView.ViewHolder(binding.root)
 
     init {
-        if (editable) {
+        if (editable)
             images.add(null)
-        }
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {

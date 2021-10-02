@@ -4,9 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import kotlinx.coroutines.runBlocking
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskDTO
+import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskImage
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskName
-import lab.maxb.dark.Presentation.Repository.Room.Relation.RecognitionTaskWithNames
-import lab.maxb.dark.Presentation.Repository.Room.Relation.RecognitionTaskWithOwner
+import lab.maxb.dark.Presentation.Repository.Room.Relation.RecognitionTaskWithNamesAndImages
+import lab.maxb.dark.Presentation.Repository.Room.Relation.RecognitionTaskWithOwnerAndImage
 
 @Dao
 interface RecognitionTaskDAO {
@@ -14,13 +15,18 @@ interface RecognitionTaskDAO {
     suspend fun addRecognitionTask(task: RecognitionTaskDTO)
 
     @Insert
-    suspend fun addRecognitionTaskNames(name: List<RecognitionTaskName>)
+    suspend fun addRecognitionTaskNames(names: List<RecognitionTaskName>)
+
+    @Insert
+    suspend fun addRecognitionTaskImages(images: List<RecognitionTaskImage>)
 
     @Transaction
     fun addRecognitionTask(task: RecognitionTaskDTO,
-                           names: List<RecognitionTaskName>) = runBlocking {
+                           names: List<RecognitionTaskName>,
+                           images: List<RecognitionTaskImage>) = runBlocking {
         addRecognitionTask(task)
         addRecognitionTaskNames(names)
+        addRecognitionTaskImages(images)
     }
 
     @Delete
@@ -28,9 +34,9 @@ interface RecognitionTaskDAO {
 
     @Transaction
     @Query("SELECT * FROM recognition_task")
-    fun getAllRecognitionTasks(): LiveData<List<RecognitionTaskWithOwner>?>
+    fun getAllRecognitionTasks(): LiveData<List<RecognitionTaskWithOwnerAndImage>?>
 
     @Transaction
     @Query("SELECT * FROM recognition_task WHERE id = :id")
-    fun getRecognitionTask(id: String): LiveData<RecognitionTaskWithNames?>
+    fun getRecognitionTask(id: String): LiveData<RecognitionTaskWithNamesAndImages?>
 }

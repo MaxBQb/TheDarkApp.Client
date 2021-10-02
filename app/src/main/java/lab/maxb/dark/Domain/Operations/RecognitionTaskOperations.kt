@@ -5,19 +5,19 @@ import lab.maxb.dark.Domain.Model.User
 
 fun createRecognitionTask(
     names: List<String>,
-    image: String,
+    images: List<String>,
     owner: User?
 ): RecognitionTask? {
     val namesSet = names.map { it.trim().lowercase() }
         .filter { it.isNotBlank() }
         .toSet()
 
-    if (namesSet.isEmpty())
+    if (namesSet.isEmpty() or images.isEmpty())
         return null
 
     return RecognitionTask(
         namesSet,
-        image,
+        images,
         owner ?: User("", 0, "UUID")
     )
 }

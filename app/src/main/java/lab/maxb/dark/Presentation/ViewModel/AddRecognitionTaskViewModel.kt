@@ -1,7 +1,6 @@
 package lab.maxb.dark.Presentation.ViewModel
 
 import android.app.Application
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,9 +12,8 @@ import lab.maxb.dark.Presentation.Repository.Repository
 class AddRecognitionTaskViewModel(application: Application) : AndroidViewModel(application) {
     var imageUris: MutableList<String?> = mutableListOf()
 
-
     fun addRecognitionTask(names: List<String>): Boolean {
-        val task = createRecognitionTask(names, (imageUris[0] ?: return false).toString(), null) ?: return false
+        val task = createRecognitionTask(names, imageUris.filterNotNull(), null) ?: return false
         viewModelScope.launch {
             try {
                 Repository.recognitionTasks.addRecognitionTask(task)

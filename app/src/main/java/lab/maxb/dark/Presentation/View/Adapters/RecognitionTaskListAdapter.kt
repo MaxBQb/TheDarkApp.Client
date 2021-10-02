@@ -32,7 +32,7 @@ class RecognitionTaskListAdapter(data: List<RecognitionTask>?) :
         holder.binding.taskOwnerName.text = item.owner?.name
         try {
             holder.binding.taskImage.setImageBitmap(
-                Uri.parse(item.image).toBitmap(
+                Uri.parse(item.images?.get(0)).toBitmap(
                     holder.itemView.context,
                     holder.binding.taskImage.layoutParams.width,
                     holder.binding.taskImage.layoutParams.height,

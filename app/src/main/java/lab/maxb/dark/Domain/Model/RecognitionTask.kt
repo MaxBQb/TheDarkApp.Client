@@ -4,7 +4,7 @@ import lab.maxb.dark.Domain.Operations.getUUID
 
 open class RecognitionTask(
     open var names: Set<String>? = null,
-    open var image: String? = null,
+    open var images: List<String>? = null,
     open var owner: User? = null,
     open var id: String = getUUID(),
 ) {

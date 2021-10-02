@@ -8,6 +8,7 @@ import androidx.room.TypeConverters
 import lab.maxb.dark.Presentation.Repository.Room.DAO.RecognitionTaskDAO
 import lab.maxb.dark.Presentation.Repository.Room.DAO.UserDAO
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskDTO
+import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskImage
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskName
 import lab.maxb.dark.Presentation.Repository.Room.Model.UserDTO
 
@@ -15,6 +16,7 @@ import lab.maxb.dark.Presentation.Repository.Room.Model.UserDTO
             UserDTO::class,
             RecognitionTaskDTO::class,
             RecognitionTaskName::class,
+            RecognitionTaskImage::class,
           ], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class LocalDatabase : RoomDatabase() {

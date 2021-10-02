@@ -7,13 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".Presentation.View.AddRecognitionTaskFragment"
     android:orientation="vertical">
-        <ImageView
-            android:id="@+id/task_image"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/image_slider"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:adjustViewBounds="true"/>
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/halfMargin"
+            android:layout_marginBottom="@dimen/normalMargin"/>
         <LinearLayout
-            android:layout_below="@id/task_image"
+            android:layout_below="@id/image_slider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/normalMargin"
