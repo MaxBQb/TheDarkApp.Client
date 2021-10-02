@@ -8,7 +8,7 @@ fun createRecognitionTask(
     images: List<String>,
     owner: User?
 ): RecognitionTask? {
-    val namesSet = names.map { it.trim().lowercase() }
+    val namesSet = names.map { prepareRecognitionTaskName(it) }
         .filter { it.isNotBlank() }
         .toSet()
 
@@ -23,4 +23,6 @@ fun createRecognitionTask(
 }
 
 fun RecognitionTask.solve(name: String)
-    = names?.contains(name) ?: false
+    = names?.contains(prepareRecognitionTaskName(name)) ?: false
+
+fun prepareRecognitionTaskName(name: String) = name.trim().lowercase()
