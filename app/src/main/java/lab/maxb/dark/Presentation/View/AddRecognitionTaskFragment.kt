@@ -1,44 +1,31 @@
 package lab.maxb.dark.Presentation.View
 
-import android.net.Uri
 import lab.maxb.dark.Presentation.ViewModel.AddRecognitionTaskViewModel
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import lab.maxb.dark.MainActivity
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
-import lab.maxb.dark.Presentation.Extra.takePersistablePermission
-import lab.maxb.dark.Presentation.Extra.toBitmap
+import lab.maxb.dark.Presentation.View.Adapters.ImageSliderAdapter
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.AddRecognitionTaskFragmentBinding
 
 class AddRecognitionTaskFragment : Fragment() {
     private val mViewModel: AddRecognitionTaskViewModel by viewModels()
     private var mBinding: AddRecognitionTaskFragmentBinding by autoCleaned()
+    private var mAdapter: ImageSliderAdapter by autoCleaned()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         mBinding = AddRecognitionTaskFragmentBinding.inflate(layoutInflater, container, false)
-        mBinding.loadTaskImage.setOnClickListener { getContent.launch(arrayOf("image/*")) }
+        mAdapter = ImageSliderAdapter(mViewModel.imageUris, true, activity as AppCompatActivity)
+        mBinding.imageSlider.adapter = mAdapter
         return mBinding.root
-    }
-
-    private val getContent = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
-        uri?.let {
-            val context = requireContext()
-            it.takePersistablePermission(context)
-            mBinding.taskImage.setImageBitmap(it.toBitmap(
-                context,
-                mBinding.taskImage.layoutParams.width,
-                mBinding.taskImage.layoutParams.height
-            ) ?: return@let)
-            mViewModel.imageUri = it
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

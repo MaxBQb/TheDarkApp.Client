@@ -35,16 +35,20 @@
             android:inputType="textAutoCorrect|textAutoComplete"
             android:hint="Ещё один вариант названия"
             android:layout_marginBottom="@dimen/normalMargin"/>
-        <Button
-            android:id="@+id/load_task_image"
+
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="@string/load_image_btn"/>
-        <ImageView
-            android:id="@+id/task_image"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/halfMargin"
+            android:textAlignment="center"
+            android:textSize="12pt"
+            android:text="@string/load_images_title"/>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/image_slider"
             android:layout_width="match_parent"
-            android:layout_gravity="center"
-            android:adjustViewBounds="true"
-            android:layout_height="250dp"/>
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/halfMargin"
+            android:layout_marginBottom="@dimen/normalMargin"/>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
