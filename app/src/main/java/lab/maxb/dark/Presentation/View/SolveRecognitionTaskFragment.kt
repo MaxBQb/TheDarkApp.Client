@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
@@ -39,9 +38,7 @@ class SolveRecognitionTaskFragment : Fragment() {
         mViewModel.recognitionTask.observe(viewLifecycleOwner, {
             it?.let { task: RecognitionTask ->
                 mAdapter = ImageSliderAdapter(
-                    task.images?.toMutableList() ?: return@let null,
-                    false,
-                    activity as AppCompatActivity
+                    task.images?.toMutableList() ?: return@let null
                 )
                 mBinding.imageSlider.adapter = mAdapter
             } ?: activity?.onBackPressed()
