@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.MainActivity
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
 import lab.maxb.dark.Presentation.View.Adapters.ImageSliderAdapter
@@ -23,7 +24,7 @@ class AddRecognitionTaskFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mBinding = AddRecognitionTaskFragmentBinding.inflate(layoutInflater, container, false)
-        mAdapter = ImageSliderAdapter(mViewModel.imageUris, true, activity as AppCompatActivity)
+        mAdapter = ImageSliderAdapter(mViewModel.imageUris, true, activity as AppCompatActivity, RecognitionTask.MAX_IMAGES_COUNT)
         mBinding.imageSlider.adapter = mAdapter
         return mBinding.root
     }

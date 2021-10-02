@@ -15,7 +15,8 @@ import lab.maxb.dark.databinding.ImageElementBinding
 class ImageSliderAdapter(
     private var images: MutableList<String?>,
     val editable: Boolean,
-    activity: AppCompatActivity
+    activity: AppCompatActivity,
+    val maxAmount: Int = -1,
 ) : RecyclerView.Adapter<ImageSliderAdapter.ImageSliderViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -31,6 +32,8 @@ class ImageSliderAdapter(
         position: Int
     ) {
         if (images[position] == null) {
+            if (maxAmount in 1..position)
+                holder.binding.addImageButton.isEnabled = false
             holder.binding.imageContent.visibility = View.GONE
             holder.binding.addImageButton.visibility = View.VISIBLE
             holder.binding.addImageButton.setOnClickListener { v: View ->
