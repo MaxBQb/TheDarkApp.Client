@@ -41,11 +41,14 @@ class EditableImageSliderAdapter(
         notifyItemRemoved(position)
     }
 
-    private var getContent = activity.activityResultRegistry.register(ADD_URI, ActivityResultContracts.OpenDocument()) {
-        uri: Uri? ->
-        uri?.let {
+    private val getContent = activity.activityResultRegistry.register(ADD_URI, ActivityResultContracts.OpenMultipleDocuments()) {
+        uris: List<Uri?>? ->
+        uris?.filterNotNull()?.forEach {
+            if (maxAmount in 1 until images.size)
+                return@forEach
             it.takePersistablePermission(activity)
             images.add(images.size - 1, it.toString())
+        }?.also {
             //notifyItemInserted(images.size - 2) // will swipe to the end
             notifyDataSetChanged() // on current position
         }
