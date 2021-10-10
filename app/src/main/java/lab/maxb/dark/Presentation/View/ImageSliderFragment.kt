@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
 import lab.maxb.dark.Presentation.Extra.toBitmap
+import lab.maxb.dark.Presentation.Extra.toggleVisibility
 import lab.maxb.dark.Presentation.View.Adapters.ImageSliderAdapter
 import lab.maxb.dark.Presentation.ViewModel.ImageSliderViewModel
 import lab.maxb.dark.databinding.ImageSliderFragmentBinding
@@ -39,8 +40,8 @@ class ImageSliderFragment : Fragment() {
                 mBinding.imageSlider.layoutParams.height,
             )})
             if (mViewModel.isEditable) {
-                mBinding.addImageButton.visibility = if (uris.isNotEmpty()) View.GONE else View.VISIBLE
-                mBinding.imageSlider.visibility = if (uris.isEmpty()) View.GONE else View.VISIBLE
+                mBinding.addImageButton.toggleVisibility(uris.isEmpty())
+                mBinding.imageSlider.toggleVisibility(uris.isNotEmpty())
             }
             mBinding.imageSlider.adapter = mAdapter
             parentFragmentManager.setFragmentResult(RESULT_URIS,
