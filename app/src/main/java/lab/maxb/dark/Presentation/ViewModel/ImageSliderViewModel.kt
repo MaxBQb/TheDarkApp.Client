@@ -18,13 +18,24 @@ class ImageSliderViewModel(application: Application) : AndroidViewModel(applicat
         _images.value = imageUris
     }
 
+    fun deleteImage(position: Int) {
+        imageUris.removeAt(position)
+        _images.value = imageUris
+    }
+
     fun addImages(uris: List<Uri>) {
         uris.forEach {
-            if (maxAmount in 1 until imageUris.size)
+            if (maxAmount in 1..imageUris.size)
                 return@forEach
             it.takePersistablePermission(getApplication())
             imageUris.add(it)
         }
+        _images.value = imageUris
+    }
+
+    fun updateImage(position: Int, uri: Uri) {
+        uri.takePersistablePermission(getApplication())
+        imageUris[position] = uri
         _images.value = imageUris
     }
 }

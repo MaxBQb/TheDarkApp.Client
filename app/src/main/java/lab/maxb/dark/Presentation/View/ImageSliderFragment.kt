@@ -40,15 +40,27 @@ class ImageSliderFragment : Fragment() {
                 mBinding.imageSlider.layoutParams.height,
             )})
             if (mViewModel.isEditable) {
-                mBinding.addImageButton.toggleVisibility(uris.isEmpty())
+                mBinding.addImageButtonAlternative.toggleVisibility(uris.isEmpty())
                 mBinding.imageSlider.toggleVisibility(uris.isNotEmpty())
+                mBinding.editImageButton.toggleVisibility(uris.isNotEmpty())
+                mBinding.deleteImageButton.toggleVisibility(uris.isNotEmpty())
+                mBinding.addImageButton.toggleVisibility(uris.isNotEmpty()
+                        && mViewModel.maxAmount !in 1..uris.size)
             }
             mBinding.imageSlider.adapter = mAdapter
             parentFragmentManager.setFragmentResult(RESULT_URIS,
                 bundleOf(URIS to uris.map { it.toString() }))
         })
-        if (mViewModel.isEditable)
+        if (mViewModel.isEditable) {
             mBinding.addImageButton.setOnClickListener{addImages()}
+            mBinding.addImageButtonAlternative.setOnClickListener{addImages()}
+            mBinding.deleteImageButton.setOnClickListener {
+                mViewModel.deleteImage(mBinding.imageSlider.currentItem)
+            }
+            mBinding.editImageButton.setOnClickListener {
+                updateContent.launch(arrayOf("image/*"))
+            }
+        }
         return mBinding.root
     }
 
@@ -61,13 +73,23 @@ class ImageSliderFragment : Fragment() {
         }
     }
 
+    private val updateContent by lazy {
+        requireActivity().activityResultRegistry.register(UPDATE_URI, ActivityResultContracts.OpenDocument()) {
+            it?.let {
+                mViewModel.updateImage(mBinding.imageSlider.currentItem, it)
+            }
+        }
+    }
+
     private fun addImages() {
         getContent.launch(arrayOf("image/*"))
     }
 
     override fun onDestroy() {
-        if (mViewModel.isEditable)
+        if (mViewModel.isEditable) {
             getContent.unregister()
+            updateContent.unregister()
+        }
         super.onDestroy()
     }
 
@@ -75,6 +97,7 @@ class ImageSliderFragment : Fragment() {
         const val URIS = "ImageSliderFragment.params.URIS"
         const val RESULT_URIS = "ImageSliderFragment.result.URIS"
         const val ADD_URIS = "ImageSliderFragment.registerForResult.ADD_URIS"
+        const val UPDATE_URI = "ImageSliderFragment.registerForResult.UPDATE_URI"
         const val IS_EDITABLE = "ImageSliderFragment.params.IS_EDITABLE"
         const val MAX_AMOUNT = "ImageSliderFragment.params.MAX_AMOUNT"
 

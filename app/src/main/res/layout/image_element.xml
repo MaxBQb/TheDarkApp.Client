@@ -19,5 +19,5 @@
         android:visibility="gone"
         android:padding="@dimen/normalMargin"
         android:layout_margin="@dimen/normalMargin"
-        android:src="@drawable/ic_add_photo" />
+        android:src="@drawable/ic_add_photo_alternative" />
 </RelativeLayout>
