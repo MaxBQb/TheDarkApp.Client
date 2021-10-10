@@ -19,6 +19,7 @@ import lab.maxb.dark.databinding.ImageSliderFragmentBinding
 class ImageSliderFragment : Fragment() {
     private val mViewModel: ImageSliderViewModel by viewModels()
     private var mBinding: ImageSliderFragmentBinding by autoCleaned()
+    private var mUris: List<Uri> by autoCleaned()
     private var mAdapter: ImageSliderAdapter by autoCleaned()
 
     override fun onCreateView(
@@ -48,9 +49,9 @@ class ImageSliderFragment : Fragment() {
                         && mViewModel.maxAmount !in 1..uris.size)
             }
             mBinding.imageSlider.adapter = mAdapter
-            parentFragmentManager.setFragmentResult(RESULT_URIS,
-                bundleOf(URIS to uris.map { it.toString() }))
+            mUris = uris
         })
+
         if (mViewModel.isEditable) {
             mBinding.addImageButton.setOnClickListener{addImages()}
             mBinding.addImageButtonAlternative.setOnClickListener{addImages()}
@@ -61,6 +62,14 @@ class ImageSliderFragment : Fragment() {
                 updateContent.launch(arrayOf("image/*"))
             }
         }
+
+        parentFragmentManager.setFragmentResultListener(REQUEST, viewLifecycleOwner) {
+            _, _ ->
+            parentFragmentManager.setFragmentResult(RESULT_URIS,
+                bundleOf(URIS to mUris.map { it.toString() }))
+        }
+
+
         return mBinding.root
     }
 
@@ -96,6 +105,7 @@ class ImageSliderFragment : Fragment() {
     companion object {
         const val URIS = "ImageSliderFragment.params.URIS"
         const val RESULT_URIS = "ImageSliderFragment.result.URIS"
+        const val REQUEST = "ImageSliderFragment.request.*"
         const val ADD_URIS = "ImageSliderFragment.registerForResult.ADD_URIS"
         const val UPDATE_URI = "ImageSliderFragment.registerForResult.UPDATE_URI"
         const val IS_EDITABLE = "ImageSliderFragment.params.IS_EDITABLE"

@@ -3,6 +3,7 @@ package lab.maxb.dark.Presentation.View
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import lab.maxb.dark.Domain.Model.RecognitionTask
@@ -31,6 +32,7 @@ class AddRecognitionTaskFragment : Fragment() {
             result.getStringArrayList(ImageSliderFragment.URIS)?.let {
                 mViewModel.imageUris = it
             }
+            createRecognitionTask()
         }
         return mBinding.root
     }
@@ -49,11 +51,18 @@ class AddRecognitionTaskFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean
         = when (item.itemId) {
             R.id.submit -> {
-                createRecognitionTask()
+                startCreateRecognitionTask()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+
+    private fun startCreateRecognitionTask() {
+        parentFragmentManager.setFragmentResult(
+            ImageSliderFragment.REQUEST,
+            Bundle()
+        )
+    }
 
     private fun createRecognitionTask() {
         if (mViewModel.addRecognitionTask(listOf(
