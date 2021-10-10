@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".Presentation.View.AddRecognitionTaskFragment"
     android:orientation="vertical">
-        <androidx.viewpager2.widget.ViewPager2
+        <FrameLayout
             android:id="@+id/image_slider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -1,15 +1,14 @@
 package lab.maxb.dark.Presentation.View.Adapters
 
-import android.net.Uri
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import lab.maxb.dark.Presentation.Extra.toBitmap
 import lab.maxb.dark.databinding.ImageElementBinding
 
 
 open class ImageSliderAdapter(
-    private var images: List<String?>,
+    private var images: List<Bitmap>,
 ) : RecyclerView.Adapter<ImageSliderAdapter.ImageSliderViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -24,27 +23,7 @@ open class ImageSliderAdapter(
         holder: ImageSliderAdapter.ImageSliderViewHolder,
         position: Int
     ) {
-        try {
-            holder.binding.imageContent.setImageBitmap(
-                Uri.parse(images[position]).toBitmap(
-                    holder.itemView.context,
-                    holder.binding.imageContent.layoutParams.width,
-                    holder.binding.imageContent.layoutParams.height,
-                )
-            )
-        } catch (e: Throwable) {
-            handleCursedImage(e, holder, position)
-            e.printStackTrace()
-        }
-    }
-
-    protected open fun handleCursedImage(exception: Throwable,
-                                         holder: ImageSliderAdapter.ImageSliderViewHolder,
-                                         position: Int) {
-        val imagesNew = images.toMutableList()
-        imagesNew.removeAt(position)
-        images = imagesNew
-        notifyDataSetChanged()
+        holder.binding.imageContent.setImageBitmap(images[position])
     }
 
     override fun getItemCount() = images.size

@@ -1,35 +1,37 @@
 package lab.maxb.dark.Presentation.View
 
-import lab.maxb.dark.Presentation.ViewModel.AddRecognitionTaskViewModel
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.MainActivity
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
-import lab.maxb.dark.Presentation.View.Adapters.EditableImageSliderAdapter
-import lab.maxb.dark.Presentation.View.Adapters.ImageSliderAdapter
+import lab.maxb.dark.Presentation.ViewModel.AddRecognitionTaskViewModel
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.AddRecognitionTaskFragmentBinding
 
 class AddRecognitionTaskFragment : Fragment() {
     private val mViewModel: AddRecognitionTaskViewModel by viewModels()
     private var mBinding: AddRecognitionTaskFragmentBinding by autoCleaned()
-    private var mAdapter: ImageSliderAdapter by autoCleaned()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         mBinding = AddRecognitionTaskFragmentBinding.inflate(layoutInflater, container, false)
-        mAdapter = EditableImageSliderAdapter(mViewModel.imageUris,
-            activity as AppCompatActivity,
-            RecognitionTask.MAX_IMAGES_COUNT
-        )
-        mBinding.imageSlider.adapter = mAdapter
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.image_slider, ImageSliderFragment.newInstance(
+                mViewModel.imageUris, true, RecognitionTask.MAX_IMAGES_COUNT
+            )).commit()
+        parentFragmentManager.setFragmentResultListener(ImageSliderFragment.RESULT_URIS,
+            viewLifecycleOwner) {
+            _: String, result: Bundle ->
+            result.getStringArrayList(ImageSliderFragment.URIS)?.let {
+                mViewModel.imageUris = it
+            }
+        }
         return mBinding.root
     }
 

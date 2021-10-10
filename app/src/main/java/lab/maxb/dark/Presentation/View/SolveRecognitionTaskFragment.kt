@@ -10,7 +10,6 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.navArgs
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
-import lab.maxb.dark.Presentation.View.Adapters.ImageSliderAdapter
 import lab.maxb.dark.Presentation.ViewModel.SolveRecognitionTaskViewModel
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.SolveRecognitionTaskFragmentBinding
@@ -18,7 +17,6 @@ import lab.maxb.dark.databinding.SolveRecognitionTaskFragmentBinding
 class SolveRecognitionTaskFragment : Fragment() {
     private val mViewModel: SolveRecognitionTaskViewModel by viewModels()
     private var mBinding: SolveRecognitionTaskFragmentBinding by autoCleaned()
-    private var mAdapter: ImageSliderAdapter by autoCleaned()
     private val args: SolveRecognitionTaskFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -35,12 +33,13 @@ class SolveRecognitionTaskFragment : Fragment() {
             else
                 Toast.makeText(context, "Неверно", Toast.LENGTH_SHORT).show()
         }
+
         mViewModel.recognitionTask.observe(viewLifecycleOwner, {
             it?.let { task: RecognitionTask ->
-                mAdapter = ImageSliderAdapter(
-                    task.images?.toMutableList() ?: return@let null
-                )
-                mBinding.imageSlider.adapter = mAdapter
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.image_slider, ImageSliderFragment.newInstance(
+                        task.images?.toList() ?: listOf()
+                    )).commit()
             } ?: activity?.onBackPressed()
         })
         return mBinding.root

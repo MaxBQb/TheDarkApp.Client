@@ -10,10 +10,10 @@ import lab.maxb.dark.Presentation.Repository.Repository
 
 
 class AddRecognitionTaskViewModel(application: Application) : AndroidViewModel(application) {
-    var imageUris: MutableList<String?> = mutableListOf()
+    var imageUris: List<String> = mutableListOf()
 
     fun addRecognitionTask(names: List<String>): Boolean {
-        val task = createRecognitionTask(names, imageUris.filterNotNull(), null) ?: return false
+        val task = createRecognitionTask(names, imageUris, null) ?: return false
         viewModelScope.launch {
             try {
                 Repository.recognitionTasks.addRecognitionTask(task)

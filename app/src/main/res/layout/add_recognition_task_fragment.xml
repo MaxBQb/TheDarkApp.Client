@@ -43,8 +43,7 @@
             android:textAlignment="center"
             android:textSize="12pt"
             android:text="@string/load_images_title"/>
-
-        <androidx.viewpager2.widget.ViewPager2
+        <FrameLayout
             android:id="@+id/image_slider"
             android:layout_width="match_parent"
             android:layout_height="200dp"
