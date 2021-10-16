@@ -4,11 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
+            android:completionThreshold="1"
             android:inputType="textAutoCorrect|textAutoComplete"
             android:hint="@string/input_list_item_hint"
             android:layout_margin="@dimen/halfMargin"/>

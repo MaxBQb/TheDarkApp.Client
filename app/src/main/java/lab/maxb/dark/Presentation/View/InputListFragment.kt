@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -32,8 +34,16 @@ class InputListFragment : Fragment() {
         arguments?.getStringArray(TEXTS)?.toMutableList()?.let { mViewModel.texts = it }
         mAdapter = InputListAdapter(mViewModel.texts)
         mBinding.inputListRecycler.adapter = mAdapter
-        mAdapter.onItemTextChangedListener = { _, text, position -> text?.let {
+        mAdapter.onItemTextChangedListener = { editText, text, position -> text?.let {
             mViewModel.texts[position] = it
+            mViewModel.getSuggestions(mViewModel.texts).observe(viewLifecycleOwner) { values: Set<String> ->
+                val input = editText as AutoCompleteTextView
+                input.setAdapter(ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_dropdown_item_1line,
+                    values.toList()
+                ).apply { filter.filter(null) })
+            }
         }}
         mAdapter.onItemFocusedListener = { _, position, hasFocus ->
             if (hasFocus)
