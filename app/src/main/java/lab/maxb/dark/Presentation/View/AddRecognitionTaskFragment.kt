@@ -3,7 +3,6 @@ package lab.maxb.dark.Presentation.View
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import lab.maxb.dark.Domain.Model.RecognitionTask
@@ -25,7 +24,10 @@ class AddRecognitionTaskFragment : Fragment() {
         parentFragmentManager.beginTransaction()
             .replace(R.id.image_slider, ImageSliderFragment.newInstance(
                 mViewModel.imageUris, true, RecognitionTask.MAX_IMAGES_COUNT
-            )).commit()
+            ))
+            .replace(R.id.task_names, InputListFragment.newInstance())
+            .commit()
+
         parentFragmentManager.setFragmentResultListener(ImageSliderFragment.RESULT_URIS,
             viewLifecycleOwner) {
             _: String, result: Bundle ->
@@ -34,6 +36,19 @@ class AddRecognitionTaskFragment : Fragment() {
             }
             createRecognitionTask()
         }
+
+        parentFragmentManager.setFragmentResultListener(InputListFragment.RESULT_TEXTS,
+            viewLifecycleOwner) {
+                _: String, result: Bundle ->
+            result.getStringArray(InputListFragment.TEXTS)?.let {
+                mViewModel.names = it.toList()
+            }
+            parentFragmentManager.setFragmentResult(
+                ImageSliderFragment.REQUEST,
+                Bundle()
+            )
+        }
+
         return mBinding.root
     }
 
@@ -59,17 +74,13 @@ class AddRecognitionTaskFragment : Fragment() {
 
     private fun startCreateRecognitionTask() {
         parentFragmentManager.setFragmentResult(
-            ImageSliderFragment.REQUEST,
+            InputListFragment.REQUEST,
             Bundle()
         )
     }
 
     private fun createRecognitionTask() {
-        if (mViewModel.addRecognitionTask(listOf(
-                mBinding.taskName1.text.toString(),
-                mBinding.taskName2.text.toString(),
-                mBinding.taskName3.text.toString(),
-            )))
+        if (mViewModel.addRecognitionTask())
             activity?.onBackPressed()
         else
             Toast.makeText(context, "Вы ввели не все данные", Toast.LENGTH_SHORT).show()

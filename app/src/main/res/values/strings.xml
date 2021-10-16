@@ -2,6 +2,7 @@
     <string name="app_name">Тёмная</string>
     <string name="load_images_title">Загрузить картинки</string>
     <string name="check_recognition_task_solution">Проверить</string>
+    <string name="input_list_item_hint">Введите текст</string>
     <string name="recognition_task_name_answer">Ваш ответ</string>
     <string name="available_recognition_tasks">Доступные задачи</string>
     <string name="add_recognition_task_label">Добавление задачи</string>
