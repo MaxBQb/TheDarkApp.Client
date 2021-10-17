@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
+import lab.maxb.dark.Presentation.Extra.FragmentKeys
+import lab.maxb.dark.Presentation.Extra.setFragmentResponse
 import lab.maxb.dark.Presentation.View.Adapters.InputListAdapter
 import lab.maxb.dark.Presentation.ViewModel.InputListViewModel
 import lab.maxb.dark.databinding.InputListFragmentBinding
@@ -53,20 +55,21 @@ class InputListFragment : Fragment() {
                     mAdapter.notifyItemInserted(position+1)
                 }
         }
-        parentFragmentManager.setFragmentResultListener(REQUEST, viewLifecycleOwner) {
-                _, _ ->
-            parentFragmentManager.setFragmentResult(RESULT_TEXTS,
-                bundleOf(TEXTS to mViewModel.texts
+
+        setFragmentResponse(REQUEST_TEXTS, RESPONSE_TEXTS) {bundleOf(
+            TEXTS to mViewModel.texts
                     .filter { it.isNotBlank() }
-                    .toTypedArray())
-            )
-        }
+                    .toTypedArray()
+        )}
     }
 
     companion object {
-        const val TEXTS = "InputListFragment.params.TEXTS"
-        const val RESULT_TEXTS = "InputListFragment.result.TEXTS"
-        const val REQUEST = "InputListFragment.request.*"
+        private val keys = FragmentKeys(this::class)
+        val TEXTS = keys.param("TEXTS")
+        val REQUEST_TEXTS = keys.request(TEXTS)
+        val RESPONSE_TEXTS = keys.response(TEXTS)
+
+        init { keys.clear() }
 
         fun newInstance(texts: List<String>? = null)
             = InputListFragment().apply { arguments = bundleOf(

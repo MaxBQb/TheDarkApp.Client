@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.MainActivity
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
+import lab.maxb.dark.Presentation.Extra.requestFragmentResult
 import lab.maxb.dark.Presentation.ViewModel.AddRecognitionTaskViewModel
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.AddRecognitionTaskFragmentBinding
@@ -28,8 +30,7 @@ class AddRecognitionTaskFragment : Fragment() {
             .replace(R.id.task_names, InputListFragment.newInstance())
             .commit()
 
-        parentFragmentManager.setFragmentResultListener(ImageSliderFragment.RESULT_URIS,
-            viewLifecycleOwner) {
+        setFragmentResultListener(ImageSliderFragment.RESPONSE_URIS) {
             _: String, result: Bundle ->
             result.getStringArrayList(ImageSliderFragment.URIS)?.let {
                 mViewModel.imageUris = it
@@ -37,16 +38,12 @@ class AddRecognitionTaskFragment : Fragment() {
             createRecognitionTask()
         }
 
-        parentFragmentManager.setFragmentResultListener(InputListFragment.RESULT_TEXTS,
-            viewLifecycleOwner) {
-                _: String, result: Bundle ->
+        setFragmentResultListener(InputListFragment.RESPONSE_TEXTS) {
+                _, result: Bundle ->
             result.getStringArray(InputListFragment.TEXTS)?.let {
                 mViewModel.names = it.toList()
             }
-            parentFragmentManager.setFragmentResult(
-                ImageSliderFragment.REQUEST,
-                Bundle()
-            )
+            requestFragmentResult(ImageSliderFragment.REQUEST_URIS)
         }
 
         return mBinding.root
@@ -73,10 +70,7 @@ class AddRecognitionTaskFragment : Fragment() {
         }
 
     private fun startCreateRecognitionTask() {
-        parentFragmentManager.setFragmentResult(
-            InputListFragment.REQUEST,
-            Bundle()
-        )
+        requestFragmentResult(InputListFragment.REQUEST_TEXTS)
     }
 
     private fun createRecognitionTask() {

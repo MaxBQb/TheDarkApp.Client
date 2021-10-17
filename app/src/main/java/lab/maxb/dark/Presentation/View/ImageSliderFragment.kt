@@ -10,6 +10,8 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
+import lab.maxb.dark.Presentation.Extra.FragmentKeys
+import lab.maxb.dark.Presentation.Extra.setFragmentResponse
 import lab.maxb.dark.Presentation.Extra.toBitmap
 import lab.maxb.dark.Presentation.Extra.toggleVisibility
 import lab.maxb.dark.Presentation.View.Adapters.ImageSliderAdapter
@@ -63,12 +65,9 @@ class ImageSliderFragment : Fragment() {
             }
         }
 
-        parentFragmentManager.setFragmentResultListener(REQUEST, viewLifecycleOwner) {
-            _, _ ->
-            parentFragmentManager.setFragmentResult(RESULT_URIS,
-                bundleOf(URIS to mUris.map { it.toString() }))
-        }
-
+        setFragmentResponse(REQUEST_URIS, RESPONSE_URIS) {bundleOf(
+            URIS to mUris.map { it.toString() }
+        )}
 
         return mBinding.root
     }
@@ -90,9 +89,7 @@ class ImageSliderFragment : Fragment() {
         }
     }
 
-    private fun addImages() {
-        getContent.launch(arrayOf("image/*"))
-    }
+    private fun addImages() = getContent.launch(arrayOf("image/*"))
 
     override fun onDestroy() {
         if (mViewModel.isEditable) {
@@ -103,13 +100,17 @@ class ImageSliderFragment : Fragment() {
     }
 
     companion object {
-        const val URIS = "ImageSliderFragment.params.URIS"
-        const val RESULT_URIS = "ImageSliderFragment.result.URIS"
-        const val REQUEST = "ImageSliderFragment.request.*"
-        const val ADD_URIS = "ImageSliderFragment.registerForResult.ADD_URIS"
-        const val UPDATE_URI = "ImageSliderFragment.registerForResult.UPDATE_URI"
-        const val IS_EDITABLE = "ImageSliderFragment.params.IS_EDITABLE"
-        const val MAX_AMOUNT = "ImageSliderFragment.params.MAX_AMOUNT"
+        private val keys = FragmentKeys(this::class)
+        private val REGISTER_FOR_RESULT = "${keys.path}.registerForResult"
+        val URIS = keys.param("URIS")
+        val IS_EDITABLE = keys.param("IS_EDITABLE")
+        val MAX_AMOUNT = keys.param("MAX_AMOUNT")
+        val REQUEST_URIS = keys.request(URIS)
+        val RESPONSE_URIS = keys.response(URIS)
+        val ADD_URIS = "$REGISTER_FOR_RESULT.ADD_URIS"
+        val UPDATE_URI = "$REGISTER_FOR_RESULT.UPDATE_URI"
+
+        init { keys.clear() }
 
         fun newInstance(uris: List<String>? = null, isEditable: Boolean = false, maxAmount: Int? = null)
             = ImageSliderFragment().apply { arguments = bundleOf(
