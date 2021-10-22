@@ -1,15 +1,16 @@
 package lab.maxb.dark.Presentation.ViewModel
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import lab.maxb.dark.Domain.Operations.createRecognitionTask
-import lab.maxb.dark.Presentation.Repository.Repository
+import lab.maxb.dark.Presentation.Repository.Interfaces.IRecognitionTasksRepository
 
 
-class AddRecognitionTaskViewModel(application: Application) : AndroidViewModel(application) {
+class AddRecognitionTaskViewModel(
+    private val recognitionTasksRepository: IRecognitionTasksRepository,
+) : ViewModel() {
     var imageUris: List<String> = mutableListOf()
     var names: List<String> = mutableListOf()
 
@@ -17,7 +18,7 @@ class AddRecognitionTaskViewModel(application: Application) : AndroidViewModel(a
         val task = createRecognitionTask(names, imageUris, null) ?: return false
         viewModelScope.launch {
             try {
-                Repository.recognitionTasks.addRecognitionTask(task)
+                recognitionTasksRepository.addRecognitionTask(task)
             } catch (exc: Throwable) {
                 Log.e("AddRecognitionTask", exc.localizedMessage ?: "")
             }

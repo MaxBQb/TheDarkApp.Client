@@ -1,22 +1,22 @@
 package lab.maxb.dark.Presentation.View
 
-import lab.maxb.dark.Presentation.ViewModel.RecognitionTaskListViewModel
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
 import lab.maxb.dark.Presentation.View.Adapters.RecognitionTaskListAdapter
+import lab.maxb.dark.Presentation.ViewModel.RecognitionTaskListViewModel
 import lab.maxb.dark.databinding.RecognitionTaskListFragmentBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class RecognitionTaskListFragment : Fragment() {
-    private val mViewModel: RecognitionTaskListViewModel by viewModels()
+    private val mViewModel: RecognitionTaskListViewModel by viewModel()
     private var mBinding: RecognitionTaskListFragmentBinding by autoCleaned()
     private var mAdapter: RecognitionTaskListAdapter by autoCleaned()
 

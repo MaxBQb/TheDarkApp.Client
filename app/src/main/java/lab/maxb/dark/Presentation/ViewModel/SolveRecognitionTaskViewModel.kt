@@ -1,20 +1,21 @@
 package lab.maxb.dark.Presentation.ViewModel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import lab.maxb.dark.Domain.Extra.Delegates.Once
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.Domain.Operations.solve
-import lab.maxb.dark.Presentation.Repository.Repository
+import lab.maxb.dark.Presentation.Repository.Interfaces.IRecognitionTasksRepository
 
 
-class SolveRecognitionTaskViewModel(application: Application) : AndroidViewModel(application) {
+class SolveRecognitionTaskViewModel(
+    private val recognitionTasksRepository: IRecognitionTasksRepository,
+) : ViewModel() {
     var id: String by Once()
     val recognitionTask: LiveData<RecognitionTask?> by lazy {
-        Repository.recognitionTasks.getRecognitionTask(id)
+        recognitionTasksRepository.getRecognitionTask(id)
     }
 
     fun solveRecognitionTask(name: String): Boolean {
@@ -22,7 +23,7 @@ class SolveRecognitionTaskViewModel(application: Application) : AndroidViewModel
         return task.solve(name).also { isSolution ->
             if (isSolution)
                 viewModelScope.launch {
-                    Repository.recognitionTasks.deleteRecognitionTask(task)
+                    recognitionTasksRepository.deleteRecognitionTask(task)
                 }
         }
     }

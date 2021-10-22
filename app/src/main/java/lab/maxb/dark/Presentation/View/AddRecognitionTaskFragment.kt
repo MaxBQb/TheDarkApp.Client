@@ -5,7 +5,6 @@ import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
-import androidx.fragment.app.viewModels
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.MainActivity
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
@@ -13,9 +12,10 @@ import lab.maxb.dark.Presentation.Extra.requestFragmentResult
 import lab.maxb.dark.Presentation.ViewModel.AddRecognitionTaskViewModel
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.AddRecognitionTaskFragmentBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddRecognitionTaskFragment : Fragment() {
-    private val mViewModel: AddRecognitionTaskViewModel by viewModels()
+    private val mViewModel: AddRecognitionTaskViewModel by viewModel()
     private var mBinding: AddRecognitionTaskFragmentBinding by autoCleaned()
 
     override fun onCreateView(

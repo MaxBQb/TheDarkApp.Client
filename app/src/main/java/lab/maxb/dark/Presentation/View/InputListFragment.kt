@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
 import lab.maxb.dark.Presentation.Extra.FragmentKeys
@@ -16,9 +15,11 @@ import lab.maxb.dark.Presentation.Extra.setFragmentResponse
 import lab.maxb.dark.Presentation.View.Adapters.InputListAdapter
 import lab.maxb.dark.Presentation.ViewModel.InputListViewModel
 import lab.maxb.dark.databinding.InputListFragmentBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class InputListFragment : Fragment() {
-    private val mViewModel: InputListViewModel by viewModels()
+    private val mViewModel: InputListViewModel by viewModel()
     private var mBinding: InputListFragmentBinding by autoCleaned()
     private var mAdapter: InputListAdapter by autoCleaned()
 
