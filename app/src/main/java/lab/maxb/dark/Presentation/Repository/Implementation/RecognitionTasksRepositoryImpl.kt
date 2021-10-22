@@ -7,11 +7,11 @@ import androidx.lifecycle.Transformations
 import lab.maxb.dark.Presentation.Repository.Room.DAO.RecognitionTaskDAO
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskDTO
 import lab.maxb.dark.Domain.Model.RecognitionTask
-import lab.maxb.dark.Presentation.Repository.Interfaces.IRecognitionTasksRepository
+import lab.maxb.dark.Presentation.Repository.Interfaces.RecognitionTasksRepository
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskImage
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskName
 
-class RecognitionTasksRepository(applicationContext: Context) : IRecognitionTasksRepository {
+class RecognitionTasksRepositoryImpl(applicationContext: Context) : RecognitionTasksRepository {
     private val mRecognitionTaskDao: RecognitionTaskDAO
     private val recognitionTasks: LiveData<List<RecognitionTask>?>
 

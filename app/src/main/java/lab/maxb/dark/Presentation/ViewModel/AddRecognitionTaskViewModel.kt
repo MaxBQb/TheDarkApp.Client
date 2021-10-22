@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import lab.maxb.dark.Domain.Operations.createRecognitionTask
-import lab.maxb.dark.Presentation.Repository.Interfaces.IRecognitionTasksRepository
+import lab.maxb.dark.Presentation.Repository.Interfaces.RecognitionTasksRepository
 
 
 class AddRecognitionTaskViewModel(
-    private val recognitionTasksRepository: IRecognitionTasksRepository,
+    private val recognitionTasksRepository: RecognitionTasksRepository,
 ) : ViewModel() {
     var imageUris: List<String> = mutableListOf()
     var names: List<String> = mutableListOf()

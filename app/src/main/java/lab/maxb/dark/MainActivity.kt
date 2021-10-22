@@ -10,7 +10,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import kotlinx.coroutines.launch
 import lab.maxb.dark.Domain.Model.User
-import lab.maxb.dark.Presentation.Repository.Interfaces.IUsersRepository
+import lab.maxb.dark.Presentation.Repository.Interfaces.UsersRepository
 import lab.maxb.dark.databinding.MainActivityBinding
 import org.koin.android.ext.android.inject
 
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         MainActivityBinding.inflate(layoutInflater)
     }
 
-    private val usersRepository by inject<IUsersRepository>()
+    private val usersRepository by inject<UsersRepository>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -3,7 +3,7 @@ package lab.maxb.dark.Presentation.Repository.Network.Synonymizer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import lab.maxb.dark.Presentation.Repository.Interfaces.ISynonymsRepository
+import lab.maxb.dark.Presentation.Repository.Interfaces.SynonymsRepository
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -12,7 +12,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-class SynonymFounder : ISynonymsRepository {
+class SynonymFounder : SynonymsRepository {
     private val api: RusTxtAPI
     private fun getSynonym(text: String): LiveData<String?> {
         val addresses = MutableLiveData<String?>()

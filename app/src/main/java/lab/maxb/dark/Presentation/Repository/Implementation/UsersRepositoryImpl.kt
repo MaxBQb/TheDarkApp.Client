@@ -4,11 +4,11 @@ import android.content.Context
 import lab.maxb.dark.Presentation.Repository.Room.LocalDatabase.Companion.getDatabase
 import androidx.lifecycle.LiveData
 import lab.maxb.dark.Domain.Model.User
-import lab.maxb.dark.Presentation.Repository.Interfaces.IUsersRepository
+import lab.maxb.dark.Presentation.Repository.Interfaces.UsersRepository
 import lab.maxb.dark.Presentation.Repository.Room.DAO.UserDAO
 import lab.maxb.dark.Presentation.Repository.Room.Model.UserDTO
 
-class UsersRepository(applicationContext: Context) : IUsersRepository {
+class UsersRepositoryImpl(applicationContext: Context) : UsersRepository {
     private val mUserDao: UserDAO
 
     init {

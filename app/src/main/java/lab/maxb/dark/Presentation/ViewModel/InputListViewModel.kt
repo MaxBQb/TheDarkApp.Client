@@ -2,11 +2,11 @@ package lab.maxb.dark.Presentation.ViewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import lab.maxb.dark.Presentation.Repository.Interfaces.ISynonymsRepository
+import lab.maxb.dark.Presentation.Repository.Interfaces.SynonymsRepository
 
 
 class InputListViewModel(
-    private val synonymsRepository: ISynonymsRepository,
+    private val synonymsRepository: SynonymsRepository,
 ) : ViewModel() {
     var texts: MutableList<String> = mutableListOf("")
 
