@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.navigation.fragment.navArgs
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
@@ -35,10 +36,11 @@ class SolveRecognitionTaskFragment : Fragment() {
 
         mViewModel.recognitionTask.observe(viewLifecycleOwner) {
             it?.let { task: RecognitionTask ->
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.image_slider, ImageSliderFragment.newInstance(
+                parentFragmentManager.commit {
+                    replace(R.id.image_slider, ImageSliderFragment.newInstance(
                         task.images?.toList() ?: listOf()
-                    )).commit()
+                    ))
+                }
             } ?: activity?.onBackPressed()
         }
         return mBinding.root

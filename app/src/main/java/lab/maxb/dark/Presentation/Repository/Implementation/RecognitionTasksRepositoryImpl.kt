@@ -1,13 +1,14 @@
 package lab.maxb.dark.Presentation.Repository.Implementation
 
 import android.content.Context
-import lab.maxb.dark.Presentation.Repository.Room.LocalDatabase.Companion.getDatabase
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import lab.maxb.dark.Presentation.Repository.Room.DAO.RecognitionTaskDAO
-import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskDTO
+import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.map
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.Presentation.Repository.Interfaces.RecognitionTasksRepository
+import lab.maxb.dark.Presentation.Repository.Room.DAO.RecognitionTaskDAO
+import lab.maxb.dark.Presentation.Repository.Room.LocalDatabase.Companion.getDatabase
+import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskDTO
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskImage
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskName
 
@@ -15,11 +16,10 @@ class RecognitionTasksRepositoryImpl(applicationContext: Context) : RecognitionT
     private val mRecognitionTaskDao: RecognitionTaskDAO
     private val recognitionTasks: LiveData<List<RecognitionTask>?>
 
-
     init {
         val db = getDatabase(applicationContext)
         mRecognitionTaskDao = db.recognitionTaskDao()
-        recognitionTasks = Transformations.map(mRecognitionTaskDao.getAllRecognitionTasks()) {
+        recognitionTasks = mRecognitionTaskDao.getAllRecognitionTasks().distinctUntilChanged().map {
             data -> data?.map { it.toRecognitionTask() }
         }
     }
@@ -28,7 +28,7 @@ class RecognitionTasksRepositoryImpl(applicationContext: Context) : RecognitionT
         = recognitionTasks
 
     override fun getRecognitionTask(id: String): LiveData<RecognitionTask?>
-        = Transformations.map(mRecognitionTaskDao.getRecognitionTask(id)) {
+        = mRecognitionTaskDao.getRecognitionTask(id).distinctUntilChanged().map {
             it?.toRecognitionTask()
         }
 

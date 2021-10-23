@@ -1,10 +1,9 @@
 package lab.maxb.dark.Presentation.View.Adapters
 
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_POSITION
 import lab.maxb.dark.databinding.InputListItemBinding
@@ -42,15 +41,11 @@ class InputListAdapter(
     inner class ViewHolder(var binding: InputListItemBinding):
         RecyclerView.ViewHolder(binding.root) {
         fun setListeners() {
-            binding.input.addTextChangedListener(object : TextWatcher {
-                override fun afterTextChanged(p0: Editable?) {}
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            binding.input.doOnTextChanged { text, _, _, _ ->
+                if (adapterPosition != NO_POSITION)
+                    onItemTextChangedListener?.invoke(binding.input, text.toString(), adapterPosition)
+            }
 
-                override fun onTextChanged(str: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (adapterPosition != NO_POSITION)
-                        onItemTextChangedListener?.invoke(binding.input, str.toString(), adapterPosition)
-                }
-            })
             binding.input.setOnFocusChangeListener { _, hasFocus ->
                 if (adapterPosition != NO_POSITION)
                     onItemFocusedListener?.invoke(binding.input, adapterPosition, hasFocus)

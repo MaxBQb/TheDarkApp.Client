@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "lab.maxb.dark"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
 
@@ -41,6 +41,7 @@ android {
 dependencies {
     implementation 'androidx.lifecycle:lifecycle-common-java8:2.3.1'
     implementation "io.insert-koin:koin-android:3.1.2"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0-rc01"
     def room_version = "2.3.0"
 
     implementation "androidx.room:room-runtime:$room_version"

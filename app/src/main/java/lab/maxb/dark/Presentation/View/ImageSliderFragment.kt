@@ -9,11 +9,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import lab.maxb.dark.Presentation.Extra.*
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
-import lab.maxb.dark.Presentation.Extra.FragmentKeys
-import lab.maxb.dark.Presentation.Extra.setFragmentResponse
-import lab.maxb.dark.Presentation.Extra.toBitmap
-import lab.maxb.dark.Presentation.Extra.toggleVisibility
 import lab.maxb.dark.Presentation.View.Adapters.ImageSliderAdapter
 import lab.maxb.dark.Presentation.ViewModel.ImageSliderViewModel
 import lab.maxb.dark.databinding.ImageSliderFragmentBinding
@@ -101,22 +98,21 @@ class ImageSliderFragment : Fragment() {
 
     companion object {
         private val keys = FragmentKeys(this::class)
-        private val REGISTER_FOR_RESULT = "${keys.path}.registerForResult"
-        val URIS = keys.param("URIS")
-        val IS_EDITABLE = keys.param("IS_EDITABLE")
-        val MAX_AMOUNT = keys.param("MAX_AMOUNT")
-        val REQUEST_URIS = keys.request(URIS)
-        val RESPONSE_URIS = keys.response(URIS)
-        val ADD_URIS = "$REGISTER_FOR_RESULT.ADD_URIS"
-        val UPDATE_URI = "$REGISTER_FOR_RESULT.UPDATE_URI"
+        val URIS by keys.param()
+        val IS_EDITABLE by keys.param()
+        val MAX_AMOUNT by keys.param()
+        val REQUEST_URIS by keys.communication()
+        val RESPONSE_URIS by keys.communication()
+        val ADD_URIS by keys.special()
+        val UPDATE_URI by keys.special()
 
-        init { keys.clear() }
-
-        fun newInstance(uris: List<String>? = null, isEditable: Boolean = false, maxAmount: Int? = null)
-            = ImageSliderFragment().apply { arguments = bundleOf(
+        fun newInstance(uris: List<String>? = null,
+                        isEditable: Boolean = false,
+                        maxAmount: Int? = null)
+            = ImageSliderFragment().withArgs(
                 URIS to uris?.toTypedArray(),
                 IS_EDITABLE to isEditable,
-                MAX_AMOUNT to maxAmount
-            )}
+                MAX_AMOUNT to maxAmount,
+            )
     }
 }

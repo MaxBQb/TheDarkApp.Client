@@ -1,19 +1,19 @@
 package lab.maxb.dark.Presentation.Extra
 
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 
 class FragmentKeys(clazz: KClass<*>) {
-    val path = clazz.qualifiedName!!
-    private val params = mutableMapOf<String, String>()
+    private val path = clazz.qualifiedName!!
 
-    fun param(name: String)
-        = "$path.params.$name".also {
-            params[it] = name
-        }
+    fun param(): Path = Path(::param.name)
+    fun communication(): Path = Path(::communication.name)
+    fun special(): Path = Path(::special.name)
 
-    fun request(paramName: String) = "$path.request.${params[paramName]}"
+    inner class Path(private val key: String) {
+        private var name: String? = null
 
-    fun response(paramName: String) = "$path.response.${params[paramName]}"
-
-    fun clear() = params.clear()
+        operator fun getValue(thisRef: Any?, property: KProperty<*>)
+            = name ?: "$path.$key.${property.name}".also { name = it }
+    }
 }

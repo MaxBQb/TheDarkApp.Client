@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
 import lab.maxb.dark.Presentation.Extra.FragmentKeys
 import lab.maxb.dark.Presentation.Extra.setFragmentResponse
+import lab.maxb.dark.Presentation.Extra.withArgs
 import lab.maxb.dark.Presentation.View.Adapters.InputListAdapter
 import lab.maxb.dark.Presentation.ViewModel.InputListViewModel
 import lab.maxb.dark.databinding.InputListFragmentBinding
@@ -66,15 +67,13 @@ class InputListFragment : Fragment() {
 
     companion object {
         private val keys = FragmentKeys(this::class)
-        val TEXTS = keys.param("TEXTS")
-        val REQUEST_TEXTS = keys.request(TEXTS)
-        val RESPONSE_TEXTS = keys.response(TEXTS)
-
-        init { keys.clear() }
+        val TEXTS by keys.param()
+        val REQUEST_TEXTS by keys.communication()
+        val RESPONSE_TEXTS by keys.communication()
 
         fun newInstance(texts: List<String>? = null)
-            = InputListFragment().apply { arguments = bundleOf(
+            = InputListFragment().withArgs(
                 TEXTS to texts?.toTypedArray(),
-            )}
+            )
     }
 }

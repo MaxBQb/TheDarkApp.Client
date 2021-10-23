@@ -3,6 +3,7 @@ package lab.maxb.dark.Presentation.Extra
 import android.os.Bundle
 import android.view.View
 import android.view.View.*
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
@@ -31,3 +32,6 @@ fun Fragment.setFragmentResponse(requestKey: String,
         setFragmentResult(responseKey, response())
     }
 }
+
+fun Fragment.withArgs(vararg args: Pair<String, Any?>)
+    = apply { arguments = bundleOf(*args) }

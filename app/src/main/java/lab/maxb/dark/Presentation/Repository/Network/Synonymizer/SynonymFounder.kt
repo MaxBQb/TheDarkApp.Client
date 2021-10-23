@@ -41,7 +41,6 @@ class SynonymFounder : SynonymsRepository {
         .removeSuffix("<br>").trim()
         .replace(Regex("\\s+"), " ")
 
-
     override fun getSynonyms(texts: Set<String>): LiveData<Set<String>> {
         val fixedTexts = texts.map { fixText(it) }.toSet()
         val mediator = MediatorLiveData<Set<String>>()
