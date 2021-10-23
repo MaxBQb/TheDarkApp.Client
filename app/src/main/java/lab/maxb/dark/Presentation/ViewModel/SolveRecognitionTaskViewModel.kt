@@ -4,16 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import lab.maxb.dark.Domain.Extra.Delegates.Once
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.Domain.Operations.solve
 import lab.maxb.dark.Presentation.Repository.Interfaces.RecognitionTasksRepository
+import kotlin.properties.Delegates
 
 
 class SolveRecognitionTaskViewModel(
     private val recognitionTasksRepository: RecognitionTasksRepository,
 ) : ViewModel() {
-    var id: String by Once()
+    var id: String by Delegates.notNull()
     val recognitionTask: LiveData<RecognitionTask?> by lazy {
         recognitionTasksRepository.getRecognitionTask(id)
     }
