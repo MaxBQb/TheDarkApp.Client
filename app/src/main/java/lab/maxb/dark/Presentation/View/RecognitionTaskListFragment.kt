@@ -35,7 +35,7 @@ class RecognitionTaskListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mViewModel.recognitionTaskList.observe(viewLifecycleOwner, {
+        mViewModel.recognitionTaskList.observe(viewLifecycleOwner) {
                 recognitionTasks: List<RecognitionTask>? ->
             mAdapter = RecognitionTaskListAdapter(recognitionTasks)
             mBinding.recognitionTaskListRecycler.adapter = mAdapter
@@ -46,6 +46,6 @@ class RecognitionTaskListFragment : Fragment() {
                     )
                 )
             }
-        })
+        }
     }
 }

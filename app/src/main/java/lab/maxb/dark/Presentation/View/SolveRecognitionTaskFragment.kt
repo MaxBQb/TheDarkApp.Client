@@ -33,14 +33,14 @@ class SolveRecognitionTaskFragment : Fragment() {
                 Toast.makeText(context, "Неверно", Toast.LENGTH_SHORT).show()
         }
 
-        mViewModel.recognitionTask.observe(viewLifecycleOwner, {
+        mViewModel.recognitionTask.observe(viewLifecycleOwner) {
             it?.let { task: RecognitionTask ->
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.image_slider, ImageSliderFragment.newInstance(
                         task.images?.toList() ?: listOf()
                     )).commit()
             } ?: activity?.onBackPressed()
-        })
+        }
         return mBinding.root
     }
 

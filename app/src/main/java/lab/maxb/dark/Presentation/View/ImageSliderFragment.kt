@@ -36,7 +36,7 @@ class ImageSliderFragment : Fragment() {
             mViewModel.maxAmount = it.getInt(MAX_AMOUNT, -1)
             mViewModel.isEditable = it.getBoolean(IS_EDITABLE, false)
         }
-        mViewModel.images.observe(viewLifecycleOwner, { uris ->
+        mViewModel.images.observe(viewLifecycleOwner) { uris ->
             mAdapter = ImageSliderAdapter( uris.mapNotNull { it.toBitmap(
                 requireContext(),
                 mBinding.imageSlider.layoutParams.width,
@@ -52,7 +52,7 @@ class ImageSliderFragment : Fragment() {
             }
             mBinding.imageSlider.adapter = mAdapter
             mUris = uris
-        })
+        }
 
         if (mViewModel.isEditable) {
             mBinding.addImageButton.setOnClickListener{addImages()}
