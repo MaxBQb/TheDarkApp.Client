@@ -6,9 +6,12 @@ import lab.maxb.dark.Presentation.Repository.Interfaces.RecognitionTasksReposito
 import lab.maxb.dark.Presentation.Repository.Interfaces.SynonymsRepository
 import lab.maxb.dark.Presentation.Repository.Interfaces.UsersRepository
 import lab.maxb.dark.Presentation.Repository.Network.Synonymizer.SynonymFounder
+import lab.maxb.dark.Presentation.Repository.Room.LocalDatabase
+import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 
 internal val MODULE_repository = module {
+    single { LocalDatabase.buildDatabase(androidApplication()) }
     single<SynonymsRepository> { SynonymFounder() }
     single<RecognitionTasksRepository> { RecognitionTasksRepositoryImpl(get()) }
     single<UsersRepository> { UsersRepositoryImpl(get()) }

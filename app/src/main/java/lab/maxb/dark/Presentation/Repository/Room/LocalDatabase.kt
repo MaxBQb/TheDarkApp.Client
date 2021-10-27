@@ -1,5 +1,6 @@
 package lab.maxb.dark.Presentation.Repository.Room
 
+import android.app.Application
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
@@ -24,17 +25,9 @@ abstract class LocalDatabase : RoomDatabase() {
     abstract fun userDao(): UserDAO
 
     companion object {
-        @Volatile
-        private var INSTANCE: LocalDatabase? = null
-
-        fun getDatabase(context: Context): LocalDatabase
-            = INSTANCE ?: synchronized(this) {
-                INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
-            }
-
-        private fun buildDatabase(context: Context)
+        fun buildDatabase(app: Application)
             = Room.databaseBuilder(
-                context.applicationContext,
+                app.applicationContext,
                 LocalDatabase::class.java, "dark_database"
             ).allowMainThreadQueries()
             .fallbackToDestructiveMigration()

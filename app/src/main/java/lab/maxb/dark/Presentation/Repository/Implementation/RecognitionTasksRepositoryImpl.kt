@@ -1,28 +1,23 @@
 package lab.maxb.dark.Presentation.Repository.Implementation
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.map
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.Presentation.Repository.Interfaces.RecognitionTasksRepository
 import lab.maxb.dark.Presentation.Repository.Room.DAO.RecognitionTaskDAO
-import lab.maxb.dark.Presentation.Repository.Room.LocalDatabase.Companion.getDatabase
+import lab.maxb.dark.Presentation.Repository.Room.LocalDatabase
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskDTO
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskImage
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskName
 
-class RecognitionTasksRepositoryImpl(applicationContext: Context) : RecognitionTasksRepository {
-    private val mRecognitionTaskDao: RecognitionTaskDAO
-    private val recognitionTasks: LiveData<List<RecognitionTask>?>
-
-    init {
-        val db = getDatabase(applicationContext)
-        mRecognitionTaskDao = db.recognitionTaskDao()
-        recognitionTasks = mRecognitionTaskDao.getAllRecognitionTasks().distinctUntilChanged().map {
+class RecognitionTasksRepositoryImpl(db: LocalDatabase) : RecognitionTasksRepository {
+    private val mRecognitionTaskDao: RecognitionTaskDAO = db.recognitionTaskDao()
+    private val recognitionTasks: LiveData<List<RecognitionTask>?> = mRecognitionTaskDao
+        .getAllRecognitionTasks()
+        .distinctUntilChanged().map {
             data -> data?.map { it.toRecognitionTask() }
         }
-    }
 
     override fun getAllRecognitionTasks(): LiveData<List<RecognitionTask>?>
         = recognitionTasks
