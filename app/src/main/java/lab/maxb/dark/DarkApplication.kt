@@ -1,6 +1,7 @@
 package lab.maxb.dark
 
 import android.app.Application
+import lab.maxb.dark.DI.MODULE_extra
 import lab.maxb.dark.DI.MODULE_repository
 import lab.maxb.dark.DI.MODULE_viewModels
 import org.koin.android.ext.koin.androidContext
@@ -17,6 +18,7 @@ class DarkApplication : Application() {
             modules(
                 MODULE_repository,
                 MODULE_viewModels,
+                MODULE_extra,
             )
         }
     }

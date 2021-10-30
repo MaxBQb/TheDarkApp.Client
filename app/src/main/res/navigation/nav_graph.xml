@@ -3,10 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/RecognitionTaskList">
+    app:startDestination="@id/login_fragment">
 
     <fragment
-        android:id="@+id/RecognitionTaskList"
+        android:id="@+id/login_fragment"
+        android:name="lab.maxb.dark.Presentation.View.LoginFragment"
+        android:label="@string/login_fragment_label"
+        tools:layout="@layout/login_fragment" >
+        <action
+            android:id="@+id/toRecognitionTaskList_fragment"
+            app:destination="@id/RecognitionTaskList_fragment"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/RecognitionTaskList_fragment"
         android:name="lab.maxb.dark.Presentation.View.RecognitionTaskListFragment"
         android:label="@string/available_recognition_tasks"
         tools:layout="@layout/recognition_task_list_fragment" >
@@ -17,6 +28,7 @@
             android:id="@+id/solveRecognitionTask"
             app:destination="@id/solveRecognitionTask" />
     </fragment>
+
     <fragment
         android:id="@+id/addRecognitionTask"
         android:name="lab.maxb.dark.Presentation.View.AddRecognitionTaskFragment"

@@ -9,4 +9,10 @@
     <string name="solve_recognition_task_label">Что это?</string>
     <string name="share_button">Поделиться</string>
     <string name="submit_button">Утвердить</string>
+    <string name="login_label">Вход</string>
+    <string name="login_fragment_label">Вход</string>
+    <string name="login_hint">Логин</string>
+    <string name="password_hint">Пароль</string>
+    <string name="login_button">Войти</string>
+    <string name="incorrect_credentials_message">Неверный логин или пароль</string>
 </resources>
