@@ -19,17 +19,18 @@ class LoginViewModel(
         val profile = profileRepository.getProfile(
             login, Profile.getHash(login, password)
         )
-        profile?.let{Session(it).let { session ->
+        profile?.let{ Session(it).let { session ->
             sessionRepository.addSession(session)
-            sessionHolder.saveSession(session)
+            sessionHolder.session = session
         }}
         emit(profile)
     }
 
     fun authorizeBySession() = liveData(viewModelScope.coroutineContext) {
-        emit(sessionRepository.getSession(
+        sessionHolder.session = sessionRepository.getSession(
             sessionHolder.sessionId ?: "",
             sessionHolder.sessionHash ?: ""
-        )?.profile)
+        )
+        emit(sessionHolder.session?.profile)
     }
 }

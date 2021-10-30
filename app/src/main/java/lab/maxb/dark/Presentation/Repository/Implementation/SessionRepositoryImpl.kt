@@ -15,5 +15,5 @@ class SessionRepositoryImpl(db: LocalDatabase) : SessionRepository {
         = mSessionDao.addSession(SessionDTO(session))
 
     override suspend fun deleteSession(session: Session)
-        = mSessionDao.deleteSession(session as SessionDTO)
+        = mSessionDao.deleteSession(SessionDTO(session))
 }

@@ -46,6 +46,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun onAuthorized() {
+        mBinding.password.setText("")
         findNavController().navigate(
             LoginFragmentDirections.toRecognitionTaskListFragment(),
         )

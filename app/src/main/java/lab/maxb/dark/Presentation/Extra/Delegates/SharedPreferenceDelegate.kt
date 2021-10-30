@@ -21,6 +21,8 @@ class SharedPreferenceDelegate(
             ?.also { _value = it }
 
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: String?) {
+        if (_value == value)
+            return
         _value = value
         getPrefs(context).edit {
             putString(property.name, _value)
