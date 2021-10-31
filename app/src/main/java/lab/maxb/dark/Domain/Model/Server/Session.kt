@@ -7,7 +7,8 @@ import lab.maxb.dark.Domain.Operations.toSHA256
 open class Session(
     open var profile: Profile?,
     open var expires: Long = getTimestampNow() + SESSION_MAX_DURATION,
-    open var hash: String = EMPTY_HASH,
+    open var hash: String? = null,
+    open var auth_code: String? = null,
     open var id: String = getUUID(),
 ) {
     init {
@@ -25,6 +26,5 @@ open class Session(
 
     companion object {
         const val SESSION_MAX_DURATION = 10*24*60*60*1000
-        const val EMPTY_HASH = ""
     }
 }

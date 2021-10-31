@@ -26,11 +26,30 @@ class LoginViewModel(
         emit(profile)
     }
 
-    fun authorizeBySession() = liveData(viewModelScope.coroutineContext) {
+    fun authorizeBySession(authCode: String?) = liveData(viewModelScope.coroutineContext) {
         sessionHolder.session = sessionRepository.getSession(
             sessionHolder.sessionId ?: "",
-            sessionHolder.sessionHash ?: ""
+            sessionHolder.sessionHash ?: "",
+            authCode,
         )
         emit(sessionHolder.session?.profile)
+    }
+
+    fun authorizeByOAUTHProvider(login: String, authCode: String) = liveData(viewModelScope.coroutineContext) {
+        sessionHolder.session = sessionRepository.getSession(
+            sessionHolder.sessionId ?: "",
+            sessionHolder.sessionHash ?: "",
+            authCode,
+        )
+        sessionHolder.session?.profile?.let {
+            emit(it)
+            return@liveData
+        }
+        val profile = Profile(login, 0)
+        profileRepository.addProfile(profile)
+        val session = Session(profile, auth_code = authCode)
+        sessionRepository.addSession(session)
+        sessionHolder.session = session
+        emit(profile)
     }
 }

@@ -11,7 +11,7 @@ data class ProfileDTO(
     override var id: String,
     override var name: String,
     override var rating: Int,
-    override var hash: String,
+    override var hash: String?,
     override var role: Role,
 ): Profile(name=name, rating=rating, hash=hash, role=role) {
     constructor(profile: Profile) : this(

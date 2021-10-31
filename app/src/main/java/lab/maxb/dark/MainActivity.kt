@@ -17,6 +17,7 @@ import lab.maxb.dark.Presentation.Repository.Interfaces.UsersRepository
 import lab.maxb.dark.databinding.MainActivityBinding
 import org.koin.android.ext.android.inject
 
+
 class MainActivity : AppCompatActivity() {
     val binding: MainActivityBinding by lazy {
         MainActivityBinding.inflate(layoutInflater)

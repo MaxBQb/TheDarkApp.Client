@@ -10,12 +10,14 @@ data class SessionDTO(
     override var id: String,
     var profile_id: String,
     override var expires: Long,
-    override var hash: String,
+    override var hash: String?,
+    override var auth_code: String?,
 ): Session(null, expires, hash) {
     constructor(session: Session) : this(
         session.id,
         session.profile!!.id,
         session.expires,
-        session.hash
+        session.hash,
+        session.auth_code,
     )
 }

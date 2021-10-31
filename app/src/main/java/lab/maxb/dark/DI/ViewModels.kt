@@ -7,7 +7,7 @@ import org.koin.dsl.module
 internal val MODULE_viewModels = module {
     viewModel { InputListViewModel(get()) }
     viewModel { AddRecognitionTaskViewModel(get()) }
-    viewModel { RecognitionTaskListViewModel(get(), get(), get()) }
+    viewModel { RecognitionTaskListViewModel(get(), get(), get(), get()) }
     viewModel { SolveRecognitionTaskViewModel(get()) }
     viewModel { LoginViewModel(get(), get(), get()) }
 }

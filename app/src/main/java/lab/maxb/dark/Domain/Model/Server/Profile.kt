@@ -11,7 +11,7 @@ open class Profile(
     override var rating: Int,
     open var role: Role = Role.USER,
     override var id: String = getUUID(),
-    open var hash: String = EMPTY_HASH,
+    open var hash: String? = null,
     password: String? = null,
 ): User(name, rating, id) {
     init {
@@ -19,8 +19,6 @@ open class Profile(
     }
 
     companion object {
-        const val EMPTY_HASH = ""
-
         fun getHash(name: String, password: String)
             = (name + password).toSHA256()
     }

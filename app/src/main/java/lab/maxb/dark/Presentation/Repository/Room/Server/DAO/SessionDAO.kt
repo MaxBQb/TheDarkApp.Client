@@ -21,4 +21,13 @@ interface SessionDAO {
         AND expires >= strftime('%s','now')
     """)
     suspend fun getSession(id: String, hash: String): SessionWithProfile?
+
+    @Transaction
+    @Query("""
+        SELECT * FROM session 
+        WHERE id = :id 
+        AND auth_code = :auth_code 
+        AND expires >= strftime('%s','now')
+    """)
+    suspend fun getSessionByAuthCode(id: String, auth_code: String): SessionWithProfile?
 }

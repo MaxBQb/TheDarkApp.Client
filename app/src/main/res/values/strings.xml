@@ -16,4 +16,5 @@
     <string name="login_button">Войти</string>
     <string name="incorrect_credentials_message">Неверный логин или пароль</string>
     <string name="sign_out">Выйти</string>
+    <string name="something_went_wrong">Неизвесная ошибка</string>
 </resources>
