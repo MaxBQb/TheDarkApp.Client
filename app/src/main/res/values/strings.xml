@@ -17,4 +17,5 @@
     <string name="incorrect_credentials_message">Неверный логин или пароль</string>
     <string name="sign_out">Выйти</string>
     <string name="something_went_wrong">Неизвесная ошибка</string>
+    <string name="not_enough_data_provided_message">Вы ввели не все данные</string>
 </resources>

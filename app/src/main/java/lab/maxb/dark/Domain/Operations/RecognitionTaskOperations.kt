@@ -6,7 +6,7 @@ import lab.maxb.dark.Domain.Model.User
 fun createRecognitionTask(
     names: List<String>,
     images: List<String>,
-    owner: User?
+    owner: User
 ): RecognitionTask? {
     val namesSet = names.map { prepareRecognitionTaskName(it) }
         .filter { it.isNotBlank() }
@@ -18,7 +18,7 @@ fun createRecognitionTask(
     return RecognitionTask(
         namesSet,
         images,
-        owner ?: User("", 0, "UUID")
+        owner,
     )
 }
 

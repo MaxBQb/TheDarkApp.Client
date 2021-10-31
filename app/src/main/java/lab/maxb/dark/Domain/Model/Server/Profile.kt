@@ -7,6 +7,7 @@ import lab.maxb.dark.Domain.Operations.toSHA256
 
 
 open class Profile(
+    open var login: String,
     override var name: String,
     override var rating: Int,
     open var role: Role = Role.USER,
@@ -15,7 +16,7 @@ open class Profile(
     password: String? = null,
 ): User(name, rating, id) {
     init {
-        password?.let { hash = getHash(name, it) }
+        password?.let { hash = getHash(login, it) }
     }
 
     companion object {

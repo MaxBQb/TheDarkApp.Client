@@ -77,9 +77,11 @@ class AddRecognitionTaskFragment : Fragment() {
     }
 
     private fun createRecognitionTask() {
-        if (mViewModel.addRecognitionTask())
-            activity?.onBackPressed()
-        else
-            Toast.makeText(context, "Вы ввели не все данные", Toast.LENGTH_SHORT).show()
+        mViewModel.addRecognitionTask().observe(viewLifecycleOwner) {
+            if (it) activity?.onBackPressed()
+            else Toast.makeText(context,
+                getString(R.string.not_enough_data_provided_message),
+                Toast.LENGTH_SHORT).show()
+        }
     }
 }

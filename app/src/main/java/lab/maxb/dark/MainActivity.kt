@@ -11,9 +11,7 @@ import androidx.navigation.ui.setupWithNavController
 import kotlinx.coroutines.launch
 import lab.maxb.dark.Domain.Model.Role
 import lab.maxb.dark.Domain.Model.Server.Profile
-import lab.maxb.dark.Domain.Model.User
 import lab.maxb.dark.Presentation.Repository.Interfaces.ProfileRepository
-import lab.maxb.dark.Presentation.Repository.Interfaces.UsersRepository
 import lab.maxb.dark.databinding.MainActivityBinding
 import org.koin.android.ext.android.inject
 
@@ -23,7 +21,6 @@ class MainActivity : AppCompatActivity() {
         MainActivityBinding.inflate(layoutInflater)
     }
 
-    private val usersRepository by inject<UsersRepository>()
     private val profileRepository by inject<ProfileRepository>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,10 +35,8 @@ class MainActivity : AppCompatActivity() {
 
         // Hardcode current user
         lifecycleScope.launch {
-            usersRepository.addUser(
-                User("CURRENT_USER", 0, "UUID")
-            )
             profileRepository.addProfile(Profile(
+                "Admin",
                 "Admin",
                 0,
                 Role.ADMINISTRATOR,
@@ -50,12 +45,14 @@ class MainActivity : AppCompatActivity() {
             ))
             profileRepository.addProfile(Profile(
                 "Moderator",
+                "Moderator",
                 0,
                 Role.MODERATOR,
                 "moderatorUUID",
                 password = "moderator"
             ))
             profileRepository.addProfile(Profile(
+                "User",
                 "User",
                 0,
                 Role.MODERATOR,

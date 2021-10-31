@@ -80,8 +80,9 @@ class LoginFragment : Fragment() {
             onNotAuthorized(R.string.something_went_wrong,)
         else {
             mViewModel.authorizeByOAUTHProvider(
-                credentials.first,
-                credentials.second,
+                credentials[0],
+                credentials[1],
+                credentials[2],
             ).observe(viewLifecycleOwner) { profile ->
                 if (profile != null)
                     onAuthorized()

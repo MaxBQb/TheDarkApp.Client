@@ -14,6 +14,10 @@ class UsersRepositoryImpl(db: LocalDatabase) : UsersRepository {
     override fun getUser(id: String)
         = mUserDao.getUser(id).distinctUntilChanged() as LiveData<User?>
 
+    override suspend fun getUserOnce(id: String)
+            = mUserDao.getUserOnce(id) as User?
+
+
     override suspend fun <T : User> addUser(user: T)
         = mUserDao.addUser(UserDTO(user))
 

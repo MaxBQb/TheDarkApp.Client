@@ -23,7 +23,7 @@ class GoogleSignInLogic {
             return liveData
         }
         mGoogleSignInClient.silentSignIn().addOnCompleteListener(activity) { task ->
-            liveData.postValue(handleSignIn(task)?.second)
+            liveData.postValue(handleSignIn(task)?.last())
         }.addOnCanceledListener(activity) {
             liveData.postValue(null)
         }
@@ -38,12 +38,16 @@ class GoogleSignInLogic {
 
     fun signOut() = mGoogleSignInClient.signOut()
 
-    fun handleSignInResult(result: Intent): Pair<String, String>?
+    fun handleSignInResult(result: Intent)
         = handleSignIn(GoogleSignIn.getSignedInAccountFromIntent(result))
 
-    private fun handleSignIn(task: Task<GoogleSignInAccount>): Pair<String, String>? = try {
+    private fun handleSignIn(task: Task<GoogleSignInAccount>) = try {
         val account = task.getResult(ApiException::class.java)
-        account.email!! to account.serverAuthCode!!
+        arrayOf(
+            account.email!!,
+            account.displayName!!,
+            account.serverAuthCode!!
+        )
     } catch (e: Throwable) {
         GoogleSignInStatusCodes.CONNECTION_SUSPENDED_DURING_CALL
         e.printStackTrace()

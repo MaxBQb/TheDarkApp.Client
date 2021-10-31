@@ -25,7 +25,7 @@ import lab.maxb.dark.Presentation.Repository.Room.Server.Model.SessionDTO
             // Server side
             SessionDTO::class,
             ProfileDTO::class,
-          ], version = 2, exportSchema = false)
+          ], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class LocalDatabase : RoomDatabase() {
     abstract fun recognitionTaskDao(): RecognitionTaskDAO

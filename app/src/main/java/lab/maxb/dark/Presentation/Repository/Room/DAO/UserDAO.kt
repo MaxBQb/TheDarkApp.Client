@@ -18,4 +18,7 @@ interface UserDAO {
 
     @Query("SELECT * FROM user WHERE id = :id")
     fun getUser(id: String): LiveData<UserDTO?>
+
+    @Query("SELECT * FROM user WHERE id = :id")
+    suspend fun getUserOnce(id: String): UserDTO?
 }
