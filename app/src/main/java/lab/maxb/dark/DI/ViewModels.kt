@@ -8,6 +8,6 @@ internal val MODULE_viewModels = module {
     viewModel { InputListViewModel(get()) }
     viewModel { AddRecognitionTaskViewModel(get(), get(), get(), get()) }
     viewModel { RecognitionTaskListViewModel(get(), get(), get(), get()) }
-    viewModel { SolveRecognitionTaskViewModel(get()) }
+    viewModel { SolveRecognitionTaskViewModel(get(), get()) }
     viewModel { LoginViewModel(get(), get(), get()) }
 }

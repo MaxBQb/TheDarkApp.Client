@@ -99,7 +99,7 @@ class LoginFragment : Fragment() {
         changeLoginButtonsIsEnable(true)
     }
 
-    fun changeLoginButtonsIsEnable(isEnabled: Boolean) {
+    private fun changeLoginButtonsIsEnable(isEnabled: Boolean) {
         mBinding.googleSignIn.isEnabled = isEnabled
         mBinding.signIn.isEnabled = isEnabled
     }

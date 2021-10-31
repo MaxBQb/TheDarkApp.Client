@@ -18,4 +18,6 @@
     <string name="sign_out">Выйти</string>
     <string name="something_went_wrong">Неизвесная ошибка</string>
     <string name="not_enough_data_provided_message">Вы ввели не все данные</string>
+    <string name="mark_reviewed">Одобрить</string>
+    <string name="delete_task">Удалить</string>
 </resources>

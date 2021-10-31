@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import lab.maxb.dark.Domain.Model.RecognitionTask
+import lab.maxb.dark.Domain.Model.isUser
 import lab.maxb.dark.Presentation.Extra.SessionHolder
 import lab.maxb.dark.Presentation.Repository.Interfaces.RecognitionTasksRepository
 import lab.maxb.dark.Presentation.Repository.Interfaces.SessionRepository
@@ -17,7 +18,13 @@ class RecognitionTaskListViewModel(
     private val mGoogleSignInLogic: GoogleSignInLogic,
 ) : ViewModel() {
     val recognitionTaskList: LiveData<List<RecognitionTask>?>
-        get() = recognitionTasksRepository.getAllRecognitionTasks()
+        get() =
+            if (sessionHolder.session!!.profile!!.role.isUser())
+                recognitionTasksRepository.getAllRecognitionTasksByReview(true)
+            else
+                recognitionTasksRepository.getAllRecognitionTasks()
+
+    fun isTaskCreationAllowed() = sessionHolder.session!!.profile!!.role.isUser()
 
     fun signOut() {
         mGoogleSignInLogic.signOut()

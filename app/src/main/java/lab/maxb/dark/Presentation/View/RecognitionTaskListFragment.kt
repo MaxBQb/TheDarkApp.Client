@@ -30,6 +30,8 @@ class RecognitionTaskListFragment : Fragment() {
                 RecognitionTaskListFragmentDirections.addRecognitionTask()
             )
         }
+        if (!mViewModel.isTaskCreationAllowed())
+            mBinding.fab.hide()
         return mBinding.root
     }
 

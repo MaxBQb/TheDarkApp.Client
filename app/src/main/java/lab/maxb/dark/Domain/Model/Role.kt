@@ -4,7 +4,11 @@ enum class Role {
     ADMINISTRATOR,
     MODERATOR,
     CONSULTOR,
-    SUPPORTER,
     PREMIUM_USER,
     USER,
+}
+
+fun Role.isUser() = when(this) {
+    Role.USER, Role.PREMIUM_USER -> true
+    else -> false
 }

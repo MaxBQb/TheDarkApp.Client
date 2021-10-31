@@ -49,7 +49,6 @@ class GoogleSignInLogic {
             account.serverAuthCode!!
         )
     } catch (e: Throwable) {
-        GoogleSignInStatusCodes.CONNECTION_SUSPENDED_DURING_CALL
         e.printStackTrace()
         null
     }
@@ -58,6 +57,7 @@ class GoogleSignInLogic {
         private val options = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestServerAuthCode(BuildConfig.GOOGLE_CLIENT_ID, true)
             .requestEmail()
+            .requestProfile()
             .build()
     }
 }

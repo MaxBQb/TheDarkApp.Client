@@ -19,6 +19,12 @@ class RecognitionTasksRepositoryImpl(db: LocalDatabase) : RecognitionTasksReposi
             data -> data?.map { it.toRecognitionTask() }
         }
 
+    override fun getAllRecognitionTasksByReview(isReviewed: Boolean): LiveData<List<RecognitionTask>?>
+        = mRecognitionTaskDao.getAllRecognitionTasksByReview(isReviewed)
+        .distinctUntilChanged().map {
+            data -> data?.map { it.toRecognitionTask() }
+        }
+
     override fun getAllRecognitionTasks(): LiveData<List<RecognitionTask>?>
         = recognitionTasks
 
@@ -36,6 +42,12 @@ class RecognitionTasksRepositoryImpl(db: LocalDatabase) : RecognitionTasksReposi
             task.images!!.map {
                 RecognitionTaskImage(task.id, it)
             }
+        )
+    }
+
+    override suspend fun <T : RecognitionTask> updateRecognitionTask(task: T) {
+        mRecognitionTaskDao.updateRecognitionTask(
+            task as RecognitionTaskDTO
         )
     }
 

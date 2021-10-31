@@ -5,17 +5,36 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import lab.maxb.dark.Domain.Model.RecognitionTask
+import lab.maxb.dark.Domain.Model.Role
 import lab.maxb.dark.Domain.Operations.solve
+import lab.maxb.dark.Presentation.Extra.SessionHolder
 import lab.maxb.dark.Presentation.Repository.Interfaces.RecognitionTasksRepository
 import kotlin.properties.Delegates
 
 
 class SolveRecognitionTaskViewModel(
     private val recognitionTasksRepository: RecognitionTasksRepository,
+    private val sessionHolder: SessionHolder,
 ) : ViewModel() {
     var id: String by Delegates.notNull()
     val recognitionTask: LiveData<RecognitionTask?> by lazy {
         recognitionTasksRepository.getRecognitionTask(id)
+    }
+
+    fun isReviewMode() = when (sessionHolder.session!!.profile!!.role) {
+        Role.MODERATOR, Role.ADMINISTRATOR -> true
+        else -> false
+    }
+
+    fun markReviewed() = viewModelScope.launch {
+        val task = recognitionTask.value ?: return@launch
+        task.reviewed = true
+        recognitionTasksRepository.updateRecognitionTask(task)
+    }
+
+    fun deleteTask() = viewModelScope.launch {
+        val task = recognitionTask.value ?: return@launch
+        recognitionTasksRepository.deleteRecognitionTask(task)
     }
 
     fun solveRecognitionTask(name: String): Boolean {

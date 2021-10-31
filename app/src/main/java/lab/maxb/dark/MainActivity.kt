@@ -52,11 +52,11 @@ class MainActivity : AppCompatActivity() {
                 password = "moderator"
             ))
             profileRepository.addProfile(Profile(
-                "User",
-                "User",
+                "user",
+                "user",
                 0,
-                Role.MODERATOR,
-                "userUUID",
+                Role.USER,
+                "userUUID1",
                 password = "user"
             ))
         }

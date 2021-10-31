@@ -9,6 +9,8 @@ import androidx.fragment.app.commit
 import androidx.navigation.fragment.navArgs
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
+import lab.maxb.dark.Presentation.Extra.hide
+import lab.maxb.dark.Presentation.Extra.show
 import lab.maxb.dark.Presentation.ViewModel.SolveRecognitionTaskViewModel
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.SolveRecognitionTaskFragmentBinding
@@ -41,7 +43,23 @@ class SolveRecognitionTaskFragment : Fragment() {
                         task.images?.toList() ?: listOf()
                     ))
                 }
+                if (mViewModel.isReviewMode() && task.reviewed)
+                    mBinding.markReviewedButton.hide()
             } ?: activity?.onBackPressed()
+        }
+        if (mViewModel.isReviewMode()) {
+            mBinding.moderatorTools.show()
+            mBinding.answerLayout.hide()
+
+            mBinding.markReviewedButton.setOnClickListener {
+                mViewModel.markReviewed()
+                activity?.onBackPressed()
+            }
+
+            mBinding.deleteButton.setOnClickListener {
+                mViewModel.deleteTask()
+                activity?.onBackPressed()
+            }
         }
         return mBinding.root
     }

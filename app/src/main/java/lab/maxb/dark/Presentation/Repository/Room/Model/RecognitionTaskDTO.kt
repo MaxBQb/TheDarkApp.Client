@@ -20,9 +20,11 @@ data class RecognitionTaskDTO(
     @PrimaryKey
     override var id: String,
     val owner_id: String,
+    override var reviewed: Boolean = false,
 ): RecognitionTask(id=id) {
     constructor(task: RecognitionTask) : this(
         task.id,
         task.owner!!.id,
+        task.reviewed,
     )
 }

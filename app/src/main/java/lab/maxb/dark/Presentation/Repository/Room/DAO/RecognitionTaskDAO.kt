@@ -29,12 +29,19 @@ interface RecognitionTaskDAO {
         addRecognitionTaskImages(images)
     }
 
+    @Update
+    suspend fun updateRecognitionTask(task: RecognitionTaskDTO)
+
     @Delete
     suspend fun deleteRecognitionTask(task: RecognitionTaskDTO)
 
     @Transaction
-    @Query("SELECT * FROM recognition_task")
+    @Query("SELECT * FROM recognition_task ORDER BY reviewed")
     fun getAllRecognitionTasks(): LiveData<List<RecognitionTaskWithOwnerAndImage>?>
+
+    @Transaction
+    @Query("SELECT * FROM recognition_task WHERE reviewed = :isReviewed")
+    fun getAllRecognitionTasksByReview(isReviewed: Boolean): LiveData<List<RecognitionTaskWithOwnerAndImage>?>
 
     @Transaction
     @Query("SELECT * FROM recognition_task WHERE id = :id")
