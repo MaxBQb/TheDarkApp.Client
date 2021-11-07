@@ -20,4 +20,7 @@
     <string name="not_enough_data_provided_message">Вы ввели не все данные</string>
     <string name="mark_reviewed">Одобрить</string>
     <string name="delete_task">Удалить</string>
+    <string name="welcome_label">Добро пожаловать, %s!</string>
+    <string name="anonymous_welcome_label">Вы не авторизованы!</string>
+    <string name="main_fragment_label">Главная</string>
 </resources>

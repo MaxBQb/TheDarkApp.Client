@@ -2,19 +2,20 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
-    app:startDestination="@id/login_fragment">
+    app:startDestination="@id/main_fragment"
+    android:id="@+id/nav_graph">
+
+    <fragment
+        android:id="@+id/main_fragment"
+        android:name="lab.maxb.dark.Presentation.View.MainFragment"
+        android:label="@string/main_fragment_label"
+        tools:layout="@layout/main_fragment" />
 
     <fragment
         android:id="@+id/login_fragment"
         android:name="lab.maxb.dark.Presentation.View.LoginFragment"
         android:label="@string/login_fragment_label"
-        tools:layout="@layout/login_fragment" >
-        <action
-            android:id="@+id/toRecognitionTaskList_fragment"
-            app:destination="@id/RecognitionTaskList_fragment"
-            />
-    </fragment>
+        tools:layout="@layout/login_fragment" />
 
     <fragment
         android:id="@+id/RecognitionTaskList_fragment"

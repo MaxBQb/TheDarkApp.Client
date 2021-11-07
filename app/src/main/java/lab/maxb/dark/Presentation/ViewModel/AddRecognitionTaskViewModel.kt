@@ -14,7 +14,6 @@ import lab.maxb.dark.Presentation.Repository.Interfaces.UsersRepository
 class AddRecognitionTaskViewModel(
     private val recognitionTasksRepository: RecognitionTasksRepository,
     private val usersRepository: UsersRepository,
-    private val profileRepository: ProfileRepository,
     private val sessionHolder: SessionHolder,
 ) : ViewModel() {
     var imageUris: List<String> = mutableListOf()
