@@ -17,8 +17,8 @@ data class ProfileDTO(
 ): Profile(login=login, name=name, rating=rating, hash=hash, role=role) {
     constructor(profile: Profile) : this(
         profile.id,
-        profile.login,
         profile.name,
+        profile.login,
         profile.rating,
         profile.hash,
         profile.role,
