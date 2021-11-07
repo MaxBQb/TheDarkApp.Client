@@ -11,6 +11,6 @@ interface ProfileDAO {
     @Insert(onConflict = IGNORE)
     suspend fun addProfile(profile: ProfileDTO)
 
-    @Query("SELECT * FROM profile WHERE login = :name AND hash = :hash")
-    suspend fun getProfile(name: String, hash: String): ProfileDTO?
+    @Query("SELECT * FROM profile WHERE login = :login AND hash = :hash")
+    suspend fun getProfile(login: String, hash: String): ProfileDTO?
 }

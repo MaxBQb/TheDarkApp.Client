@@ -8,8 +8,8 @@ import lab.maxb.dark.Presentation.Repository.Room.Server.Model.ProfileDTO
 class ProfileRepositoryImpl(db: LocalDatabase) : ProfileRepository {
     private val mProfileDao = db.profileDao()
 
-    override suspend fun getProfile(name: String, hash: String): Profile?
-        = mProfileDao.getProfile(name, hash)
+    override suspend fun getProfile(login: String, hash: String): Profile?
+        = mProfileDao.getProfile(login, hash)
 
     override suspend fun addProfile(profile: Profile)
         = mProfileDao.addProfile(ProfileDTO(profile))

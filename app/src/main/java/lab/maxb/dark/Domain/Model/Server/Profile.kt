@@ -20,7 +20,7 @@ open class Profile(
     }
 
     companion object {
-        fun getHash(name: String, password: String)
-            = (name + password).toSHA256()
+        fun getHash(login: String, password: String)
+            = (login + password).toSHA256()
     }
 }
