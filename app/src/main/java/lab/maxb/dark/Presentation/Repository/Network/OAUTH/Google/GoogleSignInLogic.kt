@@ -4,7 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.android.gms.auth.api.signin.*
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import lab.maxb.dark.BuildConfig
@@ -17,7 +20,7 @@ class GoogleSignInLogic {
 
     fun getAuthCode(activity: Activity): LiveData<String?> {
         val liveData = MutableLiveData<String?>()
-        val authCode = GoogleSignIn.getLastSignedInAccount(activity)?.serverAuthCode
+        val authCode = GoogleSignIn.getLastSignedInAccount(activity)?.idToken
         if (authCode != null) {
             liveData.postValue(authCode)
             return liveData
@@ -46,16 +49,16 @@ class GoogleSignInLogic {
         arrayOf(
             account.email!!,
             account.displayName!!,
-            account.serverAuthCode!!
+            account.idToken!!
         )
     } catch (e: Throwable) {
-        e.printStackTrace()
+        println(e.localizedMessage)
         null
     }
 
     companion object {
         private val options = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestServerAuthCode(BuildConfig.GOOGLE_CLIENT_ID, true)
+            .requestIdToken(BuildConfig.GOOGLE_CLIENT_ID)
             .requestEmail()
             .requestProfile()
             .build()
