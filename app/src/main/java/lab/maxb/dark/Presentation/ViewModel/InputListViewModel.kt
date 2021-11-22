@@ -2,6 +2,8 @@ package lab.maxb.dark.Presentation.ViewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import lab.maxb.dark.Presentation.Repository.Interfaces.SynonymsRepository
 
 
@@ -11,9 +13,10 @@ class InputListViewModel(
     var texts: MutableList<String> = mutableListOf("")
 
     fun getSuggestions(texts: List<String>): LiveData<Set<String>>
-        = synonymsRepository.getSynonyms(texts
-            .map { it.trim() }
-            .filterNot { it.isEmpty() }
-            .toSet()
-        )
+        = liveData(viewModelScope.coroutineContext) {
+            emit(synonymsRepository.getSynonyms(texts.toSet())
+                .map { it.trim() }
+                .filterNot { it.isEmpty() }
+                .toSet())
+        }
 }

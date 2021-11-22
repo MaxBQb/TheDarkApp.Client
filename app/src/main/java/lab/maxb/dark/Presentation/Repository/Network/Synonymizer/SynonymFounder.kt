@@ -14,26 +14,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SynonymFounder : SynonymsRepository {
     private val api: RusTxtAPI
-    private fun getSynonym(text: String): LiveData<String?> {
-        val addresses = MutableLiveData<String?>()
-        api.getSynonym(MultipartBody.Builder().setType(MultipartBody.FORM)
+    private suspend fun getSynonym(text: String): String? {
+        return api.getSynonym(MultipartBody.Builder().setType(MultipartBody.FORM)
             .addFormDataPart("method","getSynText")
             .addFormDataPart("text", text)
             .build()
-        )?.enqueue(object : Callback<SynonymResponse?> {
-            override fun onResponse(
-                call: Call<SynonymResponse?>,
-                response: Response<SynonymResponse?>
-            ) {
-                if (response.isSuccessful)
-                    addresses.postValue(fixText(response.body()?.modified_text ?: return))
-            }
-
-            override fun onFailure(call: Call<SynonymResponse?>, t: Throwable) {
-                t.message
-            }
-        })
-        return addresses
+        )?.modified_text?.let { fixText(it) }
     }
 
     private fun fixText(text: String)
@@ -41,20 +27,17 @@ class SynonymFounder : SynonymsRepository {
         .removeSuffix("<br>").trim()
         .replace(Regex("\\s+"), " ")
 
-    override fun getSynonyms(texts: Set<String>): LiveData<Set<String>> {
+    override suspend fun getSynonyms(texts: Set<String>): Set<String> {
         val fixedTexts = texts.map { fixText(it) }.toSet()
-        val mediator = MediatorLiveData<Set<String>>()
         val results = mutableSetOf<String>()
-        mediator.value = results
+
         fixedTexts.forEach { text ->
-            mediator.addSource(getSynonym(text)) { it?.let {
-                if (it.isNotBlank() && it !in fixedTexts) {
+            getSynonym(text)?.let {
+                if (it.isNotBlank() && it !in fixedTexts)
                     results.add(it)
-                    mediator.postValue(results)
-                }
-            }}
+            }
         }
-        return mediator
+        return results
     }
 
     class SynonymResponse {

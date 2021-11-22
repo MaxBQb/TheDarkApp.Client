@@ -8,7 +8,7 @@ import retrofit2.http.*
 interface RusTxtAPI {
     @POST(".")
     @Headers("Accept: application/json")
-    fun getSynonym(
+    suspend fun getSynonym(
         @Body request: RequestBody,
-    ): Call<SynonymFounder.SynonymResponse?>?
+    ): SynonymFounder.SynonymResponse?
 }
