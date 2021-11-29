@@ -1,13 +1,13 @@
 package lab.maxb.dark.Presentation.View.Adapters
 
 import android.net.Uri
-import lab.maxb.dark.Domain.Model.RecognitionTask
-import androidx.recyclerview.widget.RecyclerView
-import lab.maxb.dark.Presentation.View.Adapters.RecognitionTaskListAdapter.RecognitionTaskViewHolder
-import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.Presentation.Extra.toBitmap
+import lab.maxb.dark.Presentation.View.Adapters.RecognitionTaskListAdapter.RecognitionTaskViewHolder
 import lab.maxb.dark.databinding.RecognitionTaskListElementBinding
 import java.io.FileNotFoundException
 
