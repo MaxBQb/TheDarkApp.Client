@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import lab.maxb.dark.Domain.Model.Profile3
+import lab.maxb.dark.Domain.Model.Profile
 import lab.maxb.dark.MainActivity
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
 import lab.maxb.dark.Presentation.Extra.FragmentKeys
@@ -99,7 +99,7 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun makeAuthResultHandler(@StringRes message: Int?) = { profile: Profile3? ->
+    private fun makeAuthResultHandler(@StringRes message: Int?) = { profile: Profile? ->
         profile?.let {
             mBinding.password.setText("")
             setFragmentResult(RESPONSE_LOGIN_SUCCESSFUL, bundleOf())

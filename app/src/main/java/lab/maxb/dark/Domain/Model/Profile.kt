@@ -1,6 +1,6 @@
 package lab.maxb.dark.Domain.Model
 
-open class Profile3(
+open class Profile(
     open var login: String,
     open var user: User? = null,
     open var token: String,

@@ -52,12 +52,12 @@ class SolveRecognitionTaskFragment : Fragment() {
             mBinding.answerLayout.hide()
 
             mBinding.markReviewedButton.setOnClickListener {
-                mViewModel.markReviewed()
+                mViewModel.mark(true)
                 activity?.onBackPressed()
             }
 
             mBinding.deleteButton.setOnClickListener {
-                mViewModel.deleteTask()
+                mViewModel.mark(false)
                 activity?.onBackPressed()
             }
         }

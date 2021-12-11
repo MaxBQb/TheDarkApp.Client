@@ -18,7 +18,7 @@ internal val MODULE_repository = module {
     single { LocalDatabase.buildDatabase(androidApplication()) }
     single { buildDarkService() }
     single<SynonymsRepository> { SynonymFounder() }
-    single<RecognitionTasksRepository> { RecognitionTasksRepositoryImpl(get(), get()) }
+    single<RecognitionTasksRepository> { RecognitionTasksRepositoryImpl(get(), get(), get()) }
     single<UsersRepository> { UsersRepositoryImpl(get(), get()) }
     single<ProfileRepository> { ProfileRepositoryImpl(get(), get(), get(), get()) }
     single { GoogleSignInLogic() }

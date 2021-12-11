@@ -6,12 +6,12 @@ import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import lab.maxb.dark.Presentation.Repository.Room.Relation.FullProfile
-import lab.maxb.dark.Presentation.Repository.Room.Server.Model.ProfileDTO3
+import lab.maxb.dark.Presentation.Repository.Room.Server.Model.ProfileDTO
 
 @Dao
-interface ProfileDAO3 {
+interface ProfileDAO {
     @Insert(onConflict = REPLACE)
-    suspend fun save(profile: ProfileDTO3)
+    suspend fun save(profile: ProfileDTO)
 
     @Query("SELECT * FROM profile WHERE login = :login")
     fun getByLogin(login: String): Flow<FullProfile?>
