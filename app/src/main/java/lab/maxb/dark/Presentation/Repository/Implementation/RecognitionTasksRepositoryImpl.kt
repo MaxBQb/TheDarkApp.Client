@@ -5,19 +5,18 @@ import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.map
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.Presentation.Repository.Interfaces.RecognitionTasksRepository
+import lab.maxb.dark.Presentation.Repository.Network.Dark.DarkService
 import lab.maxb.dark.Presentation.Repository.Room.DAO.RecognitionTaskDAO
 import lab.maxb.dark.Presentation.Repository.Room.LocalDatabase
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskDTO
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskImage
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskName
 
-class RecognitionTasksRepositoryImpl(db: LocalDatabase) : RecognitionTasksRepository {
+class RecognitionTasksRepositoryImpl(
+    db: LocalDatabase,
+    private val mDarkService: DarkService
+) : RecognitionTasksRepository {
     private val mRecognitionTaskDao: RecognitionTaskDAO = db.recognitionTaskDao()
-    private val recognitionTasks: LiveData<List<RecognitionTask>?> = mRecognitionTaskDao
-        .getAllRecognitionTasks()
-        .distinctUntilChanged().map {
-            data -> data?.map { it.toRecognitionTask() }
-        }
 
     override fun getAllRecognitionTasksByReview(isReviewed: Boolean): LiveData<List<RecognitionTask>?>
         = mRecognitionTaskDao.getAllRecognitionTasksByReview(isReviewed)
@@ -25,8 +24,19 @@ class RecognitionTasksRepositoryImpl(db: LocalDatabase) : RecognitionTasksReposi
             data -> data?.map { it.toRecognitionTask() }
         }
 
-    override fun getAllRecognitionTasks(): LiveData<List<RecognitionTask>?>
-        = recognitionTasks
+    override suspend fun getAllRecognitionTasks(): LiveData<List<RecognitionTask>?>
+        = mRecognitionTaskDao
+        .getAllRecognitionTasks()
+        .distinctUntilChanged().map {
+            data -> data?.map { it.toRecognitionTask() }
+        }.also { try {
+            mDarkService.getAllTasks()?.forEach { task ->
+            //    addRecognitionTask(task)
+
+            }
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }}
 
     override fun getRecognitionTask(id: String): LiveData<RecognitionTask?>
         = mRecognitionTaskDao.getRecognitionTask(id).distinctUntilChanged().map {

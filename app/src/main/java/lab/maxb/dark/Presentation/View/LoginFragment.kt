@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import lab.maxb.dark.Domain.Model.Server.Profile
+import lab.maxb.dark.Domain.Model.Profile3
 import lab.maxb.dark.MainActivity
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
 import lab.maxb.dark.Presentation.Extra.FragmentKeys
@@ -50,16 +50,17 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mBinding = LoginFragmentBinding.inflate(layoutInflater, container, false)
-        changeLoginButtonsIsEnable(false)
         return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mGoogleSignInLogic.getAuthCode(requireActivity()).observeOnce(viewLifecycleOwner) { authCode ->
-            mViewModel.authorizeBySession(authCode).observeOnce(viewLifecycleOwner,
-                makeAuthResultHandler(null))
-        }
+//        mGoogleSignInLogic.getAuthCode(requireActivity()).observeOnce(viewLifecycleOwner) { authCode ->
+//            mViewModel.authorizeBySession(authCode).observeOnce(viewLifecycleOwner,
+//                makeAuthResultHandler(null))
+//        }
+        mViewModel.authorizeBySession(null).observeOnce(viewLifecycleOwner,
+            makeAuthResultHandler(null))
         mBinding.signIn.setOnClickListener {
             changeLoginButtonsIsEnable(false)
             mViewModel.authorize(
@@ -98,13 +99,14 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun makeAuthResultHandler(@StringRes message: Int?) = { profile: Profile? ->
-        if (profile != null) {
+    private fun makeAuthResultHandler(@StringRes message: Int?) = { profile: Profile3? ->
+        profile?.let {
             mBinding.password.setText("")
             setFragmentResult(RESPONSE_LOGIN_SUCCESSFUL, bundleOf())
             requireActivity().onBackPressed()
             toggleToolbarVisibility(true)
-        } else onNotAuthorized(message)
+        } ?: onNotAuthorized(message)
+        changeLoginButtonsIsEnable(true)
     }
 
     private fun onNotAuthorized(@StringRes message: Int?) {

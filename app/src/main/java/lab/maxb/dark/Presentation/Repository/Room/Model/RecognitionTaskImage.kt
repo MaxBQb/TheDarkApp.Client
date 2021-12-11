@@ -12,6 +12,7 @@ import lab.maxb.dark.Domain.Operations.getUUID
                 parentColumns = ["id"],
                 childColumns = ["recognition_task"],
                 onDelete = CASCADE,
+                onUpdate = CASCADE,
                 deferred = true
             )
         ],

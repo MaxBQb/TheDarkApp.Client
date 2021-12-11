@@ -1,5 +1,6 @@
 package lab.maxb.dark.Presentation.Extra
 
+import lab.maxb.dark.Domain.Operations.getUUID
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -14,6 +15,6 @@ class FragmentKeys(clazz: KClass<*>) {
         private var name: String? = null
 
         operator fun getValue(thisRef: Any?, property: KProperty<*>)
-            = name ?: "$path.$key.${property.name}".also { name = it }
+            = name ?: "$path.$key.${property.name}.${getUUID()}".also { name = it }
     }
 }

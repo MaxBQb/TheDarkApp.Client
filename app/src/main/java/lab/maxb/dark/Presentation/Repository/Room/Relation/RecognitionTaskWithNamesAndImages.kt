@@ -15,7 +15,7 @@ data class RecognitionTaskWithNamesAndImages(
     val names: List<RecognitionTaskName>,
     @Relation(
         parentColumn = "id",
-        entityColumn = "recognition_task"
+        entityColumn = "recognition_task",
     )
     val images: List<RecognitionTaskImage>
 ) {

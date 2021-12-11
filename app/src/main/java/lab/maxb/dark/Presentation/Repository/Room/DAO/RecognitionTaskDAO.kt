@@ -2,6 +2,7 @@ package lab.maxb.dark.Presentation.Repository.Room.DAO
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import androidx.room.OnConflictStrategy.REPLACE
 import kotlinx.coroutines.runBlocking
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskDTO
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskImage
@@ -11,13 +12,13 @@ import lab.maxb.dark.Presentation.Repository.Room.Relation.RecognitionTaskWithOw
 
 @Dao
 interface RecognitionTaskDAO {
-    @Insert
+    @Insert(onConflict = REPLACE)
     suspend fun addRecognitionTask(task: RecognitionTaskDTO)
 
-    @Insert
+    @Insert(onConflict = REPLACE)
     suspend fun addRecognitionTaskNames(names: List<RecognitionTaskName>)
 
-    @Insert
+    @Insert(onConflict = REPLACE)
     suspend fun addRecognitionTaskImages(images: List<RecognitionTaskImage>)
 
     @Transaction

@@ -51,7 +51,8 @@ class MainFragment : Fragment() {
                 openLoginView()
                 return@observe
             }
-            mBinding.welcomeLabel.text = getString(R.string.welcome_label, profile.name)
+            mBinding.welcomeLabel.text = getString(R.string.welcome_label,
+                profile.user?.name ?: "Anonymous")
         }
     }
 

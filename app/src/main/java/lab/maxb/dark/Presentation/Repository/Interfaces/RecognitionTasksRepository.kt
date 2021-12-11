@@ -5,7 +5,7 @@ import lab.maxb.dark.Domain.Model.RecognitionTask
 
 interface RecognitionTasksRepository {
     fun getAllRecognitionTasksByReview(isReviewed: Boolean): LiveData<List<RecognitionTask>?>
-    fun getAllRecognitionTasks(): LiveData<List<RecognitionTask>?>
+    suspend fun getAllRecognitionTasks(): LiveData<List<RecognitionTask>?>
     fun getRecognitionTask(id: String): LiveData<RecognitionTask?>
     suspend fun <T : RecognitionTask> addRecognitionTask(task: T)
     suspend fun <T : RecognitionTask> updateRecognitionTask(task: T)

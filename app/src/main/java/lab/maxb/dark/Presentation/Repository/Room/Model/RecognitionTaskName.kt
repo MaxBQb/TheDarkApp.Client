@@ -10,6 +10,8 @@ import androidx.room.ForeignKey.CASCADE
                 parentColumns = ["id"],
                 childColumns = ["recognition_task"],
                 onDelete = CASCADE,
+                onUpdate = CASCADE,
+
                 deferred = true
             )
         ],
