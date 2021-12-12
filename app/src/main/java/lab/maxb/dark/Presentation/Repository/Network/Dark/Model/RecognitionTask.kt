@@ -16,7 +16,5 @@ class RecognitionTaskFullViewDTO(
 )
 
 class RecognitionTaskCreationDTO(
-    var names: Set<String>? = null,
-    var images: List<String>? = null,
-    var owner_id: String,
+    var names: Set<String>
 )

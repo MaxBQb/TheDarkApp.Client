@@ -1,24 +1,43 @@
 package lab.maxb.dark.Presentation.Repository.Network.Dark.Groups
 
+import lab.maxb.dark.Presentation.Repository.Network.Dark.DARK_SERVICE_URL
+import lab.maxb.dark_api.Model.POJO.RecognitionTaskCreationDTO
 import lab.maxb.dark_api.Model.POJO.RecognitionTaskFullViewDTO
 import lab.maxb.dark_api.Model.POJO.RecognitionTaskListViewDTO
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import okhttp3.MultipartBody
+import okhttp3.ResponseBody
+import retrofit2.http.*
 
 interface RecognitionTask {
     @GET("$path/all")
     suspend fun getAllTasks(): List<RecognitionTaskListViewDTO>?
 
-    @GET("${path}/{id}")
+    @GET("$path/{id}")
     suspend fun getTask(@Path("id") id: String): RecognitionTaskFullViewDTO?
 
-    @GET("${path}/mark/{id}")
+    @POST("$path/add")
+    suspend fun addTask(@Body task: RecognitionTaskCreationDTO): String?
+
+    @GET("$path/mark/{id}")
     suspend fun markTask(@Path("id") id: String,
                          @Query("isAllowed") isAllowed: Boolean):
             Boolean
+
+    @Multipart
+    @POST("$path/{id}/image")
+    suspend fun addImage(
+        @Path("id") id: String,
+        @Part filePart: MultipartBody.Part
+    ): String?
+
+    @Streaming
+    @GET
+    suspend fun downloadImage(@Url path: String): ResponseBody?
 
     companion object {
         const val path = "/task"
     }
 }
+
+fun downloadLink(filename: String)
+    = "$DARK_SERVICE_URL/task/image/$filename"

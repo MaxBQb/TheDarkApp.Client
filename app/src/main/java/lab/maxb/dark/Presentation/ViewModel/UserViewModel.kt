@@ -28,22 +28,19 @@ class UserViewModelImpl(
     override fun authorize(login: String, password: String)
         = liveData(viewModelScope.coroutineContext) {
             emit((try {
-                    profileRepository.getProfile(
-                        login, password
-                    ).first()
-                } catch (e: Throwable) { null }).also {
+                profileRepository.getProfile(
+                    login, password
+                ).first()
+            } catch (e: Throwable) { null }).also {
                 user.postValue(it)
             })
         }
 
     override fun authorizeBySession(authCode: String?)
         = liveData(viewModelScope.coroutineContext) {
-            sessionHolder.login ?: run {
-                emit(null)
-                user.postValue(null)
-                return@liveData
-            }
-            emit(profileRepository.getProfile().first().also {
+            emit((try {
+                profileRepository.getProfile().first()
+            } catch (e: Throwable) { null }).also {
                 user.postValue(it)
             })
         }

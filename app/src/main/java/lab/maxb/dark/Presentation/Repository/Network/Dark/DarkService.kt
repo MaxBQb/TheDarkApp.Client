@@ -13,9 +13,11 @@ interface DarkService :
     User,
     Auth
 
+const val DARK_SERVICE_URL = "https://1318-109-252-188-6.ngrok.io"
+
 fun buildDarkService(): DarkService
     = Retrofit.Builder()
-        .baseUrl("https://1318-109-252-188-6.ngrok.io")
+        .baseUrl(DARK_SERVICE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .client(okhttpClient())
         .build()
