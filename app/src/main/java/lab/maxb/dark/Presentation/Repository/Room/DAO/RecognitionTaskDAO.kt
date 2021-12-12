@@ -47,8 +47,8 @@ interface RecognitionTaskDAO {
     @Query("DELETE FROM recognition_task WHERE id=:id")
     suspend fun deleteRecognitionTask(id: String)
 
-    @Query("SELECT id FROM recognition_task_image WHERE recognition_task = :id")
-    suspend fun getRecognitionTaskImages(id: String): List<String>
+    @Query("SELECT * FROM recognition_task_image WHERE recognition_task = :id")
+    suspend fun getRecognitionTaskImages(id: String): List<RecognitionTaskImage>
 
     @Query("SELECT id FROM recognition_task")
     fun getAllRecognitionTasksIds(): List<String>

@@ -55,7 +55,8 @@ class RecognitionTasksRepositoryImpl(
                         task.reviewed
                     )
                 )
-                if (task.image!! !in mRecognitionTaskDao.getRecognitionTaskImages(task.id))
+                if (mRecognitionTaskDao.getRecognitionTaskImages(task.id)
+                        .none { it.id == task.image!! })
                     mRecognitionTaskDao.addRecognitionTaskImages(
                         listOf(RecognitionTaskImage(task.id,
                             refreshImage(task.image!!)
@@ -70,6 +71,7 @@ class RecognitionTasksRepositoryImpl(
     private suspend fun refreshRecognitionTask(id: String) {
         try {
             mDarkService.getTask(id)?.let { task ->
+                val images = mRecognitionTaskDao.getRecognitionTaskImages(task.id)
                 mRecognitionTaskDao.deleteRecognitionTask(task.id)
                 mRecognitionTaskDao.addRecognitionTask(
                     RecognitionTaskDTO(
@@ -82,9 +84,13 @@ class RecognitionTasksRepositoryImpl(
                     task.names!!.map { RecognitionTaskName(
                         task.id, it
                     ) },
-                    task.images!!.map { RecognitionTaskImage(
-                        task.id, it
-                    ) }
+                    task.images!!.map { image ->
+                        val cache = images.find { it.id == image }
+                        RecognitionTaskImage(
+                            task.id,
+                            cache?.image ?: refreshImage(image)
+                        )
+                    }
                 )
             }
         } catch (e: Throwable) {
