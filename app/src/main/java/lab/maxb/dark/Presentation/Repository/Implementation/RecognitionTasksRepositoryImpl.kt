@@ -10,7 +10,6 @@ import lab.maxb.dark.Presentation.Extra.ImageLoader
 import lab.maxb.dark.Presentation.Repository.Interfaces.RecognitionTasksRepository
 import lab.maxb.dark.Presentation.Repository.Interfaces.UsersRepository
 import lab.maxb.dark.Presentation.Repository.Network.Dark.DarkService
-import lab.maxb.dark.Presentation.Repository.Network.Dark.Groups.downloadLink
 import lab.maxb.dark.Presentation.Repository.Room.DAO.RecognitionTaskDAO
 import lab.maxb.dark.Presentation.Repository.Room.LocalDatabase
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskDTO
@@ -140,14 +139,16 @@ class RecognitionTasksRepositoryImpl(
         )
     }
 
-    private suspend fun refreshImage(id: String)
-        = try { imageLoader.fromResponse(
-            mDarkService.downloadImage(
-                downloadLink(id)
-            ),
+    private suspend fun refreshImage(id: String) = try {
+        imageLoader.fromResponse(
+            mDarkService.downloadImage(id),
             id
-        ) } catch (e: Throwable) {
-            e.printStackTrace()
-            id
-        }
+        )
+    } catch (e: NullPointerException) {
+        println("Image not found on server: $id")
+        id
+    } catch (e: Throwable) {
+        e.printStackTrace()
+        id
+    }
 }

@@ -1,6 +1,5 @@
 package lab.maxb.dark.Presentation.Repository.Network.Dark.Groups
 
-import lab.maxb.dark.Presentation.Repository.Network.Dark.DARK_SERVICE_URL
 import lab.maxb.dark_api.Model.POJO.RecognitionTaskCreationDTO
 import lab.maxb.dark_api.Model.POJO.RecognitionTaskFullViewDTO
 import lab.maxb.dark_api.Model.POJO.RecognitionTaskListViewDTO
@@ -18,7 +17,7 @@ interface RecognitionTask {
     @POST("$path/add")
     suspend fun addTask(@Body task: RecognitionTaskCreationDTO): String?
 
-    @GET("$path/mark/{id}")
+    @PATCH("$path/mark/{id}")
     suspend fun markTask(@Path("id") id: String,
                          @Query("isAllowed") isAllowed: Boolean):
             Boolean
@@ -31,13 +30,10 @@ interface RecognitionTask {
     ): String?
 
     @Streaming
-    @GET
-    suspend fun downloadImage(@Url path: String): ResponseBody?
+    @GET("$path/image/{path}")
+    suspend fun downloadImage(@Path("path") path: String): ResponseBody?
 
     companion object {
         const val path = "/task"
     }
 }
-
-fun downloadLink(filename: String)
-    = "$DARK_SERVICE_URL/task/image/$filename"
