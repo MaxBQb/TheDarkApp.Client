@@ -1,16 +1,13 @@
 package lab.maxb.dark.Presentation.Repository.Room.DAO
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy.IGNORE
-import androidx.room.Query
+import androidx.room.*
+import androidx.room.OnConflictStrategy.REPLACE
 import kotlinx.coroutines.flow.Flow
 import lab.maxb.dark.Presentation.Repository.Room.Model.UserDTO
 
 @Dao
 interface UserDAO {
-    @Insert(onConflict = IGNORE)
+    @Insert(onConflict = REPLACE)
     suspend fun addUser(user: UserDTO)
 
     @Delete
@@ -19,6 +16,10 @@ interface UserDAO {
     @Query("SELECT * FROM user WHERE id = :id")
     fun getUser(id: String): Flow<UserDTO?>
 
-    @Query("SELECT * FROM user WHERE id = :id")
-    suspend fun getUserOnce(id: String): UserDTO?
+    @Query("SELECT EXISTS(SELECT * FROM user WHERE id = :id)")
+    fun hasUser(id: String): Boolean
+
+    @Transaction
+    @Query("DELETE FROM user")
+    fun clear()
 }

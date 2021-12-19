@@ -3,6 +3,7 @@ package lab.maxb.dark.Presentation.Repository.Implementation
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import kotlinx.coroutines.flow.first
 import lab.maxb.dark.Domain.Model.RecognitionTask
@@ -25,84 +26,102 @@ class RecognitionTasksRepositoryImpl(
 ) : RecognitionTasksRepository {
     private val mRecognitionTaskDao: RecognitionTaskDAO = db.recognitionTaskDao()
 
-    override suspend fun getAllRecognitionTasksByReview(isReviewed: Boolean): LiveData<List<RecognitionTask>?>
-        = mRecognitionTaskDao.getAllRecognitionTasksByReview(isReviewed)
-        .distinctUntilChanged().map {
-            data -> data?.map { it.toRecognitionTask() }
-        }.also { refreshRecognitionTaskList() }
-
-    override suspend fun getAllRecognitionTasks(): LiveData<List<RecognitionTask>?>
-        = mRecognitionTaskDao
-        .getAllRecognitionTasks()
-        .distinctUntilChanged().map {
-            data -> data?.map { it.toRecognitionTask() }
-        }.also { refreshRecognitionTaskList() }
-
-    private suspend fun refreshRecognitionTaskList() {
-        try {
-            mDarkService.getAllTasks()?.also { tasks ->
-                mRecognitionTaskDao.deleteRecognitionTasks(
-                    tasks.map { it.id }
-                )
-            }?.forEach { task ->
-                mRecognitionTaskDao.addRecognitionTask(
-                    RecognitionTaskDTO(
-                        task.id,
-                        usersRepository.getUser(
-                            task.owner_id
-                        ).first()!!.id,
-                        task.reviewed
-                    )
-                )
-                if (mRecognitionTaskDao.getRecognitionTaskImages(task.id)
-                        .none { it.id == task.image!! })
-                    mRecognitionTaskDao.addRecognitionTaskImages(
-                        listOf(RecognitionTaskImage(task.id,
-                            refreshImage(task.image!!)
-                        ))
-                    )
+    override fun getAllRecognitionTasksByReview(isReviewed: Boolean):
+            LiveData<List<RecognitionTask>?> = liveData {
+        emitSource(
+            mRecognitionTaskDao.getAllRecognitionTasksByReview(isReviewed)
+            .distinctUntilChanged().map {
+                data -> data?.map { it.toRecognitionTask() }
             }
-        } catch (e: Throwable) {
-            e.printStackTrace()
-        }
+        )
+        refreshRecognitionTaskList()
     }
 
-    private suspend fun refreshRecognitionTask(id: String) {
-        try {
-            mDarkService.getTask(id)?.let { task ->
-                val images = mRecognitionTaskDao.getRecognitionTaskImages(task.id)
-                mRecognitionTaskDao.deleteRecognitionTask(task.id)
-                mRecognitionTaskDao.addRecognitionTask(
-                    RecognitionTaskDTO(
-                        task.id,
-                        usersRepository.getUser(
-                            task.owner_id
-                        ).first()!!.id,
-                        task.reviewed
-                    ),
-                    task.names!!.map { RecognitionTaskName(
-                        task.id, it
-                    ) },
-                    task.images!!.map { image ->
-                        val cache = images.find { it.id == image }
-                        RecognitionTaskImage(
-                            task.id,
-                            cache?.image ?: refreshImage(image)
-                        )
-                    }
-                )
+    override fun getAllRecognitionTasks():
+            LiveData<List<RecognitionTask>?> = liveData {
+        emitSource(
+            mRecognitionTaskDao.getAllRecognitionTasks()
+            .distinctUntilChanged().map {
+                data -> data?.map { it.toRecognitionTask() }
             }
-        } catch (e: Throwable) {
-            e.printStackTrace()
-        }
+        )
+        refreshRecognitionTaskList()
     }
 
-    override suspend fun getRecognitionTask(id: String): LiveData<RecognitionTask?>
-        = mRecognitionTaskDao.getRecognitionTask(id).distinctUntilChanged().map {
-            it?.toRecognitionTask()
-        }.also {
+    private suspend fun refreshRecognitionTaskList() = try {
+        mDarkService.getAllTasks()?.also { tasks ->
+            mRecognitionTaskDao.deleteRecognitionTasks(
+                tasks.map { it.id }
+            )
+        }?.forEach { task ->
+            mRecognitionTaskDao.addRecognitionTask(
+                RecognitionTaskDTO(
+                    task.id,
+                    usersRepository.getUser(
+                        task.owner_id
+                    ).first()!!.id,
+                    task.reviewed
+                )
+            )
+            if (mRecognitionTaskDao.getRecognitionTaskImages(task.id)
+                    .none { it.id == task.image!! })
+                mRecognitionTaskDao.addRecognitionTaskImages(
+                    listOf(RecognitionTaskImage(task.id,
+                        refreshImage(task.image!!)
+                    ))
+                )
+        }
+    } catch (e: Throwable) {
+        e.printStackTrace()
+    }
+
+    private suspend fun refreshRecognitionTask(id: String) = try {
+        mDarkService.getTask(id)?.let { task ->
+            val images = mRecognitionTaskDao.getRecognitionTaskImages(task.id)
+            mRecognitionTaskDao.addRecognitionTask(
+                RecognitionTaskDTO(
+                    task.id,
+                    usersRepository.getUser(
+                        task.owner_id
+                    ).first()!!.id,
+                    task.reviewed
+                ),
+                task.names!!.map { RecognitionTaskName(
+                    task.id, it
+                ) },
+                task.images!!.map { image ->
+                    val cache = images.find { it.id == image }
+                    RecognitionTaskImage(
+                        task.id,
+                        cache?.image ?: refreshImage(image)
+                    )
+                }
+            )
+        }
+    } catch (e: Throwable) {
+        e.printStackTrace()
+    }
+
+    override fun getRecognitionTask(id: String):
+            LiveData<RecognitionTask?> = liveData {
+        if (mRecognitionTaskDao.hasRecognitionTask(id)) {
+            emitSource(
+                mRecognitionTaskDao.getRecognitionTask(id)
+                    .distinctUntilChanged().map {
+                    it?.toRecognitionTask()
+                }
+            )
             refreshRecognitionTask(id)
+        } else {
+            refreshRecognitionTask(id)
+            emitSource(
+                mRecognitionTaskDao.getRecognitionTask(id)
+                    .distinctUntilChanged().map {
+                        it?.toRecognitionTask()
+                    }
+            )
         }
+    }
 
     override suspend fun <T : RecognitionTask> addRecognitionTask(task: T) {
         val taskLocal = RecognitionTaskDTO(task)
@@ -129,8 +148,12 @@ class RecognitionTasksRepositoryImpl(
 
     override suspend fun <T : RecognitionTask> markRecognitionTask(task: T) {
         mRecognitionTaskDao.updateRecognitionTask(task as RecognitionTaskDTO)
-        if (mDarkService.markTask(task.id, task.reviewed))
-            refreshRecognitionTaskList()
+        try {
+            if (mDarkService.markTask(task.id, task.reviewed))
+                refreshRecognitionTaskList()
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
     }
 
     override suspend fun <T : RecognitionTask> deleteRecognitionTask(task: T) {
@@ -151,4 +174,7 @@ class RecognitionTasksRepositoryImpl(
         e.printStackTrace()
         id
     }
+
+    override suspend fun clearCache(): Unit
+        = mRecognitionTaskDao.clear()
 }

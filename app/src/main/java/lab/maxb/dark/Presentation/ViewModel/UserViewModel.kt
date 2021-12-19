@@ -7,6 +7,8 @@ import kotlinx.coroutines.launch
 import lab.maxb.dark.Domain.Model.Profile
 import lab.maxb.dark.Presentation.Extra.SessionHolder
 import lab.maxb.dark.Presentation.Repository.Interfaces.ProfileRepository
+import lab.maxb.dark.Presentation.Repository.Interfaces.RecognitionTasksRepository
+import lab.maxb.dark.Presentation.Repository.Interfaces.UsersRepository
 import lab.maxb.dark.Presentation.Repository.Network.OAUTH.Google.GoogleSignInLogic
 
 
@@ -20,6 +22,8 @@ abstract class UserViewModel: ViewModel() {
 
 class UserViewModelImpl(
     private val profileRepository: ProfileRepository,
+    private val usersRepository: UsersRepository,
+    private val recognitionTasksRepository: RecognitionTasksRepository,
     private val sessionHolder: SessionHolder,
     private val mGoogleSignInLogic: GoogleSignInLogic,
 ): UserViewModel() {
@@ -52,5 +56,8 @@ class UserViewModelImpl(
         mGoogleSignInLogic.signOut()
         sessionHolder.token = null
         sessionHolder.login = null
+        profileRepository.clearCache()
+        usersRepository.clearCache()
+        recognitionTasksRepository.clearCache()
     }
 }

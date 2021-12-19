@@ -20,11 +20,11 @@ class MockBase : RecognitionTasksRepository {
         recognitionTasks.value = data
     }
 
-    override suspend fun getAllRecognitionTasksByReview(isReviewed: Boolean): LiveData<List<RecognitionTask>?> {
+    override fun getAllRecognitionTasksByReview(isReviewed: Boolean): LiveData<List<RecognitionTask>?> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getAllRecognitionTasks(): LiveData<List<RecognitionTask>?>
+    override fun getAllRecognitionTasks(): LiveData<List<RecognitionTask>?>
         = recognitionTasks
 
     override suspend fun <T : RecognitionTask> addRecognitionTask(task: T) {
@@ -41,7 +41,10 @@ class MockBase : RecognitionTasksRepository {
         reloadAllRecognitionTasks()
     }
 
-    override suspend fun getRecognitionTask(id: String): LiveData<RecognitionTask?> {
+    override suspend fun clearCache()
+        = TODO("Not yet implemented")
+
+    override fun getRecognitionTask(id: String): LiveData<RecognitionTask?> {
         return MutableLiveData(data?.get(0))
     }
 }

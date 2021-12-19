@@ -1,6 +1,8 @@
 package lab.maxb.dark.Presentation.Repository.Implementation
 
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import lab.maxb.dark.Domain.Model.User
 import lab.maxb.dark.Presentation.Repository.Interfaces.UsersRepository
 import lab.maxb.dark.Presentation.Repository.Network.Dark.DarkService
@@ -14,21 +16,24 @@ class UsersRepositoryImpl(
 ) : UsersRepository {
     private val mUserDao: UserDAO = db.userDao()
 
-    override suspend fun getUser(id: String)
-        = mUserDao.getUser(id)
-                  .distinctUntilChanged().also {
-            mUserDao.addUser(UserDTO(
-                darkService.getUser(id)
-                    ?: return@also
-            ))
+    override fun getUser(id: String) = flow {
+        if (mUserDao.hasUser(id)) {
+            emitAll(mUserDao.getUser(id).distinctUntilChanged())
+            refreshUser(id)
+        } else {
+            refreshUser(id)
+            emitAll(mUserDao.getUser(id).distinctUntilChanged())
         }
+    }
 
-    override suspend fun getUserOnce(id: String)
-        = mUserDao.getUserOnce(id) as User?
+    private suspend fun refreshUser(id: String) = try {
+        addUser(darkService.getUser(id)!!)
+    } catch (e: Throwable) {
+        e.printStackTrace()
+    }
 
-    override suspend fun <T : User> addUser(user: T)
+    suspend fun <T : User> addUser(user: T)
         = mUserDao.addUser(UserDTO(user))
 
-    override suspend fun <T : User> deleteUser(user: T)
-        = mUserDao.deleteUser(user as UserDTO)
+    override suspend fun clearCache(): Unit = mUserDao.clear()
 }

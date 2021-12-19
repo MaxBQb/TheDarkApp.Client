@@ -1,7 +1,6 @@
 package lab.maxb.dark.Presentation.ViewModel
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
@@ -29,14 +28,8 @@ class SolveRecognitionTaskViewModelImpl(
     private val recognitionTasksRepository: RecognitionTasksRepository,
     private val profileRepository: ProfileRepository,
 ) : SolveRecognitionTaskViewModel() {
-    override val recognitionTask by lazy {
-        val livedata = MediatorLiveData<RecognitionTask?>()
-        viewModelScope.launch {
-            livedata.addSource(
-                recognitionTasksRepository.getRecognitionTask(id)
-            ) { livedata.value = it }
-        }
-        livedata
+    override val recognitionTask by lazy  {
+        recognitionTasksRepository.getRecognitionTask(id)
     }
     private var profile: Profile
 

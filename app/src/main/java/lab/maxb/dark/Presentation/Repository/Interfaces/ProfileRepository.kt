@@ -7,4 +7,5 @@ interface ProfileRepository {
     suspend fun getProfile(login: String? = null, password: String? = null): Flow<Profile?>
     val profile: Profile?
     suspend fun save(profile: Profile)
+    suspend fun clearCache()
 }

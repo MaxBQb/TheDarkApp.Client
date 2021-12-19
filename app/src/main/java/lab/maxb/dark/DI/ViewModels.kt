@@ -9,5 +9,5 @@ internal val MODULE_viewModels = module {
     viewModel { AddRecognitionTaskViewModel(get(), get()) }
     viewModel { RecognitionTaskListViewModel(get()) }
     viewModel<SolveRecognitionTaskViewModel> { SolveRecognitionTaskViewModelImpl(get(), get()) }
-    viewModel<UserViewModel> { UserViewModelImpl(get(), get(), get()) }
+    viewModel<UserViewModel> { UserViewModelImpl(get(), get(), get(), get(), get()) }
 }
