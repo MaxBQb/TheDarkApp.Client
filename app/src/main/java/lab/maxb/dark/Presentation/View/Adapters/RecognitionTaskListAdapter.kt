@@ -9,7 +9,6 @@ import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.Presentation.Extra.toBitmap
 import lab.maxb.dark.Presentation.View.Adapters.RecognitionTaskListAdapter.RecognitionTaskViewHolder
 import lab.maxb.dark.databinding.RecognitionTaskListElementBinding
-import java.io.FileNotFoundException
 
 class RecognitionTaskListAdapter(data: List<RecognitionTask>?) :
       RecyclerView.Adapter<RecognitionTaskViewHolder>() {
@@ -38,7 +37,7 @@ class RecognitionTaskListAdapter(data: List<RecognitionTask>?) :
                     holder.binding.taskImage.layoutParams.height,
                 )
             )
-        } catch (ignored: FileNotFoundException) {}
+        } catch (ignored: Throwable) {}
         holder.itemView.setOnClickListener { v ->
             if (position != RecyclerView.NO_POSITION)
                 onElementClickListener?.invoke(v, item)

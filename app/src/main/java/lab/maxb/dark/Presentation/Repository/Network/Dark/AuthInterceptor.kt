@@ -7,13 +7,11 @@ import okhttp3.Response
 class AuthInterceptor(
     private val sessionHolder: SessionHolder
 ): Interceptor {
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val requestBuilder = chain.request().newBuilder()
-
-        sessionHolder.token?.let {
-            requestBuilder.addHeader("Authorization", "Bearer $it")
+    override fun intercept(chain: Interceptor.Chain): Response
+        = with(chain.request().newBuilder()) {
+            sessionHolder.token?.let {
+                addHeader("Authorization", "Bearer $it")
+            }
+            chain.proceed(build())
         }
-
-        return chain.proceed(requestBuilder.build())
-    }
 }

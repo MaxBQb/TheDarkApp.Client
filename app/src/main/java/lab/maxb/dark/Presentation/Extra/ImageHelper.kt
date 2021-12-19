@@ -9,7 +9,6 @@ import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import java.io.FileOutputStream
 import java.io.InputStream
 
 private fun getContentResolver(context: Context) = context.applicationContext.contentResolver
@@ -89,8 +88,7 @@ class ImageLoader(context: Context) {
     }
 
     fun fromResponse(body: ResponseBody?, filename: String): String {
-        if (body==null)
-            return ""
+        body ?: return ""
 
         val path = "image_$filename"
 

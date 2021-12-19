@@ -20,10 +20,10 @@ data class RecognitionTaskWithOwnerAndImage(
         parentColumn = "id",
         entityColumn = "recognition_task"
     )
-    val image: RecognitionTaskImage
+    val image: RecognitionTaskImage?
 ) {
-    fun toRecognitionTask() = recognition_task.also {
-        it.owner = owner
-        it.images = listOf(image.image)
+    fun toRecognitionTask() = recognition_task.also { task ->
+        task.owner = owner
+        task.images = image?.image?.let{ listOf(it) } ?: listOf()
     } as RecognitionTask
 }

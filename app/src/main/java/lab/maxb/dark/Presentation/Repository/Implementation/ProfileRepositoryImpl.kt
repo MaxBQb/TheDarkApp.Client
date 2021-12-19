@@ -3,7 +3,6 @@ package lab.maxb.dark.Presentation.Repository.Implementation
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.transformLatest
 import lab.maxb.dark.Domain.Model.Profile
 import lab.maxb.dark.Presentation.Extra.SessionHolder
 import lab.maxb.dark.Presentation.Repository.Interfaces.ProfileRepository
@@ -28,28 +27,36 @@ class ProfileRepositoryImpl(
             val response = darkService.login(AuthRequest(
                 login, it
             ))
+
             sessionHolder.token = response.token
             sessionHolder.login = login
-
-            save(Profile(
-                login,
-                usersRepository.getUser(response.id).first(),
-                response.token,
-                role=response.role
-            ).also { profile = it })
+            try {
+                save(Profile(
+                    login,
+                    usersRepository.getUser(response.id).first(),
+                    response.token,
+                    role = response.role
+                ).also { profile = it })
+            } catch (e: Throwable) {
+                sessionHolder.token = null
+                sessionHolder.login = null
+                throw e
+            }
         }
         return profileDAO.getByLogin(login).map {
             it?.toProfile()?.also { profile = it }
-        }.also { it.first()?.user?.id?.let{ id ->
+        }.also { it.first()?.user?.id?.let { id ->
             assert(checkToken(id))
         } }
     }
 
     private suspend fun checkToken(id: String) = try {
-        usersRepository.getUser(id)
+        usersRepository.getUser(id).first()!!
         true
     } catch (e: Throwable) { false }
 
     override suspend fun save(profile: Profile)
         = profileDAO.save(ProfileDTO(profile))
+
+    override suspend fun clearCache(): Unit = profileDAO.clear()
 }
