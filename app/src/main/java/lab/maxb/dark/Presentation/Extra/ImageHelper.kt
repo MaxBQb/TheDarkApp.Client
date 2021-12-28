@@ -5,6 +5,8 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -75,41 +77,43 @@ private fun calculateInSampleSize(options: BitmapFactory.Options,
 class ImageLoader(context: Context) {
     private var context = context.applicationContext
 
-    fun fromUri(uri: Uri): MultipartBody.Part {
+    suspend fun fromUri(uri: Uri): MultipartBody.Part {
         val contentResolver = getContentResolver(context)
-        return MultipartBody.Part.createFormData(
-            "file",
-            "filename.png",
-            RequestBody.create(
-                MediaType.parse(contentResolver.getType(uri)!!),
-                contentResolver.openInputStream(uri)!!.readBytes()
+        return withContext(Dispatchers.IO) { MultipartBody.Part.createFormData(
+                "file",
+                "filename.png",
+                RequestBody.create(
+                    MediaType.parse(contentResolver.getType(uri)!!),
+                    contentResolver.openInputStream(uri)!!.readBytes()
+                )
             )
-        )
-    }
+        } }
 
-    fun fromResponse(body: ResponseBody?, filename: String): String {
+    suspend fun fromResponse(body: ResponseBody?, filename: String): String {
         body ?: return ""
 
         val path = "image_$filename"
 
-        var input: InputStream? = null
-        try {
-            input = body.byteStream()
-            context.openFileOutput(path, Context.MODE_PRIVATE).use { output ->
-                val buffer = ByteArray(4 * 1024)
-                var read: Int
-                while (input.read(buffer).also { read = it } != -1)
-                    output.write(buffer, 0, read)
-                output.flush()
+        return withContext(Dispatchers.IO) {
+            var input: InputStream? = null
+            try {
+                input = body.byteStream()
+                context.openFileOutput(path, Context.MODE_PRIVATE).use { output ->
+                    val buffer = ByteArray(4 * 1024)
+                    var read: Int
+                    while (input.read(buffer).also { read = it } != -1)
+                        output.write(buffer, 0, read)
+                    output.flush()
+                }
+                return@withContext Uri.fromFile(
+                    context.getFileStreamPath(path)
+                ).toString()
+            } catch (e: Exception){
+                e.printStackTrace()
+            } finally {
+                input?.close()
             }
-            return Uri.fromFile(
-                context.getFileStreamPath(path)
-            ).toString()
-        } catch (e: Exception){
-            e.printStackTrace()
-        } finally {
-            input?.close()
+            ""
         }
-        return ""
     }
 }
