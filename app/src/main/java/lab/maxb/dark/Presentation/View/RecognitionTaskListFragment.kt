@@ -16,11 +16,10 @@ import lab.maxb.dark.Presentation.ViewModel.UserViewModel
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.RecognitionTaskListFragmentBinding
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class RecognitionTaskListFragment : Fragment(R.layout.recognition_task_list_fragment) {
-    private val mViewModel: RecognitionTaskListViewModel by viewModel()
+    private val mViewModel: RecognitionTaskListViewModel by sharedViewModel()
     private val mBinding: RecognitionTaskListFragmentBinding by viewBinding()
     private var mAdapter: RecognitionTaskListAdapter by autoCleaned()
     private val mUserViewModel: UserViewModel by sharedViewModel()

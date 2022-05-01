@@ -18,10 +18,10 @@ import lab.maxb.dark.Presentation.Extra.show
 import lab.maxb.dark.Presentation.ViewModel.SolveRecognitionTaskViewModel
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.SolveRecognitionTaskFragmentBinding
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fragment) {
-    private val mViewModel: SolveRecognitionTaskViewModel by viewModel()
+    private val mViewModel: SolveRecognitionTaskViewModel by sharedViewModel()
     private val mBinding: SolveRecognitionTaskFragmentBinding by viewBinding()
     private val args: SolveRecognitionTaskFragmentArgs by navArgs()
 

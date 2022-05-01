@@ -17,10 +17,10 @@ import lab.maxb.dark.Presentation.Extra.requestFragmentResult
 import lab.maxb.dark.Presentation.ViewModel.AddRecognitionTaskViewModel
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.AddRecognitionTaskFragmentBinding
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragment) {
-    private val mViewModel: AddRecognitionTaskViewModel by viewModel()
+    private val mViewModel: AddRecognitionTaskViewModel by sharedViewModel()
     private val mBinding: AddRecognitionTaskFragmentBinding by viewBinding()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
