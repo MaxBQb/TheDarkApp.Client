@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
 import lab.maxb.dark.Presentation.Extra.Delegates.viewBinding
 import lab.maxb.dark.Presentation.Extra.FragmentKeys
+import lab.maxb.dark.Presentation.Extra.observe
 import lab.maxb.dark.Presentation.Extra.setFragmentResponse
 import lab.maxb.dark.Presentation.Extra.withArgs
 import lab.maxb.dark.Presentation.View.Adapters.InputListAdapter
@@ -32,7 +33,7 @@ class InputListFragment : Fragment(R.layout.input_list_fragment) {
         mBinding.inputListRecycler.adapter = mAdapter
         mAdapter.onItemTextChangedListener = { editText, text, position -> text?.let {
             mViewModel.texts[position] = it
-            mViewModel.getSuggestions(mViewModel.texts).observe(viewLifecycleOwner) { values: Set<String> ->
+            observe(mViewModel.getSuggestions(mViewModel.texts)) { values: Set<String> ->
                 val input = editText as AutoCompleteTextView
                 input.setAdapter(ArrayAdapter(
                     requireContext(),

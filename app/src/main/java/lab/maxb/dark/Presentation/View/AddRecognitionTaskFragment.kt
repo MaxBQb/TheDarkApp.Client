@@ -12,6 +12,7 @@ import androidx.fragment.app.setFragmentResultListener
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.MainActivity
 import lab.maxb.dark.Presentation.Extra.Delegates.viewBinding
+import lab.maxb.dark.Presentation.Extra.observe
 import lab.maxb.dark.Presentation.Extra.requestFragmentResult
 import lab.maxb.dark.Presentation.ViewModel.AddRecognitionTaskViewModel
 import lab.maxb.dark.R
@@ -75,7 +76,7 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
     }
 
     private fun createRecognitionTask() {
-        mViewModel.addRecognitionTask().observe(viewLifecycleOwner) {
+        observe(mViewModel.addRecognitionTask()) {
             if (it) activity?.onBackPressed()
             else Toast.makeText(context,
                 getString(R.string.not_enough_data_provided_message),

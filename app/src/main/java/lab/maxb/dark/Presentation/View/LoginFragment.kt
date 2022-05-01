@@ -17,6 +17,7 @@ import lab.maxb.dark.Domain.Model.Profile
 import lab.maxb.dark.MainActivity
 import lab.maxb.dark.Presentation.Extra.Delegates.viewBinding
 import lab.maxb.dark.Presentation.Extra.FragmentKeys
+import lab.maxb.dark.Presentation.Extra.observe
 import lab.maxb.dark.Presentation.Extra.observeOnce
 import lab.maxb.dark.Presentation.Extra.toggleVisibility
 import lab.maxb.dark.Presentation.Repository.Network.OAUTH.Google.GoogleSignInLogic
@@ -49,15 +50,13 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
 //            mViewModel.authorizeBySession(authCode).observeOnce(viewLifecycleOwner,
 //                makeAuthResultHandler(null))
 //        }
-        mViewModel.authorizeBySession(null).observeOnce(viewLifecycleOwner,
-            makeAuthResultHandler(null))
+        observeOnce(mViewModel.authorizeBySession(null), makeAuthResultHandler(null))
         mBinding.signIn.setOnClickListener {
             changeLoginButtonsIsEnable(false)
-            mViewModel.authorize(
-                mBinding.login.text.toString(),
-                mBinding.password.text.toString(),
-            ).observeOnce(
-                viewLifecycleOwner,
+            observe(mViewModel.authorize(
+                    mBinding.login.text.toString(),
+                    mBinding.password.text.toString(),
+                ),
                 makeAuthResultHandler(R.string.incorrect_credentials_message)
             )
         }
@@ -78,14 +77,11 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
         if (credentials == null)
             onNotAuthorized(R.string.something_went_wrong)
         else {
-            mViewModel.authorizeByOAUTHProvider(
+            observeOnce(mViewModel.authorizeByOAUTHProvider(
                 credentials[0],
                 credentials[1],
                 credentials[2],
-            ).observeOnce(
-                viewLifecycleOwner,
-                makeAuthResultHandler(R.string.something_went_wrong)
-            )
+            ), makeAuthResultHandler(R.string.something_went_wrong))
         }
     }
 

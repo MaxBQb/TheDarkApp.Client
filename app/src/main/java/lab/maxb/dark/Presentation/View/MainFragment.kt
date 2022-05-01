@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import lab.maxb.dark.Presentation.Extra.Delegates.viewBinding
+import lab.maxb.dark.Presentation.Extra.observe
 import lab.maxb.dark.Presentation.ViewModel.UserViewModel
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.MainFragmentBinding
@@ -33,7 +34,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             )
         }
 
-        mViewModel.user.observe(viewLifecycleOwner) { profile ->
+        observe(mViewModel.user) { profile ->
             if (profile == null) {
                 openLoginView()
                 return@observe

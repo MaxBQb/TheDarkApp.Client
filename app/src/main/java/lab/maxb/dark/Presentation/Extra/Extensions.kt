@@ -7,9 +7,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 
 fun View.hide(preserveSpace: Boolean = false) {
     visibility = if (preserveSpace) INVISIBLE else GONE
@@ -39,11 +36,3 @@ fun Fragment.setFragmentResponse(requestKey: String,
 fun Fragment.withArgs(vararg args: Pair<String, Any?>)
     = apply { arguments = bundleOf(*args) }
 
-fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
-    observe(lifecycleOwner, object : Observer<T> {
-        override fun onChanged(t: T?) {
-            observer.onChanged(t)
-            removeObserver(this)
-        }
-    })
-}

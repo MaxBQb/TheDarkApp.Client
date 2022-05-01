@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
 import lab.maxb.dark.Presentation.Extra.Delegates.viewBinding
+import lab.maxb.dark.Presentation.Extra.observe
 import lab.maxb.dark.Presentation.Extra.observeOnce
 import lab.maxb.dark.Presentation.View.Adapters.RecognitionTaskListAdapter
 import lab.maxb.dark.Presentation.ViewModel.RecognitionTaskListViewModel
@@ -26,7 +27,7 @@ class RecognitionTaskListFragment : Fragment(R.layout.recognition_task_list_frag
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mUserViewModel.user.observeOnce(viewLifecycleOwner) {
+        observeOnce(mUserViewModel.user) {
             it?.let { profile ->
                 if (!mViewModel.isTaskCreationAllowed(profile))
                     mBinding.fab.hide()
@@ -40,8 +41,8 @@ class RecognitionTaskListFragment : Fragment(R.layout.recognition_task_list_frag
                 RecognitionTaskListFragmentDirections.addRecognitionTask()
             )
         }
-        mUserViewModel.user.observe(viewLifecycleOwner) { profile -> profile?.let {
-            mViewModel.getRecognitionTaskList(it).observe(viewLifecycleOwner) {
+        observe(mUserViewModel.user) { profile -> profile?.let {
+            observe(mViewModel.getRecognitionTaskList(it)) {
                     recognitionTasks: List<RecognitionTask>? ->
                 mAdapter = RecognitionTaskListAdapter(recognitionTasks)
                 mBinding.recognitionTaskListRecycler.adapter = mAdapter

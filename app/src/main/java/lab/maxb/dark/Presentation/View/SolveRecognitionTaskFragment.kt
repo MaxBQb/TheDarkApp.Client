@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.Presentation.Extra.Delegates.viewBinding
 import lab.maxb.dark.Presentation.Extra.hide
+import lab.maxb.dark.Presentation.Extra.observe
 import lab.maxb.dark.Presentation.Extra.show
 import lab.maxb.dark.Presentation.ViewModel.SolveRecognitionTaskViewModel
 import lab.maxb.dark.R
@@ -36,7 +37,7 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
                 Toast.makeText(context, "Неверно", Toast.LENGTH_SHORT).show()
         }
 
-        mViewModel.recognitionTask.observe(viewLifecycleOwner) {
+        observe(mViewModel.recognitionTask) {
             it?.let { task: RecognitionTask ->
                 parentFragmentManager.commit {
                     replace(R.id.image_slider, ImageSliderFragment.newInstance(
