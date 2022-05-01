@@ -1,29 +1,23 @@
 package lab.maxb.dark.Presentation.View
 
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
+import lab.maxb.dark.Presentation.Extra.Delegates.viewBinding
 import lab.maxb.dark.Presentation.ViewModel.UserViewModel
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.MainFragmentBinding
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(R.layout.main_fragment) {
     private val mViewModel: UserViewModel by sharedViewModel()
-    private var mBinding: MainFragmentBinding by autoCleaned()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        mBinding = MainFragmentBinding.inflate(layoutInflater, container, false)
-        return mBinding.root
-    }
+    private val mBinding: MainFragmentBinding by viewBinding()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

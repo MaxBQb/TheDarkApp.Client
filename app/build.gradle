@@ -54,17 +54,14 @@ android {
 }
 
 dependencies {
-    def room_version = "2.4.2"
-    def retrofit_version = "2.9.0"
-    def coroutines_version = "1.6.0"
-
     // Dependency Injection
-    def koin_annotations_version = "1.0.0-beta-1"
+    def koin_annotations_version = '1.0.0-beta-2'
     implementation 'io.insert-koin:koin-android:3.2.0-beta-1'
     implementation "io.insert-koin:koin-annotations:$koin_annotations_version"
     ksp "io.insert-koin:koin-ksp-compiler:$koin_annotations_version"
 
     // Coroutines + LiveData
+    def coroutines_version = '1.6.1-native-mt'
     implementation 'androidx.lifecycle:lifecycle-common-java8:2.4.1'
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0-beta01"
@@ -76,12 +73,14 @@ dependencies {
     implementation "androidx.preference:preference-ktx:1.2.0"
 
     // Room persistence
+    def room_version = "2.4.2"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
     // Retrofit2 Networking
+    def retrofit_version = "2.9.0"
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.google.code.gson:gson:$retrofit_version"

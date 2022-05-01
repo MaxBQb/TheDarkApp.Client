@@ -2,30 +2,27 @@ package lab.maxb.dark.Presentation.View
 
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import lab.maxb.dark.Presentation.Extra.*
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
+import lab.maxb.dark.Presentation.Extra.Delegates.viewBinding
 import lab.maxb.dark.Presentation.View.Adapters.ImageSliderAdapter
 import lab.maxb.dark.Presentation.ViewModel.ImageSliderViewModel
+import lab.maxb.dark.R
 import lab.maxb.dark.databinding.ImageSliderFragmentBinding
 
-class ImageSliderFragment : Fragment() {
+class ImageSliderFragment : Fragment(R.layout.image_slider_fragment) {
     private val mViewModel: ImageSliderViewModel by viewModels()
-    private var mBinding: ImageSliderFragmentBinding by autoCleaned()
+    private val mBinding: ImageSliderFragmentBinding by viewBinding()
     private var mUris: List<Uri> by autoCleaned()
     private var mAdapter: ImageSliderAdapter by autoCleaned()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        mBinding = ImageSliderFragmentBinding.inflate(layoutInflater, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         arguments?.let {
             it.getStringArray(URIS)?.toMutableList()?.let {
                 uris -> mViewModel.setImages(uris)
@@ -65,8 +62,6 @@ class ImageSliderFragment : Fragment() {
         setFragmentResponse(REQUEST_URIS, RESPONSE_URIS) {bundleOf(
             URIS to mUris.map { it.toString() }
         )}
-
-        return mBinding.root
     }
 
     private val getContent by lazy {

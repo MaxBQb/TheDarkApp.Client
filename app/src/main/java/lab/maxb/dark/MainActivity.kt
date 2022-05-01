@@ -7,13 +7,12 @@ import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import lab.maxb.dark.Presentation.Extra.Delegates.viewBinding
 import lab.maxb.dark.databinding.MainActivityBinding
 
 
-class MainActivity : AppCompatActivity() {
-    val binding: MainActivityBinding by lazy {
-        MainActivityBinding.inflate(layoutInflater)
-    }
+class MainActivity : AppCompatActivity(R.layout.main_activity) {
+    val binding: MainActivityBinding by viewBinding()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -2,13 +2,16 @@ package lab.maxb.dark.Presentation.View
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.navigation.fragment.navArgs
 import lab.maxb.dark.Domain.Model.RecognitionTask
-import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
+import lab.maxb.dark.Presentation.Extra.Delegates.viewBinding
 import lab.maxb.dark.Presentation.Extra.hide
 import lab.maxb.dark.Presentation.Extra.show
 import lab.maxb.dark.Presentation.ViewModel.SolveRecognitionTaskViewModel
@@ -16,16 +19,13 @@ import lab.maxb.dark.R
 import lab.maxb.dark.databinding.SolveRecognitionTaskFragmentBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SolveRecognitionTaskFragment : Fragment() {
+class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fragment) {
     private val mViewModel: SolveRecognitionTaskViewModel by viewModel()
-    private var mBinding: SolveRecognitionTaskFragmentBinding by autoCleaned()
+    private val mBinding: SolveRecognitionTaskFragmentBinding by viewBinding()
     private val args: SolveRecognitionTaskFragmentArgs by navArgs()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        mBinding = SolveRecognitionTaskFragmentBinding.inflate(layoutInflater, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         mViewModel.id = args.id
         mBinding.checkAnswer.setOnClickListener { v ->
             if (mViewModel.solveRecognitionTask(
@@ -63,7 +63,6 @@ class SolveRecognitionTaskFragment : Fragment() {
                 }
             }
         }
-        return mBinding.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

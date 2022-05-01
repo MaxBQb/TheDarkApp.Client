@@ -2,9 +2,7 @@ package lab.maxb.dark.Presentation.View
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
@@ -17,7 +15,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import lab.maxb.dark.Domain.Model.Profile
 import lab.maxb.dark.MainActivity
-import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
+import lab.maxb.dark.Presentation.Extra.Delegates.viewBinding
 import lab.maxb.dark.Presentation.Extra.FragmentKeys
 import lab.maxb.dark.Presentation.Extra.observeOnce
 import lab.maxb.dark.Presentation.Extra.toggleVisibility
@@ -29,9 +27,9 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
-class LoginFragment : Fragment() {
+class LoginFragment : Fragment(R.layout.login_fragment) {
     private val mViewModel: UserViewModel by sharedViewModel()
-    private var mBinding: LoginFragmentBinding by autoCleaned()
+    private val mBinding: LoginFragmentBinding by viewBinding()
     lateinit var mGoogleSignInPage : GoogleSignInPage
     val mGoogleSignInLogic by inject<GoogleSignInLogic>()
 
@@ -43,14 +41,6 @@ class LoginFragment : Fragment() {
             ::onAuthWithGoogle
         )
         lifecycle.addObserver(mGoogleSignInPage)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        mBinding = LoginFragmentBinding.inflate(layoutInflater, container, false)
-        return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

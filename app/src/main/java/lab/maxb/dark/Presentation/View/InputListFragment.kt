@@ -1,42 +1,34 @@
 package lab.maxb.dark.Presentation.View
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
+import lab.maxb.dark.Presentation.Extra.Delegates.viewBinding
 import lab.maxb.dark.Presentation.Extra.FragmentKeys
 import lab.maxb.dark.Presentation.Extra.setFragmentResponse
 import lab.maxb.dark.Presentation.Extra.withArgs
 import lab.maxb.dark.Presentation.View.Adapters.InputListAdapter
 import lab.maxb.dark.Presentation.ViewModel.InputListViewModel
+import lab.maxb.dark.R
 import lab.maxb.dark.databinding.InputListFragmentBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class InputListFragment : Fragment() {
+class InputListFragment : Fragment(R.layout.input_list_fragment) {
     private val mViewModel: InputListViewModel by viewModel()
-    private var mBinding: InputListFragmentBinding by autoCleaned()
+    private val mBinding: InputListFragmentBinding by viewBinding()
     private var mAdapter: InputListAdapter by autoCleaned()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        mBinding = InputListFragmentBinding.inflate(layoutInflater, container, false)
-        mBinding.inputListRecycler.layoutManager = LinearLayoutManager(context)
-        return mBinding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arguments?.getStringArray(TEXTS)?.toMutableList()?.let { mViewModel.texts = it }
         mAdapter = InputListAdapter(mViewModel.texts)
+        mBinding.inputListRecycler.layoutManager = LinearLayoutManager(context)
         mBinding.inputListRecycler.adapter = mAdapter
         mAdapter.onItemTextChangedListener = { editText, text, position -> text?.let {
             mViewModel.texts[position] = it
