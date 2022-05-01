@@ -34,16 +34,9 @@ class MainFragment : Fragment() {
 
         setFragmentResultListener(LoginFragment.RESPONSE_LOGIN_SUCCESSFUL) {
             _, _ ->
-            findNavController().run {
-                navigate(
-                    graph.startDestination,
-                    null,
-                    NavOptions.Builder()
-                        .setPopUpTo(graph.startDestination, true)
-                        .build()
-                )
-                navigate(R.id.RecognitionTaskList_fragment)
-            }
+            findNavController().navigate(
+                MainFragmentDirections.actionMainFragmentToRecognitionTaskListFragment()
+            )
         }
 
         mViewModel.user.observe(viewLifecycleOwner) { profile ->

@@ -5,7 +5,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import lab.maxb.dark.Domain.Model.Profile
-import lab.maxb.dark.Presentation.Extra.SessionHolder
+import lab.maxb.dark.Presentation.Extra.UserSettings
 import lab.maxb.dark.Presentation.Repository.Interfaces.ProfileRepository
 import lab.maxb.dark.Presentation.Repository.Interfaces.RecognitionTasksRepository
 import lab.maxb.dark.Presentation.Repository.Interfaces.UsersRepository
@@ -24,7 +24,7 @@ class UserViewModelImpl(
     private val profileRepository: ProfileRepository,
     private val usersRepository: UsersRepository,
     private val recognitionTasksRepository: RecognitionTasksRepository,
-    private val sessionHolder: SessionHolder,
+    private val userSettings: UserSettings,
     private val mGoogleSignInLogic: GoogleSignInLogic,
 ): UserViewModel() {
     override val user = MutableLiveData<Profile?>()
@@ -54,8 +54,8 @@ class UserViewModelImpl(
 
     override fun signOut() = viewModelScope.launch {
         mGoogleSignInLogic.signOut()
-        sessionHolder.token = null
-        sessionHolder.login = null
+        userSettings.token = ""
+        userSettings.login = ""
         profileRepository.clearCache()
         usersRepository.clearCache()
         recognitionTasksRepository.clearCache()

@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import lab.maxb.dark.Domain.Model.Profile
-import lab.maxb.dark.Presentation.Extra.SessionHolder
+import lab.maxb.dark.Presentation.Extra.UserSettings
 import lab.maxb.dark.Presentation.Repository.Interfaces.ProfileRepository
 import lab.maxb.dark.Presentation.Repository.Interfaces.UsersRepository
 import lab.maxb.dark.Presentation.Repository.Network.Dark.DarkService
@@ -15,21 +15,21 @@ import lab.maxb.dark.Presentation.Repository.Room.Server.Model.ProfileDTO
 class ProfileRepositoryImpl(
     db: LocalDatabase,
     private val darkService: DarkService,
-    private val sessionHolder: SessionHolder,
+    private val userSettings: UserSettings,
     private val usersRepository: UsersRepository,
 ) : ProfileRepository {
     private val profileDAO = db.profileDao()
     override var profile: Profile? = null
 
     override suspend fun getProfile(login: String?, password: String?): Flow<Profile?> {
-        val login = (login ?: sessionHolder.login)!!
+        val login = login ?: userSettings.login
         password?.let {
             val response = darkService.login(AuthRequest(
                 login, it
             ))
 
-            sessionHolder.token = response.token
-            sessionHolder.login = login
+            userSettings.token = response.token
+            userSettings.login = login
             try {
                 save(Profile(
                     login,
@@ -38,8 +38,8 @@ class ProfileRepositoryImpl(
                     role = response.role
                 ).also { profile = it })
             } catch (e: Throwable) {
-                sessionHolder.token = null
-                sessionHolder.login = null
+                userSettings.token = ""
+                userSettings.login = ""
                 throw e
             }
         }
