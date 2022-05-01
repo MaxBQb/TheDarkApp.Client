@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import lab.maxb.dark.Domain.Model.Profile
 import lab.maxb.dark.Domain.Model.isUser
 import lab.maxb.dark.Presentation.Repository.Interfaces.RecognitionTasksRepository
+import org.koin.android.annotation.KoinViewModel
 
+@KoinViewModel
 class RecognitionTaskListViewModel(
     private val recognitionTasksRepository: RecognitionTasksRepository,
 ) : ViewModel() {

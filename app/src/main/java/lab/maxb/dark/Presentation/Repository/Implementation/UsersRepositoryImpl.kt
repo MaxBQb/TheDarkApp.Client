@@ -9,7 +9,9 @@ import lab.maxb.dark.Presentation.Repository.Network.Dark.DarkService
 import lab.maxb.dark.Presentation.Repository.Room.DAO.UserDAO
 import lab.maxb.dark.Presentation.Repository.Room.LocalDatabase
 import lab.maxb.dark.Presentation.Repository.Room.Model.UserDTO
+import org.koin.core.annotation.Single
 
+@Single
 class UsersRepositoryImpl(
     db: LocalDatabase,
     private val darkService: DarkService

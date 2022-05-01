@@ -17,7 +17,9 @@ import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskDTO
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskImage
 import lab.maxb.dark.Presentation.Repository.Room.Model.RecognitionTaskName
 import lab.maxb.dark_api.Model.POJO.RecognitionTaskCreationDTO
+import org.koin.core.annotation.Single
 
+@Single
 class RecognitionTasksRepositoryImpl(
     db: LocalDatabase,
     private val mDarkService: DarkService,

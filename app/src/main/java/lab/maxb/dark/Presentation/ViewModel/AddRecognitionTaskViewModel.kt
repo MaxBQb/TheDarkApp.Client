@@ -8,8 +8,9 @@ import kotlinx.coroutines.flow.first
 import lab.maxb.dark.Domain.Operations.createRecognitionTask
 import lab.maxb.dark.Presentation.Repository.Interfaces.ProfileRepository
 import lab.maxb.dark.Presentation.Repository.Interfaces.RecognitionTasksRepository
+import org.koin.android.annotation.KoinViewModel
 
-
+@KoinViewModel
 class AddRecognitionTaskViewModel(
     private val recognitionTasksRepository: RecognitionTasksRepository,
     private val profileRepository: ProfileRepository,

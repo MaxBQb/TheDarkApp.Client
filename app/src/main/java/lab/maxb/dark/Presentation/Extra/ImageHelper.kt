@@ -11,6 +11,7 @@ import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import org.koin.core.annotation.Single
 import java.io.InputStream
 
 private fun getContentResolver(context: Context) = context.applicationContext.contentResolver
@@ -74,6 +75,7 @@ private fun calculateInSampleSize(options: BitmapFactory.Options,
     return inSampleSize
 }
 
+@Single
 class ImageLoader(context: Context) {
     private var context = context.applicationContext
 

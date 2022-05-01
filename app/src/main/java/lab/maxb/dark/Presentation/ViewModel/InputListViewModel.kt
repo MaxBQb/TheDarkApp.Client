@@ -5,8 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import lab.maxb.dark.Presentation.Repository.Interfaces.SynonymsRepository
+import org.koin.android.annotation.KoinViewModel
 
-
+@KoinViewModel
 class InputListViewModel(
     private val synonymsRepository: SynonymsRepository,
 ) : ViewModel() {

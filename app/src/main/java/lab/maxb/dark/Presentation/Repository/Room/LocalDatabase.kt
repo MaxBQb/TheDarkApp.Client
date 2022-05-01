@@ -28,7 +28,7 @@ abstract class LocalDatabase : RoomDatabase() {
     abstract fun profileDao(): ProfileDAO
 
     companion object {
-        fun buildDatabase(app: Application)
+        internal fun build(app: Application)
             = Room.databaseBuilder(
                 app.applicationContext,
                 LocalDatabase::class.java, "dark_database"

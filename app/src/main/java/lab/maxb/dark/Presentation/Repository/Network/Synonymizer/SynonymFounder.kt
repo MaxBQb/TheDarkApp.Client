@@ -2,10 +2,11 @@ package lab.maxb.dark.Presentation.Repository.Network.Synonymizer
 
 import lab.maxb.dark.Presentation.Repository.Interfaces.SynonymsRepository
 import okhttp3.MultipartBody
+import org.koin.core.annotation.Single
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-
+@Single
 class SynonymFounder : SynonymsRepository {
     private val api: RusTxtAPI
     private suspend fun getSynonym(text: String): String? {

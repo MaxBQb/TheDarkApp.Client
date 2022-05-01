@@ -11,7 +11,9 @@ import lab.maxb.dark.Presentation.Repository.Network.Dark.DarkService
 import lab.maxb.dark.Presentation.Repository.Network.Dark.Model.AuthRequest
 import lab.maxb.dark.Presentation.Repository.Room.LocalDatabase
 import lab.maxb.dark.Presentation.Repository.Room.Server.Model.ProfileDTO
+import org.koin.core.annotation.Single
 
+@Single
 class ProfileRepositoryImpl(
     db: LocalDatabase,
     private val darkService: DarkService,

@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-android'
     id 'androidx.navigation.safeargs.kotlin'
+    id "com.google.devtools.ksp" version "1.6.21-1.0.5"
     id 'kotlin-kapt'
 }
 
@@ -45,6 +46,11 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    applicationVariants.all { variant ->
+        variant.sourceSets.java.each {
+            it.srcDirs += "build/generated/ksp/${variant.name}/kotlin"
+        }
+    }
 }
 
 dependencies {
@@ -53,7 +59,10 @@ dependencies {
     def coroutines_version = "1.6.0"
 
     // Dependency Injection
+    def koin_annotations_version = "1.0.0-beta-1"
     implementation 'io.insert-koin:koin-android:3.2.0-beta-1'
+    implementation "io.insert-koin:koin-annotations:$koin_annotations_version"
+    ksp "io.insert-koin:koin-ksp-compiler:$koin_annotations_version"
 
     // Coroutines + LiveData
     implementation 'androidx.lifecycle:lifecycle-common-java8:2.4.1'

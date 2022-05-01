@@ -6,8 +6,9 @@ import androidx.preference.PreferenceManager
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import lab.maxb.dark.Presentation.Extra.Delegates.property
+import org.koin.core.annotation.Single
 
-
+@Single
 class UserSettings(context: Context) {
     private val pref = PreferenceManager.getDefaultSharedPreferences(context)
     private val securePref: SharedPreferences = EncryptedSharedPreferences.create(

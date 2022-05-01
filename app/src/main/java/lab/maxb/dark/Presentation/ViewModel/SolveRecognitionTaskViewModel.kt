@@ -13,6 +13,7 @@ import lab.maxb.dark.Domain.Model.Role
 import lab.maxb.dark.Domain.Operations.solve
 import lab.maxb.dark.Presentation.Repository.Interfaces.ProfileRepository
 import lab.maxb.dark.Presentation.Repository.Interfaces.RecognitionTasksRepository
+import org.koin.android.annotation.KoinViewModel
 import kotlin.properties.Delegates
 
 
@@ -24,6 +25,7 @@ abstract class SolveRecognitionTaskViewModel : ViewModel() {
     abstract fun solveRecognitionTask(name: String): Boolean
 }
 
+@KoinViewModel
 class SolveRecognitionTaskViewModelImpl(
     private val recognitionTasksRepository: RecognitionTasksRepository,
     private val profileRepository: ProfileRepository,

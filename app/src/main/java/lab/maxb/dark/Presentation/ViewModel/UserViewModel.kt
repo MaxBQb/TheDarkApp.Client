@@ -10,6 +10,7 @@ import lab.maxb.dark.Presentation.Repository.Interfaces.ProfileRepository
 import lab.maxb.dark.Presentation.Repository.Interfaces.RecognitionTasksRepository
 import lab.maxb.dark.Presentation.Repository.Interfaces.UsersRepository
 import lab.maxb.dark.Presentation.Repository.Network.OAUTH.Google.GoogleSignInLogic
+import org.koin.android.annotation.KoinViewModel
 
 
 abstract class UserViewModel: ViewModel() {
@@ -20,6 +21,7 @@ abstract class UserViewModel: ViewModel() {
     abstract fun signOut(): Job
 }
 
+@KoinViewModel
 class UserViewModelImpl(
     private val profileRepository: ProfileRepository,
     private val usersRepository: UsersRepository,
