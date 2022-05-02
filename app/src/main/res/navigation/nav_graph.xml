@@ -2,8 +2,17 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/main_fragment"
+    app:startDestination="@id/auth_handle_fragment"
     android:id="@+id/nav_graph">
+
+    <fragment
+        android:id="@+id/auth_handle_fragment"
+        android:name="lab.maxb.dark.Presentation.View.AuthHandleFragment"
+        tools:layout="@layout/auth_handle_fragment" >
+        <action
+            android:id="@+id/action_auth_handle_fragment_to_main_fragment"
+            app:destination="@id/main_fragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/main_fragment"
@@ -55,4 +64,10 @@
             android:id="@+id/task_link"
             app:uri="https://dark/task/{id}" />
     </fragment>
+    <action
+        android:id="@+id/action_global_login_fragment"
+        app:destination="@id/login_fragment"
+        app:popUpTo="@id/login_fragment"
+        app:popUpToInclusive="true"
+        app:launchSingleTop="true" />
 </navigation>

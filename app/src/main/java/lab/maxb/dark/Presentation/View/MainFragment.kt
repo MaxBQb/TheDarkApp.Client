@@ -5,9 +5,11 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
+import lab.maxb.dark.NavGraphDirections
 import lab.maxb.dark.Presentation.Extra.Delegates.viewBinding
 import lab.maxb.dark.Presentation.Extra.observe
 import lab.maxb.dark.Presentation.ViewModel.UserViewModel
@@ -22,16 +24,21 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (requireActivity() as AppCompatActivity)
+            .supportActionBar
+            ?.setHomeAsUpIndicator(null)
+
         if (mViewModel.user.value == null) {
             openLoginView()
             return
         }
 
         setFragmentResultListener(LoginFragment.RESPONSE_LOGIN_SUCCESSFUL) {
-            _, _ ->
-            findNavController().navigate(
-                MainFragmentDirections.actionMainFragmentToRecognitionTaskListFragment()
-            )
+                _, _ ->
+//            findNavController().navigate(
+//                MainFragmentDirections.actionMainFragmentToRecognitionTaskListFragment()
+//            )
         }
 
         observe(mViewModel.user) { profile ->
@@ -43,6 +50,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                 profile.user?.name ?: "Anonymous")
         }
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,5 +77,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         }
     }
 
-    private fun openLoginView() = findNavController().navigate(R.id.login_fragment)
+    private fun openLoginView() = findNavController().navigate(
+        NavGraphDirections.actionGlobalLoginFragment()
+    )
 }

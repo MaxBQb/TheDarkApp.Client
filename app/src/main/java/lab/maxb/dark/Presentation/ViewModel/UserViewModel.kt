@@ -55,7 +55,7 @@ class UserViewModelImpl(
         = TODO()
 
     override fun signOut() = viewModelScope.launch {
-        mGoogleSignInLogic.signOut()
+//        mGoogleSignInLogic.signOut()
         userSettings.token = ""
         userSettings.login = ""
         profileRepository.clearCache()
