@@ -2,4 +2,5 @@ package lab.maxb.dark.Domain.Operations
 
 import java.util.*
 
-fun getUUID() = UUID.randomUUID().toString()
+inline val randomUUID get() = UUID.randomUUID().toString()
+inline val<reified T> T.unicname get() = "${T::class}.${randomUUID}"

@@ -14,9 +14,9 @@ import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import lab.maxb.dark.Domain.Model.Profile
+import lab.maxb.dark.Domain.Operations.unicname
 import lab.maxb.dark.MainActivity
 import lab.maxb.dark.Presentation.Extra.Delegates.viewBinding
-import lab.maxb.dark.Presentation.Extra.FragmentKeys
 import lab.maxb.dark.Presentation.Extra.observe
 import lab.maxb.dark.Presentation.Extra.observeOnce
 import lab.maxb.dark.Presentation.Extra.toggleVisibility
@@ -131,8 +131,7 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
     }
 
     companion object {
-        private val keys = FragmentKeys(this::class)
-        val GET_GOOGLE_ACCOUNT by keys.special()
-        val RESPONSE_LOGIN_SUCCESSFUL by keys.communication()
+        val GET_GOOGLE_ACCOUNT = unicname
+        val RESPONSE_LOGIN_SUCCESSFUL = unicname
     }
 }

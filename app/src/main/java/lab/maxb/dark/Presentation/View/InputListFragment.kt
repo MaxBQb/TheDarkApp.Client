@@ -7,9 +7,9 @@ import android.widget.AutoCompleteTextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import lab.maxb.dark.Domain.Operations.unicname
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
 import lab.maxb.dark.Presentation.Extra.Delegates.viewBinding
-import lab.maxb.dark.Presentation.Extra.FragmentKeys
 import lab.maxb.dark.Presentation.Extra.observe
 import lab.maxb.dark.Presentation.Extra.setFragmentResponse
 import lab.maxb.dark.Presentation.Extra.withArgs
@@ -59,10 +59,9 @@ class InputListFragment : Fragment(R.layout.input_list_fragment) {
     }
 
     companion object {
-        private val keys = FragmentKeys(this::class)
-        val TEXTS by keys.param()
-        val REQUEST_TEXTS by keys.communication()
-        val RESPONSE_TEXTS by keys.communication()
+        val TEXTS = unicname
+        val REQUEST_TEXTS = unicname
+        val RESPONSE_TEXTS = unicname
 
         fun newInstance(texts: List<String>? = null)
             = InputListFragment().withArgs(

@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import lab.maxb.dark.Domain.Operations.unicname
 import lab.maxb.dark.Presentation.Extra.*
 import lab.maxb.dark.Presentation.Extra.Delegates.autoCleaned
 import lab.maxb.dark.Presentation.Extra.Delegates.viewBinding
@@ -92,14 +93,13 @@ class ImageSliderFragment : Fragment(R.layout.image_slider_fragment) {
     }
 
     companion object {
-        private val keys = FragmentKeys(this::class)
-        val URIS by keys.param()
-        val IS_EDITABLE by keys.param()
-        val MAX_AMOUNT by keys.param()
-        val REQUEST_URIS by keys.communication()
-        val RESPONSE_URIS by keys.communication()
-        val ADD_URIS by keys.special()
-        val UPDATE_URI by keys.special()
+        val URIS = unicname
+        val IS_EDITABLE = unicname
+        val MAX_AMOUNT = unicname
+        val REQUEST_URIS = unicname
+        val RESPONSE_URIS = unicname
+        val ADD_URIS = unicname
+        val UPDATE_URI = unicname
 
         fun newInstance(uris: List<String>? = null,
                         isEditable: Boolean = false,
