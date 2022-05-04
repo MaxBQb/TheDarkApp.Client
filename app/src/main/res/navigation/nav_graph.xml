@@ -11,7 +11,10 @@
         tools:layout="@layout/auth_handle_fragment" >
         <action
             android:id="@+id/action_auth_handle_fragment_to_main_fragment"
-            app:destination="@id/main_fragment" />
+            app:destination="@id/main_fragment"
+            app:popUpTo="@id/main_fragment"
+            app:popUpToInclusive="true"
+            />
     </fragment>
 
     <fragment

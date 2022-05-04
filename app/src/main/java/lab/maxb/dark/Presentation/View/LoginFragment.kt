@@ -13,13 +13,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import kotlinx.coroutines.flow.collectLatest
 import lab.maxb.dark.Domain.Model.Profile
 import lab.maxb.dark.Domain.Operations.unicname
-import lab.maxb.dark.MainActivity
 import lab.maxb.dark.Presentation.Extra.Delegates.viewBinding
-import lab.maxb.dark.Presentation.Extra.observe
-import lab.maxb.dark.Presentation.Extra.observeOnce
-import lab.maxb.dark.Presentation.Extra.toggleVisibility
+import lab.maxb.dark.Presentation.Extra.launch
 import lab.maxb.dark.Presentation.Repository.Network.OAUTH.Google.GoogleSignInLogic
 import lab.maxb.dark.Presentation.ViewModel.UserViewModel
 import lab.maxb.dark.R
@@ -50,47 +48,46 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
 //            mViewModel.authorizeBySession(authCode).observeOnce(viewLifecycleOwner,
 //                makeAuthResultHandler(null))
 //        }
-        observeOnce(mViewModel.authorizeBySession(null), makeAuthResultHandler(null))
+
         mBinding.signIn.setOnClickListener {
             changeLoginButtonsIsEnable(false)
-            observe(mViewModel.authorize(
+            launch {
+                mViewModel.authorize(
                     mBinding.login.text.toString(),
                     mBinding.password.text.toString(),
-                ),
-                makeAuthResultHandler(R.string.incorrect_credentials_message)
-            )
+                )
+                mViewModel.profile.collectLatest { state ->
+                    state.ifLoaded {
+                        handleResult(R.string.incorrect_credentials_message, it)
+                    }
+                }
+            }
         }
 
         mBinding.googleSignIn.setOnClickListener {
             changeLoginButtonsIsEnable(false)
             mGoogleSignInPage.open(mGoogleSignInLogic.signInIntent)
         }
-        toggleToolbarVisibility(false)
     }
-
-    private fun toggleToolbarVisibility(isVisible: Boolean)
-        = (requireActivity() as MainActivity).binding
-            .toolbar.toggleVisibility(isVisible)
 
     private fun onAuthWithGoogle(result: Intent?){
-        val credentials = result?.let { mGoogleSignInLogic.handleSignInResult(it) }
-        if (credentials == null)
-            onNotAuthorized(R.string.something_went_wrong)
-        else {
-            observeOnce(mViewModel.authorizeByOAUTHProvider(
-                credentials[0],
-                credentials[1],
-                credentials[2],
-            ), makeAuthResultHandler(R.string.something_went_wrong))
-        }
+//        val credentials = result?.let { mGoogleSignInLogic.handleSignInResult(it) }
+//        if (credentials == null)
+//            onNotAuthorized(R.string.something_went_wrong)
+//        else {
+//            observeOnce(mViewModel.authorizeByOAUTHProvider(
+//                credentials[0],
+//                credentials[1],
+//                credentials[2],
+//            ), makeAuthResultHandler(R.string.something_went_wrong))
+//        }
     }
 
-    private fun makeAuthResultHandler(@StringRes message: Int?) = { profile: Profile? ->
+    private fun handleResult(@StringRes message: Int?, profile: Profile?) {
         profile?.let {
             mBinding.password.setText("")
             setFragmentResult(RESPONSE_LOGIN_SUCCESSFUL, bundleOf())
             requireActivity().onBackPressed()
-            toggleToolbarVisibility(true)
         } ?: onNotAuthorized(message)
         changeLoginButtonsIsEnable(true)
     }

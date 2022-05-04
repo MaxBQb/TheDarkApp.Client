@@ -1,8 +1,8 @@
 package lab.maxb.dark.Presentation.Repository.Implementation
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.*
 import lab.maxb.dark.Domain.Model.Profile
 import lab.maxb.dark.Presentation.Extra.UserSettings
 import lab.maxb.dark.Presentation.Repository.Interfaces.ProfileRepository
@@ -21,44 +21,41 @@ class ProfileRepositoryImpl(
     private val usersRepository: UsersRepository,
 ) : ProfileRepository {
     private val profileDAO = db.profileDao()
-    override var profile: Profile? = null
+    private val _login = MutableStateFlow(userSettings.login)
 
-    override suspend fun getProfile(login: String?, password: String?): Flow<Profile?> {
-        val login = login ?: userSettings.login
-        password?.let {
-            val response = darkService.login(AuthRequest(
-                login, it
-            ))
-
-            userSettings.token = response.token
-            userSettings.login = login
-            try {
-                save(Profile(
-                    login,
-                    usersRepository.getUser(response.id).first(),
-                    response.token,
-                    role = response.role
-                ).also { profile = it })
-            } catch (e: Throwable) {
-                userSettings.token = ""
-                userSettings.login = ""
-                throw e
+    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
+    override val profile = _login.flatMapLatest { login ->
+        profileDAO.getByLogin(login).distinctUntilChanged().mapLatest { fullProfile ->
+            fullProfile?.toProfile()?.also {
+                it.user?.id?.let { id ->
+                    assert(checkToken(id))
+                }
             }
         }
-        return profileDAO.getByLogin(login).map {
-            it?.toProfile()?.also { profile = it }
-        }.also { it.first()?.user?.id?.let { id ->
-            assert(checkToken(id))
-        } }
+    }
+
+    override suspend fun sendCredentials(login: String, password: String) {
+        val response = darkService.login(AuthRequest(login, password))
+        userSettings.token = response.token
+        userSettings.login = login
+        save(
+            Profile(
+                login,
+                usersRepository.getUser(response.id).first(),
+                response.token,
+                role = response.role
+            )
+        )
+        _login.value = login
     }
 
     private suspend fun checkToken(id: String) = try {
         usersRepository.getUser(id).first()!!
         true
-    } catch (e: Throwable) { false }
+    } catch (e: Throwable) {
+        false
+    }
 
-    override suspend fun save(profile: Profile)
-        = profileDAO.save(ProfileDTO(profile))
-
-    override suspend fun clearCache(): Unit = profileDAO.clear()
+    override suspend fun save(profile: Profile) = profileDAO.save(ProfileDTO(profile))
+    override suspend fun clearCache() = profileDAO.clear()
 }

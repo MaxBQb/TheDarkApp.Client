@@ -20,7 +20,7 @@ class AddRecognitionTaskViewModel(
 
     fun addRecognitionTask() = liveData(viewModelScope.coroutineContext) {
         try {
-            val user = profileRepository.getProfile().first()!!.user!!
+            val user = profileRepository.profile.first()!!.user!!
             val task = createRecognitionTask(names, imageUris, user)!!
             recognitionTasksRepository.addRecognitionTask(task)
             emit(true)

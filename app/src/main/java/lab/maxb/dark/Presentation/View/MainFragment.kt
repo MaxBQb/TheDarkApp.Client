@@ -5,10 +5,10 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
+import lab.maxb.dark.MainActivity
 import lab.maxb.dark.NavGraphDirections
 import lab.maxb.dark.Presentation.Extra.Delegates.viewBinding
 import lab.maxb.dark.Presentation.Extra.observe
@@ -25,29 +25,24 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (requireActivity() as AppCompatActivity)
-            .supportActionBar
-            ?.setHomeAsUpIndicator(null)
-
-        if (mViewModel.user.value == null) {
-            openLoginView()
-            return
+        (activity as? MainActivity)?.withToolbar {
+            navigationIcon = null
         }
 
         setFragmentResultListener(LoginFragment.RESPONSE_LOGIN_SUCCESSFUL) {
                 _, _ ->
-//            findNavController().navigate(
-//                MainFragmentDirections.actionMainFragmentToRecognitionTaskListFragment()
-//            )
+            findNavController().navigate(
+                MainFragmentDirections.actionMainFragmentToRecognitionTaskListFragment()
+            )
         }
-
-        observe(mViewModel.user) { profile ->
-            if (profile == null) {
-                openLoginView()
-                return@observe
+        observe(mViewModel.profile) {
+            it.ifLoaded { profile ->
+                if (profile == null)
+                    openLoginView()
+                else
+                    mBinding.welcomeLabel.text = getString(R.string.welcome_label,
+                    profile.user?.name ?: "Anonymous")
             }
-            mBinding.welcomeLabel.text = getString(R.string.welcome_label,
-                profile.user?.name ?: "Anonymous")
         }
     }
 

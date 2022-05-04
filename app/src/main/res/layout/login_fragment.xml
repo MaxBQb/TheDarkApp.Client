@@ -47,14 +47,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/normalMargin"
-            android:enabled="false"
             android:text="@string/login_button"
             app:cornerRadius="8dp" />
         <com.google.android.gms.common.SignInButton
             android:id="@+id/google_sign_in"
             android:layout_gravity="center"
             app:colorScheme="dark"
-            android:enabled="false"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </androidx.appcompat.widget.LinearLayoutCompat>

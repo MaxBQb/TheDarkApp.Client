@@ -54,7 +54,9 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        (activity as? MainActivity)?.binding?.toolbar?.setNavigationIcon(R.drawable.ic_close)
+        (activity as? MainActivity)?.withToolbar {
+            setNavigationIcon(R.drawable.ic_close)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
