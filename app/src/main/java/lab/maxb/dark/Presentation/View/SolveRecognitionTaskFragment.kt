@@ -36,7 +36,7 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
                 Toast.makeText(context, "Неверно", Toast.LENGTH_SHORT).show()
         }
 
-        observe(mViewModel.recognitionTask) {
+        mViewModel.recognitionTask observe {
             it?.let { task: RecognitionTask ->
                 parentFragmentManager.commit {
                     replace(
@@ -45,12 +45,12 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
                         )
                     )
                 }
-                observe(mViewModel.isReviewMode) {
+                mViewModel.isReviewMode observe {
                     mBinding.markReviewedButton.isVisible = !(it && task.reviewed)
                 }
             } ?: activity?.onBackPressed()
         }
-        observe(mViewModel.isReviewMode) {
+        mViewModel.isReviewMode observe {
             mBinding.moderatorTools.isVisible = it
             mBinding.answerLayout.isVisible = !it
 

@@ -78,7 +78,7 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
     }
 
     private fun createRecognitionTask() {
-        observe(mViewModel.addRecognitionTask()) {
+        mViewModel.addRecognitionTask() observe {
             if (it) activity?.onBackPressed()
             else Toast.makeText(context,
                 getString(R.string.not_enough_data_provided_message),

@@ -19,7 +19,7 @@ class AuthHandleFragment : Fragment(R.layout.auth_handle_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        observe(mViewModel.profile) {
+        mViewModel.profile observe {
             it.ifLoaded { profile ->
                 findNavController().navigate(
                     if (profile == null)

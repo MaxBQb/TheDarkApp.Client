@@ -24,7 +24,7 @@ class RecognitionTaskListFragment : Fragment(R.layout.recognition_task_list_frag
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        observe(mViewModel.isTaskCreationAllowed) {
+        mViewModel.isTaskCreationAllowed observe {
             mBinding.fab.isVisible = it
         }
         mBinding.recognitionTaskListRecycler.layoutManager = LinearLayoutManager(context)
@@ -34,7 +34,7 @@ class RecognitionTaskListFragment : Fragment(R.layout.recognition_task_list_frag
             )
         }
 
-        observe(mViewModel.recognitionTaskList) { recognitionTasks ->
+        mViewModel.recognitionTaskList observe { recognitionTasks ->
             mAdapter = RecognitionTaskListAdapter(recognitionTasks)
             mBinding.recognitionTaskListRecycler.adapter = mAdapter
             mAdapter.onElementClickListener = { v: View, task: RecognitionTask ->

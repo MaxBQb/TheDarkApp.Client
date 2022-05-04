@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
 
-        observe(authViewModel.profile) {
+        authViewModel.profile observe {
             it.ifLoaded { profile ->
                 binding.toolbar.isVisible = profile != null
                 if (profile == null && navController.currentDestination?.id != R.id.login_fragment)

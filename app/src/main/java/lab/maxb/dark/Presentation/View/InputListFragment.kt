@@ -33,7 +33,7 @@ class InputListFragment : Fragment(R.layout.input_list_fragment) {
         mBinding.inputListRecycler.adapter = mAdapter
         mAdapter.onItemTextChangedListener = { editText, text, position -> text?.let {
             mViewModel.texts[position] = it
-            observe(mViewModel.getSuggestions(mViewModel.texts)) { values: Set<String> ->
+            mViewModel.getSuggestions(mViewModel.texts) observe { values: Set<String> ->
                 val input = editText as AutoCompleteTextView
                 input.setAdapter(ArrayAdapter(
                     requireContext(),

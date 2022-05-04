@@ -31,7 +31,7 @@ class ImageSliderFragment : Fragment(R.layout.image_slider_fragment) {
             mViewModel.maxAmount = it.getInt(MAX_AMOUNT, -1)
             mViewModel.isEditable = it.getBoolean(IS_EDITABLE, false)
         }
-        observe(mViewModel.images) { uris ->
+        mViewModel.images observe { uris ->
             mAdapter = ImageSliderAdapter( uris.mapNotNull { it.toBitmap(
                 requireContext(),
                 mBinding.imageSlider.layoutParams.width,

@@ -35,7 +35,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                 MainFragmentDirections.actionMainFragmentToRecognitionTaskListFragment()
             )
         }
-        observe(mViewModel.profile) {
+        mViewModel.profile observe {
             it.ifLoaded { profile ->
                 if (profile == null)
                     openLoginView()
