@@ -22,9 +22,9 @@ interface RecognitionTaskDAO {
     suspend fun addRecognitionTaskImages(images: List<RecognitionTaskImage>)
 
     @Transaction
-    fun addRecognitionTask(task: RecognitionTaskDTO,
+    suspend fun addRecognitionTask(task: RecognitionTaskDTO,
                            names: List<RecognitionTaskName>,
-                           images: List<RecognitionTaskImage>) = runBlocking {
+                           images: List<RecognitionTaskImage>) {
         deleteRecognitionTask(task)
         addRecognitionTask(task)
         addRecognitionTaskNames(names)
@@ -52,7 +52,7 @@ interface RecognitionTaskDAO {
     suspend fun getRecognitionTaskImages(id: String): List<RecognitionTaskImage>
 
     @Query("SELECT id FROM recognition_task")
-    fun getAllRecognitionTasksIds(): List<String>
+    suspend fun getAllRecognitionTasksIds(): List<String>
 
     @Transaction
     @Query("SELECT * FROM recognition_task ORDER BY reviewed")
@@ -67,9 +67,9 @@ interface RecognitionTaskDAO {
     fun getRecognitionTask(id: String): LiveData<RecognitionTaskWithNamesAndImages?>
 
     @Query("SELECT EXISTS(SELECT * FROM recognition_task WHERE id = :id)")
-    fun hasRecognitionTask(id: String): Boolean
+    suspend fun hasRecognitionTask(id: String): Boolean
 
     @Transaction
     @Query("DELETE FROM recognition_task")
-    fun clear()
+    suspend fun clear()
 }

@@ -17,9 +17,9 @@ interface UserDAO {
     fun getUser(id: String): Flow<UserDTO?>
 
     @Query("SELECT EXISTS(SELECT * FROM user WHERE id = :id)")
-    fun hasUser(id: String): Boolean
+    suspend fun hasUser(id: String): Boolean
 
     @Transaction
     @Query("DELETE FROM user")
-    fun clear()
+    suspend fun clear()
 }

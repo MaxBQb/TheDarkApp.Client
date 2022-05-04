@@ -32,8 +32,7 @@ abstract class LocalDatabase : RoomDatabase() {
             = Room.databaseBuilder(
                 app.applicationContext,
                 LocalDatabase::class.java, "dark_database"
-            ).allowMainThreadQueries()
-            .fallbackToDestructiveMigration()
+            ).fallbackToDestructiveMigration()
             .build()
     }
 }

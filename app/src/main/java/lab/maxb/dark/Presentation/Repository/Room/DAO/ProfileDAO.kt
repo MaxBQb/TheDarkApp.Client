@@ -19,5 +19,5 @@ interface ProfileDAO {
 
     @Transaction
     @Query("DELETE FROM profile")
-    fun clear()
+    suspend fun clear()
 }
