@@ -1,4 +1,4 @@
-package lab.maxb.dark.Presentation.ViewModel
+package lab.maxb.dark.Presentation.ViewModel.utils
 
 sealed class UiState<out T> {
     object Loading : UiState<Nothing>() {

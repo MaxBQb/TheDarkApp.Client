@@ -2,19 +2,17 @@ package lab.maxb.dark.Presentation.ViewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapLatest
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import lab.maxb.dark.Domain.Model.RecognitionTask
 import lab.maxb.dark.Domain.Model.Role
 import lab.maxb.dark.Domain.Operations.solve
+import lab.maxb.dark.Presentation.Extra.launch
 import lab.maxb.dark.Presentation.Repository.Interfaces.ProfileRepository
 import lab.maxb.dark.Presentation.Repository.Interfaces.RecognitionTasksRepository
+import lab.maxb.dark.Presentation.ViewModel.utils.stateIn
 import org.koin.android.annotation.KoinViewModel
 import kotlin.properties.Delegates
 
@@ -35,11 +33,7 @@ class SolveRecognitionTaskViewModelImpl(
     override val recognitionTask by lazy  {
         recognitionTasksRepository.getRecognitionTask(id)
     }
-    private val profile = profileRepository.profile.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = null
-    )
+    private val profile = profileRepository.profileState
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override val isReviewMode get() = profile.mapLatest {
@@ -47,13 +41,9 @@ class SolveRecognitionTaskViewModelImpl(
             Role.MODERATOR, Role.ADMINISTRATOR -> true
             else -> false
         }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = false
-    )
+    }.stateIn(false)
 
-    override fun mark(isAllowed: Boolean) = viewModelScope.launch {
+    override fun mark(isAllowed: Boolean) = launch {
         val task = recognitionTask.value ?: return@launch
         task.reviewed = isAllowed
         recognitionTasksRepository.markRecognitionTask(task)
@@ -62,10 +52,9 @@ class SolveRecognitionTaskViewModelImpl(
     override fun solveRecognitionTask(name: String): Boolean {
         val task = recognitionTask.value ?: return false
         return task.solve(name).also { isSolution ->
-            if (isSolution)
-                viewModelScope.launch {
-                    recognitionTasksRepository.deleteRecognitionTask(task)
-                }
+            if (isSolution) launch {
+                recognitionTasksRepository.deleteRecognitionTask(task)
+            }
         }
     }
 }

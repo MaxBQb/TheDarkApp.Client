@@ -1,18 +1,23 @@
 package lab.maxb.dark.Presentation.ViewModel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.withTimeout
 import lab.maxb.dark.Domain.Model.Profile
 import lab.maxb.dark.Presentation.Extra.UserSettings
+import lab.maxb.dark.Presentation.Extra.launch
 import lab.maxb.dark.Presentation.Repository.Interfaces.ProfileRepository
 import lab.maxb.dark.Presentation.Repository.Interfaces.RecognitionTasksRepository
 import lab.maxb.dark.Presentation.Repository.Interfaces.UsersRepository
 import lab.maxb.dark.Presentation.Repository.Network.OAUTH.Google.GoogleSignInLogic
+import lab.maxb.dark.Presentation.ViewModel.utils.UiState
+import lab.maxb.dark.Presentation.ViewModel.utils.stateIn
 import org.koin.android.annotation.KoinViewModel
+import java.time.Duration
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -26,14 +31,10 @@ class UserViewModel(
 ) : ViewModel() {
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _profile = MutableStateFlow(UiState.Loading as UiState<Profile?>)
-    val profile = _profile.stateIn(
-        scope = viewModelScope,
-        started = WhileSubscribed(5000),
-        initialValue = UiState.Loading
-    )
+    val profile = _profile.stateIn(UiState.Loading)
 
     init {
-        viewModelScope.launch {
+        launch {
             profileRepository.profile.mapLatest {
                 UiState.Success(it)
             }.catch {
@@ -47,9 +48,9 @@ class UserViewModel(
     suspend fun authorize(login: String, password: String) {
         try {
             _profile.value = UiState.Loading
-//            withTimeout(Duration.ofSeconds(10).toMillis()) {
+            withTimeout(Duration.ofSeconds(10).toMillis()) {
                 profileRepository.sendCredentials(login, password)
-//            }
+            }
         } catch (e: Throwable) {
             _profile.value = UiState.Error(e)
             println(e)
@@ -60,7 +61,7 @@ class UserViewModel(
         TODO()
     }
 
-    fun signOut() = viewModelScope.launch {
+    fun signOut() = launch {
 //        mGoogleSignInLogic.signOut()
         userSettings.token = ""
         userSettings.login = ""
@@ -70,6 +71,5 @@ class UserViewModel(
     }
 }
 
-inline fun UiState<Profile?>.ifHasProfile(crossinline block: (Profile) -> Unit) = ifLoaded {
-    block(it ?: return@ifLoaded)
-}
+context(ViewModel)
+inline val ProfileRepository.profileState get() = profile.stateIn(null)
