@@ -9,13 +9,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.setFragmentResultListener
+import lab.maxb.dark.R
+import lab.maxb.dark.databinding.AddRecognitionTaskFragmentBinding
 import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.presentation.extra.delegates.viewBinding
+import lab.maxb.dark.presentation.extra.goBack
 import lab.maxb.dark.presentation.extra.observe
 import lab.maxb.dark.presentation.extra.requestFragmentResult
 import lab.maxb.dark.presentation.viewModel.AddRecognitionTaskViewModel
-import lab.maxb.dark.R
-import lab.maxb.dark.databinding.AddRecognitionTaskFragmentBinding
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragment) {
@@ -78,7 +79,7 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
 
     private fun createRecognitionTask() {
         mViewModel.addRecognitionTask() observe {
-            if (it) activity?.onBackPressed()
+            if (it) goBack()
             else Toast.makeText(context,
                 getString(R.string.not_enough_data_provided_message),
                 Toast.LENGTH_SHORT).show()

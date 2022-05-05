@@ -7,12 +7,12 @@ import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
-import androidx.navigation.fragment.findNavController
 import lab.maxb.dark.NavGraphDirections
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.MainFragmentBinding
 import lab.maxb.dark.presentation.extra.delegates.viewBinding
 import lab.maxb.dark.presentation.extra.launch
+import lab.maxb.dark.presentation.extra.navigate
 import lab.maxb.dark.presentation.extra.observe
 import lab.maxb.dark.presentation.viewModel.UserViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -31,9 +31,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
         setFragmentResultListener(LoginFragment.RESPONSE_LOGIN_SUCCESSFUL) {
                 _, _ ->
-            findNavController().navigate(
-                MainFragmentDirections.actionMainFragmentToRecognitionTaskListFragment()
-            )
+            MainFragmentDirections.actionMainFragmentToRecognitionTaskListFragment().navigate()
         }
         mViewModel.profile observe {
             it.ifLoaded { profile ->
@@ -69,7 +67,6 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         openLoginView()
     }
 
-    private fun openLoginView() = findNavController().navigate(
-        NavGraphDirections.actionGlobalLoginFragment()
-    )
+    private fun openLoginView()
+        = NavGraphDirections.actionGlobalLoginFragment().navigate()
 }

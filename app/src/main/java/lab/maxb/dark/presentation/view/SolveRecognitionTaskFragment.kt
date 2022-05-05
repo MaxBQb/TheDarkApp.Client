@@ -11,12 +11,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.navigation.fragment.navArgs
-import lab.maxb.dark.domain.model.RecognitionTask
-import lab.maxb.dark.presentation.extra.delegates.viewBinding
-import lab.maxb.dark.presentation.extra.observe
-import lab.maxb.dark.presentation.viewModel.SolveRecognitionTaskViewModel
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.SolveRecognitionTaskFragmentBinding
+import lab.maxb.dark.domain.model.RecognitionTask
+import lab.maxb.dark.presentation.extra.delegates.viewBinding
+import lab.maxb.dark.presentation.extra.goBack
+import lab.maxb.dark.presentation.extra.observe
+import lab.maxb.dark.presentation.viewModel.SolveRecognitionTaskViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fragment) {
@@ -31,7 +32,7 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
             if (mViewModel.solveRecognitionTask(
                     mBinding.answer.text.toString()
                 ))
-                activity?.onBackPressed()
+                goBack()
             else
                 Toast.makeText(context, "Неверно", Toast.LENGTH_SHORT).show()
         }
@@ -48,7 +49,7 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
                 mViewModel.isReviewMode observe {
                     mBinding.markReviewedButton.isVisible = !(it && task.reviewed)
                 }
-            } ?: activity?.onBackPressed()
+            } ?: goBack()
         }
         mViewModel.isReviewMode observe {
             mBinding.moderatorTools.isVisible = it
@@ -57,14 +58,14 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
             mBinding.markReviewedButton.setOnClickListener { _ ->
                 if (!it) return@setOnClickListener
                 mViewModel.mark(true).invokeOnCompletion {
-                    activity?.onBackPressed()
+                    goBack()
                 }
             }
 
             mBinding.deleteButton.setOnClickListener { _ ->
                 if (!it) return@setOnClickListener
                 mViewModel.mark(false).invokeOnCompletion {
-                    activity?.onBackPressed()
+                    goBack()
                 }
             }
         }

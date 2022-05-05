@@ -11,15 +11,15 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.navigation.fragment.findNavController
 import com.wada811.databinding.dataBinding
 import kotlinx.coroutines.flow.collectLatest
-import lab.maxb.dark.domain.model.Profile
-import lab.maxb.dark.domain.operations.unicname
 import lab.maxb.dark.NavGraphDirections
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.LoginFragmentBinding
+import lab.maxb.dark.domain.model.Profile
+import lab.maxb.dark.domain.operations.unicname
 import lab.maxb.dark.presentation.extra.launch
+import lab.maxb.dark.presentation.extra.navigate
 import lab.maxb.dark.presentation.extra.observe
 import lab.maxb.dark.presentation.extra.setPasswordVisibility
 import lab.maxb.dark.presentation.repository.network.oauth.google.GoogleSignInLogic
@@ -56,9 +56,7 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
             mBinding.password.setPasswordVisibility(it)
         }
         mBinding.next.setOnClickListener {
-            findNavController().navigate(
-                LoginFragmentDirections.actionLoginFragmentToSignupFragment()
-            )
+            LoginFragmentDirections.actionLoginFragmentToSignupFragment().navigate()
         }
         mBinding.logIn.setOnClickListener {
             if (mViewModel.isLoading.value)
@@ -95,9 +93,7 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
     private fun handleResult(@StringRes message: Int?, profile: Profile?) {
         profile?.let {
             mViewModel.password.value = ""
-            findNavController().navigate(
-                NavGraphDirections.actionGlobalMainFragment()
-            )
+            NavGraphDirections.actionGlobalMainFragment().navigate()
 //            setFragmentResult(RESPONSE_LOGIN_SUCCESSFUL, bundleOf())
         } ?: onNotAuthorized(message)
     }

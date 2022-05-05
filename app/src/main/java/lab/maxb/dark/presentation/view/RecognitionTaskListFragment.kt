@@ -4,16 +4,16 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import lab.maxb.dark.R
+import lab.maxb.dark.databinding.RecognitionTaskListFragmentBinding
 import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.presentation.extra.delegates.autoCleaned
 import lab.maxb.dark.presentation.extra.delegates.viewBinding
+import lab.maxb.dark.presentation.extra.navigate
 import lab.maxb.dark.presentation.extra.observe
 import lab.maxb.dark.presentation.view.adapter.RecognitionTaskListAdapter
 import lab.maxb.dark.presentation.viewModel.RecognitionTaskListViewModel
-import lab.maxb.dark.R
-import lab.maxb.dark.databinding.RecognitionTaskListFragmentBinding
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
@@ -29,20 +29,16 @@ class RecognitionTaskListFragment : Fragment(R.layout.recognition_task_list_frag
         }
         mBinding.recognitionTaskListRecycler.layoutManager = LinearLayoutManager(context)
         mBinding.fab.setOnClickListener { v ->
-            findNavController().navigate(
-                RecognitionTaskListFragmentDirections.addRecognitionTask()
-            )
+            RecognitionTaskListFragmentDirections.addRecognitionTask().navigate()
         }
 
         mViewModel.recognitionTaskList observe { recognitionTasks ->
             mAdapter = RecognitionTaskListAdapter(recognitionTasks)
             mBinding.recognitionTaskListRecycler.adapter = mAdapter
             mAdapter.onElementClickListener = { v: View, task: RecognitionTask ->
-                findNavController().navigate(
-                    RecognitionTaskListFragmentDirections.solveRecognitionTask(
-                        task.id
-                    )
-                )
+                RecognitionTaskListFragmentDirections.solveRecognitionTask(
+                    task.id
+                ).navigate()
             }
         }
     }

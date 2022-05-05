@@ -5,16 +5,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.wada811.databinding.dataBinding
 import kotlinx.coroutines.flow.collectLatest
-import lab.maxb.dark.domain.model.Profile
 import lab.maxb.dark.NavGraphDirections
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.SignupFragmentBinding
-import lab.maxb.dark.presentation.extra.launch
-import lab.maxb.dark.presentation.extra.observe
-import lab.maxb.dark.presentation.extra.setPasswordVisibility
+import lab.maxb.dark.domain.model.Profile
+import lab.maxb.dark.presentation.extra.*
 import lab.maxb.dark.presentation.viewModel.UserViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -32,7 +29,7 @@ class SignupFragment : Fragment(R.layout.signup_fragment) {
             mBinding.passwordRepeat.setPasswordVisibility(it)
         }
         mBinding.back.setOnClickListener {
-            findNavController().popBackStack()
+            goBack()
         }
         mBinding.signup.setOnClickListener {
             if (mViewModel.isLoading.value)
@@ -54,9 +51,7 @@ class SignupFragment : Fragment(R.layout.signup_fragment) {
         profile?.let {
             mViewModel.password.value = ""
             mViewModel.passwordRepeat.value = ""
-            findNavController().navigate(
-                NavGraphDirections.actionGlobalMainFragment()
-            )
+            NavGraphDirections.actionGlobalMainFragment().navigate()
         } ?: onNotAuthorized(message)
     }
 
