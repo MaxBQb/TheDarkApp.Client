@@ -35,7 +35,7 @@ class SignupFragment : Fragment(R.layout.signup_fragment) {
             if (mViewModel.isLoading.value)
                 return@setOnClickListener
             mViewModel.isLoading.value = true
-            launch {
+            launchRepeatingOnLifecycle {
                 mViewModel.authorize(true)
                 mViewModel.profile.collectLatest { state ->
                     state.ifLoaded {

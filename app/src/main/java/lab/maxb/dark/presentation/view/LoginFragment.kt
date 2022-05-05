@@ -18,10 +18,7 @@ import lab.maxb.dark.R
 import lab.maxb.dark.databinding.LoginFragmentBinding
 import lab.maxb.dark.domain.model.Profile
 import lab.maxb.dark.domain.operations.unicname
-import lab.maxb.dark.presentation.extra.launch
-import lab.maxb.dark.presentation.extra.navigate
-import lab.maxb.dark.presentation.extra.observe
-import lab.maxb.dark.presentation.extra.setPasswordVisibility
+import lab.maxb.dark.presentation.extra.*
 import lab.maxb.dark.presentation.repository.network.oauth.google.GoogleSignInLogic
 import lab.maxb.dark.presentation.viewModel.UserViewModel
 import org.koin.android.ext.android.inject
@@ -62,7 +59,7 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
             if (mViewModel.isLoading.value)
                 return@setOnClickListener
             mViewModel.isLoading.value = true
-            launch {
+            launchRepeatingOnLifecycle {
                 mViewModel.authorize()
                 mViewModel.profile.collectLatest { state ->
                     state.ifLoaded {
