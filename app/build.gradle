@@ -31,6 +31,7 @@ android {
 
     buildFeatures{
         viewBinding true
+        dataBinding true
     }
 
     buildTypes {
@@ -106,6 +107,9 @@ dependencies {
     // Views/Layouts
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+
+    // Databinding utils
+    implementation 'com.github.wada811:DataBinding-ktx:6.0.0'
 
     // Desugaring (Time support for API 21+)
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="data"
+            type="lab.maxb.dark.presentation.view_model.UserViewModel"/>
+    </data>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        tools:context=".presentation.View.LoginFragment">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/signup_label"
+            android:textSize="34sp"
+            />
+
+            <EditText
+                android:id="@+id/login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/normalMargin"
+                android:hint="@string/login_hint"
+                android:inputType="textEmailAddress"
+                android:text="@={data.login}" />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/normalMargin"
+                android:hint="@string/password_hint"
+                android:inputType="textPassword"
+                android:text="@={data.password}" />
+
+            <EditText
+                android:id="@+id/password_repeat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/normalMargin"
+                android:hint="@string/password_repeat_hint"
+                android:inputType="textPassword"
+                android:text="@={data.passwordRepeat}" />
+
+            <CheckBox
+                android:id="@+id/show_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/normalMargin"
+                android:checked="@={data.showPassword}"
+                android:text="@string/show_password" />
+
+            <Button
+                android:id="@+id/signup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/normalMargin"
+                android:enabled="@{!data.isLoading &amp;&amp; data.password.equals(data.passwordRepeat) }"
+                android:text="@string/signup_button"
+                app:cornerRadius="8dp" />
+
+        <Button
+            android:id="@+id/back"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/normalMargin"
+            android:enabled="@{!data.isLoading}"
+            android:scaleX="1.7"
+            android:scaleY="1.7"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/ic_back"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

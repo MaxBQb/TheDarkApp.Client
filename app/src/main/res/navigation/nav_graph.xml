@@ -7,39 +7,37 @@
 
     <fragment
         android:id="@+id/auth_handle_fragment"
-        android:name="lab.maxb.dark.Presentation.View.AuthHandleFragment"
-        tools:layout="@layout/auth_handle_fragment" >
-        <action
-            android:id="@+id/action_auth_handle_fragment_to_main_fragment"
-            app:destination="@id/main_fragment"
-            app:popUpTo="@id/main_fragment"
-            app:popUpToInclusive="true"
-            />
-    </fragment>
+        android:name="lab.maxb.dark.presentation.View.AuthHandleFragment"
+        tools:layout="@layout/auth_handle_fragment" />
 
     <fragment
         android:id="@+id/main_fragment"
-        android:name="lab.maxb.dark.Presentation.View.MainFragment"
+        android:name="lab.maxb.dark.presentation.View.MainFragment"
         android:label="@string/main_fragment_label"
         tools:layout="@layout/main_fragment" >
-
         <action
             android:id="@+id/action_main_fragment_to_RecognitionTaskList_fragment"
-            app:destination="@id/RecognitionTaskList_fragment"
-            app:popUpTo="@id/main_fragment"
-            app:popUpToInclusive="true"
-            />
+            app:destination="@id/RecognitionTaskList_fragment"/>
     </fragment>
 
     <fragment
         android:id="@+id/login_fragment"
-        android:name="lab.maxb.dark.Presentation.View.LoginFragment"
+        android:name="lab.maxb.dark.presentation.View.LoginFragment"
         android:label="@string/login_fragment_label"
-        tools:layout="@layout/login_fragment" />
+        tools:layout="@layout/login_fragment" >
+        <action
+            android:id="@+id/action_login_fragment_to_signup_fragment"
+            app:destination="@id/signup_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signup_fragment"
+        android:name="lab.maxb.dark.presentation.View.SignupFragment"
+        android:label="@string/signup_label"
+        tools:layout="@layout/signup_fragment" />
 
     <fragment
         android:id="@+id/RecognitionTaskList_fragment"
-        android:name="lab.maxb.dark.Presentation.View.RecognitionTaskListFragment"
+        android:name="lab.maxb.dark.presentation.View.RecognitionTaskListFragment"
         android:label="@string/available_recognition_tasks"
         tools:layout="@layout/recognition_task_list_fragment" >
         <action
@@ -52,12 +50,12 @@
 
     <fragment
         android:id="@+id/addRecognitionTask"
-        android:name="lab.maxb.dark.Presentation.View.AddRecognitionTaskFragment"
+        android:name="lab.maxb.dark.presentation.View.AddRecognitionTaskFragment"
         android:label="@string/add_recognition_task_label"
         tools:layout="@layout/add_recognition_task_fragment" />
     <fragment
         android:id="@+id/solveRecognitionTask"
-        android:name="lab.maxb.dark.Presentation.View.SolveRecognitionTaskFragment"
+        android:name="lab.maxb.dark.presentation.View.SolveRecognitionTaskFragment"
         android:label="@string/solve_recognition_task_label"
         tools:layout="@layout/solve_recognition_task_fragment">
         <argument
@@ -71,6 +69,12 @@
         android:id="@+id/action_global_login_fragment"
         app:destination="@id/login_fragment"
         app:popUpTo="@id/login_fragment"
+        app:popUpToInclusive="true"
+        app:launchSingleTop="true" />
+    <action
+        android:id="@+id/action_global_main_fragment"
+        app:destination="@id/main_fragment"
+        app:popUpTo="@id/main_fragment"
         app:popUpToInclusive="true"
         app:launchSingleTop="true" />
 </navigation>

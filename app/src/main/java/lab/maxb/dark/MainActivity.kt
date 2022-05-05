@@ -9,10 +9,10 @@ import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import lab.maxb.dark.Presentation.Extra.Delegates.viewBinding
-import lab.maxb.dark.Presentation.Extra.launch
-import lab.maxb.dark.Presentation.Extra.observe
-import lab.maxb.dark.Presentation.ViewModel.UserViewModel
+import lab.maxb.dark.presentation.Extra.Delegates.viewBinding
+import lab.maxb.dark.presentation.Extra.launch
+import lab.maxb.dark.presentation.Extra.observe
+import lab.maxb.dark.presentation.view_model.UserViewModel
 import lab.maxb.dark.databinding.MainActivityBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -33,7 +33,11 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         authViewModel.profile observe {
             it.ifLoaded { profile ->
                 binding.toolbar.isVisible = profile != null
-                if (profile == null && navController.currentDestination?.id != R.id.login_fragment)
+                if (profile == null
+                    && navController.currentDestination?.id !in listOf(
+                        R.id.login_fragment,
+                        R.id.signup_fragment,
+                    ))
                     navController.navigate(
                         NavGraphDirections.actionGlobalLoginFragment()
                     )

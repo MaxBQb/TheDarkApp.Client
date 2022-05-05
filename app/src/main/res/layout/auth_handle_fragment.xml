@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:weightSum="10"
-    tools:context=".Presentation.View.LoginFragment">
+    tools:context=".presentation.View.LoginFragment">
 
     <ProgressBar
         android:layout_width="match_parent"

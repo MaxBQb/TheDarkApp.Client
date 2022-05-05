@@ -10,10 +10,15 @@
     <string name="share_button">Поделиться</string>
     <string name="submit_button">Утвердить</string>
     <string name="login_label">Вход</string>
+    <string name="signup_label">Регистрация</string>
     <string name="login_fragment_label">Вход</string>
     <string name="login_hint">Логин</string>
     <string name="password_hint">Пароль</string>
+    <string name="show_password">Показать пароль</string>
+    <string name="password_repeat_hint">Повторите пароль</string>
     <string name="login_button">Войти</string>
+    <string name="signup_button">Зарегистрироваться</string>
+    <string name="incorrect_signup_credentials_message">Данные не корректны или такой пользователь уже существует</string>
     <string name="incorrect_credentials_message">Неверный логин или пароль</string>
     <string name="sign_out">Выйти</string>
     <string name="something_went_wrong">Неизвесная ошибка</string>
