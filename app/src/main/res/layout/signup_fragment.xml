@@ -6,7 +6,7 @@
     <data>
         <variable
             name="data"
-            type="lab.maxb.dark.presentation.view_model.UserViewModel"/>
+            type="lab.maxb.dark.presentation.viewModel.UserViewModel"/>
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center"
-        tools:context=".presentation.View.LoginFragment">
+        tools:context=".presentation.view.LoginFragment">
 
         <TextView
             android:layout_width="wrap_content"

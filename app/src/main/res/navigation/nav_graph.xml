@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/auth_handle_fragment"
-        android:name="lab.maxb.dark.presentation.View.AuthHandleFragment"
+        android:name="lab.maxb.dark.presentation.view.AuthHandleFragment"
         tools:layout="@layout/auth_handle_fragment" />
 
     <fragment
         android:id="@+id/main_fragment"
-        android:name="lab.maxb.dark.presentation.View.MainFragment"
+        android:name="lab.maxb.dark.presentation.view.MainFragment"
         android:label="@string/main_fragment_label"
         tools:layout="@layout/main_fragment" >
         <action
@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/login_fragment"
-        android:name="lab.maxb.dark.presentation.View.LoginFragment"
+        android:name="lab.maxb.dark.presentation.view.LoginFragment"
         android:label="@string/login_fragment_label"
         tools:layout="@layout/login_fragment" >
         <action
@@ -31,13 +31,13 @@
     </fragment>
     <fragment
         android:id="@+id/signup_fragment"
-        android:name="lab.maxb.dark.presentation.View.SignupFragment"
+        android:name="lab.maxb.dark.presentation.view.SignupFragment"
         android:label="@string/signup_label"
         tools:layout="@layout/signup_fragment" />
 
     <fragment
         android:id="@+id/RecognitionTaskList_fragment"
-        android:name="lab.maxb.dark.presentation.View.RecognitionTaskListFragment"
+        android:name="lab.maxb.dark.presentation.view.RecognitionTaskListFragment"
         android:label="@string/available_recognition_tasks"
         tools:layout="@layout/recognition_task_list_fragment" >
         <action
@@ -50,12 +50,12 @@
 
     <fragment
         android:id="@+id/addRecognitionTask"
-        android:name="lab.maxb.dark.presentation.View.AddRecognitionTaskFragment"
+        android:name="lab.maxb.dark.presentation.view.AddRecognitionTaskFragment"
         android:label="@string/add_recognition_task_label"
         tools:layout="@layout/add_recognition_task_fragment" />
     <fragment
         android:id="@+id/solveRecognitionTask"
-        android:name="lab.maxb.dark.presentation.View.SolveRecognitionTaskFragment"
+        android:name="lab.maxb.dark.presentation.view.SolveRecognitionTaskFragment"
         android:label="@string/solve_recognition_task_label"
         tools:layout="@layout/solve_recognition_task_fragment">
         <argument

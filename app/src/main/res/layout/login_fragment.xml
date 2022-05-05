@@ -6,13 +6,13 @@
     <data>
         <variable
             name="data"
-            type="lab.maxb.dark.presentation.view_model.UserViewModel"/>
+            type="lab.maxb.dark.presentation.viewModel.UserViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.View.LoginFragment">
+        tools:context=".presentation.view.LoginFragment">
 
 
         <TextView

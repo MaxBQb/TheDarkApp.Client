@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Dark">
-        <activity android:name=".MainActivity"
+        <activity android:name=".presentation.view.MainActivity"
             android:configChanges="orientation|screenSize"
             android:exported="true">
             <nav-graph android:value="@navigation/nav_graph" />

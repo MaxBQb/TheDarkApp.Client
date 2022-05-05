@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.View.AddRecognitionTaskFragment"
+    tools:context=".presentation.view.AddRecognitionTaskFragment"
     android:orientation="vertical">
         <FrameLayout
             android:id="@+id/image_slider"
@@ -45,7 +45,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/normalMargin"
-
             android:orientation="horizontal">
             <Button
                 android:id="@+id/mark_reviewed_button"
