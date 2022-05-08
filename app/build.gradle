@@ -26,6 +26,9 @@ android {
         // Google Client ID
         buildConfigField "String", "GOOGLE_CLIENT_ID", keystoreProperties["GOOGLE_CLIENT_ID"]
 
+        // URL for main API
+        buildConfigField "String", "DARK_API_URL", keystoreProperties["DARK_API_URL"]
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

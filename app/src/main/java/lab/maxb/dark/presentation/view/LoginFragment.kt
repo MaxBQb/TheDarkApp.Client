@@ -49,7 +49,7 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
 //                makeAuthResultHandler(null))
 //        }
 
-        mViewModel.showPassword.observe {
+        mViewModel.showPassword observe {
             mBinding.password.setPasswordVisibility(it)
         }
         mBinding.next.setOnClickListener {

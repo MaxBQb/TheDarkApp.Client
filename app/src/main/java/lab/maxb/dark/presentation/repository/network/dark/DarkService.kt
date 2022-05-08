@@ -1,5 +1,6 @@
 package lab.maxb.dark.presentation.repository.network.dark
 
+import lab.maxb.dark.BuildConfig
 import lab.maxb.dark.presentation.repository.network.dark.routes.Auth
 import lab.maxb.dark.presentation.repository.network.dark.routes.RecognitionTask
 import lab.maxb.dark.presentation.repository.network.dark.routes.User
@@ -14,14 +15,12 @@ interface DarkService :
     User,
     Auth
 
-const val DARK_SERVICE_URL = "https://polar-anchorage-77657.herokuapp.com"
-
 @Single
 class DarkServiceImpl: DarkService by buildDarkService()
 
 private fun buildDarkService()
     = Retrofit.Builder()
-        .baseUrl(DARK_SERVICE_URL)
+        .baseUrl(BuildConfig.DARK_API_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .client(okhttpClient())
         .build()

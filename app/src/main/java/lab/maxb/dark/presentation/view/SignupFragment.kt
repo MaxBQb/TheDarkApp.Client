@@ -24,7 +24,7 @@ class SignupFragment : Fragment(R.layout.signup_fragment) {
         super.onViewCreated(view, savedInstanceState)
         mBinding.data = mViewModel
 
-        mViewModel.showPassword.observe {
+        mViewModel.showPassword observe {
             mBinding.password.setPasswordVisibility(it)
             mBinding.passwordRepeat.setPasswordVisibility(it)
         }
