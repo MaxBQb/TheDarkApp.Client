@@ -18,9 +18,10 @@ interface RecognitionTask {
     suspend fun addTask(@Body task: RecognitionTaskCreationDTO): String?
 
     @PATCH("$path/mark/{id}")
-    suspend fun markTask(@Path("id") id: String,
-                         @Query("isAllowed") isAllowed: Boolean):
-            Boolean
+    suspend fun markTask(
+        @Path("id") id: String,
+        @Query("isAllowed") isAllowed: Boolean
+    ): Boolean
 
     @Multipart
     @POST("$path/{id}/image")
@@ -31,7 +32,9 @@ interface RecognitionTask {
 
     @Streaming
     @GET("$path/image/{path}")
-    suspend fun downloadImage(@Path("path") path: String): ResponseBody?
+    suspend fun downloadImage(
+        @Path("path") path: String
+    ): ResponseBody?
 
     companion object {
         const val path = "/task"

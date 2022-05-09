@@ -1,9 +1,11 @@
 package lab.maxb.dark.presentation.repository.network.dark
 
+import com.google.gson.GsonBuilder
 import lab.maxb.dark.BuildConfig
 import lab.maxb.dark.presentation.repository.network.dark.routes.Auth
 import lab.maxb.dark.presentation.repository.network.dark.routes.RecognitionTask
 import lab.maxb.dark.presentation.repository.network.dark.routes.User
+import lab.maxb.dark.presentation.repository.network.logger
 import okhttp3.OkHttpClient
 import org.koin.core.annotation.Single
 import org.koin.java.KoinJavaComponent.get
@@ -21,12 +23,18 @@ class DarkServiceImpl: DarkService by buildDarkService()
 private fun buildDarkService()
     = Retrofit.Builder()
         .baseUrl(BuildConfig.DARK_API_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(okhttpClient())
+        .addConverterFactory(converter)
+        .client(okhttpClient)
         .build()
         .create(DarkService::class.java)
 
-private fun okhttpClient()
-    = OkHttpClient.Builder()
-        .addInterceptor(get(AuthInterceptor::class.java))
-        .build()
+private val okhttpClient get() = OkHttpClient.Builder()
+    .addInterceptor(logger)
+    .addInterceptor(get<AuthInterceptor>(AuthInterceptor::class.java))
+    .build()
+
+private val converter get() = GsonBuilder().apply {
+    setLenient()
+}.create().run {
+    GsonConverterFactory.create(this)
+}

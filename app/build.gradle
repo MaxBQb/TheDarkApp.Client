@@ -93,6 +93,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.google.code.gson:gson:$retrofit_version"
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.8.1'
 
     // Google OAUTH
     implementation 'com.google.android.gms:play-services-auth:20.2.0'
