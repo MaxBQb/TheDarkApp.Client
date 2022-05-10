@@ -15,9 +15,11 @@ import lab.maxb.dark.presentation.view.adapter.ImageSliderAdapter
 import lab.maxb.dark.presentation.viewModel.ImageSliderViewModel
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.ImageSliderFragmentBinding
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+
 
 class ImageSliderFragment : Fragment(R.layout.image_slider_fragment) {
-    private val mViewModel: ImageSliderViewModel by viewModels()
+    private val mViewModel: ImageSliderViewModel by sharedViewModel()
     private val mBinding: ImageSliderFragmentBinding by viewBinding()
     private var mUris: List<Uri> by autoCleaned()
     private var mAdapter: ImageSliderAdapter by autoCleaned()

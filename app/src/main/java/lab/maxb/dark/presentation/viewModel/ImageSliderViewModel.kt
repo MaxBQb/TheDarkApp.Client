@@ -4,8 +4,9 @@ import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.*
 import lab.maxb.dark.presentation.extra.takePersistablePermission
+import org.koin.android.annotation.KoinViewModel
 
-
+@KoinViewModel
 class ImageSliderViewModel(application: Application) : AndroidViewModel(application) {
     private var imageUris: MutableList<Uri> = mutableListOf()
     private val _images: MutableLiveData<List<Uri>> = MutableLiveData(listOf())
