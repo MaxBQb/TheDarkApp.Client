@@ -1,16 +1,20 @@
 package lab.maxb.dark.presentation.viewModel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import android.net.Uri
+import androidx.lifecycle.AndroidViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
+import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.domain.operations.createRecognitionTask
+import lab.maxb.dark.presentation.extra.takePersistablePermission
 import lab.maxb.dark.presentation.repository.interfaces.ProfileRepository
 import lab.maxb.dark.presentation.repository.interfaces.RecognitionTasksRepository
 import lab.maxb.dark.presentation.repository.interfaces.SynonymsRepository
 import lab.maxb.dark.presentation.viewModel.utils.ItemHolder
+import lab.maxb.dark.presentation.viewModel.utils.asItemHolder
 import lab.maxb.dark.presentation.viewModel.utils.firstNotNull
 import lab.maxb.dark.presentation.viewModel.utils.stateIn
 import org.koin.android.annotation.KoinViewModel
@@ -20,18 +24,24 @@ class AddRecognitionTaskViewModel(
     private val recognitionTasksRepository: RecognitionTasksRepository,
     profileRepository: ProfileRepository,
     private val synonymsRepository: SynonymsRepository,
-) : ViewModel() {
-    var imageUris: List<String> = mutableListOf()
+    application: Application
+) : AndroidViewModel(application) {
     private val _namesRaw = mutableListOf(ItemHolder(""))
     private val _names = MutableStateFlow(_namesRaw.toList())
     val names = _names.asStateFlow()
+    private var _imagesRaw = mutableListOf<ItemHolder<Uri>>()
+    private val _images = MutableStateFlow(_imagesRaw.toList())
+    val images = _images.asStateFlow()
+
     private val profile = profileRepository.profileState
+
+    val allowImageAddition get() = RecognitionTask.MAX_IMAGES_COUNT > _imagesRaw.size
 
     suspend fun addRecognitionTask() = try {
         val user = profile.firstNotNull().user!!
         val task = createRecognitionTask(
-            _namesRaw.map{ it.value }.filter { it.isNotBlank() },
-            imageUris,
+            _namesRaw.map { it.value }.filter { it.isNotBlank() },
+            _imagesRaw.map { it.value.toString() },
             user)!!
         recognitionTasksRepository.addRecognitionTask(task)
         true
@@ -46,7 +56,7 @@ class AddRecognitionTaskViewModel(
         _namesRaw[position].value = text
         if (position == _namesRaw.lastIndex)
             tryExtendInputs()
-        _names.value = _namesRaw.toList()
+        updateNames()
     }
 
     private fun tryExtendInputs() {
@@ -60,7 +70,11 @@ class AddRecognitionTaskViewModel(
         if (_namesRaw.removeIf {
             checksCount++ != lastCheck &&
             it.value.isBlank()
-        }) _names.value = _namesRaw.toList()
+        }) updateNames()
+    }
+
+    private fun updateNames() {
+        _names.value = _namesRaw.toList()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -70,5 +84,30 @@ class AddRecognitionTaskViewModel(
             .filterNot { it.isEmpty() }
             .toSet()
     }.stateIn(setOf())
+
+    fun deleteImage(position: Int) {
+        _imagesRaw.removeAt(position)
+        updateImages()
+    }
+
+    private fun updateImages() {
+        _images.value = _imagesRaw.toList()
+    }
+
+    fun addImages(uris: List<Uri>) {
+        uris.forEach {
+            if (!allowImageAddition)
+                return@forEach
+            it.takePersistablePermission(getApplication())
+            _imagesRaw.add(it.asItemHolder())
+        }
+        updateImages()
+    }
+
+    fun updateImage(position: Int, uri: Uri) {
+        uri.takePersistablePermission(getApplication())
+        _imagesRaw[position].value = uri
+        updateImages()
+    }
 }
 

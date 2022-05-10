@@ -13,9 +13,8 @@ import lab.maxb.dark.databinding.InputListItemBinding
 import lab.maxb.dark.presentation.viewModel.utils.ItemHolder
 
 
-class InputListAdapter : ListAdapter<ItemHolder<String>, InputListAdapter.ViewHolder>(
-    AsyncDifferConfig.Builder(DiffCallback).build()
-) {
+class InputListAdapter :
+    ListAdapter<ItemHolder<String>, InputListAdapter.ViewHolder>(DiffCallback) {
     var onItemTextChangedListener: ((input: EditText, position: Int, newValue: String?) -> Unit)?
         = null
 
@@ -48,11 +47,13 @@ class InputListAdapter : ListAdapter<ItemHolder<String>, InputListAdapter.ViewHo
     inner class ViewHolder(var binding: InputListItemBinding):
         RecyclerView.ViewHolder(binding.root)
 
-    object DiffCallback : DiffUtil.ItemCallback<ItemHolder<String>>() {
-        override fun areItemsTheSame(oldItem: ItemHolder<String>, newItem: ItemHolder<String>) =
-            oldItem.id == newItem.id
+    companion object {
+        private val DiffCallback = object : DiffUtil.ItemCallback<ItemHolder<String>>() {
+            override fun areItemsTheSame(oldItem: ItemHolder<String>, newItem: ItemHolder<String>) =
+                oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: ItemHolder<String>, newItem: ItemHolder<String>) =
-            oldItem.value == newItem.value
+            override fun areContentsTheSame(oldItem: ItemHolder<String>, newItem: ItemHolder<String>) =
+                oldItem.value == newItem.value
+        }.let { AsyncDifferConfig.Builder(it).build() }
     }
 }

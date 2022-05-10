@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
@@ -14,21 +15,29 @@ import androidx.navigation.fragment.navArgs
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.SolveRecognitionTaskFragmentBinding
 import lab.maxb.dark.domain.model.RecognitionTask
+import lab.maxb.dark.presentation.extra.delegates.autoCleaned
 import lab.maxb.dark.presentation.extra.delegates.viewBinding
 import lab.maxb.dark.presentation.extra.goBack
 import lab.maxb.dark.presentation.extra.observe
+import lab.maxb.dark.presentation.extra.toBitmap
+import lab.maxb.dark.presentation.view.adapter.ImageSliderAdapter
 import lab.maxb.dark.presentation.viewModel.SolveRecognitionTaskViewModel
+import lab.maxb.dark.presentation.viewModel.utils.ItemHolder
+import lab.maxb.dark.presentation.viewModel.utils.map
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fragment) {
     private val mViewModel: SolveRecognitionTaskViewModel by sharedViewModel()
     private val mBinding: SolveRecognitionTaskFragmentBinding by viewBinding()
+    private var mAdapter: ImageSliderAdapter by autoCleaned()
     private val args: SolveRecognitionTaskFragmentArgs by navArgs()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(mBinding) {
         super.onViewCreated(view, savedInstanceState)
         mViewModel.id = args.id
-        mBinding.checkAnswer.setOnClickListener { v ->
+        mAdapter = ImageSliderAdapter()
+        imageSlider.adapter = mAdapter
+        mBinding.checkAnswer.setOnClickListener {
             if (mViewModel.solveRecognitionTask(
                     mBinding.answer.text.toString()
                 ))
@@ -36,16 +45,18 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
             else
                 Toast.makeText(context, "Неверно", Toast.LENGTH_SHORT).show()
         }
-
         mViewModel.recognitionTask observe {
             it?.let { task: RecognitionTask ->
-                parentFragmentManager.commit {
-                    replace(
-                        R.id.image_slider, ImageSliderFragment.newInstance(
-                            task.images?.toList() ?: listOf()
-                        )
-                    )
-                }
+                (task.images ?: listOf()).mapNotNull { path ->
+                    path.toUri().toBitmap(
+                        requireContext(),
+                        imageSlider.layoutParams.width,
+                        imageSlider.layoutParams.height,
+                    )?.let { image ->
+                        ItemHolder(path to image)
+                    }
+                }.run { mAdapter.submitList(this) }
+
                 mViewModel.isReviewMode observe {
                     mBinding.markReviewedButton.isVisible = !(it && task.reviewed)
                 }

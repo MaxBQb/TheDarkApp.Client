@@ -1,5 +1,7 @@
 package lab.maxb.dark.presentation.view
 
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -8,45 +10,101 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.setFragmentResultListener
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.AddRecognitionTaskFragmentBinding
 import lab.maxb.dark.domain.model.RecognitionTask
+import lab.maxb.dark.domain.operations.unicname
 import lab.maxb.dark.presentation.extra.*
 import lab.maxb.dark.presentation.extra.delegates.autoCleaned
 import lab.maxb.dark.presentation.extra.delegates.viewBinding
+import lab.maxb.dark.presentation.view.adapter.ImageSliderAdapter
 import lab.maxb.dark.presentation.view.adapter.InputListAdapter
 import lab.maxb.dark.presentation.viewModel.AddRecognitionTaskViewModel
+import lab.maxb.dark.presentation.viewModel.utils.ItemHolder
+import lab.maxb.dark.presentation.viewModel.utils.map
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragment) {
     private val mViewModel: AddRecognitionTaskViewModel by sharedViewModel()
     private val mBinding: AddRecognitionTaskFragmentBinding by viewBinding()
-    private var mAdapter: InputListAdapter by autoCleaned()
+    private var mInputsAdapter: InputListAdapter by autoCleaned()
+    private var mImagesAdapter: ImageSliderAdapter by autoCleaned()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupInputsList()
-        parentFragmentManager.commit {
-            replace(
-                R.id.image_slider, ImageSliderFragment.newInstance(
-                    mViewModel.imageUris,
-                    true,
-                    RecognitionTask.MAX_IMAGES_COUNT
-                )
-            )
-        }
+        setupImageUploadPanel()
+    }
 
-        setFragmentResultListener(ImageSliderFragment.RESPONSE_URIS) {
-            _: String, result: Bundle ->
-            result.getStringArrayList(ImageSliderFragment.URIS)?.let {
-                mViewModel.imageUris = it
+    private fun setupImageUploadPanel() = with (mBinding) {
+        mImagesAdapter = ImageSliderAdapter()
+        imageSlider.adapter = mImagesAdapter
+
+        mViewModel.images observe { uris ->
+            uris.mapNotNull {
+                it.value.toBitmap(
+                    requireContext(),
+                    imageSlider.layoutParams.width,
+                    imageSlider.layoutParams.height,
+                )?.let { image ->
+                    it.map { uri ->
+                        uri.toString() to image
+                    }
+                }
+            }.also {
+                mImagesAdapter.submitList(it)
             }
-            createRecognitionTask()
+            val hasUris = uris.isNotEmpty()
+            addImageButtonAlternative.isVisible = !hasUris
+            imageSlider.isVisible = hasUris
+            editImageButton.isVisible = hasUris
+            deleteImageButton.isVisible = hasUris
+            addImageButton.isVisible = hasUris && mViewModel.allowImageAddition
         }
 
+        addImageButton.setOnClickListener{
+            getContent.launch(ALLOWED_CONTENT)
+        }
+        addImageButtonAlternative.setOnClickListener{
+            getContent.launch(ALLOWED_CONTENT)
+        }
+        deleteImageButton.setOnClickListener {
+            mViewModel.deleteImage(imageSlider.currentItem)
+        }
+        editImageButton.setOnClickListener {
+            updateContent.launch(ALLOWED_CONTENT)
+        }
+    }
+
+    private val getContent by lazy {
+        requireActivity().activityResultRegistry.register(ADD_URIS,
+            ActivityResultContracts.OpenMultipleDocuments()) {
+                uris: List<Uri?>? ->
+            uris?.filterNotNull()?.let {
+                mViewModel.addImages(it)
+            }
+        }
+    }
+
+    private val updateContent by lazy {
+        requireActivity().activityResultRegistry.register(UPDATE_URI,
+            ActivityResultContracts.OpenDocument()) {
+            it?.let {
+                mViewModel.updateImage(mBinding.imageSlider.currentItem, it)
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        getContent.unregister()
+        updateContent.unregister()
+        super.onDestroy()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,14 +122,10 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.submit -> startCreateRecognitionTask()
+            R.id.submit -> createRecognitionTask()
             else -> return super.onOptionsItemSelected(item)
         }
         return true
-    }
-
-    private fun startCreateRecognitionTask() {
-        requestFragmentResult(ImageSliderFragment.REQUEST_URIS)
     }
 
     private fun createRecognitionTask() = launch {
@@ -85,9 +139,9 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
     }
 
     private fun setupInputsList() {
-        mAdapter = InputListAdapter()
-        mBinding.inputListRecycler.adapter = mAdapter
-        mAdapter.onItemTextChangedListener = { editText, position, text ->
+        mInputsAdapter = InputListAdapter()
+        mBinding.inputListRecycler.adapter = mInputsAdapter
+        mInputsAdapter.onItemTextChangedListener = { editText, position, text ->
             mViewModel.setText(position, text ?: "")
 
             text?.let {
@@ -103,12 +157,18 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
                 }
             }
         }
-        mAdapter.onItemFocusedListener = { _, _, focused: Boolean ->
+        mInputsAdapter.onItemFocusedListener = { _, _, focused: Boolean ->
             if (!focused)
                 mViewModel.shrinkInputs()
         }
         mViewModel.names observe {
-            mAdapter.submitList(it)
+            mInputsAdapter.submitList(it)
         }
+    }
+
+    companion object {
+        val ALLOWED_CONTENT = arrayOf("image/*")
+        val ADD_URIS = unicname
+        val UPDATE_URI = unicname
     }
 }

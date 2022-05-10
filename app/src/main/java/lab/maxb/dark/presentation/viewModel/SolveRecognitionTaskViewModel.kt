@@ -30,9 +30,9 @@ class SolveRecognitionTaskViewModelImpl(
     private val recognitionTasksRepository: RecognitionTasksRepository,
     profileRepository: ProfileRepository,
 ) : SolveRecognitionTaskViewModel() {
-    override val recognitionTask by lazy  {
-        recognitionTasksRepository.getRecognitionTask(id)
-    }
+    override val recognitionTask get()
+        = recognitionTasksRepository.getRecognitionTask(id)
+
     private val profile = profileRepository.profileState
 
     @OptIn(ExperimentalCoroutinesApi::class)
