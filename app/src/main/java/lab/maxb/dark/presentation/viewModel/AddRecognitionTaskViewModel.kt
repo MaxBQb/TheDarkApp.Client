@@ -11,6 +11,7 @@ import lab.maxb.dark.presentation.repository.interfaces.ProfileRepository
 import lab.maxb.dark.presentation.repository.interfaces.RecognitionTasksRepository
 import lab.maxb.dark.presentation.repository.interfaces.SynonymsRepository
 import lab.maxb.dark.presentation.viewModel.utils.ItemHolder
+import lab.maxb.dark.presentation.viewModel.utils.firstNotNull
 import lab.maxb.dark.presentation.viewModel.utils.stateIn
 import org.koin.android.annotation.KoinViewModel
 
@@ -27,7 +28,7 @@ class AddRecognitionTaskViewModel(
     private val profile = profileRepository.profileState
 
     suspend fun addRecognitionTask() = try {
-        val user = profile.first()!!.user!!
+        val user = profile.firstNotNull().user!!
         val task = createRecognitionTask(
             _namesRaw.map{ it.value }.filter { it.isNotBlank() },
             imageUris,
