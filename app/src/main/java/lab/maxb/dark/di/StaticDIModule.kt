@@ -1,4 +1,4 @@
-package lab.maxb.dark.dependencyInjection
+package lab.maxb.dark.di
 
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module

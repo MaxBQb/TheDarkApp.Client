@@ -1,4 +1,4 @@
-package lab.maxb.dark.dependencyInjection
+package lab.maxb.dark.di
 
 import lab.maxb.dark.presentation.repository.room.LocalDatabase
 import org.koin.android.ext.koin.androidApplication

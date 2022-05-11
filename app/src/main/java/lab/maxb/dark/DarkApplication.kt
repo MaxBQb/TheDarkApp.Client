@@ -1,8 +1,8 @@
 package lab.maxb.dark
 
 import android.app.Application
-import lab.maxb.dark.dependencyInjection.StaticDIModule
-import lab.maxb.dark.dependencyInjection.flexibleDIModule
+import lab.maxb.dark.di.StaticDIModule
+import lab.maxb.dark.di.flexibleDIModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
