@@ -3,6 +3,7 @@ package lab.maxb.dark.presentation.repository.room.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
+import kotlinx.coroutines.flow.Flow
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskDTO
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskImage
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskName
@@ -63,10 +64,7 @@ interface RecognitionTaskDAO {
 
     @Transaction
     @Query("SELECT * FROM recognition_task WHERE id = :id")
-    fun getRecognitionTask(id: String): LiveData<RecognitionTaskWithNamesAndImages?>
-
-    @Query("SELECT EXISTS(SELECT * FROM recognition_task WHERE id = :id)")
-    suspend fun hasRecognitionTask(id: String): Boolean
+    fun getRecognitionTask(id: String): Flow<RecognitionTaskWithNamesAndImages?>
 
     @Transaction
     @Query("DELETE FROM recognition_task")

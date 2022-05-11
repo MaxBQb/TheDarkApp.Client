@@ -5,7 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.mapLatest
 import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.presentation.extra.ImageLoader
 import lab.maxb.dark.presentation.repository.interfaces.RecognitionTasksRepository
@@ -104,25 +107,12 @@ class RecognitionTasksRepositoryImpl(
         e.printStackTrace()
     }
 
-    override fun getRecognitionTask(id: String):
-            LiveData<RecognitionTask?> = liveData {
-        if (mRecognitionTaskDao.hasRecognitionTask(id)) {
-            emitSource(
-                mRecognitionTaskDao.getRecognitionTask(id)
-                    .distinctUntilChanged().map {
-                    it?.toRecognitionTask()
-                }
-            )
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getRecognitionTask(id: String)
+        = mRecognitionTaskDao.getRecognitionTask(id).mapLatest {
+        if (it == null)
             refreshRecognitionTask(id)
-        } else {
-            refreshRecognitionTask(id)
-            emitSource(
-                mRecognitionTaskDao.getRecognitionTask(id)
-                    .distinctUntilChanged().map {
-                        it?.toRecognitionTask()
-                    }
-            )
-        }
+        it?.toRecognitionTask()
     }
 
     override suspend fun <T : RecognitionTask> addRecognitionTask(task: T) {
@@ -152,7 +142,7 @@ class RecognitionTasksRepositoryImpl(
         mRecognitionTaskDao.updateRecognitionTask(task as RecognitionTaskDTO)
         try {
             if (mDarkService.markTask(task.id, task.reviewed))
-                refreshRecognitionTaskList()
+                refreshRecognitionTask(task.id)
         } catch (e: Throwable) {
             e.printStackTrace()
         }

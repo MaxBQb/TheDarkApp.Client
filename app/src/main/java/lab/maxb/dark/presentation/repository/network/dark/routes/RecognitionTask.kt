@@ -17,10 +17,10 @@ interface RecognitionTask {
     @POST("$path/add")
     suspend fun addTask(@Body task: RecognitionTaskCreationDTO): String?
 
-    @PATCH("$path/mark/{id}")
+    @PATCH("$path/mark/{id}/{isAllowed}")
     suspend fun markTask(
         @Path("id") id: String,
-        @Query("isAllowed") isAllowed: Boolean
+        @Path("isAllowed") isAllowed: Boolean
     ): Boolean
 
     @Multipart

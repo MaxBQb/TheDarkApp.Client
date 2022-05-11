@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.mapLatest
 import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.domain.operations.createRecognitionTask
+import lab.maxb.dark.presentation.extra.launch
 import lab.maxb.dark.presentation.extra.takePersistablePermission
 import lab.maxb.dark.presentation.repository.interfaces.ProfileRepository
 import lab.maxb.dark.presentation.repository.interfaces.RecognitionTasksRepository
@@ -36,6 +37,14 @@ class AddRecognitionTaskViewModel(
     private val profile = profileRepository.profileState
 
     val allowImageAddition get() = RecognitionTask.MAX_IMAGES_COUNT > _imagesRaw.size
+
+    fun clear() = launch {
+        _namesRaw.clear()
+        _namesRaw.add(ItemHolder(""))
+        _imagesRaw.clear()
+        updateNames()
+        updateImages()
+    }
 
     suspend fun addRecognitionTask() = try {
         val user = profile.firstNotNull().user!!

@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
@@ -112,6 +113,14 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
         setHasOptionsMenu(true)
         (activity as? MainActivity)?.withToolbar {
             setNavigationIcon(R.drawable.ic_close)
+            setNavigationOnClickListener {
+                mViewModel.clear()
+                goBack()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            mViewModel.clear()
+            goBack()
         }
     }
 
@@ -129,9 +138,10 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
     }
 
     private fun createRecognitionTask() = launch {
-        if (mViewModel.addRecognitionTask())
+        if (mViewModel.addRecognitionTask()) {
+            mViewModel.clear()
             goBack()
-        else Toast.makeText(
+        } else Toast.makeText(
             context,
             getString(R.string.not_enough_data_provided_message),
             Toast.LENGTH_SHORT

@@ -1,60 +1,57 @@
 package lab.maxb.dark.presentation.viewModel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.mapLatest
-import lab.maxb.dark.domain.model.RecognitionTask
+import kotlinx.coroutines.flow.*
 import lab.maxb.dark.domain.model.Role
 import lab.maxb.dark.domain.operations.solve
-import lab.maxb.dark.presentation.extra.launch
 import lab.maxb.dark.presentation.repository.interfaces.ProfileRepository
 import lab.maxb.dark.presentation.repository.interfaces.RecognitionTasksRepository
+import lab.maxb.dark.presentation.viewModel.utils.firstNotNull
 import lab.maxb.dark.presentation.viewModel.utils.stateIn
 import org.koin.android.annotation.KoinViewModel
-import kotlin.properties.Delegates
 
-
-abstract class SolveRecognitionTaskViewModel : ViewModel() {
-    var id: String by Delegates.notNull()
-    abstract val recognitionTask: LiveData<RecognitionTask?>
-    abstract val isReviewMode: StateFlow<Boolean>
-    abstract fun mark(isAllowed: Boolean): Job
-    abstract fun solveRecognitionTask(name: String): Boolean
-}
 
 @KoinViewModel
-class SolveRecognitionTaskViewModelImpl(
+class SolveRecognitionTaskViewModel(
     private val recognitionTasksRepository: RecognitionTasksRepository,
     profileRepository: ProfileRepository,
-) : SolveRecognitionTaskViewModel() {
-    override val recognitionTask get()
-        = recognitionTasksRepository.getRecognitionTask(id)
-
+) : ViewModel() {
+    private val _id = MutableStateFlow<String?>(null)
     private val profile = profileRepository.profileState
+    val answer = MutableStateFlow("")
+
+    fun init(id: String) {
+        if (_id.value == id) return
+        _id.value = id
+        answer.value = ""
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override val isReviewMode get() = profile.mapLatest {
+    val recognitionTask = _id.filterNotNull().flatMapLatest {
+        recognitionTasksRepository.getRecognitionTask(it)
+    }.stateIn(null)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val isReviewMode get() = profile.mapLatest {
         when (it?.role) {
             Role.MODERATOR, Role.ADMINISTRATOR -> true
             else -> false
         }
     }.stateIn(false)
 
-    override fun mark(isAllowed: Boolean) = launch {
-        val task = recognitionTask.value ?: return@launch
-        task.reviewed = isAllowed
-        recognitionTasksRepository.markRecognitionTask(task)
+    suspend fun mark(isAllowed: Boolean) {
+        recognitionTask.firstNotNull().apply {
+            reviewed = isAllowed
+        }.also {
+            recognitionTasksRepository.markRecognitionTask(it)
+        }
     }
 
-    override fun solveRecognitionTask(name: String): Boolean {
-        val task = recognitionTask.value ?: return false
-        return task.solve(name).also { isSolution ->
-            if (isSolution) launch {
-                recognitionTasksRepository.deleteRecognitionTask(task)
-            }
+    suspend fun solveRecognitionTask() = recognitionTask.firstNotNull().let {
+        it.solve(answer.firstNotNull()).also { isSolution ->
+            if (isSolution)
+                recognitionTasksRepository.deleteRecognitionTask(it)
         }
     }
 }

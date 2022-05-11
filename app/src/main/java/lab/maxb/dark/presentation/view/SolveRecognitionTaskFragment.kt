@@ -9,15 +9,18 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.navigation.fragment.navArgs
+import com.wada811.databinding.dataBinding
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.SolveRecognitionTaskFragmentBinding
 import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.presentation.extra.delegates.autoCleaned
 import lab.maxb.dark.presentation.extra.delegates.viewBinding
 import lab.maxb.dark.presentation.extra.goBack
+import lab.maxb.dark.presentation.extra.launchRepeatingOnLifecycle
 import lab.maxb.dark.presentation.extra.observe
 import lab.maxb.dark.presentation.extra.toBitmap
 import lab.maxb.dark.presentation.view.adapter.ImageSliderAdapter
@@ -28,22 +31,22 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fragment) {
     private val mViewModel: SolveRecognitionTaskViewModel by sharedViewModel()
-    private val mBinding: SolveRecognitionTaskFragmentBinding by viewBinding()
+    private val mBinding: SolveRecognitionTaskFragmentBinding by dataBinding()
     private var mAdapter: ImageSliderAdapter by autoCleaned()
     private val args: SolveRecognitionTaskFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(mBinding) {
         super.onViewCreated(view, savedInstanceState)
-        mViewModel.id = args.id
+        mViewModel.init(args.id)
         mAdapter = ImageSliderAdapter()
         imageSlider.adapter = mAdapter
-        mBinding.checkAnswer.setOnClickListener {
-            if (mViewModel.solveRecognitionTask(
-                    mBinding.answer.text.toString()
-                ))
-                goBack()
-            else
-                Toast.makeText(context, "Неверно", Toast.LENGTH_SHORT).show()
+        checkAnswer.setOnClickListener {
+            launchRepeatingOnLifecycle {
+                if (mViewModel.solveRecognitionTask())
+                    goBack()
+                else
+                    Toast.makeText(context, "Неверно", Toast.LENGTH_SHORT).show()
+            }
         }
         mViewModel.recognitionTask observe {
             it?.let { task: RecognitionTask ->
@@ -68,18 +71,19 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
 
             mBinding.markReviewedButton.setOnClickListener { _ ->
                 if (!it) return@setOnClickListener
-                mViewModel.mark(true).invokeOnCompletion {
-                    goBack()
-                }
+                mark(true)
             }
 
             mBinding.deleteButton.setOnClickListener { _ ->
                 if (!it) return@setOnClickListener
-                mViewModel.mark(false).invokeOnCompletion {
-                    goBack()
-                }
+                mark(false)
             }
         }
+    }
+
+    private fun mark(isAllowed: Boolean) = launchRepeatingOnLifecycle {
+        mViewModel.mark(isAllowed)
+        goBack()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
