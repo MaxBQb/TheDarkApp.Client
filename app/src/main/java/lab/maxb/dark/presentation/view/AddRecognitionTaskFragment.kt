@@ -17,6 +17,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.lifecycleScope
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.AddRecognitionTaskFragmentBinding
 import lab.maxb.dark.domain.model.RecognitionTask
@@ -39,6 +40,10 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            mViewModel.clear()
+            goBack()
+        }
         setupInputsList()
         setupImageUploadPanel()
     }
@@ -113,14 +118,6 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
         setHasOptionsMenu(true)
         (activity as? MainActivity)?.withToolbar {
             setNavigationIcon(R.drawable.ic_close)
-            setNavigationOnClickListener {
-                mViewModel.clear()
-                goBack()
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-            mViewModel.clear()
-            goBack()
         }
     }
 
