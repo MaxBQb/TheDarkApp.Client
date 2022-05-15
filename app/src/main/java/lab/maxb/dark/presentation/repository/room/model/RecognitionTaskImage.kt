@@ -3,6 +3,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
+import lab.maxb.dark.domain.model.Image
 import lab.maxb.dark.domain.operations.randomUUID
 
 @Entity(tableName = "recognition_task_image",
@@ -23,3 +24,8 @@ data class RecognitionTaskImage(
     @PrimaryKey
     val id: String = randomUUID,
 )
+
+fun RecognitionTaskImage.toImage() = Image(
+    image, id
+)
+

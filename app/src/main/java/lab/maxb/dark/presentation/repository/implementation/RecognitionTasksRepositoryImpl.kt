@@ -19,6 +19,8 @@ import lab.maxb.dark.presentation.repository.room.LocalDatabase
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskDTO
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskImage
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskName
+import lab.maxb.dark.presentation.repository.utils.ConditionalRefreshController
+import lab.maxb.dark.presentation.repository.utils.Resource
 import lab.maxb.dark_api.Model.POJO.RecognitionTaskCreationDTO
 import org.koin.core.annotation.Single
 
@@ -122,10 +124,10 @@ class RecognitionTasksRepositoryImpl(
         ))?.also { taskLocal.id = it }
 
         val images = task.images?.map { RecognitionTaskImage(
-            taskLocal.id, it,
+            taskLocal.id, it.path,
             mDarkService.addImage(
                 taskLocal.id,
-                imageLoader.fromUri(it.toUri())
+                imageLoader.fromUri(it.path.toUri())
             )!!
         ) }
 

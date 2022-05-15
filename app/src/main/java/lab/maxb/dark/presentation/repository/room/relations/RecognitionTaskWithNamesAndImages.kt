@@ -5,6 +5,7 @@ import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskDTO
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskImage
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskName
+import lab.maxb.dark.presentation.repository.room.model.toImage
 
 data class RecognitionTaskWithNamesAndImages(
     @Embedded val recognition_task: RecognitionTaskDTO,
@@ -20,11 +21,7 @@ data class RecognitionTaskWithNamesAndImages(
     val images: List<RecognitionTaskImage>
 ) {
     fun toRecognitionTask() = recognition_task.also { task ->
-        task.names = names.map {
-            it.name
-        }.toSet()
-        task.images = images.map {
-            it.image
-        }
+        task.names = names.map { it.name }.toSet()
+        task.images = images.map { it.toImage() }
     } as RecognitionTask
 }

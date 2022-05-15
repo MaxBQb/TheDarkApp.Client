@@ -9,16 +9,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.navigation.fragment.navArgs
 import com.wada811.databinding.dataBinding
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.SolveRecognitionTaskFragmentBinding
 import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.presentation.extra.delegates.autoCleaned
-import lab.maxb.dark.presentation.extra.delegates.viewBinding
 import lab.maxb.dark.presentation.extra.goBack
 import lab.maxb.dark.presentation.extra.launchRepeatingOnLifecycle
 import lab.maxb.dark.presentation.extra.observe
@@ -26,7 +23,6 @@ import lab.maxb.dark.presentation.extra.toBitmap
 import lab.maxb.dark.presentation.view.adapter.ImageSliderAdapter
 import lab.maxb.dark.presentation.viewModel.SolveRecognitionTaskViewModel
 import lab.maxb.dark.presentation.viewModel.utils.ItemHolder
-import lab.maxb.dark.presentation.viewModel.utils.map
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fragment) {
@@ -50,13 +46,13 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
         }
         mViewModel.recognitionTask observe {
             it?.let { task: RecognitionTask ->
-                (task.images ?: listOf()).mapNotNull { path ->
-                    path.toUri().toBitmap(
+                (task.images ?: listOf()).mapNotNull { image ->
+                    image.path.toUri().toBitmap(
                         requireContext(),
                         imageSlider.layoutParams.width,
                         imageSlider.layoutParams.height,
-                    )?.let { image ->
-                        ItemHolder(path to image)
+                    )?.let { content ->
+                        ItemHolder(image.path to content)
                     }
                 }.run { mAdapter.submitList(this) }
 

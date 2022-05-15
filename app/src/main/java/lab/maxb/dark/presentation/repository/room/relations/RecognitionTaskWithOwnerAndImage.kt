@@ -7,6 +7,7 @@ import lab.maxb.dark.domain.model.User
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskDTO
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskImage
 import lab.maxb.dark.presentation.repository.room.model.UserDTO
+import lab.maxb.dark.presentation.repository.room.model.toImage
 
 data class RecognitionTaskWithOwnerAndImage(
     @Embedded val recognition_task: RecognitionTaskDTO,
@@ -24,6 +25,6 @@ data class RecognitionTaskWithOwnerAndImage(
 ) {
     fun toRecognitionTask() = recognition_task.also { task ->
         task.owner = owner
-        task.images = image?.image?.let{ listOf(it) } ?: listOf()
+        task.images = image?.let { listOf(it.toImage()) } ?: listOf()
     } as RecognitionTask
 }
