@@ -18,7 +18,7 @@ import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskDTO
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskImageCrossref
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskName
 import lab.maxb.dark.presentation.repository.utils.Resource
-import lab.maxb.dark_api.Model.POJO.RecognitionTaskCreationDTO
+import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskCreationDTO
 import org.koin.core.annotation.Single
 
 @Single
@@ -43,7 +43,9 @@ class RecognitionTasksRepositoryImpl(
                 RecognitionTask(
                     setOf(),
                     listOf(imagesRepository.getById(it.image!!).firstOrNull()!!),
-                    usersRepository.getUser(it.owner_id).firstOrNull()!!
+                    usersRepository.getUser(it.owner_id).firstOrNull()!!,
+                    it.reviewed,
+                    it.id,
                 )
             }
         }
@@ -73,9 +75,11 @@ class RecognitionTasksRepositoryImpl(
 
     override suspend fun <T : RecognitionTask> addRecognitionTask(task: T) {
         val taskLocal = RecognitionTaskDTO(task)
-        mDarkService.addTask(RecognitionTaskCreationDTO(
+        mDarkService.addTask(
+            RecognitionTaskCreationDTO(
             task.names!!
-        ))?.also { taskLocal.id = it }
+        )
+        )?.also { taskLocal.id = it }
 
         val images = task.images!!.map {
             it.id = mDarkService.addImage(
@@ -128,6 +132,8 @@ class RecognitionTasksRepositoryImpl(
                     usersRepository.getUser(
                         task.owner_id
                     ).firstOrNull()!!,
+                    task.reviewed,
+                    task.id,
                 )
             }
         }

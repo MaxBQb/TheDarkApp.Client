@@ -1,4 +1,4 @@
-package lab.maxb.dark_api.Model.POJO
+package lab.maxb.dark.presentation.repository.network.dark.model
 
 class RecognitionTaskListViewDTO (
     var image: String?,

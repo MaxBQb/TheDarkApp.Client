@@ -1,8 +1,8 @@
 package lab.maxb.dark.presentation.repository.network.dark.routes
 
-import lab.maxb.dark_api.Model.POJO.RecognitionTaskCreationDTO
-import lab.maxb.dark_api.Model.POJO.RecognitionTaskFullViewDTO
-import lab.maxb.dark_api.Model.POJO.RecognitionTaskListViewDTO
+import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskCreationDTO
+import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskFullViewDTO
+import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskListViewDTO
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.http.*
