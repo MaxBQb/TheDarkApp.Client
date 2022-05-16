@@ -9,7 +9,10 @@ import retrofit2.http.*
 
 interface RecognitionTask {
     @GET("$path/all")
-    suspend fun getAllTasks(): List<RecognitionTaskListViewDTO>?
+    suspend fun getAllTasks(
+        @Query("page") page: Int = 0,
+        @Query("size") size: Int = 2,
+    ): List<RecognitionTaskListViewDTO>?
 
     @GET("$path/{id}")
     suspend fun getTask(@Path("id") id: String): RecognitionTaskFullViewDTO?

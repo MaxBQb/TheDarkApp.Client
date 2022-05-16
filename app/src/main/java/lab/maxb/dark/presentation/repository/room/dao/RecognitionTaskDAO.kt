@@ -1,6 +1,5 @@
 package lab.maxb.dark.presentation.repository.room.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
 import kotlinx.coroutines.flow.Flow
@@ -51,16 +50,18 @@ interface RecognitionTaskDAO {
     @Query("SELECT * FROM recognition_task_image WHERE recognition_task = :id")
     suspend fun getRecognitionTaskImages(id: String): List<RecognitionTaskImage>
 
+    @Query("SELECT * FROM recognition_task_image WHERE id = :id")
+    fun getRecognitionTaskImage(id: String): Flow<RecognitionTaskImage?>
+
+    @Query("DELETE FROM recognition_task_image WHERE id = :id")
+    suspend fun deleteRecognitionTaskImage(id: String)
+
     @Query("SELECT id FROM recognition_task")
     suspend fun getAllRecognitionTasksIds(): List<String>
 
     @Transaction
     @Query("SELECT * FROM recognition_task ORDER BY reviewed")
-    fun getAllRecognitionTasks(): LiveData<List<RecognitionTaskWithOwnerAndImage>?>
-
-    @Transaction
-    @Query("SELECT * FROM recognition_task WHERE reviewed = :isReviewed")
-    fun getAllRecognitionTasksByReview(isReviewed: Boolean): LiveData<List<RecognitionTaskWithOwnerAndImage>?>
+    fun getAllRecognitionTasks(): Flow<List<RecognitionTaskWithOwnerAndImage>?>
 
     @Transaction
     @Query("SELECT * FROM recognition_task WHERE id = :id")

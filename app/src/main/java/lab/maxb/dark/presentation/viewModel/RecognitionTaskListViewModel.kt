@@ -1,7 +1,6 @@
 package lab.maxb.dark.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asFlow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -21,10 +20,8 @@ class RecognitionTaskListViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val recognitionTaskList = profile.flatMapLatest {
-        if (it?.role?.isUser() ?: return@flatMapLatest flowOf(null))
-            recognitionTasksRepository.getAllRecognitionTasksByReview(true).asFlow()
-        else
-            recognitionTasksRepository.getAllRecognitionTasks().asFlow()
+        it?.role?.isUser() ?: return@flatMapLatest flowOf(null)
+        recognitionTasksRepository.getAllRecognitionTasks()
     }.stateIn(null)
 
     @OptIn(ExperimentalCoroutinesApi::class)

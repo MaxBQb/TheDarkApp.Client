@@ -45,7 +45,7 @@ class ProfileRepositoryImpl(
         save(
             Profile(
                 login,
-                usersRepository.getUser(response.id).first(),
+                usersRepository.getUser(response.id).firstOrNull()!!,
                 response.token,
                 role = response.role
             )
@@ -54,7 +54,7 @@ class ProfileRepositoryImpl(
     }
 
     private suspend fun checkToken(id: String) = try {
-        usersRepository.getUser(id).first()!!
+        usersRepository.getUser(id).firstOrNull()!!
         true
     } catch (e: Throwable) {
         false
