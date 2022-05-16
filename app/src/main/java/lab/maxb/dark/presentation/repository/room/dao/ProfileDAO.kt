@@ -6,8 +6,8 @@ import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
-import lab.maxb.dark.presentation.repository.room.relations.FullProfile
 import lab.maxb.dark.presentation.repository.room.Server.Model.ProfileDTO
+import lab.maxb.dark.presentation.repository.room.relations.FullProfile
 
 @Dao
 interface ProfileDAO {

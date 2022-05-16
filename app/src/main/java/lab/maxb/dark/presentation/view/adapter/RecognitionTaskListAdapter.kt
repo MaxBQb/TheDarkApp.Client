@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import lab.maxb.dark.databinding.RecognitionTaskListElementBinding
 import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.presentation.extra.toBitmap
 import lab.maxb.dark.presentation.view.adapter.RecognitionTaskListAdapter.RecognitionTaskViewHolder
-import lab.maxb.dark.databinding.RecognitionTaskListElementBinding
 
 class RecognitionTaskListAdapter(data: List<RecognitionTask>?) :
       RecyclerView.Adapter<RecognitionTaskViewHolder>() {

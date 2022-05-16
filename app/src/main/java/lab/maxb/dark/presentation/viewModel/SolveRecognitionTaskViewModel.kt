@@ -2,7 +2,10 @@ package lab.maxb.dark.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.mapLatest
 import lab.maxb.dark.domain.model.Role
 import lab.maxb.dark.domain.operations.solve
 import lab.maxb.dark.presentation.repository.interfaces.ProfileRepository

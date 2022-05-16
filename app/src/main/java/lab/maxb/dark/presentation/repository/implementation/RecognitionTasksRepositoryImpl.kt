@@ -12,13 +12,13 @@ import lab.maxb.dark.presentation.repository.interfaces.ImagesRepository
 import lab.maxb.dark.presentation.repository.interfaces.RecognitionTasksRepository
 import lab.maxb.dark.presentation.repository.interfaces.UsersRepository
 import lab.maxb.dark.presentation.repository.network.dark.DarkService
+import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskCreationDTO
 import lab.maxb.dark.presentation.repository.room.LocalDatabase
 import lab.maxb.dark.presentation.repository.room.dao.RecognitionTaskDAO
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskDTO
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskImageCrossref
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskName
 import lab.maxb.dark.presentation.repository.utils.Resource
-import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskCreationDTO
 import org.koin.core.annotation.Single
 
 @Single

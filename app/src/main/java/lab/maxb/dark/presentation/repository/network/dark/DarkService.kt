@@ -7,13 +7,10 @@ import lab.maxb.dark.presentation.repository.network.dark.routes.RecognitionTask
 import lab.maxb.dark.presentation.repository.network.dark.routes.User
 import lab.maxb.dark.presentation.repository.network.logger
 import okhttp3.OkHttpClient
-import okhttp3.ResponseBody
 import org.koin.core.annotation.Single
 import org.koin.java.KoinJavaComponent.get
-import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.reflect.Type
 
 
 interface DarkService :

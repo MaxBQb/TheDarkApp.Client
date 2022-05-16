@@ -11,11 +11,11 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import lab.maxb.dark.NavGraphDirections
 import lab.maxb.dark.R
+import lab.maxb.dark.databinding.MainActivityBinding
 import lab.maxb.dark.presentation.extra.delegates.viewBinding
 import lab.maxb.dark.presentation.extra.launch
 import lab.maxb.dark.presentation.extra.observe
 import lab.maxb.dark.presentation.viewModel.UserViewModel
-import lab.maxb.dark.databinding.MainActivityBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 

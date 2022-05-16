@@ -1,6 +1,5 @@
 package lab.maxb.dark.presentation.view
 
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
@@ -12,23 +11,20 @@ import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
-import androidx.fragment.app.setFragmentResultListener
-import androidx.lifecycle.lifecycleScope
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.AddRecognitionTaskFragmentBinding
-import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.domain.operations.unicname
-import lab.maxb.dark.presentation.extra.*
 import lab.maxb.dark.presentation.extra.delegates.autoCleaned
 import lab.maxb.dark.presentation.extra.delegates.viewBinding
+import lab.maxb.dark.presentation.extra.goBack
+import lab.maxb.dark.presentation.extra.launch
+import lab.maxb.dark.presentation.extra.observe
+import lab.maxb.dark.presentation.extra.toBitmap
 import lab.maxb.dark.presentation.view.adapter.ImageSliderAdapter
 import lab.maxb.dark.presentation.view.adapter.InputListAdapter
 import lab.maxb.dark.presentation.viewModel.AddRecognitionTaskViewModel
-import lab.maxb.dark.presentation.viewModel.utils.ItemHolder
 import lab.maxb.dark.presentation.viewModel.utils.map
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
