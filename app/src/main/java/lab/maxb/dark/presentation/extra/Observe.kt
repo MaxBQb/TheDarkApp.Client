@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -38,4 +39,8 @@ fun LifecycleOwner.launchRepeatingOnLifecycle(block: suspend CoroutineScope.() -
 
 context(LifecycleOwner)
 infix fun <T> StateFlow<T>.observe(action: suspend (value: T) -> Unit)
+    = launchRepeatingOnLifecycle { collectLatest(action) }
+
+context(LifecycleOwner)
+infix fun <T> Flow<T>.observe(action: suspend (value: T) -> Unit)
     = launchRepeatingOnLifecycle { collectLatest(action) }

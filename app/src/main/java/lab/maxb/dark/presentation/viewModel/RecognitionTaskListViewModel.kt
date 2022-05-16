@@ -1,9 +1,9 @@
 package lab.maxb.dark.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.mapLatest
 import lab.maxb.dark.domain.model.isUser
 import lab.maxb.dark.presentation.repository.interfaces.ProfileRepository
@@ -13,16 +13,15 @@ import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class RecognitionTaskListViewModel(
-    private val recognitionTasksRepository: RecognitionTasksRepository,
+    recognitionTasksRepository: RecognitionTasksRepository,
     profileRepository: ProfileRepository,
 ) : ViewModel() {
     private val profile = profileRepository.profileState
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val recognitionTaskList = profile.flatMapLatest {
-        it?.role?.isUser() ?: return@flatMapLatest flowOf(null)
-        recognitionTasksRepository.getAllRecognitionTasks()
-    }.stateIn(null)
+    val recognitionTaskList = recognitionTasksRepository
+        .getAllRecognitionTasks()
+        .cachedIn(viewModelScope)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val isTaskCreationAllowed = profile.mapLatest {

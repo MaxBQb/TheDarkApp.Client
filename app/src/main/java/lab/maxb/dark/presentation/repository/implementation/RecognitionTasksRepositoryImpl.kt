@@ -1,10 +1,14 @@
 package lab.maxb.dark.presentation.repository.implementation
 
 import androidx.core.net.toUri
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.map
 import androidx.room.withTransaction
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.presentation.extra.ImageLoader
@@ -19,6 +23,8 @@ import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskDTO
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskImageCrossref
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskName
 import lab.maxb.dark.presentation.repository.utils.Resource
+import lab.maxb.dark.presentation.repository.utils.pagination.Page
+import lab.maxb.dark.presentation.repository.utils.pagination.RecognitionTaskMediator
 import org.koin.core.annotation.Single
 
 @Single
@@ -32,14 +38,14 @@ class RecognitionTasksRepositoryImpl(
     private val mRecognitionTaskDao: RecognitionTaskDAO = db.recognitionTaskDao()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val tasksResource = Resource<Unit, List<RecognitionTask>>().apply {
-        fetchLocal = {
+    private val tasksResource = Resource<Page, List<RecognitionTask>>().apply {
+        fetchLocal = { page ->
             mRecognitionTaskDao.getAllRecognitionTasks().mapLatest {
                 data -> data?.map { it.toRecognitionTask() }
             }
         }
-        fetchRemote = {
-            mDarkService.getAllTasks()?.map {
+        fetchRemote = { page ->
+            mDarkService.getAllTasks(page.page, page.size)?.map {
                 RecognitionTask(
                     setOf(),
                     listOf(imagesRepository.getById(it.image!!).firstOrNull()!!),
@@ -64,14 +70,25 @@ class RecognitionTasksRepositoryImpl(
                 }
             }
         }
-        clearLocalStore = {
-            mRecognitionTaskDao.clear()
+        clearLocalStore = { page ->
+            if (page.page == 0)
+                mRecognitionTaskDao.clear()
         }
     }
 
-    override suspend fun getAllRecognitionTasks():
-            Flow<List<RecognitionTask>?>
-        = tasksResource.query(Unit)
+    @OptIn(ExperimentalPagingApi::class)
+    private val pager = Pager(
+        config = PagingConfig(pageSize = 5),
+        remoteMediator = RecognitionTaskMediator(tasksResource, db.remoteKeysDao()),
+    ) {
+        mRecognitionTaskDao.getAllRecognitionTasksPaged()
+    }.flow.map { page ->
+        page.map {
+            it.toRecognitionTask()
+        }
+    }
+
+    override fun getAllRecognitionTasks() = pager
 
     override suspend fun <T : RecognitionTask> addRecognitionTask(task: T) {
         val taskLocal = RecognitionTaskDTO(task)

@@ -1,5 +1,6 @@
 package lab.maxb.dark.presentation.repository.room.dao
 
+import androidx.paging.PagingSource
 import androidx.room.*
 import androidx.room.OnConflictStrategy.IGNORE
 import androidx.room.OnConflictStrategy.REPLACE
@@ -54,6 +55,10 @@ interface RecognitionTaskDAO {
     @Transaction
     @Query("SELECT * FROM recognition_task ORDER BY reviewed")
     fun getAllRecognitionTasks(): Flow<List<RecognitionTaskWithOwnerAndImage>?>
+
+    @Transaction
+    @Query("SELECT * FROM recognition_task ORDER BY reviewed")
+    fun getAllRecognitionTasksPaged(): PagingSource<Int, RecognitionTaskWithOwnerAndImage>
 
     @Transaction
     @Query("SELECT * FROM recognition_task WHERE id = :id")

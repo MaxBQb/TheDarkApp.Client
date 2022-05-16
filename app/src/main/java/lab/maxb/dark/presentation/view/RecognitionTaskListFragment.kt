@@ -32,14 +32,16 @@ class RecognitionTaskListFragment : Fragment(R.layout.recognition_task_list_frag
             RecognitionTaskListFragmentDirections.addRecognitionTask().navigate()
         }
 
-        mViewModel.recognitionTaskList observe { recognitionTasks ->
-            mAdapter = RecognitionTaskListAdapter(recognitionTasks)
-            mBinding.recognitionTaskListRecycler.adapter = mAdapter
-            mAdapter.onElementClickListener = { v: View, task: RecognitionTask ->
-                RecognitionTaskListFragmentDirections.solveRecognitionTask(
-                    task.id
-                ).navigate()
-            }
+        mAdapter = RecognitionTaskListAdapter()
+        mBinding.recognitionTaskListRecycler.adapter = mAdapter
+        mAdapter.onElementClickListener = { _: View, task: RecognitionTask ->
+            RecognitionTaskListFragmentDirections.solveRecognitionTask(
+                task.id
+            ).navigate()
+        }
+
+        mViewModel.recognitionTaskList observe {
+            mAdapter.submitData(it)
         }
     }
 }

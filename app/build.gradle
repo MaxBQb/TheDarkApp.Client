@@ -87,6 +87,11 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-paging:$room_version"
+
+    // Paging
+    def paging_version = "3.1.1"
+    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
 
     // Retrofit2 Networking
     def retrofit_version = "2.9.0"

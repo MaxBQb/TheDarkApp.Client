@@ -4,30 +4,44 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import lab.maxb.dark.databinding.RecognitionTaskListElementBinding
 import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.presentation.extra.toBitmap
-import lab.maxb.dark.presentation.view.adapter.RecognitionTaskListAdapter.RecognitionTaskViewHolder
+import lab.maxb.dark.presentation.view.adapter.RecognitionTaskListAdapter.TaskViewHolder
 
-class RecognitionTaskListAdapter(data: List<RecognitionTask>?) :
-      RecyclerView.Adapter<RecognitionTaskViewHolder>() {
-    private val data: List<RecognitionTask> = data ?: listOf()
+class RecognitionTaskListAdapter:
+    PagingDataAdapter<RecognitionTask, TaskViewHolder>(COMPARATOR) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecognitionTaskViewHolder {
-        val binding = RecognitionTaskListElementBinding.inflate(
+    companion object {
+        private val COMPARATOR = object : DiffUtil.ItemCallback<RecognitionTask>() {
+            override fun areItemsTheSame(oldItem: RecognitionTask, newItem: RecognitionTask): Boolean =
+                oldItem.id == newItem.id
+
+            override fun areContentsTheSame(oldItem: RecognitionTask, newItem: RecognitionTask): Boolean =
+                oldItem.id == newItem.id &&
+                oldItem.owner?.id == newItem.owner?.id &&
+                oldItem.owner?.name == newItem.owner?.name &&
+                oldItem.images == newItem.images
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
+        = RecognitionTaskListElementBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
-        )
-        return RecognitionTaskViewHolder(binding)
-    }
+        ).run {
+            TaskViewHolder(this)
+        }
 
     var onElementClickListener: ((view: View, item: RecognitionTask) -> Unit)?
         = null
 
-    override fun onBindViewHolder(holder: RecognitionTaskViewHolder, position: Int) {
-        val item = data[position]
+    override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
+        val item = getItem(position)!!
         holder.binding.taskOwnerName.text = item.owner?.name
         try {
             holder.binding.taskImage.setImageBitmap(
@@ -44,10 +58,6 @@ class RecognitionTaskListAdapter(data: List<RecognitionTask>?) :
         }
     }
 
-    override fun getItemCount(): Int {
-        return data.size
-    }
-
-    inner class RecognitionTaskViewHolder(var binding: RecognitionTaskListElementBinding):
+    inner class TaskViewHolder(var binding: RecognitionTaskListElementBinding):
         RecyclerView.ViewHolder(binding.root)
 }
