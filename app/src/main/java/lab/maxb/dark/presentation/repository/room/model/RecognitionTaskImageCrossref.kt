@@ -2,30 +2,28 @@ package lab.maxb.dark.presentation.repository.room.model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
-import androidx.room.PrimaryKey
-import lab.maxb.dark.domain.model.Image
-import lab.maxb.dark.domain.operations.randomUUID
 
 @Entity(tableName = "recognition_task_image",
-        foreignKeys = [
+    primaryKeys = ["id", "imageId"],
+    foreignKeys = [
             ForeignKey(
                 entity = RecognitionTaskDTO::class,
                 parentColumns = ["id"],
-                childColumns = ["recognition_task"],
+                childColumns = ["id"],
                 onDelete = CASCADE,
                 onUpdate = CASCADE,
+                deferred = true
+            ),
+            ForeignKey(
+                entity = ImageDTO::class,
+                parentColumns = ["imageId"],
+                childColumns = ["imageId"],
+                onDelete = CASCADE,
                 deferred = true
             )
         ],
 )
-data class RecognitionTaskImage(
-    val recognition_task: String,
-    val image: String,
-    @PrimaryKey
-    val id: String = randomUUID,
+data class RecognitionTaskImageCrossref(
+    var id: String,
+    var imageId: String,
 )
-
-fun RecognitionTaskImage.toImage() = Image(
-    image, id
-)
-

@@ -6,20 +6,18 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.mapLatest
-import lab.maxb.dark.domain.model.Image
 import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.presentation.extra.ImageLoader
+import lab.maxb.dark.presentation.repository.interfaces.ImagesRepository
 import lab.maxb.dark.presentation.repository.interfaces.RecognitionTasksRepository
 import lab.maxb.dark.presentation.repository.interfaces.UsersRepository
 import lab.maxb.dark.presentation.repository.network.dark.DarkService
 import lab.maxb.dark.presentation.repository.room.LocalDatabase
 import lab.maxb.dark.presentation.repository.room.dao.RecognitionTaskDAO
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskDTO
-import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskImage
+import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskImageCrossref
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskName
-import lab.maxb.dark.presentation.repository.room.model.toImage
 import lab.maxb.dark.presentation.repository.utils.Resource
-import lab.maxb.dark.presentation.repository.utils.StaticResource
 import lab.maxb.dark_api.Model.POJO.RecognitionTaskCreationDTO
 import org.koin.core.annotation.Single
 
@@ -28,6 +26,7 @@ class RecognitionTasksRepositoryImpl(
     private val db: LocalDatabase,
     private val mDarkService: DarkService,
     private val usersRepository: UsersRepository,
+    private val imagesRepository: ImagesRepository,
     private val imageLoader: ImageLoader,
 ) : RecognitionTasksRepository {
     private val mRecognitionTaskDao: RecognitionTaskDAO = db.recognitionTaskDao()
@@ -43,7 +42,7 @@ class RecognitionTasksRepositoryImpl(
             mDarkService.getAllTasks()?.map {
                 RecognitionTask(
                     setOf(),
-                    listOf(getImage(it.image!!)!!),
+                    listOf(imagesRepository.getById(it.image!!).firstOrNull()!!),
                     usersRepository.getUser(it.owner_id).firstOrNull()!!
                 )
             }
@@ -55,9 +54,8 @@ class RecognitionTasksRepositoryImpl(
                         RecognitionTaskDTO(task)
                     )
                     mRecognitionTaskDao.addRecognitionTaskImages(
-                        listOf(RecognitionTaskImage(
+                        listOf(RecognitionTaskImageCrossref(
                             task.id,
-                            task.images!![0].path,
                             task.images!![0].id,
                         ))
                     )
@@ -79,20 +77,23 @@ class RecognitionTasksRepositoryImpl(
             task.names!!
         ))?.also { taskLocal.id = it }
 
-        val images = task.images?.map { RecognitionTaskImage(
-            taskLocal.id, it.path,
-            mDarkService.addImage(
+        val images = task.images!!.map {
+            it.id = mDarkService.addImage(
                 taskLocal.id,
                 imageLoader.fromUri(it.path.toUri())
             )!!
-        ) }
+            imagesRepository.save(it)
+            RecognitionTaskImageCrossref(
+                taskLocal.id, it.id,
+            )
+        }
 
         mRecognitionTaskDao.addRecognitionTask(
             taskLocal,
             task.names!!.map {
                 RecognitionTaskName(taskLocal.id, it)
             },
-            images!!
+            images
         )
     }
 
@@ -116,33 +117,13 @@ class RecognitionTasksRepositoryImpl(
         = mRecognitionTaskDao.clear()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val imageResource = StaticResource<String, Image>().apply {
-        fetchRemote = {
-            Image(imageLoader.fromResponse(
-                mDarkService.downloadImage(it),
-                it
-            ), it)
-        }
-        clearLocalStore = {
-            mRecognitionTaskDao.deleteRecognitionTaskImage(it)
-        }
-        fetchLocal = {
-            mRecognitionTaskDao.getRecognitionTaskImage(it).mapLatest { image ->
-                image?.toImage()
-            }
-        }
-    }
-
-    private suspend fun getImage(id: String) = imageResource.query(id).firstOrNull()
-
-    @OptIn(ExperimentalCoroutinesApi::class)
     private val taskResource = Resource<String, RecognitionTask>().apply {
         fetchRemote = { id ->
             mDarkService.getTask(id)?.let { task ->
                 RecognitionTask(
                     task.names,
                     task.images?.map { image ->
-                        getImage(image)!!
+                        imagesRepository.getById(image).firstOrNull()!!
                     },
                     usersRepository.getUser(
                         task.owner_id
@@ -162,9 +143,8 @@ class RecognitionTasksRepositoryImpl(
                     RecognitionTaskName(task.id, name)
                 },
                 task.images!!.map { image ->
-                    RecognitionTaskImage(
+                    RecognitionTaskImageCrossref(
                         task.id,
-                        image.path,
                         image.id,
                     )
                 },
