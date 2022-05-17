@@ -15,13 +15,13 @@ import lab.maxb.dark.databinding.MainActivityBinding
 import lab.maxb.dark.presentation.extra.delegates.viewBinding
 import lab.maxb.dark.presentation.extra.launch
 import lab.maxb.dark.presentation.extra.observe
-import lab.maxb.dark.presentation.viewModel.UserViewModel
+import lab.maxb.dark.presentation.viewModel.AuthViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class MainActivity : AppCompatActivity(R.layout.main_activity) {
     val binding: MainActivityBinding by viewBinding()
-    private val authViewModel: UserViewModel by viewModel()
+    private val authViewModel: AuthViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,12 +36,9 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
             it.ifLoaded { profile ->
                 binding.toolbar.isVisible = profile != null
                 if (profile == null
-                    && navController.currentDestination?.id !in listOf(
-                        R.id.login_fragment,
-                        R.id.signup_fragment,
-                    ))
+                    && navController.currentDestination?.id != R.id.auth_fragment)
                     navController.navigate(
-                        NavGraphDirections.actionGlobalLoginFragment()
+                        NavGraphDirections.actionGlobalAuthFragment()
                     )
             }
         }

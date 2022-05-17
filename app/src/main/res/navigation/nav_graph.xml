@@ -21,20 +21,11 @@
     </fragment>
 
     <fragment
-        android:id="@+id/login_fragment"
-        android:name="lab.maxb.dark.presentation.view.LoginFragment"
-        android:label="@string/login_fragment_label"
-        tools:layout="@layout/login_fragment" >
-        <action
-            android:id="@+id/action_login_fragment_to_signup_fragment"
-            app:destination="@id/signup_fragment" />
+        android:id="@+id/auth_fragment"
+        android:name="lab.maxb.dark.presentation.view.AuthFragment"
+        android:label="@string/auth_fragment_label"
+        tools:layout="@layout/auth_fragment" >
     </fragment>
-    <fragment
-        android:id="@+id/signup_fragment"
-        android:name="lab.maxb.dark.presentation.view.SignupFragment"
-        android:label="@string/signup_label"
-        tools:layout="@layout/signup_fragment" />
-
     <fragment
         android:id="@+id/RecognitionTaskList_fragment"
         android:name="lab.maxb.dark.presentation.view.RecognitionTaskListFragment"
@@ -66,9 +57,9 @@
             app:uri="https://dark/task/{id}" />
     </fragment>
     <action
-        android:id="@+id/action_global_login_fragment"
-        app:destination="@id/login_fragment"
-        app:popUpTo="@id/login_fragment"
+        android:id="@+id/action_global_auth_fragment"
+        app:destination="@id/auth_fragment"
+        app:popUpTo="@id/auth_fragment"
         app:popUpToInclusive="true"
         app:launchSingleTop="true" />
     <action

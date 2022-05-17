@@ -6,7 +6,7 @@
     <data>
         <variable
             name="data"
-            type="lab.maxb.dark.presentation.viewModel.UserViewModel"/>
+            type="lab.maxb.dark.presentation.viewModel.AuthViewModel"/>
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -14,23 +14,35 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center"
-        tools:context=".presentation.view.SignupFragment">
+        android:animateLayoutChanges="true"
+        tools:context=".presentation.view.AuthFragment">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_margin="@dimen/_32sdp"
-            android:text="@string/signup_label"
+            android:text="@{data.isAccountNew ? @string/signup_label : @string/login_label, default=@string/login_label}"
             android:textSize="@dimen/h1" />
+        <CheckBox
+            android:id="@+id/create_new_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:button="@drawable/ic_checkbox"
+            android:layout_marginHorizontal="@dimen/normalMargin"
+            android:layout_marginVertical="@dimen/halfMargin"
+            android:paddingHorizontal="@dimen/_4sdp"
+            android:textSize="@dimen/normalText"
+            android:checked="@={data.isAccountNew}"
+            android:text="@string/create_new_account" />
         <EditText
             android:id="@+id/login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/normalMargin"
             android:layout_marginVertical="@dimen/halfMargin"
-            android:hint="@string/login_hint"
             android:maxLines="1"
             android:imeOptions="actionNext"
+            android:hint="@string/login_hint"
             android:textSize="@dimen/normalText"
             android:inputType="textEmailAddress"
             android:text="@={data.login}" />
@@ -56,9 +68,9 @@
             android:inputType="textPassword"
             android:textSize="@dimen/normalText"
             android:maxLines="1"
-            android:imeOptions="actionDone"
-            android:nextFocusDown="@id/signup"
-            android:nextFocusForward="@id/signup"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:imeOptions="actionNext"
             android:text="@={data.passwordRepeat}" />
         <CheckBox
             android:id="@+id/show_password"
@@ -72,27 +84,23 @@
             android:checked="@={data.showPassword}"
             android:text="@string/show_password" />
         <Button
-            android:id="@+id/signup"
+            android:id="@+id/enter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/normalMargin"
             android:layout_marginVertical="@dimen/halfMargin"
-            android:enabled="@{!data.isLoading &amp;&amp; data.password.equals(data.passwordRepeat) }"
-            android:text="@string/signup_button"
+            android:enabled="@{!data.isLoading}"
+            android:text="@{data.isAccountNew ? @string/signup_button : @string/login_button, default=@string/login_button}"
             android:textSize="@dimen/normalText"
             app:cornerRadius="@dimen/_8sdp" />
-        <Button
-            android:id="@+id/back"
-            android:layout_margin="@dimen/_32sdp"
-            android:layout_width="@dimen/_48sdp"
-            android:layout_height="@dimen/_48sdp"
+
+        <!--<com.google.android.gms.common.SignInButton
+            android:id="@+id/google_sign_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:enabled="@{!data.isLoading}"
-            android:scaleX="1.7"
-            android:scaleY="1.7"
-            app:cornerRadius="@dimen/_20sdp"
-            app:icon="@drawable/ic_back"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            />
+            android:visibility="gone"
+            app:colorScheme="dark" />-->
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

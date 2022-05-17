@@ -8,6 +8,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -15,7 +16,7 @@ import com.wada811.databinding.dataBinding
 import kotlinx.coroutines.flow.collectLatest
 import lab.maxb.dark.NavGraphDirections
 import lab.maxb.dark.R
-import lab.maxb.dark.databinding.LoginFragmentBinding
+import lab.maxb.dark.databinding.AuthFragmentBinding
 import lab.maxb.dark.domain.model.Profile
 import lab.maxb.dark.domain.operations.unicname
 import lab.maxb.dark.presentation.extra.launchRepeatingOnLifecycle
@@ -23,14 +24,14 @@ import lab.maxb.dark.presentation.extra.navigate
 import lab.maxb.dark.presentation.extra.observe
 import lab.maxb.dark.presentation.extra.setPasswordVisibility
 import lab.maxb.dark.presentation.repository.network.oauth.google.GoogleSignInLogic
-import lab.maxb.dark.presentation.viewModel.UserViewModel
+import lab.maxb.dark.presentation.viewModel.AuthViewModel
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
-class LoginFragment : Fragment(R.layout.login_fragment) {
-    private val mViewModel: UserViewModel by sharedViewModel()
-    private val mBinding: LoginFragmentBinding by dataBinding()
+class AuthFragment : Fragment(R.layout.auth_fragment) {
+    private val mViewModel: AuthViewModel by sharedViewModel()
+    private val mBinding: AuthFragmentBinding by dataBinding()
     lateinit var mGoogleSignInPage : GoogleSignInPage
     val mGoogleSignInLogic by inject<GoogleSignInLogic>()
 
@@ -52,21 +53,35 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
 //                makeAuthResultHandler(null))
 //        }
 
+        mViewModel.isAccountNew observe {
+            mBinding.passwordRepeat.isVisible = it
+        }
+
         mViewModel.showPassword observe {
             mBinding.password.setPasswordVisibility(it)
+            mBinding.passwordRepeat.setPasswordVisibility(it)
         }
-        mBinding.next.setOnClickListener {
-            LoginFragmentDirections.actionLoginFragmentToSignupFragment().navigate()
-        }
-        mBinding.logIn.setOnClickListener {
+
+        mBinding.enter.setOnClickListener {
             if (mViewModel.isLoading.value)
                 return@setOnClickListener
+
+            when {
+                mViewModel.hasEmptyFields() -> show(R.string.has_empty_fields_message)
+                mViewModel.isPasswordsNotMatch() -> show(R.string.passwords_not_match_message)
+                else -> null
+            }?.let { return@setOnClickListener }
+
             mViewModel.isLoading.value = true
             launchRepeatingOnLifecycle {
                 mViewModel.authorize()
                 mViewModel.profile.collectLatest { state ->
                     state.ifLoaded {
-                        handleResult(R.string.incorrect_credentials_message, it)
+                        val message = if (mViewModel.isAccountNew.value)
+                            R.string.incorrect_signup_credentials_message
+                        else
+                            R.string.incorrect_credentials_message
+                        handleResult(message, it)
                     }
                 }
             }
@@ -93,15 +108,14 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
     private fun handleResult(@StringRes message: Int?, profile: Profile?) {
         profile?.let {
             mViewModel.password.value = ""
+            mViewModel.passwordRepeat.value = ""
             NavGraphDirections.actionGlobalMainFragment().navigate()
 //            setFragmentResult(RESPONSE_LOGIN_SUCCESSFUL, bundleOf())
         } ?: onNotAuthorized(message)
     }
 
     private fun onNotAuthorized(@StringRes message: Int?) {
-        message?.let { Toast.makeText(
-            context, it, Toast.LENGTH_LONG
-        ).show()}
+        message?.let { show(it) }
         mViewModel.isLoading.value = false
     }
 
@@ -127,6 +141,12 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
             getContent.launch(intent)
         }
     }
+
+    private fun show(message: String) = Toast.makeText(
+        context, message, Toast.LENGTH_LONG
+    ).show()
+
+    private fun show(message: Int) = show(getString(message))
 
     companion object {
         val GET_GOOGLE_ACCOUNT = unicname

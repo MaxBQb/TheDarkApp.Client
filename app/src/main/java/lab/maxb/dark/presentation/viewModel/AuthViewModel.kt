@@ -21,7 +21,7 @@ import java.time.Duration
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @KoinViewModel
-class UserViewModel(
+class AuthViewModel(
     private val profileRepository: ProfileRepository,
     private val db: LocalDatabase,
     private val userSettings: UserSettings,
@@ -35,6 +35,7 @@ class UserViewModel(
     val password = MutableStateFlow("")
     val showPassword = MutableStateFlow(false)
     val passwordRepeat = MutableStateFlow("")
+    val isAccountNew = MutableStateFlow(false)
     val isLoading = MutableStateFlow(false)
 
     init {
@@ -49,11 +50,11 @@ class UserViewModel(
         }
     }
 
-    suspend fun authorize(createNewAccount: Boolean = false) {
+    suspend fun authorize() {
         try {
             _profile.value = UiState.Loading
             withTimeout(Duration.ofSeconds(10).toMillis()) {
-                profileRepository.sendCredentials(login.value, password.value, createNewAccount)
+                profileRepository.sendCredentials(login.value, password.value, isAccountNew.value)
             }
         } catch (e: Throwable) {
             _profile.value = UiState.Error(e)
@@ -64,6 +65,13 @@ class UserViewModel(
     fun authorizeByOAUTHProvider(login: String, name: String, authCode: String) {
         TODO()
     }
+
+    fun hasEmptyFields() =
+        login.value.isEmpty() ||
+        password.value.isEmpty() ||
+        isAccountNew.value && passwordRepeat.value.isEmpty()
+
+    fun isPasswordsNotMatch() = isAccountNew.value && password.value != passwordRepeat.value
 
     fun signOut() = launch(Dispatchers.Default) {
 //        mGoogleSignInLogic.signOut()
