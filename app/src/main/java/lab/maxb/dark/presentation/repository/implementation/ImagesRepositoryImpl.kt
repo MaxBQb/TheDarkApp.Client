@@ -23,10 +23,14 @@ class ImagesRepositoryImpl(
     @OptIn(ExperimentalCoroutinesApi::class)
     private val imageResource = StaticResource<String, Image>().apply {
         fetchRemote = {
-            Image(imageLoader.fromResponse(
-                mDarkService.downloadImage(it),
-                it
-            ), it)
+            try {
+                Image(imageLoader.fromResponse(
+                    mDarkService.downloadImage(it),
+                    it
+                ), it)
+            } catch (e: NullPointerException) {
+                null
+            }
         }
         localStore = {
             mImageDao.save(it.toImageDTO())

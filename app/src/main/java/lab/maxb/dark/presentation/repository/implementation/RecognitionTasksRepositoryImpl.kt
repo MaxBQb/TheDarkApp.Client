@@ -48,7 +48,7 @@ class RecognitionTasksRepositoryImpl(
             mDarkService.getAllTasks(page.page, page.size)?.map {
                 RecognitionTask(
                     setOf(),
-                    listOf(imagesRepository.getById(it.image!!).firstOrNull()!!),
+                    imagesRepository.getById(it.image!!).firstOrNull()?.let { listOf(it) },
                     usersRepository.getUser(it.owner_id).firstOrNull()!!,
                     it.reviewed,
                     it.id,
@@ -64,7 +64,7 @@ class RecognitionTasksRepositoryImpl(
                     mRecognitionTaskDao.addRecognitionTaskImages(
                         listOf(RecognitionTaskImageCrossref(
                             task.id,
-                            task.images!![0].id,
+                            task.images?.get(0)?.id ?: return@forEach,
                         ))
                     )
                 }
