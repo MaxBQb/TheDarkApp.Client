@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_margin="@dimen/_32sdp"
-            android:text="@{data.isAccountNew ? @string/signup_label : @string/login_label, default=@string/login_label}"
+            android:text="@{data.isAccountNew ? @string/auth_signup_label : @string/auth_login_label, default= @string/auth_login_label}"
             android:textSize="@dimen/h1" />
         <CheckBox
             android:id="@+id/create_new_account"
@@ -33,7 +33,7 @@
             android:paddingHorizontal="@dimen/_4sdp"
             android:textSize="@dimen/normalText"
             android:checked="@={data.isAccountNew}"
-            android:text="@string/create_new_account" />
+            android:text="@string/auth_isAccountNew" />
         <EditText
             android:id="@+id/login"
             android:layout_width="match_parent"
@@ -42,7 +42,7 @@
             android:layout_marginVertical="@dimen/halfMargin"
             android:maxLines="1"
             android:imeOptions="actionNext"
-            android:hint="@string/login_hint"
+            android:hint="@string/auth_loginHint"
             android:textSize="@dimen/normalText"
             android:inputType="textEmailAddress"
             android:text="@={data.login}" />
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/normalMargin"
             android:layout_marginVertical="@dimen/halfMargin"
-            android:hint="@string/password_hint"
+            android:hint="@string/auth_passwordHint"
             android:textSize="@dimen/normalText"
             android:maxLines="1"
             android:imeOptions="actionNext"
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/normalMargin"
             android:layout_marginVertical="@dimen/halfMargin"
-            android:hint="@string/password_repeat_hint"
+            android:hint="@string/auth_passwordRepeatHint"
             android:inputType="textPassword"
             android:textSize="@dimen/normalText"
             android:maxLines="1"
@@ -82,7 +82,7 @@
             android:paddingHorizontal="@dimen/_4sdp"
             android:textSize="@dimen/normalText"
             android:checked="@={data.showPassword}"
-            android:text="@string/show_password" />
+            android:text="@string/auth_showPassword" />
         <Button
             android:id="@+id/enter"
             android:layout_width="match_parent"
@@ -90,7 +90,7 @@
             android:layout_marginHorizontal="@dimen/normalMargin"
             android:layout_marginVertical="@dimen/halfMargin"
             android:enabled="@{!data.isLoading}"
-            android:text="@{data.isAccountNew ? @string/signup_button : @string/login_button, default=@string/login_button}"
+            android:text="@{data.isAccountNew ? @string/auth_signup_button : @string/auth_login_button, default=@string/auth_login_button}"
             android:textSize="@dimen/normalText"
             app:cornerRadius="@dimen/_8sdp" />
 

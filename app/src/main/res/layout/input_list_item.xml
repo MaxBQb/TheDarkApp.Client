@@ -11,7 +11,7 @@
             android:textSize="@dimen/normalText"
             android:completionThreshold="1"
             android:inputType="textAutoCorrect|textAutoComplete"
-            android:hint="@string/input_list_item_hint"
+            android:hint="@string/addTask_inputList_hint"
             android:layout_marginHorizontal="@dimen/normalMargin"
             android:layout_marginVertical="@dimen/halfMargin"
             />

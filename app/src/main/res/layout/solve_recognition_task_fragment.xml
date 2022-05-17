@@ -37,7 +37,7 @@
                 android:textSize="@dimen/normalText"
                 android:text="@={data.answer}"
                 android:inputType="textAutoCorrect|textAutoComplete"
-                android:hint="@string/recognition_task_name_answer"
+                android:hint="@string/solveTask_answer"
                 android:layout_marginHorizontal="@dimen/halfMargin" />
 
             <Button
@@ -48,7 +48,7 @@
                 android:layout_marginHorizontal="@dimen/halfMargin"
                 android:textSize="@dimen/normalText"
                 android:textAllCaps="false"
-                android:text="@string/check_recognition_task_solution"
+                android:text="@string/solveTask_checkSolution"
                 app:cornerRadius="@dimen/_8sdp" />
         </LinearLayout>
 
@@ -68,7 +68,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/halfMargin"
-                android:text="@string/mark_reviewed"
+                android:text="@string/solveTask_moderator_mark_reviewed"
                 android:textColor="@color/black"
                 android:textSize="@dimen/normalText"
                 android:textAllCaps="false"
@@ -81,7 +81,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/halfMargin"
-                android:text="@string/delete_task"
+                android:text="@string/solveTask_moderator_delete"
                 android:textSize="@dimen/normalText"
                 android:textAllCaps="false"
                 android:backgroundTint="#760A0A"

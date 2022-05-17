@@ -1,34 +1,47 @@
 <resources>
+    <!-- App -->
     <string name="app_name">Тёмная</string>
-    <string name="load_images_title">Загрузить картинки</string>
-    <string name="check_recognition_task_solution">Проверить</string>
-    <string name="input_list_item_hint">Введите текст</string>
-    <string name="recognition_task_name_answer">Ваш ответ</string>
-    <string name="available_recognition_tasks">Доступные задачи</string>
-    <string name="add_recognition_task_label">Добавление задачи</string>
-    <string name="solve_recognition_task_label">Что это?</string>
-    <string name="share_button">Поделиться</string>
-    <string name="submit_button">Утвердить</string>
-    <string name="login_label">Вход</string>
-    <string name="signup_label">Регистрация</string>
-    <string name="auth_fragment_label">Авторизация</string>
-    <string name="login_hint">Логин</string>
-    <string name="password_hint">Пароль</string>
-    <string name="show_password">Показать пароль</string>
-    <string name="create_new_account">Ещё нет аккаунта</string>
-    <string name="password_repeat_hint">Повторите пароль</string>
-    <string name="login_button">Войти</string>
-    <string name="signup_button">Зарегистрироваться</string>
-    <string name="incorrect_signup_credentials_message">Данные не корректны или такой пользователь уже существует</string>
-    <string name="has_empty_fields_message">Не все данные введены</string>
-    <string name="passwords_not_match_message">Пароли не совпадают</string>
-    <string name="incorrect_credentials_message">Неверный логин или пароль</string>
-    <string name="sign_out">Выйти</string>
-    <string name="something_went_wrong">Неизвесная ошибка</string>
-    <string name="not_enough_data_provided_message">Вы ввели не все данные</string>
-    <string name="mark_reviewed">Одобрить</string>
-    <string name="delete_task">Удалить</string>
-    <string name="welcome_label">Добро пожаловать, %s!</string>
-    <string name="anonymous_welcome_label">Вы не авторизованы!</string>
-    <string name="main_fragment_label">Главная</string>
+
+    <!-- Add Recognition Task -->
+    <string name="addTask_loadImagesTitle">Загрузить картинки</string>
+    <string name="addTask_inputList_hint">Введите текст</string>
+    <string name="addTask_message_notEnoughDataProvided">Вы ввели не все данные</string>
+
+    <!-- Solve Recognition Task -->
+    <string name="solveTask_checkSolution">Проверить</string>
+    <string name="solveTask_answer">Ваш ответ</string>
+    <string name="solveTask_share">Поделиться</string>
+        <!-- Moderator actions -->
+        <string name="solveTask_moderator_submit">Утвердить</string>
+        <string name="solveTask_moderator_mark_reviewed">Одобрить</string>
+        <string name="solveTask_moderator_delete">Удалить</string>
+
+    <!-- Navigation -->
+    <string name="nav_auth">Авторизация</string>
+    <string name="nav_taskList">Доступные задачи</string>
+    <string name="nav_addTask">Добавление задачи</string>
+    <string name="nav_solveTask">Что это?</string>
+    <string name="nav_main">Главная</string>
+
+    <!-- Authorization -->
+    <string name="auth_login_label">Вход</string>
+    <string name="auth_signup_label">Регистрация</string>
+    <string name="auth_isAccountNew">Ещё нет аккаунта</string>
+    <string name="auth_loginHint">Логин</string>
+    <string name="auth_passwordHint">Пароль</string>
+    <string name="auth_passwordRepeatHint">Повторите пароль</string>
+    <string name="auth_showPassword">Показать пароль</string>
+    <string name="auth_login_button">Войти</string>
+    <string name="auth_signup_button">Зарегистрироваться</string>
+    <string name="auth_signOut">Выйти</string>
+        <!-- Messages -->
+        <string name="auth_message_signup_incorrectCredentials">Данные не корректны или такой пользователь уже существует</string>
+        <string name="auth_message_login_incorrectCredentials">Неверный логин или пароль</string>
+        <string name="auth_message_hasEmptyFields">Не все данные введены</string>
+        <string name="auth_message_passwordsNotMatch">Пароли не совпадают</string>
+        <string name="auth_message_somethingWentWrong">Неизвесная ошибка</string>
+
+    <!-- Welcome -->
+    <string name="welcome_welcome">Добро пожаловать, %s!</string>
+    <string name="welcome_anonymousWelcome">Вы не авторизованы!</string>
 </resources>

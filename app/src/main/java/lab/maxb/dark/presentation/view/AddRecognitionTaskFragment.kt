@@ -136,7 +136,7 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
             goBack()
         } else Toast.makeText(
             context,
-            getString(R.string.not_enough_data_provided_message),
+            getString(R.string.addTask_message_notEnoughDataProvided),
             Toast.LENGTH_SHORT
         ).show()
     }

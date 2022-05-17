@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textSize="@dimen/h3"
-        android:text="@string/load_images_title"/>
+        android:text="@string/addTask_loadImagesTitle"/>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"

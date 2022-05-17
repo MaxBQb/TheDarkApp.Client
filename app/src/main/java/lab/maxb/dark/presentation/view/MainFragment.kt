@@ -36,7 +36,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                 if (profile == null)
                     openLoginView()
                 else
-                    mBinding.welcomeLabel.text = getString(R.string.welcome_label,
+                    mBinding.welcomeLabel.text = getString(R.string.welcome_welcome,
                     profile.user?.name ?: "Anonymous")
             }
         }

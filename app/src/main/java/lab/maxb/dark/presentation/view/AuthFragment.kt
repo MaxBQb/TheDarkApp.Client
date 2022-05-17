@@ -67,8 +67,8 @@ class AuthFragment : Fragment(R.layout.auth_fragment) {
                 return@setOnClickListener
 
             when {
-                mViewModel.hasEmptyFields() -> show(R.string.has_empty_fields_message)
-                mViewModel.isPasswordsNotMatch() -> show(R.string.passwords_not_match_message)
+                mViewModel.hasEmptyFields() -> show(R.string.auth_message_hasEmptyFields)
+                mViewModel.isPasswordsNotMatch() -> show(R.string.auth_message_passwordsNotMatch)
                 else -> null
             }?.let { return@setOnClickListener }
 
@@ -78,9 +78,9 @@ class AuthFragment : Fragment(R.layout.auth_fragment) {
                 mViewModel.profile.collectLatest { state ->
                     state.ifLoaded {
                         val message = if (mViewModel.isAccountNew.value)
-                            R.string.incorrect_signup_credentials_message
+                            R.string.auth_message_signup_incorrectCredentials
                         else
-                            R.string.incorrect_credentials_message
+                            R.string.auth_message_login_incorrectCredentials
                         handleResult(message, it)
                     }
                 }
