@@ -18,12 +18,9 @@
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/image_slider"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginHorizontal="@dimen/halfMargin"
-            android:layout_marginBottom="@dimen/normalMargin"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="5dp" />
+            android:layout_height="@dimen/_200sdp"
+            android:layout_marginVertical="@dimen/normalMargin"
+             />
 
         <LinearLayout
             android:id="@+id/answer_layout"
@@ -37,7 +34,7 @@
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:textSize="@dimen/normalText"
                 android:text="@={data.answer}"
                 android:inputType="textAutoCorrect|textAutoComplete"
                 android:hint="@string/recognition_task_name_answer"
@@ -49,14 +46,17 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/halfMargin"
+                android:textSize="@dimen/normalText"
+                android:textAllCaps="false"
                 android:text="@string/check_recognition_task_solution"
-                app:cornerRadius="8dp" />
+                app:cornerRadius="@dimen/_8sdp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_below="@id/answer_layout"
             android:id="@+id/moderator_tools"
             android:visibility="gone"
+            tools:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/normalMargin"
@@ -69,8 +69,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/halfMargin"
                 android:text="@string/mark_reviewed"
-                android:backgroundTint="#796B1B"
-                app:cornerRadius="8dp" />
+                android:textColor="@color/black"
+                android:textSize="@dimen/normalText"
+                android:textAllCaps="false"
+                android:backgroundTint="#736721"
+                app:cornerRadius="@dimen/_8sdp" />
 
             <Button
                 android:id="@+id/delete_button"
@@ -79,8 +82,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/halfMargin"
                 android:text="@string/delete_task"
-                android:backgroundTint="#D30000"
-                app:cornerRadius="8dp" />
+                android:textSize="@dimen/normalText"
+                android:textAllCaps="false"
+                android:backgroundTint="#760A0A"
+                app:cornerRadius="@dimen/_8sdp" />
         </LinearLayout>
     </RelativeLayout>
 </layout>

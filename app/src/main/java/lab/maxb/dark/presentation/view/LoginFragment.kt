@@ -72,9 +72,9 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
             }
         }
 
-        mBinding.googleSignIn.setOnClickListener {
-            mGoogleSignInPage.open(mGoogleSignInLogic.signInIntent)
-        }
+//        mBinding.googleSignIn.setOnClickListener {
+//            mGoogleSignInPage.open(mGoogleSignInLogic.signInIntent)
+//        }
     }
 
     private fun onAuthWithGoogle(result: Intent?){

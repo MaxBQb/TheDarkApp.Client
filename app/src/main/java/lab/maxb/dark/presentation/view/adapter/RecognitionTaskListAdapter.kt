@@ -24,7 +24,7 @@ class RecognitionTaskListAdapter:
                 oldItem.id == newItem.id &&
                 oldItem.owner?.id == newItem.owner?.id &&
                 oldItem.owner?.name == newItem.owner?.name &&
-                oldItem.images == newItem.images
+                oldItem.images?.firstOrNull()?.id == newItem.images?.firstOrNull()?.id
         }
     }
 

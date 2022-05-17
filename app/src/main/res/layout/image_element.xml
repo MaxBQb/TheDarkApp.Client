@@ -4,20 +4,10 @@
     android:id="@+id/addLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <ImageView
         android:id="@+id/imageContent"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:layout_centerInParent="true"/>
-
-    <ImageButton
-        android:id="@+id/addImageButton"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        android:padding="@dimen/normalMargin"
-        android:layout_margin="@dimen/normalMargin"
-        android:src="@drawable/ic_add_photo_alternative" />
 </RelativeLayout>

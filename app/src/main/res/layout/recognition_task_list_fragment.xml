@@ -5,20 +5,21 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".presentation.view.RecognitionTaskListFragment">
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/fab"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="30dp"
-        android:src="@android:drawable/ic_input_add"/>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recognitionTaskListRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="?actionBarSize"
-        android:paddingTop="@dimen/normalMargin"
-        />
+        android:clipToPadding="false"
+        android:paddingVertical="@dimen/halfMargin"
+        tools:context=".presentation.view.RecognitionTasksListFragment"
+        tools:listitem="@layout/recognition_task_list_element" />
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fab"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/_32sdp"
+        android:scaleType="center"
+        android:background="@drawable/ic_ripple_oval"
+        android:src="@drawable/ic_plus"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
