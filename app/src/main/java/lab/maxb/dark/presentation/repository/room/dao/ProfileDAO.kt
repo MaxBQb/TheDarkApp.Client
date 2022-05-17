@@ -16,8 +16,4 @@ interface ProfileDAO {
 
     @Query("SELECT * FROM profile WHERE login = :login")
     fun getByLogin(login: String): Flow<FullProfile?>
-
-    @Transaction
-    @Query("DELETE FROM profile")
-    suspend fun clear()
 }

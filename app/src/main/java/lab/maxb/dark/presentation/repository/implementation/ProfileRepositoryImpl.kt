@@ -61,5 +61,4 @@ class ProfileRepositoryImpl(
     }
 
     override suspend fun save(profile: Profile) = profileDAO.save(ProfileDTO(profile))
-    override suspend fun clearCache() = profileDAO.clear()
 }

@@ -19,11 +19,9 @@ class UsersRepositoryImpl(
         fetchLocal = { mUserDao.getUser(it) }
         fetchRemote = { darkService.getUser(it) }
         localStore = { mUserDao.addUser(UserDTO(it)) }
-//        clearLocalStore = { mUserDao.deleteUser(it) }
+        clearLocalStore = { mUserDao.deleteUser(it) }
     }
 
     override suspend fun getUser(id: String)
         = userResource.query(id)
-
-    override suspend fun clearCache(): Unit = mUserDao.clear()
 }

@@ -18,8 +18,4 @@ interface UserDAO {
 
     @Query("SELECT * FROM user WHERE id = :id")
     fun getUser(id: String): Flow<UserDTO?>
-
-    @Transaction
-    @Query("DELETE FROM user")
-    suspend fun clear()
 }

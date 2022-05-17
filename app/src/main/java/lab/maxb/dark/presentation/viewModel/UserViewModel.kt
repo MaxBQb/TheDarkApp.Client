@@ -1,6 +1,7 @@
 package lab.maxb.dark.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
@@ -11,9 +12,7 @@ import lab.maxb.dark.domain.model.Profile
 import lab.maxb.dark.presentation.extra.UserSettings
 import lab.maxb.dark.presentation.extra.launch
 import lab.maxb.dark.presentation.repository.interfaces.ProfileRepository
-import lab.maxb.dark.presentation.repository.interfaces.RecognitionTasksRepository
-import lab.maxb.dark.presentation.repository.interfaces.UsersRepository
-import lab.maxb.dark.presentation.repository.network.oauth.google.GoogleSignInLogic
+import lab.maxb.dark.presentation.repository.room.LocalDatabase
 import lab.maxb.dark.presentation.viewModel.utils.UiState
 import lab.maxb.dark.presentation.viewModel.utils.stateIn
 import org.koin.android.annotation.KoinViewModel
@@ -24,10 +23,9 @@ import java.time.Duration
 @KoinViewModel
 class UserViewModel(
     private val profileRepository: ProfileRepository,
-    private val usersRepository: UsersRepository,
-    private val recognitionTasksRepository: RecognitionTasksRepository,
+    private val db: LocalDatabase,
     private val userSettings: UserSettings,
-    private val mGoogleSignInLogic: GoogleSignInLogic,
+//    private val mGoogleSignInLogic: GoogleSignInLogic,
 ) : ViewModel() {
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _profile = MutableStateFlow(UiState.Loading as UiState<Profile?>)
@@ -67,14 +65,12 @@ class UserViewModel(
         TODO()
     }
 
-    fun signOut() = launch {
+    fun signOut() = launch(Dispatchers.Default) {
 //        mGoogleSignInLogic.signOut()
         userSettings.token = ""
         userSettings.login = ""
         isLoading.value = false
-        profileRepository.clearCache()
-        usersRepository.clearCache()
-        recognitionTasksRepository.clearCache()
+        db.clearAllTables()
     }
 }
 

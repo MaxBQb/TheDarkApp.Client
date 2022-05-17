@@ -38,19 +38,8 @@ interface RecognitionTaskDAO {
     @Delete
     suspend fun deleteRecognitionTask(task: RecognitionTaskDTO)
 
-    @Transaction
-    suspend fun deleteRecognitionTasks(exclude: List<String>) {
-        getAllRecognitionTasksIds().forEach {
-            if (it !in exclude)
-                deleteRecognitionTask(it)
-        }
-    }
-
     @Query("DELETE FROM recognition_task WHERE id=:id")
     suspend fun deleteRecognitionTask(id: String)
-
-    @Query("SELECT id FROM recognition_task")
-    suspend fun getAllRecognitionTasksIds(): List<String>
 
     @Transaction
     @Query("SELECT * FROM recognition_task ORDER BY reviewed")

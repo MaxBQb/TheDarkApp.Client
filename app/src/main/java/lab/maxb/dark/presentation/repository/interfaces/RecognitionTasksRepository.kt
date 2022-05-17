@@ -7,8 +7,7 @@ import lab.maxb.dark.domain.model.RecognitionTask
 interface RecognitionTasksRepository {
     fun getAllRecognitionTasks(): Flow<PagingData<RecognitionTask>>
     suspend fun getRecognitionTask(id: String, forceUpdate: Boolean = false): Flow<RecognitionTask?>
-    suspend fun <T : RecognitionTask> addRecognitionTask(task: T)
-    suspend fun <T : RecognitionTask> markRecognitionTask(task: T)
-    suspend fun <T : RecognitionTask> deleteRecognitionTask(task: T)
-    suspend fun clearCache()
+    suspend fun addRecognitionTask(task: RecognitionTask)
+    suspend fun markRecognitionTask(task: RecognitionTask)
+    suspend fun deleteRecognitionTask(task: RecognitionTask)
 }

@@ -7,5 +7,4 @@ interface ProfileRepository {
     suspend fun sendCredentials(login: String, password: String, initial: Boolean = false)
     val profile: Flow<Profile?>
     suspend fun save(profile: Profile)
-    suspend fun clearCache()
 }

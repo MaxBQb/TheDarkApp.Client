@@ -90,7 +90,7 @@ class RecognitionTasksRepositoryImpl(
 
     override fun getAllRecognitionTasks() = pager
 
-    override suspend fun <T : RecognitionTask> addRecognitionTask(task: T) {
+    override suspend fun addRecognitionTask(task: RecognitionTask) {
         val taskLocal = RecognitionTaskDTO(task)
         mDarkService.addTask(
             RecognitionTaskCreationDTO(
@@ -118,7 +118,7 @@ class RecognitionTasksRepositoryImpl(
         )
     }
 
-    override suspend fun <T : RecognitionTask> markRecognitionTask(task: T) {
+    override suspend fun markRecognitionTask(task: RecognitionTask) {
         mRecognitionTaskDao.updateRecognitionTask(task as RecognitionTaskDTO)
         try {
             if (mDarkService.markTask(task.id, task.reviewed))
@@ -128,14 +128,11 @@ class RecognitionTasksRepositoryImpl(
         }
     }
 
-    override suspend fun <T : RecognitionTask> deleteRecognitionTask(task: T) {
+    override suspend fun deleteRecognitionTask(task: RecognitionTask) {
         mRecognitionTaskDao.deleteRecognitionTask(
             task as RecognitionTaskDTO
         )
     }
-
-    override suspend fun clearCache(): Unit
-        = mRecognitionTaskDao.clear()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val taskResource = Resource<String, RecognitionTask>().apply {
