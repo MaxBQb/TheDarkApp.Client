@@ -3,7 +3,9 @@ package lab.maxb.dark.presentation.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import androidx.paging.filter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.mapLatest
 import lab.maxb.dark.domain.model.isUser
 import lab.maxb.dark.presentation.repository.interfaces.ProfileRepository
@@ -20,8 +22,11 @@ class RecognitionTaskListViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val recognitionTaskList = recognitionTasksRepository
-        .getAllRecognitionTasks()
-        .cachedIn(viewModelScope)
+        .getAllRecognitionTasks().mapLatest { page ->
+            page.filter {
+                it.owner?.id != profile.firstOrNull()?.user?.id
+            }
+        }.cachedIn(viewModelScope)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val isTaskCreationAllowed = profile.mapLatest {
