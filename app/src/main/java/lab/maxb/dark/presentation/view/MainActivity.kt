@@ -38,6 +38,11 @@ class MainActivity : AppCompatActivity(R.layout.main_activity),
             R.id.menu_nav_main to R.id.nav_main_fragment,
             R.id.menu_nav_tasksList to R.id.nav_taskList_fragment,
         )
+
+        private val authDestinations = setOf(
+            R.id.nav_auth_fragment,
+            R.id.nav_auth_handle_fragment,
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,12 +77,13 @@ class MainActivity : AppCompatActivity(R.layout.main_activity),
         binding.navView.setNavigationItemSelectedListener(this)
 
         // Logic
-        authViewModel.isAuthorized observe {
+        navController.addOnDestinationChangedListener { _, destionation, _ ->
+            val inAuthZone = destionation.id in authDestinations
             binding.drawerLayout.setDrawerLockMode(
-                if (it) DrawerLayout.LOCK_MODE_UNLOCKED
+                if (!inAuthZone) DrawerLayout.LOCK_MODE_UNLOCKED
                 else DrawerLayout.LOCK_MODE_LOCKED_CLOSED
             )
-            binding.toolbar.isVisible = it
+            binding.toolbar.isVisible = !inAuthZone
         }
 
         authViewModel.profile observe {
@@ -86,6 +92,10 @@ class MainActivity : AppCompatActivity(R.layout.main_activity),
                     navController.navigate(NavGraphDirections.navToAuthFragment())
             }
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return super.onSupportNavigateUp()
     }
 
     override fun onBackPressed(): Unit = with(binding.drawerLayout) {
