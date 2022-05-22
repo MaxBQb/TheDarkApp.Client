@@ -20,3 +20,8 @@ sealed class UiState<out T> {
     open fun ifLoading(block: () -> Unit) {}
     open fun ifLoaded(block: (T?) -> Unit) {}
 }
+
+val<T> UiState<T>.valueOrNull get() = when (this) {
+    is UiState.Success<T> -> value
+    else -> null
+}

@@ -14,11 +14,7 @@
         android:id="@+id/main_fragment"
         android:name="lab.maxb.dark.presentation.view.MainFragment"
         android:label="@string/nav_main"
-        tools:layout="@layout/main_fragment" >
-        <action
-            android:id="@+id/action_main_fragment_to_RecognitionTaskList_fragment"
-            app:destination="@id/RecognitionTaskList_fragment"/>
-    </fragment>
+        tools:layout="@layout/main_fragment" />
 
     <fragment
         android:id="@+id/auth_fragment"

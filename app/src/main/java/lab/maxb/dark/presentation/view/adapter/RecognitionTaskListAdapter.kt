@@ -41,7 +41,7 @@ class RecognitionTaskListAdapter:
         = null
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        val item = getItem(position)!!
+        val item = getItem(position) ?: return
         holder.binding.taskOwnerName.text = item.owner?.name
         try {
             holder.binding.taskImage.setImageBitmap(

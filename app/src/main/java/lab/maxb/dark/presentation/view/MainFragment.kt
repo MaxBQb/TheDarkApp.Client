@@ -24,13 +24,6 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as? MainActivity)?.withToolbar {
-            navigationIcon = null
-        }
-
-        if (false)
-            MainFragmentDirections.actionMainFragmentToRecognitionTaskListFragment().navigate()
-
         mViewModel.profile observe {
             it.ifLoaded { profile ->
                 if (profile == null)

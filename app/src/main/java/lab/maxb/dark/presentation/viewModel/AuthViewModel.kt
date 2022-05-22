@@ -15,6 +15,7 @@ import lab.maxb.dark.presentation.repository.interfaces.ProfileRepository
 import lab.maxb.dark.presentation.repository.room.LocalDatabase
 import lab.maxb.dark.presentation.viewModel.utils.UiState
 import lab.maxb.dark.presentation.viewModel.utils.stateIn
+import lab.maxb.dark.presentation.viewModel.utils.valueOrNull
 import org.koin.android.annotation.KoinViewModel
 import java.time.Duration
 
@@ -30,6 +31,10 @@ class AuthViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _profile = MutableStateFlow(UiState.Loading as UiState<Profile?>)
     val profile = _profile.stateIn(UiState.Loading)
+
+    val isAuthorized = profile.mapLatest {
+        it.valueOrNull != null
+    }.stateIn(false)
 
     val login = MutableStateFlow("")
     val password = MutableStateFlow("")
