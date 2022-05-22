@@ -109,8 +109,7 @@ class AuthFragment : Fragment(R.layout.auth_fragment) {
         profile?.let {
             mViewModel.password.value = ""
             mViewModel.passwordRepeat.value = ""
-            NavGraphDirections.actionGlobalMainFragment().navigate()
-//            setFragmentResult(RESPONSE_LOGIN_SUCCESSFUL, bundleOf())
+            NavGraphDirections.navToMainFragment().navigate()
         } ?: onNotAuthorized(message)
     }
 
@@ -150,6 +149,5 @@ class AuthFragment : Fragment(R.layout.auth_fragment) {
 
     companion object {
         val GET_GOOGLE_ACCOUNT = unicname
-        val RESPONSE_LOGIN_SUCCESSFUL = unicname
     }
 }

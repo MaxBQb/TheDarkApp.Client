@@ -124,7 +124,7 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.submit -> createRecognitionTask()
+            R.id.menu_submit -> createRecognitionTask()
             else -> return super.onOptionsItemSelected(item)
         }
         return true

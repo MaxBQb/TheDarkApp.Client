@@ -46,7 +46,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.sign_out -> {
+        R.id.menu_sign_out -> {
             signOut()
             true
         }
@@ -59,5 +59,5 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     }
 
     private fun openLoginView()
-        = NavGraphDirections.actionGlobalAuthFragment().navigate()
+        = NavGraphDirections.navToAuthFragment().navigate()
 }

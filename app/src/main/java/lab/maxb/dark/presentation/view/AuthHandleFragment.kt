@@ -22,9 +22,9 @@ class AuthHandleFragment : Fragment(R.layout.auth_handle_fragment) {
         mViewModel.profile observe {
             it.ifLoaded { profile ->
                 if (profile == null)
-                    NavGraphDirections.actionGlobalAuthFragment().navigate()
+                    NavGraphDirections.navToAuthFragment().navigate()
                 else
-                    NavGraphDirections.actionGlobalMainFragment().navigate()
+                    NavGraphDirections.navToMainFragment().navigate()
             }
         }
     }

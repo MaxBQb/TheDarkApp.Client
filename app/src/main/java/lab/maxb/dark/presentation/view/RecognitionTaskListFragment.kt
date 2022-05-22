@@ -29,13 +29,13 @@ class RecognitionTaskListFragment : Fragment(R.layout.recognition_task_list_frag
         }
         mBinding.recognitionTaskListRecycler.layoutManager = LinearLayoutManager(context)
         mBinding.fab.setOnClickListener { v ->
-            RecognitionTaskListFragmentDirections.addRecognitionTask().navigate()
+            RecognitionTaskListFragmentDirections.navToAddTaskFragment().navigate()
         }
 
         mAdapter = RecognitionTaskListAdapter()
         mBinding.recognitionTaskListRecycler.adapter = mAdapter
         mAdapter.onElementClickListener = { _: View, task: RecognitionTask ->
-            RecognitionTaskListFragmentDirections.solveRecognitionTask(
+            RecognitionTaskListFragmentDirections.navToSolveTaskFragment(
                 task.id
             ).navigate()
         }

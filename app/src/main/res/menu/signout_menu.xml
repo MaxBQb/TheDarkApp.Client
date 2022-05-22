@@ -2,7 +2,7 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/sign_out"
-        android:title="@string/auth_signOut"
+        android:id="@+id/menu_sign_out"
+        android:title="@string/auth_menu_signOut"
         app:showAsAction="never"/>
 </menu>

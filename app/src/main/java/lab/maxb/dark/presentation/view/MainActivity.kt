@@ -35,8 +35,8 @@ class MainActivity : AppCompatActivity(R.layout.main_activity),
 
     companion object {
         private val navbarDestinations = mapOf(
-            R.id.nav_main to R.id.main_fragment,
-            R.id.nav_tasksList to R.id.RecognitionTaskList_fragment,
+            R.id.menu_nav_main to R.id.nav_main_fragment,
+            R.id.menu_nav_tasksList to R.id.nav_taskList_fragment,
         )
     }
 
@@ -56,8 +56,8 @@ class MainActivity : AppCompatActivity(R.layout.main_activity),
             this,
             binding.drawerLayout,
             binding.toolbar,
-            R.string.nav_drawer_open,
-            R.string.nav_drawer_close
+            R.string.nav_drawerDescription_open,
+            R.string.nav_drawerDescription_close
         )
         binding.drawerLayout.addDrawerListener(actionBarToggle)
 
@@ -82,10 +82,8 @@ class MainActivity : AppCompatActivity(R.layout.main_activity),
 
         authViewModel.profile observe {
             it.ifLoaded { profile ->
-                if (profile == null && navController.currentDestination?.id != R.id.auth_fragment)
-                    navController.navigate(
-                        NavGraphDirections.actionGlobalAuthFragment()
-                    )
+                if (profile == null && navController.currentDestination?.id != R.id.nav_auth_fragment)
+                    navController.navigate(NavGraphDirections.navToAuthFragment())
             }
         }
     }

@@ -94,7 +94,7 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean
         = when (item.itemId) {
-            R.id.share -> {
+            R.id.menu_share -> {
                 shareTask()
                 true
             }

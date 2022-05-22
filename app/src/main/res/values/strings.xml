@@ -6,24 +6,24 @@
     <string name="addTask_loadImagesTitle">Загрузить картинки</string>
     <string name="addTask_inputList_hint">Введите текст</string>
     <string name="addTask_message_notEnoughDataProvided">Вы ввели не все данные</string>
+    <string name="addTask_menu_submit">Сохранить</string>
 
     <!-- Solve Recognition Task -->
     <string name="solveTask_checkSolution">Проверить</string>
     <string name="solveTask_answer">Ваш ответ</string>
-    <string name="solveTask_share">Поделиться</string>
+    <string name="solveTask_menu_share">Поделиться</string>
         <!-- Moderator actions -->
-        <string name="solveTask_moderator_submit">Утвердить</string>
         <string name="solveTask_moderator_mark_reviewed">Одобрить</string>
         <string name="solveTask_moderator_delete">Удалить</string>
 
     <!-- Navigation -->
-    <string name="nav_auth">Авторизация</string>
-    <string name="nav_taskList">Доступные задачи</string>
-    <string name="nav_addTask">Добавление задачи</string>
-    <string name="nav_solveTask">Что это?</string>
-    <string name="nav_main">Главная</string>
-    <string name="nav_drawer_open">Открыть боковыую панель</string>
-    <string name="nav_drawer_close">Закрыть боковыую панель</string>
+    <string name="nav_auth_label">Авторизация</string>
+    <string name="nav_taskList_label">Доступные задачи</string>
+    <string name="nav_addTask_label">Добавление задачи</string>
+    <string name="nav_solveTask_label">Что это?</string>
+    <string name="nav_main_label">Главная</string>
+    <string name="nav_drawerDescription_open">Открыть боковыую панель</string>
+    <string name="nav_drawerDescription_close">Закрыть боковыую панель</string>
 
     <!-- Authorization -->
     <string name="auth_login_label">Вход</string>
@@ -35,7 +35,7 @@
     <string name="auth_showPassword">Показать пароль</string>
     <string name="auth_login_button">Войти</string>
     <string name="auth_signup_button">Зарегистрироваться</string>
-    <string name="auth_signOut">Выйти</string>
+    <string name="auth_menu_signOut">Выйти</string>
         <!-- Messages -->
         <string name="auth_message_signup_incorrectCredentials">Данные не корректны или такой пользователь уже существует</string>
         <string name="auth_message_login_incorrectCredentials">Неверный логин или пароль</string>
