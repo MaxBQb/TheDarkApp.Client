@@ -2,16 +2,15 @@ package lab.maxb.dark.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.*
 import lab.maxb.dark.domain.model.Role
 import lab.maxb.dark.domain.operations.solve
 import lab.maxb.dark.presentation.repository.interfaces.ProfileRepository
 import lab.maxb.dark.presentation.repository.interfaces.RecognitionTasksRepository
+import lab.maxb.dark.presentation.viewModel.utils.UiState
 import lab.maxb.dark.presentation.viewModel.utils.firstNotNull
 import lab.maxb.dark.presentation.viewModel.utils.stateIn
+import lab.maxb.dark.presentation.viewModel.utils.valueOrNull
 import org.koin.android.annotation.KoinViewModel
 
 
@@ -31,9 +30,14 @@ class SolveRecognitionTaskViewModel(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val recognitionTask = _id.filterNotNull().flatMapLatest {
-        recognitionTasksRepository.getRecognitionTask(it)
-    }.stateIn(null)
+    val recognitionTask = _id.filterNotNull().flatMapLatest { merge(
+        flowOf(UiState.Loading),
+        recognitionTasksRepository.getRecognitionTask(it).mapLatest { task ->
+            UiState.Success(task)
+        }
+    ) }.stateIn(UiState.Loading)
+
+    suspend fun getCurrentTask() = recognitionTask.firstOrNull()?.valueOrNull
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val isReviewMode get() = profile.mapLatest {
@@ -44,17 +48,17 @@ class SolveRecognitionTaskViewModel(
     }.stateIn(false)
 
     suspend fun mark(isAllowed: Boolean) {
-        recognitionTask.firstNotNull().apply {
+        (getCurrentTask() ?: return).apply {
             reviewed = isAllowed
         }.also {
             recognitionTasksRepository.markRecognitionTask(it)
         }
     }
 
-    suspend fun solveRecognitionTask() = recognitionTask.firstNotNull().let {
+    suspend fun solveRecognitionTask() = getCurrentTask()?.let {
         it.solve(answer.firstNotNull()).also { isSolution ->
             if (isSolution)
                 recognitionTasksRepository.deleteRecognitionTask(it)
         }
-    }
+    } ?: false
 }

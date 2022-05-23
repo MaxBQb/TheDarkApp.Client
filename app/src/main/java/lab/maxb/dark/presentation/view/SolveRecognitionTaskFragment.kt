@@ -45,7 +45,11 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
             }
         }
         mViewModel.recognitionTask observe {
-            it?.let { task: RecognitionTask ->
+            it.ifLoaded { task ->
+                task ?: run {
+                    goBack()
+                    return@ifLoaded
+                }
                 (task.images ?: listOf()).mapNotNull { image ->
                     image.path.toUri().toBitmap(
                         requireContext(),
@@ -59,7 +63,7 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
                 mViewModel.isReviewMode observe {
                     mBinding.markReviewedButton.isVisible = !(it && task.reviewed)
                 }
-            } ?: goBack()
+            }
         }
         mViewModel.isReviewMode observe {
             mBinding.moderatorTools.isVisible = it
@@ -101,13 +105,13 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
             else -> super.onOptionsItemSelected(item)
         }
 
-    private fun shareTask() {
+    private fun shareTask() = launchRepeatingOnLifecycle {
         startActivity(Intent.createChooser(Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT,
             "https://dark/task/" + (
-                     mViewModel.recognitionTask.value?.id
-                     ?: return
+                     mViewModel.getCurrentTask()?.id
+                     ?: return@launchRepeatingOnLifecycle
                  )
             )
             type = "text/plain"
