@@ -21,11 +21,8 @@ context(LifecycleOwner)
 infix fun <T> LiveData<T>.observe(observer: Observer<T>)
     = observe(forObservation, observer)
 
-fun LifecycleOwner.launch(block: suspend CoroutineScope.() -> Unit){
-    forObservation.lifecycleScope.launch {
-        block()
-    }
-}
+fun LifecycleOwner.launch(block: suspend CoroutineScope.() -> Unit)
+    = forObservation.lifecycleScope.launch { block() }
 
 fun ViewModel.launch(
     context: CoroutineContext = EmptyCoroutineContext,
@@ -36,10 +33,6 @@ fun ViewModel.launch(
 fun LifecycleOwner.launchRepeatingOnLifecycle(block: suspend CoroutineScope.() -> Unit) = launch {
     forObservation.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED, block)
 }
-
-context(LifecycleOwner)
-infix fun <T> StateFlow<T>.observe(action: suspend (value: T) -> Unit)
-    = launchRepeatingOnLifecycle { collectLatest(action) }
 
 context(LifecycleOwner)
 infix fun <T> Flow<T>.observe(action: suspend (value: T) -> Unit)

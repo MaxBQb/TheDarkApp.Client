@@ -14,7 +14,6 @@ import androidx.navigation.fragment.navArgs
 import com.wada811.databinding.dataBinding
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.SolveRecognitionTaskFragmentBinding
-import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.presentation.extra.delegates.autoCleaned
 import lab.maxb.dark.presentation.extra.goBack
 import lab.maxb.dark.presentation.extra.launchRepeatingOnLifecycle
@@ -31,7 +30,7 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
     private var mAdapter: ImageSliderAdapter by autoCleaned()
     private val args: SolveRecognitionTaskFragmentArgs by navArgs()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(mBinding) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit = with(mBinding) {
         super.onViewCreated(view, savedInstanceState)
         mViewModel.init(args.id)
         mAdapter = ImageSliderAdapter()
@@ -65,6 +64,7 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
                 }
             }
         }
+
         mViewModel.isReviewMode observe {
             mBinding.moderatorTools.isVisible = it
             mBinding.answerLayout.isVisible = !it
