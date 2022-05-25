@@ -128,6 +128,17 @@ class RecognitionTasksRepositoryImpl(
         }
     }
 
+    override suspend fun solveRecognitionTask(id: String, answer: String)
+        = try {
+            val result = mDarkService.solveTask(id, answer)
+            if (result)
+                getRecognitionTask(id, true).firstOrNull()
+            result
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            false
+        }
+
     override suspend fun deleteRecognitionTask(task: RecognitionTask) {
         mRecognitionTaskDao.deleteRecognitionTask(
             task as RecognitionTaskDTO

@@ -56,9 +56,11 @@ class SolveRecognitionTaskViewModel(
     }
 
     suspend fun solveRecognitionTask() = getCurrentTask()?.let {
-        it.solve(answer.firstNotNull()).also { isSolution ->
-            if (isSolution)
-                recognitionTasksRepository.deleteRecognitionTask(it)
+        recognitionTasksRepository.solveRecognitionTask(
+            it.id, answer.firstOrNull() ?: ""
+        ).also { result ->
+            if (result)
+                usersRepository.getUser(profile.firstOrNull()!!.user!!.id, true).firstOrNull()
         }
     } ?: false
 }
