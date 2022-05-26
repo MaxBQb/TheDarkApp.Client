@@ -27,7 +27,6 @@ class RecognitionTaskListFragment : Fragment(R.layout.recognition_task_list_frag
         mViewModel.isTaskCreationAllowed observe {
             mBinding.fab.isVisible = it
         }
-        mBinding.recognitionTaskListRecycler.layoutManager = LinearLayoutManager(context)
         mBinding.fab.setOnClickListener { v ->
             RecognitionTaskListFragmentDirections.navToAddTaskFragment().navigate()
         }

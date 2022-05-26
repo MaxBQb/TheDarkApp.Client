@@ -23,14 +23,10 @@ class ProfileRepositoryImpl(
     private val profileDAO = db.profileDao()
     private val _login = MutableStateFlow(userSettings.login)
 
-    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val profile = _login.flatMapLatest { login ->
         profileDAO.getByLogin(login).distinctUntilChanged().mapLatest { fullProfile ->
-            fullProfile?.toProfile()?.also {
-                it.user?.id?.let { id ->
-                    assert(checkToken(id))
-                }
-            }
+            fullProfile?.toProfile()
         }
     }
 
@@ -51,13 +47,6 @@ class ProfileRepositoryImpl(
             )
         )
         _login.value = login
-    }
-
-    private suspend fun checkToken(id: String) = try {
-        usersRepository.getUser(id).firstOrNull()!!
-        true
-    } catch (e: Throwable) {
-        false
     }
 
     override suspend fun save(profile: Profile) = profileDAO.save(ProfileDTO(profile))

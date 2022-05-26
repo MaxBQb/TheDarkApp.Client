@@ -130,10 +130,7 @@ class RecognitionTasksRepositoryImpl(
 
     override suspend fun solveRecognitionTask(id: String, answer: String)
         = try {
-            val result = mDarkService.solveTask(id, answer)
-            if (result)
-                getRecognitionTask(id, true).firstOrNull()
-            result
+            mDarkService.solveTask(id, answer)
         } catch (e: Throwable) {
             e.printStackTrace()
             false
@@ -186,7 +183,6 @@ class RecognitionTasksRepositoryImpl(
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun getRecognitionTask(id: String, forceUpdate: Boolean)
         = taskResource.query(id, forceUpdate)
 }

@@ -59,8 +59,10 @@ class SolveRecognitionTaskViewModel(
         recognitionTasksRepository.solveRecognitionTask(
             it.id, answer.firstOrNull() ?: ""
         ).also { result ->
-            if (result)
+            if (result) {
                 usersRepository.getUser(profile.firstOrNull()!!.user!!.id, true).firstOrNull()
+                recognitionTasksRepository.getRecognitionTask(it.id, true).firstOrNull()
+            }
         }
     } ?: false
 }

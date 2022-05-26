@@ -41,7 +41,7 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
                 if (mViewModel.solveRecognitionTask())
                     goBack()
                 else
-                    Toast.makeText(context, "Неверно", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Неверно", Toast.LENGTH_SHORT).show()
             }
         }
         mViewModel.recognitionTask observe {
