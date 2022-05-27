@@ -26,6 +26,12 @@ interface RecognitionTask {
         @Path("isAllowed") isAllowed: Boolean
     ): Boolean
 
+    @GET("$path/solve/{id}")
+    suspend fun solveTask(
+        @Path("id") id: String,
+        @Query("answer") answer: String
+    ): Boolean
+
     @Multipart
     @POST("$path/{id}/image")
     suspend fun addImage(

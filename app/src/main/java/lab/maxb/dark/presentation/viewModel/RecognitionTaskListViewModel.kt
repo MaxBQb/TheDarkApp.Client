@@ -30,6 +30,6 @@ class RecognitionTaskListViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val isTaskCreationAllowed = profile.mapLatest {
-        it?.role?.isUser() ?: false
+        it?.role?.isUser ?: false
     }.stateIn(false)
 }

@@ -33,6 +33,7 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
     override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit = with(mBinding) {
         super.onViewCreated(view, savedInstanceState)
         mViewModel.init(args.id)
+        data = mViewModel
         mAdapter = ImageSliderAdapter()
         imageSlider.adapter = mAdapter
         checkAnswer.setOnClickListener {
@@ -40,7 +41,7 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
                 if (mViewModel.solveRecognitionTask())
                     goBack()
                 else
-                    Toast.makeText(context, "Неверно", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Неверно", Toast.LENGTH_SHORT).show()
             }
         }
         mViewModel.recognitionTask observe {

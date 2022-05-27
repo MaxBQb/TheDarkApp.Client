@@ -4,11 +4,10 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import lab.maxb.dark.domain.model.Role
-import lab.maxb.dark.domain.operations.solve
 import lab.maxb.dark.presentation.repository.interfaces.ProfileRepository
 import lab.maxb.dark.presentation.repository.interfaces.RecognitionTasksRepository
+import lab.maxb.dark.presentation.repository.interfaces.UsersRepository
 import lab.maxb.dark.presentation.viewModel.utils.UiState
-import lab.maxb.dark.presentation.viewModel.utils.firstNotNull
 import lab.maxb.dark.presentation.viewModel.utils.stateIn
 import lab.maxb.dark.presentation.viewModel.utils.valueOrNull
 import org.koin.android.annotation.KoinViewModel
@@ -17,6 +16,7 @@ import org.koin.android.annotation.KoinViewModel
 @KoinViewModel
 class SolveRecognitionTaskViewModel(
     private val recognitionTasksRepository: RecognitionTasksRepository,
+    private val usersRepository: UsersRepository,
     profileRepository: ProfileRepository,
 ) : ViewModel() {
     private val _id = MutableStateFlow<String?>(null)
@@ -56,9 +56,13 @@ class SolveRecognitionTaskViewModel(
     }
 
     suspend fun solveRecognitionTask() = getCurrentTask()?.let {
-        it.solve(answer.firstNotNull()).also { isSolution ->
-            if (isSolution)
-                recognitionTasksRepository.deleteRecognitionTask(it)
+        recognitionTasksRepository.solveRecognitionTask(
+            it.id, answer.firstOrNull() ?: ""
+        ).also { result ->
+            if (result) {
+                usersRepository.getUser(profile.firstOrNull()!!.user!!.id, true).firstOrNull()
+                recognitionTasksRepository.getRecognitionTask(it.id, true).firstOrNull()
+            }
         }
     } ?: false
 }

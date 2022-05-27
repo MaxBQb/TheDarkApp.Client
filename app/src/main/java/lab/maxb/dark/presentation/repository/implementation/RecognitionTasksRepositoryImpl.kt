@@ -128,6 +128,14 @@ class RecognitionTasksRepositoryImpl(
         }
     }
 
+    override suspend fun solveRecognitionTask(id: String, answer: String)
+        = try {
+            mDarkService.solveTask(id, answer)
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            false
+        }
+
     override suspend fun deleteRecognitionTask(task: RecognitionTask) {
         mRecognitionTaskDao.deleteRecognitionTask(
             task as RecognitionTaskDTO
@@ -175,7 +183,6 @@ class RecognitionTasksRepositoryImpl(
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun getRecognitionTask(id: String, forceUpdate: Boolean)
         = taskResource.query(id, forceUpdate)
 }

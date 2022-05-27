@@ -1,41 +1,20 @@
 package lab.maxb.dark.presentation.repository.network.dark
 
-import com.google.gson.GsonBuilder
-import lab.maxb.dark.BuildConfig
-import lab.maxb.dark.presentation.repository.network.dark.routes.Auth
-import lab.maxb.dark.presentation.repository.network.dark.routes.RecognitionTask
-import lab.maxb.dark.presentation.repository.network.dark.routes.User
-import lab.maxb.dark.presentation.repository.network.logger
-import okhttp3.OkHttpClient
-import org.koin.core.annotation.Single
-import org.koin.java.KoinJavaComponent.get
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import lab.maxb.dark.domain.model.User
+import lab.maxb.dark.presentation.repository.network.dark.model.*
+import okhttp3.MultipartBody
+import okhttp3.ResponseBody
 
 
-interface DarkService :
-    RecognitionTask,
-    User,
-    Auth
-
-@Single
-class DarkServiceImpl: DarkService by buildDarkService()
-
-private fun buildDarkService()
-    = Retrofit.Builder()
-        .baseUrl(BuildConfig.DARK_API_URL)
-        .addConverterFactory(converter)
-        .client(okhttpClient)
-        .build()
-        .create(DarkService::class.java)
-
-private val okhttpClient get() = OkHttpClient.Builder()
-    .addInterceptor(logger)
-    .addInterceptor(get<AuthInterceptor>(AuthInterceptor::class.java))
-    .build()
-
-private val converter get() = GsonBuilder().apply {
-    setLenient()
-}.create().run {
-    GsonConverterFactory.create(this)
+interface DarkService {
+    suspend fun getAllTasks(page: Int, size: Int): List<RecognitionTaskListViewDTO>?
+    suspend fun getTask(id: String): RecognitionTaskFullViewDTO?
+    suspend fun addTask(task: RecognitionTaskCreationDTO): String?
+    suspend fun markTask(id: String, isAllowed: Boolean): Boolean
+    suspend fun solveTask(id: String, answer: String): Boolean
+    suspend fun addImage(id: String, filePart: MultipartBody.Part): String?
+    suspend fun downloadImage(path: String): ResponseBody?
+    suspend fun getUser(id: String): User?
+    suspend fun login(request: AuthRequest): AuthResponse
+    suspend fun signup(request: AuthRequest): AuthResponse
 }

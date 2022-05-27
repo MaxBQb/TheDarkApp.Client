@@ -9,5 +9,6 @@ interface RecognitionTasksRepository {
     suspend fun getRecognitionTask(id: String, forceUpdate: Boolean = false): Flow<RecognitionTask?>
     suspend fun addRecognitionTask(task: RecognitionTask)
     suspend fun markRecognitionTask(task: RecognitionTask)
+    suspend fun solveRecognitionTask(id: String, answer: String): Boolean
     suspend fun deleteRecognitionTask(task: RecognitionTask)
 }

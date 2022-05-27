@@ -58,12 +58,18 @@ android {
             it.srcDirs += "build/generated/ksp/${variant.name}/kotlin"
         }
     }
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
+    }
 }
 
 dependencies {
     // Dependency Injection
-    def koin_annotations_version = '1.0.0-beta-2'
-    implementation 'io.insert-koin:koin-android:3.2.0-beta-1'
+    def koin_annotations_version = '1.0.0-beta-1'
+    def koin_version = "3.2.0"
+    implementation "io.insert-koin:koin-android:$koin_version"
     implementation "io.insert-koin:koin-annotations:$koin_annotations_version"
     ksp "io.insert-koin:koin-ksp-compiler:$koin_annotations_version"
 
@@ -127,4 +133,12 @@ dependencies {
 
     // Desugaring (Time-related features support for API 21+)
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+
+    // Tests
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+        // Koin
+        testImplementation "io.insert-koin:koin-test:$koin_version"
+        testImplementation "io.insert-koin:koin-test-junit4:$koin_version"
+        testImplementation "io.insert-koin:koin-test-junit5:$koin_version"
 }

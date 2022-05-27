@@ -21,7 +21,7 @@ enum class Role {
     USER,
 }
 
-fun Role.isUser() = when(this) {
+val Role.isUser get() = when(this) {
     Role.USER, Role.PREMIUM_USER -> true
     else -> false
 }
