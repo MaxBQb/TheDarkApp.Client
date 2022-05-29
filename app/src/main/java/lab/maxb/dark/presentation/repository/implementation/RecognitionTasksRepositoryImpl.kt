@@ -19,7 +19,6 @@ import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskC
 import lab.maxb.dark.presentation.repository.room.LocalDatabase
 import lab.maxb.dark.presentation.repository.room.dao.RecognitionTaskDAO
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskDTO
-import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskName
 import lab.maxb.dark.presentation.repository.utils.Resource
 import lab.maxb.dark.presentation.repository.utils.pagination.Page
 import lab.maxb.dark.presentation.repository.utils.pagination.RecognitionTaskMediator
@@ -55,7 +54,7 @@ class RecognitionTasksRepositoryImpl(
         localStore = {
             db.withTransaction {
                 it.forEach { task ->
-                    mRecognitionTaskDao.addRecognitionTask(
+                    mRecognitionTaskDao.save(
                         RecognitionTaskDTO(task)
                     )
                 }
@@ -96,12 +95,7 @@ class RecognitionTasksRepositoryImpl(
             )!!
         }
 
-        mRecognitionTaskDao.addRecognitionTask(
-            taskLocal,
-            task.names!!.map {
-                RecognitionTaskName(taskLocal.id, it)
-            }
-        )
+        mRecognitionTaskDao.save(taskLocal)
     }
 
     override suspend fun markRecognitionTask(task: RecognitionTask) {
@@ -149,12 +143,7 @@ class RecognitionTasksRepositoryImpl(
             }
         }
         localStore = { task ->
-            mRecognitionTaskDao.addRecognitionTask(
-                RecognitionTaskDTO(task),
-                task.names!!.map { name ->
-                    RecognitionTaskName(task.id, name)
-                },
-            )
+            mRecognitionTaskDao.save(RecognitionTaskDTO(task))
         }
         clearLocalStore = {
             mRecognitionTaskDao.deleteRecognitionTask(it)

@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.presentation.repository.room.dao.RemoteKeysDAO
 import lab.maxb.dark.presentation.repository.room.model.RemoteKeys
-import lab.maxb.dark.presentation.repository.room.relations.RecognitionTaskWithOwnerAndImage
+import lab.maxb.dark.presentation.repository.room.relations.RecognitionTaskWithOwner
 import lab.maxb.dark.presentation.repository.utils.BaseResource
 import retrofit2.HttpException
 import java.io.IOException
@@ -19,7 +19,7 @@ import java.io.InvalidObjectException
 class RecognitionTaskMediator(
     private val resource: BaseResource<Page, List<RecognitionTask>>,
     private val remoteKeys: RemoteKeysDAO,
-) : RemoteMediator<Int, RecognitionTaskWithOwnerAndImage>() {
+) : RemoteMediator<Int, RecognitionTaskWithOwner>() {
 
     override suspend fun initialize() = if (resource.isFresh(Page(0, 1)))
         InitializeAction.SKIP_INITIAL_REFRESH
@@ -28,7 +28,7 @@ class RecognitionTaskMediator(
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, RecognitionTaskWithOwnerAndImage>
+        state: PagingState<Int, RecognitionTaskWithOwner>
     ): MediatorResult {
         return try {
             val pageKeyData = getKeyPageData(loadType, state)
@@ -61,21 +61,21 @@ class RecognitionTaskMediator(
         }
     }
 
-    private suspend fun getFirstRemoteKey(state: PagingState<Int, RecognitionTaskWithOwnerAndImage>): RemoteKeys? {
+    private suspend fun getFirstRemoteKey(state: PagingState<Int, RecognitionTaskWithOwner>): RemoteKeys? {
         return state.pages
             .firstOrNull { it.data.isNotEmpty() }
             ?.data?.firstOrNull()
             ?.let { doggo -> remoteKeys.getById(doggo.recognition_task.id) }
     }
 
-    private suspend fun getLastRemoteKey(state: PagingState<Int, RecognitionTaskWithOwnerAndImage>): RemoteKeys? {
+    private suspend fun getLastRemoteKey(state: PagingState<Int, RecognitionTaskWithOwner>): RemoteKeys? {
         return state.pages
             .lastOrNull { it.data.isNotEmpty() }
             ?.data?.lastOrNull()
             ?.let { doggo -> remoteKeys.getById(doggo.recognition_task.id) }
     }
 
-    private suspend fun getClosestRemoteKey(state: PagingState<Int, RecognitionTaskWithOwnerAndImage>): RemoteKeys? {
+    private suspend fun getClosestRemoteKey(state: PagingState<Int, RecognitionTaskWithOwner>): RemoteKeys? {
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.recognition_task?.id?.let { id ->
                 remoteKeys.getById(id)
@@ -83,7 +83,7 @@ class RecognitionTaskMediator(
         }
     }
 
-    private suspend fun getKeyPageData(loadType: LoadType, state: PagingState<Int, RecognitionTaskWithOwnerAndImage>): Any? {
+    private suspend fun getKeyPageData(loadType: LoadType, state: PagingState<Int, RecognitionTaskWithOwner>): Any? {
         return when (loadType) {
             LoadType.REFRESH -> {
                 val remoteKeys = getClosestRemoteKey(state)
