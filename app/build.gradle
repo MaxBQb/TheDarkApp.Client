@@ -137,7 +137,7 @@ dependencies {
     // Desugaring (Time-related features support for API 21+)
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 
-    // Images
+    // Images with Glide
     def glide_version = "4.13.0"
     implementation "com.github.bumptech.glide:glide:$glide_version"
     annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
@@ -146,6 +146,7 @@ dependencies {
         // Excludes the support library because it's already included by Glide.
         transitive = false
     }
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
 
     // Tests
     testImplementation 'junit:junit:4.13.2'

@@ -6,12 +6,11 @@ import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.RecognitionTaskListFragmentBinding
 import lab.maxb.dark.domain.model.RecognitionTask
+import lab.maxb.dark.presentation.extra.GlideApp
 import lab.maxb.dark.presentation.extra.delegates.autoCleaned
 import lab.maxb.dark.presentation.extra.delegates.viewBinding
 import lab.maxb.dark.presentation.extra.navigate
@@ -40,7 +39,7 @@ class RecognitionTaskListFragment : Fragment(R.layout.recognition_task_list_frag
             R.drawable.loading_vector
         ) as AnimatedVectorDrawable
         mPlaceholder.start()
-        mAdapter = RecognitionTaskListAdapter(Glide.with(this)) {
+        mAdapter = RecognitionTaskListAdapter(GlideApp.with(this)) {
             load(mViewModel.getImage(it))
                 .transition(withCrossFade())
                 .placeholder(mPlaceholder)

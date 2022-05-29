@@ -14,11 +14,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.AddRecognitionTaskFragmentBinding
 import lab.maxb.dark.domain.operations.unicname
+import lab.maxb.dark.presentation.extra.GlideApp
 import lab.maxb.dark.presentation.extra.delegates.autoCleaned
 import lab.maxb.dark.presentation.extra.delegates.viewBinding
 import lab.maxb.dark.presentation.extra.goBack
@@ -47,7 +47,7 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
     }
 
     private fun setupImageUploadPanel() = with (mBinding) {
-        mGlide = Glide.with(this@AddRecognitionTaskFragment)
+        mGlide = GlideApp.with(this@AddRecognitionTaskFragment)
         mImagesAdapter = ImageSliderAdapter {
             mGlide.load(it.toUri())
                 .error(R.drawable.ic_error)

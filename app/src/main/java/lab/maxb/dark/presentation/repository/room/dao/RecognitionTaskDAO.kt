@@ -2,10 +2,8 @@ package lab.maxb.dark.presentation.repository.room.dao
 
 import androidx.paging.PagingSource
 import androidx.room.*
-import androidx.room.OnConflictStrategy.REPLACE
 import kotlinx.coroutines.flow.Flow
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskDTO
-import lab.maxb.dark.presentation.repository.room.model.UserDTO
 import lab.maxb.dark.presentation.repository.room.relations.RecognitionTaskWithOwner
 
 @Dao
