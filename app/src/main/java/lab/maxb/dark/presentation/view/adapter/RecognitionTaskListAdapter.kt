@@ -20,7 +20,7 @@ class RecognitionTaskListAdapter(
     val preloader = ImagePreloader(
         manager,
         getItem = {
-            getItem(it)?.images?.firstOrNull()?.path
+            getItem(it)?.images?.firstOrNull()
         },
         getImageLoader = getImageLoader
     )
@@ -33,7 +33,7 @@ class RecognitionTaskListAdapter(
             override fun areContentsTheSame(oldItem: RecognitionTask, newItem: RecognitionTask): Boolean =
                 oldItem.owner?.id == newItem.owner?.id &&
                 oldItem.owner?.name == newItem.owner?.name &&
-                oldItem.images?.firstOrNull()?.id == newItem.images?.firstOrNull()?.id
+                oldItem.images?.firstOrNull() == newItem.images?.firstOrNull()
         }
     }
 
@@ -52,7 +52,7 @@ class RecognitionTaskListAdapter(
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) = with(holder.binding) {
         val item = getItem(position)
         taskOwnerName.text = item?.owner?.name ?: ""
-        item?.images?.firstOrNull()?.path?.let {
+        item?.images?.firstOrNull()?.let {
             getImageLoader(manager, it).into(taskImage)
         } ?: manager.clear(taskImage)
         root.setOnClickListener { v ->

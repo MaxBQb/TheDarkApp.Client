@@ -54,7 +54,7 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
                 }
 
                 (task.images ?: listOf()).map { image ->
-                    ItemHolder(image.path)
+                    ItemHolder(image)
                 }.run { mAdapter.submitList(this) }
 
                 mViewModel.isReviewMode observe {

@@ -8,7 +8,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.mapLatest
 import lab.maxb.dark.domain.model.isUser
-import lab.maxb.dark.presentation.repository.interfaces.ImagesRepository
 import lab.maxb.dark.presentation.repository.interfaces.ProfileRepository
 import lab.maxb.dark.presentation.repository.interfaces.RecognitionTasksRepository
 import lab.maxb.dark.presentation.viewModel.utils.stateIn
@@ -16,9 +15,8 @@ import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class RecognitionTaskListViewModel(
-    recognitionTasksRepository: RecognitionTasksRepository,
+    private val recognitionTasksRepository: RecognitionTasksRepository,
     profileRepository: ProfileRepository,
-    private val imagesRepository: ImagesRepository,
 ) : ViewModel() {
     private val profile = profileRepository.profileState
 
@@ -35,5 +33,5 @@ class RecognitionTaskListViewModel(
         it?.role?.isUser ?: false
     }.stateIn(false)
 
-    fun getImage(path: String) = imagesRepository.getUri(path)
+    fun getImage(path: String) = recognitionTasksRepository.getRecognitionTaskImage(path)
 }

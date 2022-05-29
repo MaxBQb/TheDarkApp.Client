@@ -2,11 +2,9 @@ package lab.maxb.dark.presentation.repository.room.dao
 
 import androidx.paging.PagingSource
 import androidx.room.*
-import androidx.room.OnConflictStrategy.IGNORE
 import androidx.room.OnConflictStrategy.REPLACE
 import kotlinx.coroutines.flow.Flow
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskDTO
-import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskImageCrossref
 import lab.maxb.dark.presentation.repository.room.model.RecognitionTaskName
 import lab.maxb.dark.presentation.repository.room.relations.RecognitionTaskWithNamesAndImages
 import lab.maxb.dark.presentation.repository.room.relations.RecognitionTaskWithOwnerAndImage
@@ -19,17 +17,12 @@ interface RecognitionTaskDAO {
     @Insert(onConflict = REPLACE)
     suspend fun addRecognitionTaskNames(names: List<RecognitionTaskName>)
 
-    @Insert(onConflict = IGNORE)
-    suspend fun addRecognitionTaskImages(images: List<RecognitionTaskImageCrossref>)
-
     @Transaction
     suspend fun addRecognitionTask(task: RecognitionTaskDTO,
-                           names: List<RecognitionTaskName>,
-                           images: List<RecognitionTaskImageCrossref>) {
+                           names: List<RecognitionTaskName>) {
         deleteRecognitionTask(task)
         addRecognitionTask(task)
         addRecognitionTaskNames(names)
-        addRecognitionTaskImages(images)
     }
 
     @Update

@@ -1,6 +1,5 @@
 package lab.maxb.dark.domain.operations
 
-import lab.maxb.dark.domain.model.Image
 import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.domain.model.User
 
@@ -18,7 +17,7 @@ fun createRecognitionTask(
 
     return RecognitionTask(
         namesSet,
-        images.map { Image(it) },
+        images,
         owner,
     )
 }

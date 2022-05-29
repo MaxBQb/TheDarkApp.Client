@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import lab.maxb.dark.domain.model.Role
-import lab.maxb.dark.presentation.repository.interfaces.ImagesRepository
 import lab.maxb.dark.presentation.repository.interfaces.ProfileRepository
 import lab.maxb.dark.presentation.repository.interfaces.RecognitionTasksRepository
 import lab.maxb.dark.presentation.repository.interfaces.UsersRepository
@@ -17,7 +16,6 @@ import org.koin.android.annotation.KoinViewModel
 @KoinViewModel
 class SolveRecognitionTaskViewModel(
     private val recognitionTasksRepository: RecognitionTasksRepository,
-    private val imagesRepository: ImagesRepository,
     private val usersRepository: UsersRepository,
     profileRepository: ProfileRepository,
 ) : ViewModel() {
@@ -68,5 +66,5 @@ class SolveRecognitionTaskViewModel(
         }
     } ?: false
 
-    fun getImage(path: String) = imagesRepository.getUri(path)
+    fun getImage(path: String) = recognitionTasksRepository.getRecognitionTaskImage(path)
 }
