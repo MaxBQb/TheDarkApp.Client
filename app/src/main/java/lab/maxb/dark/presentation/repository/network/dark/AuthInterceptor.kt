@@ -9,9 +9,12 @@ import org.koin.core.annotation.Single
 class AuthInterceptor(
     private val userSettings: UserSettings
 ): Interceptor {
+    val header = "Authorization"
+    val value get() = "Bearer ${userSettings.token}"
+
     override fun intercept(chain: Interceptor.Chain): Response
         = with(chain.request().newBuilder()) {
-            addHeader("Authorization", "Bearer ${userSettings.token}")
+            addHeader(header, value)
             chain.proceed(build())
         }
 }

@@ -7,10 +7,10 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.wada811.databinding.dataBinding
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.SolveRecognitionTaskFragmentBinding
@@ -18,7 +18,6 @@ import lab.maxb.dark.presentation.extra.delegates.autoCleaned
 import lab.maxb.dark.presentation.extra.goBack
 import lab.maxb.dark.presentation.extra.launchRepeatingOnLifecycle
 import lab.maxb.dark.presentation.extra.observe
-import lab.maxb.dark.presentation.extra.toBitmap
 import lab.maxb.dark.presentation.view.adapter.ImageSliderAdapter
 import lab.maxb.dark.presentation.viewModel.SolveRecognitionTaskViewModel
 import lab.maxb.dark.presentation.viewModel.utils.ItemHolder
@@ -34,7 +33,10 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
         super.onViewCreated(view, savedInstanceState)
         mViewModel.init(args.id)
         data = mViewModel
-        mAdapter = ImageSliderAdapter()
+        val mGlide = Glide.with(this@SolveRecognitionTaskFragment)
+        mAdapter = ImageSliderAdapter {
+            mGlide.load(mViewModel.getImage(it))
+        }
         imageSlider.adapter = mAdapter
         checkAnswer.setOnClickListener {
             launchRepeatingOnLifecycle {
@@ -50,14 +52,8 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
                     goBack()
                     return@ifLoaded
                 }
-                (task.images ?: listOf()).mapNotNull { image ->
-                    image.path.toUri().toBitmap(
-                        requireContext(),
-                        imageSlider.layoutParams.width,
-                        imageSlider.layoutParams.height,
-                    )?.let { content ->
-                        ItemHolder(image.path to content)
-                    }
+                (task.images ?: listOf()).map { image ->
+                    ItemHolder(image.path)
                 }.run { mAdapter.submitList(this) }
 
                 mViewModel.isReviewMode observe {

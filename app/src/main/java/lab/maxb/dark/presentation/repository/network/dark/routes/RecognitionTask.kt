@@ -4,7 +4,6 @@ import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskC
 import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskFullViewDTO
 import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskListViewDTO
 import okhttp3.MultipartBody
-import okhttp3.ResponseBody
 import retrofit2.http.*
 
 interface RecognitionTask {
@@ -39,11 +38,11 @@ interface RecognitionTask {
         @Part filePart: MultipartBody.Part
     ): String?
 
-    @Streaming
-    @GET("$path/image/{path}")
-    suspend fun downloadImage(
-        @Path("path") path: String
-    ): ResponseBody?
+//    @Streaming
+//    @GET("$path/image/{path}")
+//    suspend fun downloadImage(
+//        @Path("path") path: String
+//    ): ResponseBody?
 
     companion object {
         const val path = "/task"

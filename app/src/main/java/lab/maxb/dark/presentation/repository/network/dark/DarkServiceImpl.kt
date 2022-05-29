@@ -1,5 +1,7 @@
 package lab.maxb.dark.presentation.repository.network.dark
 
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.google.gson.GsonBuilder
 import lab.maxb.dark.BuildConfig
 import lab.maxb.dark.presentation.repository.network.dark.model.AuthRequest
@@ -42,9 +44,16 @@ class DarkServiceImpl(
         api.addImage(id, filePart)
     }
 
-    override suspend fun downloadImage(path: String) = catchAll {
-        api.downloadImage(path)
-    }
+    override fun getImageSource(path: String)
+        = GlideUrl(
+            "${BuildConfig.DARK_API_URL}/task/image/$path",
+            LazyHeaders.Builder()
+                .addHeader(authInterceptor.header, authInterceptor.value)
+                .build()
+        )
+
+//        api.downloadImage(path)
+
 
     override suspend fun getUser(id: String) = catchAll {
         api.getUser(id)

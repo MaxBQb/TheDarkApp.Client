@@ -11,8 +11,10 @@ import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.AddRecognitionTaskFragmentBinding
 import lab.maxb.dark.domain.operations.unicname
@@ -21,7 +23,6 @@ import lab.maxb.dark.presentation.extra.delegates.viewBinding
 import lab.maxb.dark.presentation.extra.goBack
 import lab.maxb.dark.presentation.extra.launch
 import lab.maxb.dark.presentation.extra.observe
-import lab.maxb.dark.presentation.extra.toBitmap
 import lab.maxb.dark.presentation.view.adapter.ImageSliderAdapter
 import lab.maxb.dark.presentation.view.adapter.InputListAdapter
 import lab.maxb.dark.presentation.viewModel.AddRecognitionTaskViewModel
@@ -45,20 +46,15 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
     }
 
     private fun setupImageUploadPanel() = with (mBinding) {
-        mImagesAdapter = ImageSliderAdapter()
+        val mGlide = Glide.with(this@AddRecognitionTaskFragment)
+        mImagesAdapter = ImageSliderAdapter {
+            mGlide.load(it.toUri())
+        }
         imageSlider.adapter = mImagesAdapter
-
+//        imageSlider.set() mImagesAdapter.preloader
         mViewModel.images observe { uris ->
-            uris.mapNotNull {
-                it.value.toBitmap(
-                    requireContext(),
-                    imageSlider.layoutParams.width,
-                    imageSlider.layoutParams.height,
-                )?.let { image ->
-                    it.map { uri ->
-                        uri.toString() to image
-                    }
-                }
+            uris.map {
+                it.map { uri -> uri.toString() }
             }.also {
                 mImagesAdapter.submitList(it)
             }

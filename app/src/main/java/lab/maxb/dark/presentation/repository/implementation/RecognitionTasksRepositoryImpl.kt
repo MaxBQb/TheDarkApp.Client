@@ -102,7 +102,10 @@ class RecognitionTasksRepositoryImpl(
             it.id = mDarkService.addImage(
                 taskLocal.id,
                 imageLoader.fromUri(it.path.toUri())
-            )!!
+            )!!.also { id ->
+                it.id = id
+                it.path = id
+            }
             imagesRepository.save(it)
             RecognitionTaskImageCrossref(
                 taskLocal.id, it.id,

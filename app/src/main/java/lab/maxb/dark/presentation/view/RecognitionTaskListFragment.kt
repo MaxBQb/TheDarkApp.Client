@@ -4,7 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.RecognitionTaskListFragmentBinding
 import lab.maxb.dark.domain.model.RecognitionTask
@@ -27,12 +28,14 @@ class RecognitionTaskListFragment : Fragment(R.layout.recognition_task_list_frag
         mViewModel.isTaskCreationAllowed observe {
             mBinding.fab.isVisible = it
         }
-        mBinding.fab.setOnClickListener { v ->
+        mBinding.fab.setOnClickListener {
             RecognitionTaskListFragmentDirections.navToAddTaskFragment().navigate()
         }
-
-        mAdapter = RecognitionTaskListAdapter()
+        mAdapter = RecognitionTaskListAdapter(Glide.with(this)) {
+            load(mViewModel.getImage(it)).transition(withCrossFade())
+        }
         mBinding.recognitionTaskListRecycler.adapter = mAdapter
+        mBinding.recognitionTaskListRecycler.addOnScrollListener(mAdapter.preloader.raw)
         mAdapter.onElementClickListener = { _: View, task: RecognitionTask ->
             RecognitionTaskListFragmentDirections.navToSolveTaskFragment(
                 task.id

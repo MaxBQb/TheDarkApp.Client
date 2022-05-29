@@ -23,14 +23,7 @@ class ImagesRepositoryImpl(
     @OptIn(ExperimentalCoroutinesApi::class)
     private val imageResource = StaticResource<String, Image>().apply {
         fetchRemote = {
-            try {
-                Image(imageLoader.fromResponse(
-                    mDarkService.downloadImage(it),
-                    it
-                ), it)
-            } catch (e: NullPointerException) {
-                null
-            }
+            Image(it, it)
         }
         localStore = {
             mImageDao.save(it.toImageDTO())
@@ -48,6 +41,9 @@ class ImagesRepositoryImpl(
     override suspend fun save(image: Image) = mImageDao.save(image.toImageDTO())
 
     override suspend fun getById(id: String) = imageResource.query(id)
+
+    override fun getUri(path: String)
+        = mDarkService.getImageSource(path)
 
     override suspend fun delete(id: String) = mImageDao.delete(id)
 }

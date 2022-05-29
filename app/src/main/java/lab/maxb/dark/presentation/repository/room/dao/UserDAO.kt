@@ -1,7 +1,7 @@
 package lab.maxb.dark.presentation.repository.room.dao
 
 import androidx.room.*
-import androidx.room.OnConflictStrategy.*
+import androidx.room.OnConflictStrategy.IGNORE
 import kotlinx.coroutines.flow.Flow
 import lab.maxb.dark.presentation.repository.room.model.UserDTO
 
