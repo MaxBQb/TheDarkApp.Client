@@ -15,6 +15,7 @@ import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.AddRecognitionTaskFragmentBinding
 import lab.maxb.dark.domain.operations.unicname
@@ -32,6 +33,7 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
     private val mViewModel: AddRecognitionTaskViewModel by sharedViewModel()
     private val mBinding: AddRecognitionTaskFragmentBinding by viewBinding()
     private var mInputsAdapter: InputListAdapter by autoCleaned()
+    private var mGlide: RequestManager by autoCleaned()
     private var mImagesAdapter: ImageSliderAdapter by autoCleaned()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,9 +47,10 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
     }
 
     private fun setupImageUploadPanel() = with (mBinding) {
-        val mGlide = Glide.with(this@AddRecognitionTaskFragment)
+        mGlide = Glide.with(this@AddRecognitionTaskFragment)
         mImagesAdapter = ImageSliderAdapter {
             mGlide.load(it.toUri())
+                .error(R.drawable.ic_error)
         }
         imageSlider.adapter = mImagesAdapter
 
