@@ -52,6 +52,7 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
                     goBack()
                     return@ifLoaded
                 }
+
                 (task.images ?: listOf()).map { image ->
                     ItemHolder(image.path)
                 }.run { mAdapter.submitList(this) }

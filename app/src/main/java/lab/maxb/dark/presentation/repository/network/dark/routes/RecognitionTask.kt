@@ -38,12 +38,6 @@ interface RecognitionTask {
         @Part filePart: MultipartBody.Part
     ): String?
 
-//    @Streaming
-//    @GET("$path/image/{path}")
-//    suspend fun downloadImage(
-//        @Path("path") path: String
-//    ): ResponseBody?
-
     companion object {
         const val path = "/task"
     }

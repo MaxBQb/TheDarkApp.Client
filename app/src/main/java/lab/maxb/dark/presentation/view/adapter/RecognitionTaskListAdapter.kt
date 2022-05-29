@@ -31,7 +31,6 @@ class RecognitionTaskListAdapter(
                 oldItem.id == newItem.id
 
             override fun areContentsTheSame(oldItem: RecognitionTask, newItem: RecognitionTask): Boolean =
-                oldItem.id == newItem.id &&
                 oldItem.owner?.id == newItem.owner?.id &&
                 oldItem.owner?.name == newItem.owner?.name &&
                 oldItem.images?.firstOrNull()?.id == newItem.images?.firstOrNull()?.id

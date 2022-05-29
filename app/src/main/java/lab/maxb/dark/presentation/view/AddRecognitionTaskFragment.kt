@@ -26,7 +26,6 @@ import lab.maxb.dark.presentation.extra.observe
 import lab.maxb.dark.presentation.view.adapter.ImageSliderAdapter
 import lab.maxb.dark.presentation.view.adapter.InputListAdapter
 import lab.maxb.dark.presentation.viewModel.AddRecognitionTaskViewModel
-import lab.maxb.dark.presentation.viewModel.utils.map
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragment) {
@@ -51,13 +50,9 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
             mGlide.load(it.toUri())
         }
         imageSlider.adapter = mImagesAdapter
-//        imageSlider.set() mImagesAdapter.preloader
+
         mViewModel.images observe { uris ->
-            uris.map {
-                it.map { uri -> uri.toString() }
-            }.also {
-                mImagesAdapter.submitList(it)
-            }
+            mImagesAdapter.submitList(uris)
             val hasUris = uris.isNotEmpty()
             addImageButtonAlternative.isVisible = !hasUris
             imageSlider.isVisible = hasUris

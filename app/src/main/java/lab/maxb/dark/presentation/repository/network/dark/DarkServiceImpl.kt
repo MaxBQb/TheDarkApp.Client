@@ -44,16 +44,12 @@ class DarkServiceImpl(
         api.addImage(id, filePart)
     }
 
-    override fun getImageSource(path: String)
-        = GlideUrl(
-            "${BuildConfig.DARK_API_URL}/task/image/$path",
-            LazyHeaders.Builder()
-                .addHeader(authInterceptor.header, authInterceptor.value)
-                .build()
-        )
-
-//        api.downloadImage(path)
-
+    override fun getImageSource(path: String) = GlideUrl(
+        "${BuildConfig.DARK_API_URL}/task/image/$path",
+        LazyHeaders.Builder()
+            .addHeader(authInterceptor.header, authInterceptor.value)
+            .build()
+    )
 
     override suspend fun getUser(id: String) = catchAll {
         api.getUser(id)
