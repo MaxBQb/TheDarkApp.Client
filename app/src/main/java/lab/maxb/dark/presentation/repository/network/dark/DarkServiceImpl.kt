@@ -3,6 +3,7 @@ package lab.maxb.dark.presentation.repository.network.dark
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.delay
 import lab.maxb.dark.BuildConfig
 import lab.maxb.dark.presentation.repository.network.dark.model.AuthRequest
 import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskCreationNetworkDTO
@@ -13,6 +14,8 @@ import org.koin.core.annotation.Single
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.EOFException
+import java.net.SocketTimeoutException
+import java.time.Duration
 
 @Single
 class DarkServiceImpl(
@@ -64,14 +67,30 @@ class DarkServiceImpl(
     }
 
     private suspend inline fun<reified T> catchAll(
-        crossinline block: suspend () -> T
+        crossinline block: suspend () -> T,
     ): T = try {
-        block()
+        retry(block)
     } catch (e: EOFException) {
         null as T
     } catch (e: Throwable) {
         e.printStackTrace()
         throw e
+    }
+
+    private suspend inline fun<T> retry(
+        crossinline block: suspend () -> T,
+    ): T {
+        lateinit var lastException: SocketTimeoutException
+        repeat(MAX_RETRY_COUNT) {
+            try {
+                return block()
+            } catch (e: SocketTimeoutException) {
+                lastException = e
+                if ((it + 1) != MAX_RETRY_COUNT)
+                    delay(RETRY_DELAY)
+            }
+        }
+        throw lastException
     }
 
     // Initialization
@@ -92,5 +111,10 @@ class DarkServiceImpl(
         setLenient()
     }.create().run {
         GsonConverterFactory.create(this)
+    }
+
+    companion object {
+        const val MAX_RETRY_COUNT = 6
+        val RETRY_DELAY = Duration.ofSeconds(1).toMillis()
     }
 }
