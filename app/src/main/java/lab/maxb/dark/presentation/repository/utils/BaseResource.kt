@@ -3,6 +3,7 @@ package lab.maxb.dark.presentation.repository.utils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import lab.maxb.dark.presentation.repository.network.dark.UnableToObtainResource
 
 open class BaseResource<Input, Output> {
     open lateinit var fetchLocal: suspend (Input) -> Flow<Output?>
@@ -16,10 +17,12 @@ open class BaseResource<Input, Output> {
 
     suspend fun query(args: Input, force: Boolean = false) = flow {
         if (force || !isFresh(args)) {
-            fetchRemote(args)?.run {
-                localStore?.invoke(this)
-            } ?: clearLocalStore?.invoke(args)
-            onRefresh?.invoke()
+            try {
+                fetchRemote(args)?.run {
+                    localStore?.invoke(this)
+                } ?: clearLocalStore?.invoke(args)
+                onRefresh?.invoke()
+            } catch (e: UnableToObtainResource) {}
         }
         emitAll(getCache(args))
     }

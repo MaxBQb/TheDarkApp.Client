@@ -15,6 +15,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.EOFException
 import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import java.time.Duration
 
 @Single
@@ -72,6 +73,8 @@ class DarkServiceImpl(
         retry(block)
     } catch (e: EOFException) {
         null as T
+    } catch (e: UnknownHostException) {
+        throw UnableToObtainResource()
     } catch (e: Throwable) {
         e.printStackTrace()
         throw e
@@ -80,17 +83,14 @@ class DarkServiceImpl(
     private suspend inline fun<T> retry(
         crossinline block: suspend () -> T,
     ): T {
-        lateinit var lastException: SocketTimeoutException
         repeat(MAX_RETRY_COUNT) {
             try {
                 return block()
             } catch (e: SocketTimeoutException) {
-                lastException = e
-                if ((it + 1) != MAX_RETRY_COUNT)
-                    delay(RETRY_DELAY)
+                // Ignore
             }
         }
-        throw lastException
+        throw UnableToObtainResource()
     }
 
     // Initialization
@@ -118,3 +118,6 @@ class DarkServiceImpl(
         val RETRY_DELAY = Duration.ofSeconds(1).toMillis()
     }
 }
+
+
+class UnableToObtainResource: Exception()

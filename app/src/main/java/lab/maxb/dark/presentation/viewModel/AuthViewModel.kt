@@ -58,9 +58,7 @@ class AuthViewModel(
     suspend fun authorize() {
         try {
             _profile.value = UiState.Loading
-            withTimeout(Duration.ofSeconds(10).toMillis()) {
-                profileRepository.sendCredentials(login.value, password.value, isAccountNew.value)
-            }
+            profileRepository.sendCredentials(login.value, password.value, isAccountNew.value)
         } catch (e: Throwable) {
             _profile.value = UiState.Error(e)
             println(e)
