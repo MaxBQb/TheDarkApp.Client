@@ -21,5 +21,5 @@ abstract class RecognitionTasksDAO: AdvancedDAO<RecognitionTaskLocalDTO>(
     abstract fun getAllPaged(): PagingSource<Int, FullRecognitionTaskDTO>
 
     @Query("SELECT * FROM recognition_task WHERE id = :id")
-    abstract fun get(id: String): Flow<RecognitionTaskLocalDTO?>
+    abstract fun get(id: String): Flow<FullRecognitionTaskDTO?>
 }

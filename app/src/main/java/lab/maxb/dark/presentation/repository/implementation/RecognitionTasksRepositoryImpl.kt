@@ -87,15 +87,16 @@ class RecognitionTasksRepositoryImpl(
         localDataSource.save(taskLocal)
     }
 
-    override suspend fun markRecognitionTask(task: RecognitionTask) {
-        localDataSource.update(task.toLocalDTO())
-        try {
-            if (networkDataSource.markTask(task.id, task.reviewed))
-                getRecognitionTask(task.id, true).firstOrNull()
+    override suspend fun markRecognitionTask(task: RecognitionTask)
+        = try {
+            networkDataSource.markTask(task.id, task.reviewed).also {
+                if (it)
+                    getRecognitionTask(task.id, true).firstOrNull()
+            }
         } catch (e: Throwable) {
             e.printStackTrace()
+            false
         }
-    }
 
     override suspend fun solveRecognitionTask(id: String, answer: String)
         = try {

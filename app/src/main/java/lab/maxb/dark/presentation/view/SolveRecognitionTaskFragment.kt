@@ -89,8 +89,8 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
     }
 
     private fun mark(isAllowed: Boolean) = launchRepeatingOnLifecycle {
-        mViewModel.mark(isAllowed)
-        goBack()
+        if (mViewModel.mark(isAllowed))
+            goBack()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

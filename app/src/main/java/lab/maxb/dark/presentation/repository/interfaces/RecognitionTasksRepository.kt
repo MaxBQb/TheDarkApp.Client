@@ -10,6 +10,6 @@ interface RecognitionTasksRepository {
     suspend fun getRecognitionTask(id: String, forceUpdate: Boolean = false): Flow<RecognitionTask?>
     fun getRecognitionTaskImage(path: String): GlideUrl
     suspend fun addRecognitionTask(task: RecognitionTask)
-    suspend fun markRecognitionTask(task: RecognitionTask)
+    suspend fun markRecognitionTask(task: RecognitionTask): Boolean
     suspend fun solveRecognitionTask(id: String, answer: String): Boolean
 }
