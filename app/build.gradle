@@ -26,6 +26,9 @@ android {
         // Google Client ID
         buildConfigField "String", "GOOGLE_CLIENT_ID", keystoreProperties["GOOGLE_CLIENT_ID"]
 
+        // MasterKey for encrypted SharedPreference
+        buildConfigField "String", "SECURE_PREFS_MASTER_KEY", keystoreProperties["SECURE_PREFS_MASTER_KEY"]
+
         // URL for main API
         buildConfigField "String", "DARK_API_URL", keystoreProperties["DARK_API_URL"]
 
