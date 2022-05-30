@@ -5,7 +5,7 @@ import com.bumptech.glide.load.model.LazyHeaders
 import com.google.gson.GsonBuilder
 import lab.maxb.dark.BuildConfig
 import lab.maxb.dark.presentation.repository.network.dark.model.AuthRequest
-import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskCreationDTO
+import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskCreationNetworkDTO
 import lab.maxb.dark.presentation.repository.network.logger
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -28,7 +28,7 @@ class DarkServiceImpl(
         api.getTask(id)
     }
 
-    override suspend fun addTask(task: RecognitionTaskCreationDTO) = catchAll {
+    override suspend fun addTask(task: RecognitionTaskCreationNetworkDTO) = catchAll {
         api.addTask(task)
     }
 

@@ -9,44 +9,43 @@ import lab.maxb.dark.presentation.repository.interfaces.UsersRepository
 import lab.maxb.dark.presentation.repository.network.dark.DarkService
 import lab.maxb.dark.presentation.repository.network.dark.model.AuthRequest
 import lab.maxb.dark.presentation.repository.room.LocalDatabase
-import lab.maxb.dark.presentation.repository.room.Server.Model.ProfileDTO
+import lab.maxb.dark.presentation.repository.room.model.toLocalDTO
+import lab.maxb.dark.presentation.repository.room.relations.toDomain
 import org.koin.core.annotation.Single
 
 @Single
 class ProfileRepositoryImpl(
     db: LocalDatabase,
-    private val darkService: DarkService,
+    private val networkDataSource: DarkService,
     private val userSettings: UserSettings,
     private val usersRepository: UsersRepository,
 ) : ProfileRepository {
-    private val profileDAO = db.profileDao()
+    private val localDataSource = db.profiles()
     private val _login = MutableStateFlow(userSettings.login)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override val profile = _login.flatMapLatest { login ->
-        profileDAO.getByLogin(login).distinctUntilChanged().mapLatest { fullProfile ->
-            fullProfile?.toProfile()
+        localDataSource.getByLogin(login).distinctUntilChanged().mapLatest { fullProfile ->
+            fullProfile?.toDomain()
         }
     }
 
     override suspend fun sendCredentials(login: String, password: String, initial: Boolean) {
         val request = AuthRequest(login, password)
         val response = if (initial)
-            darkService.signup(request)
+            networkDataSource.signup(request)
         else
-            darkService.login(request)
+            networkDataSource.login(request)
         userSettings.token = response.token
         userSettings.login = login
-        save(
+        localDataSource.save(
             Profile(
                 login,
                 usersRepository.getUser(response.id).firstOrNull()!!,
                 response.token,
                 role = response.role
-            )
+            ).toLocalDTO()
         )
         _login.value = login
     }
-
-    override suspend fun save(profile: Profile) = profileDAO.save(ProfileDTO(profile))
 }

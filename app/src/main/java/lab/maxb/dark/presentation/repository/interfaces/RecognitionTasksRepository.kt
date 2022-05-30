@@ -12,5 +12,4 @@ interface RecognitionTasksRepository {
     suspend fun addRecognitionTask(task: RecognitionTask)
     suspend fun markRecognitionTask(task: RecognitionTask)
     suspend fun solveRecognitionTask(id: String, answer: String): Boolean
-    suspend fun deleteRecognitionTask(task: RecognitionTask)
 }

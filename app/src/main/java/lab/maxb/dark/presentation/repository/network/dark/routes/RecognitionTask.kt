@@ -1,8 +1,8 @@
 package lab.maxb.dark.presentation.repository.network.dark.routes
 
-import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskCreationDTO
-import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskFullViewDTO
-import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskListViewDTO
+import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskCreationNetworkDTO
+import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskFullViewNetworkDTO
+import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskListViewNetworkDTO
 import okhttp3.MultipartBody
 import retrofit2.http.*
 
@@ -11,13 +11,13 @@ interface RecognitionTask {
     suspend fun getAllTasks(
         @Query("page") page: Int = 0,
         @Query("size") size: Int = 2,
-    ): List<RecognitionTaskListViewDTO>?
+    ): List<RecognitionTaskListViewNetworkDTO>?
 
     @GET("$path/{id}")
-    suspend fun getTask(@Path("id") id: String): RecognitionTaskFullViewDTO?
+    suspend fun getTask(@Path("id") id: String): RecognitionTaskFullViewNetworkDTO?
 
     @POST("$path/add")
-    suspend fun addTask(@Body task: RecognitionTaskCreationDTO): String?
+    suspend fun addTask(@Body task: RecognitionTaskCreationNetworkDTO): String?
 
     @PATCH("$path/mark/{id}/{isAllowed}")
     suspend fun markTask(
