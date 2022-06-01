@@ -10,4 +10,7 @@ import lab.maxb.dark.presentation.repository.room.relations.FullProfileLocalDTO
 abstract class ProfilesDAO: AdvancedDAO<ProfileLocalDTO>("profile") {
     @Query("SELECT * FROM profile WHERE id = :login")
     abstract fun getByLogin(login: String): Flow<FullProfileLocalDTO?>
+
+    @Query("SELECT user_id FROM profile WHERE id = :login")
+    abstract suspend fun getUserIdByLogin(login: String): String?
 }

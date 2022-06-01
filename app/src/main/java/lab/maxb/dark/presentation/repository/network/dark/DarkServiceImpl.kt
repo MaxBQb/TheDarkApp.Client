@@ -3,6 +3,7 @@ package lab.maxb.dark.presentation.repository.network.dark
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.delay
 import lab.maxb.dark.BuildConfig
 import lab.maxb.dark.presentation.repository.network.dark.model.AuthRequest
 import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskCreationNetworkDTO
@@ -13,15 +14,17 @@ import org.koin.core.annotation.Single
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.EOFException
+import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.time.Duration
 
 @Single
 class DarkServiceImpl(
-    private val authInterceptor: AuthInterceptor,
+    private val authInterceptor: AuthInterceptor
 ) : DarkService {
     private val api = buildDarkService()
+    override var onAuthRequired: (suspend () -> Unit)? = null
 
     override suspend fun getAllTasks(page: Int, size: Int) = catchAll {
         api.getAllTasks(page, size)
@@ -74,6 +77,14 @@ class DarkServiceImpl(
         null as T
     } catch (e: UnknownHostException) {
         throw UnableToObtainResource()
+    } catch (e: ConnectException) {
+        throw UnableToObtainResource()
+    } catch (e: retrofit2.HttpException) {
+        when (e.code()) {
+            401, 403 -> onAuthRequired?.invoke()
+            else -> e.printStackTrace()
+        }
+        throw UnableToObtainResource()
     } catch (e: Throwable) {
         e.printStackTrace()
         throw e
@@ -86,7 +97,8 @@ class DarkServiceImpl(
             try {
                 return block()
             } catch (e: SocketTimeoutException) {
-                // Ignore
+                if (it != LAST_RETRY)
+                    delay(RETRY_DELAY)
             }
         }
         throw UnableToObtainResource()
@@ -114,6 +126,7 @@ class DarkServiceImpl(
 
     companion object {
         const val MAX_RETRY_COUNT = 6
+        private const val LAST_RETRY = MAX_RETRY_COUNT-1
         val RETRY_DELAY = Duration.ofSeconds(1).toMillis()
     }
 }

@@ -17,4 +17,6 @@ interface DarkService {
     suspend fun getUser(id: String): User?
     suspend fun login(request: AuthRequest): AuthResponse
     suspend fun signup(request: AuthRequest): AuthResponse
+
+    var onAuthRequired: (suspend () -> Unit)?
 }
