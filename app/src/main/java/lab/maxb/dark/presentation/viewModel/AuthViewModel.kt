@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.withTimeout
 import lab.maxb.dark.domain.model.Profile
 import lab.maxb.dark.presentation.extra.UserSettings
 import lab.maxb.dark.presentation.extra.launch
@@ -15,7 +14,6 @@ import lab.maxb.dark.presentation.viewModel.utils.UiState
 import lab.maxb.dark.presentation.viewModel.utils.stateIn
 import lab.maxb.dark.presentation.viewModel.utils.valueOrNull
 import org.koin.android.annotation.KoinViewModel
-import java.time.Duration
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -65,6 +63,7 @@ class AuthViewModel(
         }
     }
 
+    @Suppress("unused", "UNUSED_PARAMETER")
     fun authorizeByOAUTHProvider(login: String, name: String, authCode: String) {
         TODO()
     }

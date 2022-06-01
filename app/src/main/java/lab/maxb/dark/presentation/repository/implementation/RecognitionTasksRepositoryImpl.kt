@@ -17,7 +17,6 @@ import lab.maxb.dark.presentation.repository.network.dark.DarkService
 import lab.maxb.dark.presentation.repository.network.dark.model.toDomain
 import lab.maxb.dark.presentation.repository.network.dark.model.toNetworkDTO
 import lab.maxb.dark.presentation.repository.room.LocalDatabase
-import lab.maxb.dark.presentation.repository.room.model.toDomain
 import lab.maxb.dark.presentation.repository.room.model.toLocalDTO
 import lab.maxb.dark.presentation.repository.room.relations.toDomain
 import lab.maxb.dark.presentation.repository.utils.Resource
@@ -46,11 +45,14 @@ class RecognitionTasksRepositoryImpl(
                 it.toDomain { getUser(it.owner_id) }
             }
         }
+        isEmptyResponse = {
+            it.isNullOrEmpty()
+        }
         localStore = { tasks ->
             tasks.map {
                 it.toLocalDTO()
             }.toTypedArray().let {
-                localDataSource.save(*it)
+                localDataSource.saveOnly(*it)
             }
         }
         clearLocalStore = { page ->
@@ -61,7 +63,7 @@ class RecognitionTasksRepositoryImpl(
 
     @OptIn(ExperimentalPagingApi::class)
     private val pager = Pager(
-        config = PagingConfig(pageSize = 5),
+        config = PagingConfig(pageSize = 50),
         remoteMediator = RecognitionTaskMediator(tasksResource, db.remoteKeys()),
     ) {
         localDataSource.getAllPaged()

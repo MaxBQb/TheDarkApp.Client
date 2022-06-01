@@ -3,7 +3,6 @@ package lab.maxb.dark.presentation.repository.network.dark
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.google.gson.GsonBuilder
-import kotlinx.coroutines.delay
 import lab.maxb.dark.BuildConfig
 import lab.maxb.dark.presentation.repository.network.dark.model.AuthRequest
 import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskCreationNetworkDTO

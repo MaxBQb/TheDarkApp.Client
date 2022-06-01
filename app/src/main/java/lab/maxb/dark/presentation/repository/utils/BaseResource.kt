@@ -9,6 +9,7 @@ open class BaseResource<Input, Output> {
     open lateinit var fetchLocal: suspend (Input) -> Flow<Output?>
     open lateinit var fetchRemote: suspend (Input) -> Output?
     open lateinit var isFresh: (suspend (Input) -> Boolean)
+    open var isEmptyResponse: (suspend (Output?) -> Boolean) = { it == null }
     open var onRefresh: (suspend () -> Unit)? = null
     open var localStore: (suspend (Output) -> Unit)? = null
     open var clearLocalStore: (suspend (Input) -> Unit)? = null
@@ -18,9 +19,12 @@ open class BaseResource<Input, Output> {
     suspend fun query(args: Input, force: Boolean = false) = flow {
         if (force || !isFresh(args)) {
             try {
-                fetchRemote(args)?.run {
-                    localStore?.invoke(this)
-                } ?: clearLocalStore?.invoke(args)
+                fetchRemote(args).also {
+                    if (isEmptyResponse(it))
+                        clearLocalStore?.invoke(args)
+                    else
+                        localStore?.invoke(it!!)
+                }
                 onRefresh?.invoke()
             } catch (e: UnableToObtainResource) {}
         }

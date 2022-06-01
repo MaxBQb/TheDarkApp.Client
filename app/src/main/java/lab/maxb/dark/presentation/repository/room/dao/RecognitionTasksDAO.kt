@@ -22,4 +22,13 @@ abstract class RecognitionTasksDAO: AdvancedDAO<RecognitionTaskLocalDTO>(
 
     @Query("SELECT * FROM recognition_task WHERE id = :id")
     abstract fun get(id: String): Flow<FullRecognitionTaskDTO?>
+
+    @Query("DELETE FROM recognition_task WHERE NOT (id in (:id))")
+    abstract fun deleteOther(id: List<String>)
+
+    @Transaction
+    open suspend fun saveOnly(vararg value: RecognitionTaskLocalDTO) {
+        save(*value)
+        deleteOther(value.map { it.id })
+    }
 }
