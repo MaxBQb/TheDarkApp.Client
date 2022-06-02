@@ -45,9 +45,8 @@ class RecognitionTasksRepositoryImpl(
                 it.toDomain { getUser(it.owner_id) }
             }
         }
-        isEmptyResponse = {
-            it.isNullOrEmpty()
-        }
+        isEmptyResponse = { it.isNullOrEmpty() }
+        isEmptyCache = { it.isNullOrEmpty() }
         localStore = { tasks ->
             tasks.map {
                 it.toLocalDTO()

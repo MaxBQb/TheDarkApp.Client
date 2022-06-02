@@ -21,7 +21,10 @@ class RecognitionTaskMediator(
     private val remoteKeys: RemoteKeysDAO,
 ) : RemoteMediator<Int, FullRecognitionTaskDTO>() {
 
-    override suspend fun initialize() = if (resource.checkIsFresh(Page(0, 1)))
+    override suspend fun initialize() = if (
+        resource.checkIsFresh(Page(0, 1))
+        && remoteKeys.hasContent()
+    )
         InitializeAction.SKIP_INITIAL_REFRESH
     else
         InitializeAction.LAUNCH_INITIAL_REFRESH
@@ -31,13 +34,14 @@ class RecognitionTaskMediator(
         state: PagingState<Int, FullRecognitionTaskDTO>
     ): MediatorResult {
         return try {
-            val pageKeyData = getKeyPageData(loadType, state)
+            val pageKeyData = getKeyPageData(if (remoteKeys.hasContent())
+                loadType else LoadType.REFRESH, state)
             val page = when (pageKeyData) {
                 is MediatorResult.Success -> return pageKeyData
                 else -> pageKeyData as Int
             }
             val response = resource.query(Page(page, state.config.pageSize), true).firstOrNull()
-            val isEndOfList = response?.isEmpty() ?: true
+            val isEndOfList = response.isNullOrEmpty()
             if (loadType == LoadType.REFRESH)
                 remoteKeys.clear()
 
