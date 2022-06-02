@@ -13,11 +13,11 @@ abstract class RecognitionTasksDAO: AdvancedDAO<RecognitionTaskLocalDTO>(
     "recognition_task"
 ) {
     @Transaction
-    @Query("SELECT * FROM recognition_task ORDER BY reviewed")
+    @Query("SELECT * FROM recognition_task ORDER BY reviewed ASC, id ASC")
     abstract fun getAll(): Flow<List<FullRecognitionTaskDTO>?>
 
     @Transaction
-    @Query("SELECT * FROM recognition_task ORDER BY reviewed")
+    @Query("SELECT * FROM recognition_task ORDER BY reviewed ASC, id ASC")
     abstract fun getAllPaged(): PagingSource<Int, FullRecognitionTaskDTO>
 
     @Query("SELECT * FROM recognition_task WHERE id = :id")

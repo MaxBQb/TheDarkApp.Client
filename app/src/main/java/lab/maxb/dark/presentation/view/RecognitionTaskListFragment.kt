@@ -39,7 +39,9 @@ class RecognitionTaskListFragment : Fragment(R.layout.recognition_task_list_frag
             R.drawable.loading_vector
         ) as AnimatedVectorDrawable
         mPlaceholder.start()
-        mAdapter = RecognitionTaskListAdapter(GlideApp.with(this)) {
+        mAdapter = RecognitionTaskListAdapter(GlideApp.with(this),
+            !mViewModel.isTaskCreationAllowed.value
+        ) {
             load(mViewModel.getImage(it))
                 .transition(withCrossFade())
                 .placeholder(mPlaceholder)

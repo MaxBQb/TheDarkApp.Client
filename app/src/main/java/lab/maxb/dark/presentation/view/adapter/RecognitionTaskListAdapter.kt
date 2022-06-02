@@ -14,6 +14,7 @@ import lab.maxb.dark.presentation.view.adapter.RecognitionTaskListAdapter.TaskVi
 
 class RecognitionTaskListAdapter(
     private val manager: RequestManager,
+    private val accentNonReviewed: Boolean,
     private val getImageLoader: RequestManager.(String) -> RequestBuilder<*>,
 ): PagingDataAdapter<RecognitionTask, TaskViewHolder>(COMPARATOR) {
 
@@ -52,6 +53,8 @@ class RecognitionTaskListAdapter(
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) = with(holder.binding) {
         val item = getItem(position)
         taskOwnerName.text = item?.owner?.name ?: ""
+        if (accentNonReviewed)
+            root.alpha = if (item?.reviewed != true) 1f else 0.75f
         item?.images?.firstOrNull()?.let {
             getImageLoader(manager, it).into(taskImage)
         } ?: manager.clear(taskImage)
