@@ -25,6 +25,7 @@ import lab.maxb.dark.presentation.view.adapter.ImageSliderAdapter
 import lab.maxb.dark.presentation.viewModel.SolveRecognitionTaskViewModel
 import lab.maxb.dark.presentation.viewModel.utils.ItemHolder
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import java.util.*
 
 class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fragment) {
     private val mViewModel: SolveRecognitionTaskViewModel by sharedViewModel()
@@ -63,7 +64,7 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
                 }
 
                 (task.images ?: listOf()).map { image ->
-                    ItemHolder(image)
+                    ItemHolder(image, image)
                 }.run { mAdapter.submitList(this) }
 
                 mViewModel.isReviewMode observe {
