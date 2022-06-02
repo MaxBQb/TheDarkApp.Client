@@ -16,6 +16,7 @@ import lab.maxb.dark.presentation.repository.interfaces.RecognitionTasksReposito
 import lab.maxb.dark.presentation.repository.interfaces.SynonymsRepository
 import lab.maxb.dark.presentation.viewModel.utils.ItemHolder
 import lab.maxb.dark.presentation.viewModel.utils.firstNotNull
+import lab.maxb.dark.presentation.viewModel.utils.map
 import lab.maxb.dark.presentation.viewModel.utils.stateIn
 import org.koin.android.annotation.KoinViewModel
 
@@ -114,7 +115,7 @@ class AddRecognitionTaskViewModel(
 
     fun updateImage(position: Int, uri: Uri) {
         uri.takePersistablePermission(getApplication())
-        _imagesRaw[position].value = uri.toString()
+        _imagesRaw[position] = _imagesRaw[position].map(uri.toString())
         updateImages()
     }
 }
