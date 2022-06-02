@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
+import lab.maxb.dark.domain.model.AuthCredentials
 import lab.maxb.dark.domain.model.Profile
 import lab.maxb.dark.presentation.extra.UserSettings
 import lab.maxb.dark.presentation.extra.launch
@@ -25,6 +26,7 @@ class AuthViewModel(
     private val userSettings: UserSettings,
 //    private val mGoogleSignInLogic: GoogleSignInLogic,
 ) : ViewModel() {
+    private var _wasAuthorized = false
     private val _profile = MutableStateFlow(UiState.Loading as UiState<Profile?>)
     val profile = _profile.stateIn(UiState.Loading)
 
@@ -53,14 +55,26 @@ class AuthViewModel(
         }
     }
 
-    suspend fun authorize() {
-        try {
-            _profile.value = UiState.Loading
-            profileRepository.sendCredentials(login.value, password.value, isAccountNew.value)
-        } catch (e: Throwable) {
-            _profile.value = UiState.Error(e)
-            println(e)
+    fun handleNotAuthorizedYet() {
+        _profile.value = UiState.Loading
+    }
+
+    fun handleAuthorizedStateChanges() = _profile.value.ifLoaded {
+        if (it != null)
+            _wasAuthorized = true
+        else if (_wasAuthorized) {
+            _wasAuthorized = false
+            signOut()
         }
+    }
+
+    fun authorize() {
+        _profile.value = UiState.Loading
+        profileRepository.sendCredentials(AuthCredentials(
+            login.value,
+            password.value,
+            isAccountNew.value,
+        ))
     }
 
     @Suppress("unused", "UNUSED_PARAMETER")

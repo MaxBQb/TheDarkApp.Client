@@ -3,7 +3,6 @@ package lab.maxb.dark.presentation.repository.network.dark
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.google.gson.GsonBuilder
-import kotlinx.coroutines.delay
 import lab.maxb.dark.BuildConfig
 import lab.maxb.dark.presentation.repository.network.dark.model.AuthRequest
 import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskCreationNetworkDTO
@@ -17,7 +16,6 @@ import java.io.EOFException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-import java.time.Duration
 
 @Single
 class DarkServiceImpl(
@@ -75,6 +73,8 @@ class DarkServiceImpl(
         retry(block)
     } catch (e: EOFException) {
         null as T
+    } catch (e: UnableToObtainResource) {
+        throw e
     } catch (e: UnknownHostException) {
         throw UnableToObtainResource()
     } catch (e: ConnectException) {
@@ -97,8 +97,7 @@ class DarkServiceImpl(
             try {
                 return block()
             } catch (e: SocketTimeoutException) {
-                if (it != LAST_RETRY)
-                    delay(RETRY_DELAY)
+                // Ignore (delay included in timeout)
             }
         }
         throw UnableToObtainResource()
@@ -126,8 +125,6 @@ class DarkServiceImpl(
 
     companion object {
         const val MAX_RETRY_COUNT = 6
-        private const val LAST_RETRY = MAX_RETRY_COUNT-1
-        val RETRY_DELAY = Duration.ofSeconds(1).toMillis()
     }
 }
 

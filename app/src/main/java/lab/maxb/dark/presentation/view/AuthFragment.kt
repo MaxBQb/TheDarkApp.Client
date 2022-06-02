@@ -13,13 +13,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.wada811.databinding.dataBinding
-import kotlinx.coroutines.flow.collectLatest
 import lab.maxb.dark.NavGraphDirections
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.AuthFragmentBinding
 import lab.maxb.dark.domain.model.Profile
 import lab.maxb.dark.domain.operations.unicname
-import lab.maxb.dark.presentation.extra.launchRepeatingOnLifecycle
 import lab.maxb.dark.presentation.extra.navigate
 import lab.maxb.dark.presentation.extra.observe
 import lab.maxb.dark.presentation.extra.setPasswordVisibility
@@ -73,20 +71,21 @@ class AuthFragment : Fragment(R.layout.auth_fragment) {
             }?.let { return@setOnClickListener }
 
             mViewModel.isLoading.value = true
-            launchRepeatingOnLifecycle {
-                mViewModel.authorize()
-                mViewModel.profile.collectLatest { state ->
-                    state.ifLoaded {
-                        val message = if (mViewModel.isAccountNew.value)
-                            R.string.auth_message_signup_incorrectCredentials
-                        else
-                            R.string.auth_message_login_incorrectCredentials
-                        handleResult(message, it)
-                    }
-                }
-            }
+            mViewModel.authorize()
         }
 
+        mViewModel.profile observe { state ->
+            if (!mViewModel.isLoading.value)
+                return@observe
+            
+            state.ifLoaded {
+                val message = if (mViewModel.isAccountNew.value)
+                    R.string.auth_message_signup_incorrectCredentials
+                else
+                    R.string.auth_message_login_incorrectCredentials
+                handleResult(message, it)
+            }
+        }
 //        mBinding.googleSignIn.setOnClickListener {
 //            mGoogleSignInPage.open(mGoogleSignInLogic.signInIntent)
 //        }

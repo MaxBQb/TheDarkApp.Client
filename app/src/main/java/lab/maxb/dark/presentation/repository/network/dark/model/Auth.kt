@@ -1,9 +1,8 @@
 package lab.maxb.dark.presentation.repository.network.dark.model
 
-import lab.maxb.dark.domain.model.Profile
-import lab.maxb.dark.domain.model.RecognitionTask
+import lab.maxb.dark.domain.model.AuthCredentials
+import lab.maxb.dark.domain.model.ReceivedAuthCredentials
 import lab.maxb.dark.domain.model.Role
-import lab.maxb.dark.domain.model.User
 
 class AuthRequest(
     var login: String,
@@ -16,12 +15,11 @@ class AuthResponse(
     var role: Role,
 )
 
-inline fun AuthResponse.toProfile(
-    login: String,
-    user: (String) -> User? = { null },
-) = Profile(
+fun AuthCredentials.toNetworkDTO() = AuthRequest(
     login,
-    user(id),
-    token,
-    role = role
+    password!!,
+)
+
+fun AuthResponse.toDomain(request: AuthCredentials) = ReceivedAuthCredentials(
+    token, id, role, request,
 )

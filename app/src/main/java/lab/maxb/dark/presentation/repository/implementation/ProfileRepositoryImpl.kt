@@ -1,17 +1,20 @@
 package lab.maxb.dark.presentation.repository.implementation
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.mapLatest
+import lab.maxb.dark.domain.model.AuthCredentials
 import lab.maxb.dark.domain.model.Profile
-import lab.maxb.dark.domain.model.User
+import lab.maxb.dark.domain.operations.toProfile
 import lab.maxb.dark.presentation.extra.UserSettings
 import lab.maxb.dark.presentation.repository.interfaces.ProfileRepository
 import lab.maxb.dark.presentation.repository.interfaces.UsersRepository
 import lab.maxb.dark.presentation.repository.network.dark.DarkService
-import lab.maxb.dark.presentation.repository.network.dark.model.AuthRequest
-import lab.maxb.dark.presentation.repository.network.dark.model.toProfile
+import lab.maxb.dark.presentation.repository.network.dark.model.toDomain
+import lab.maxb.dark.presentation.repository.network.dark.model.toNetworkDTO
 import lab.maxb.dark.presentation.repository.room.LocalDatabase
-import lab.maxb.dark.presentation.repository.room.model.toDomain
 import lab.maxb.dark.presentation.repository.room.model.toLocalDTO
 import lab.maxb.dark.presentation.repository.room.relations.toDomain
 import lab.maxb.dark.presentation.repository.utils.RefreshControllerImpl
@@ -27,9 +30,7 @@ class ProfileRepositoryImpl(
     private val usersRepository: UsersRepository,
 ) : ProfileRepository {
     private val localDataSource = db.profiles()
-    private val _credentials = MutableStateFlow(Credentials(
-        userSettings.login,
-    ))
+    private val _credentials = MutableStateFlow(AuthCredentials(userSettings.login))
 
     init {
         networkDataSource.onAuthRequired = {
@@ -43,7 +44,7 @@ class ProfileRepositoryImpl(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val profileResource = Resource<Credentials, Profile>(
+    private val profileResource = Resource<AuthCredentials, Profile>(
         RefreshControllerImpl(Duration.ofHours(12).toMillis())
     ).apply {
         fetchLocal = {
@@ -57,29 +58,21 @@ class ProfileRepositoryImpl(
                 return@remote null
             }
 
-            val request = it.toRequest()
-            val response = if (it.initial)
+            val request = it.toNetworkDTO()
+            val response = (if (it.initial)
                 networkDataSource.signup(request)
             else
-                networkDataSource.login(request)
+                networkDataSource.login(request)).toDomain(it)
             userSettings.token = response.token
             userSettings.login = it.login
-            response.toProfile(it.login) { id ->
+            response.toProfile { id ->
                 usersRepository.getUser(id).firstOrNull() ?: return@remote null
             }
         }
         localStore = { localDataSource.save(it.toLocalDTO()) }
     }
 
-    override suspend fun sendCredentials(login: String, password: String, initial: Boolean) {
-        _credentials.value = Credentials(login, password, initial)
+    override fun sendCredentials(credentials: AuthCredentials) {
+        _credentials.value = credentials
     }
-
-    private data class Credentials(
-        val login: String,
-        val password: String? = null,
-        val initial: Boolean = false,
-    )
-
-    private fun Credentials.toRequest() = AuthRequest(login, password!!)
 }

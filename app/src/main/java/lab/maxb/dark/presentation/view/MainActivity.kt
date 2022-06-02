@@ -88,10 +88,10 @@ class MainActivity : AppCompatActivity(R.layout.main_activity),
 
         authViewModel.profile observe {
             it.ifLoaded { profile ->
-                if (profile == null && navController.currentDestination?.id != R.id.nav_auth_fragment) {
-                    authViewModel.signOut()
+                if (profile == null && navController.currentDestination?.id != R.id.nav_auth_fragment)
                     navController.navigate(NavGraphDirections.navToAuthFragment())
-                }
+
+                authViewModel.handleAuthorizedStateChanges()
             }
         }
     }
