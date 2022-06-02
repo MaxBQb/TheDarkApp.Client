@@ -9,7 +9,7 @@ import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.presentation.repository.room.dao.RemoteKeysDAO
 import lab.maxb.dark.presentation.repository.room.model.RemoteKey
 import lab.maxb.dark.presentation.repository.room.relations.FullRecognitionTaskDTO
-import lab.maxb.dark.presentation.repository.utils.BaseResource
+import lab.maxb.dark.presentation.repository.utils.Resource
 import retrofit2.HttpException
 import java.io.IOException
 import java.io.InvalidObjectException
@@ -17,11 +17,11 @@ import java.io.InvalidObjectException
 
 @OptIn(ExperimentalPagingApi::class)
 class RecognitionTaskMediator(
-    private val resource: BaseResource<Page, List<RecognitionTask>>,
+    private val resource: Resource<Page, List<RecognitionTask>>,
     private val remoteKeys: RemoteKeysDAO,
 ) : RemoteMediator<Int, FullRecognitionTaskDTO>() {
 
-    override suspend fun initialize() = if (resource.isFresh(Page(0, 1)))
+    override suspend fun initialize() = if (resource.checkIsFresh(Page(0, 1)))
         InitializeAction.SKIP_INITIAL_REFRESH
     else
         InitializeAction.LAUNCH_INITIAL_REFRESH

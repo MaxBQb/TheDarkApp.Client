@@ -53,7 +53,7 @@ class ProfileRepositoryImpl(
         fetchRemote = remote@ {
             it.password ?: run {
                 localDataSource.getUserIdByLogin(it.login)?.let { id ->
-                    usersRepository.getUser(id).firstOrNull()
+                    usersRepository.refresh(id)
                 }
                 return@remote null
             }

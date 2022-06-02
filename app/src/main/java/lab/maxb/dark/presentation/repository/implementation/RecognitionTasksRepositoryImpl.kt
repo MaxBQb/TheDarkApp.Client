@@ -92,8 +92,7 @@ class RecognitionTasksRepositoryImpl(
     override suspend fun markRecognitionTask(task: RecognitionTask)
         = try {
             networkDataSource.markTask(task.id, task.reviewed).also {
-                if (it)
-                    getRecognitionTask(task.id, true).firstOrNull()
+                if (it) refresh(task.id)
             }
         } catch (e: Throwable) {
             e.printStackTrace()
@@ -129,11 +128,15 @@ class RecognitionTasksRepositoryImpl(
     }
 
     override suspend fun getRecognitionTask(id: String, forceUpdate: Boolean)
-        = taskResource.query(id, forceUpdate)
+        = taskResource.query(id, forceUpdate, true)
+
+    override suspend fun refresh(id: String) {
+        taskResource.refresh(id)
+    }
 
     override fun getRecognitionTaskImage(path: String)
         = networkDataSource.getImageSource(path)
 
-    private suspend fun getUser(id: String) =
-        usersRepository.getUser(id).firstOrNull()!!
+    private suspend fun getUser(id: String)
+        = usersRepository.getUser(id).firstOrNull()!!
 }
