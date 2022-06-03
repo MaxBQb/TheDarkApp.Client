@@ -21,9 +21,10 @@ class AuthHandleFragment : Fragment(R.layout.auth_handle_fragment) {
         super.onViewCreated(view, savedInstanceState)
         mViewModel.profile observe {
             it.ifLoaded { profile ->
-                if (profile == null)
+                if (profile == null) {
+                    mViewModel.handleNotAuthorizedYet()
                     NavGraphDirections.navToAuthFragment().navigate()
-                else
+                } else
                     NavGraphDirections.navToMainFragment().navigate()
             }
         }

@@ -1,14 +1,10 @@
 package lab.maxb.dark.presentation.viewModel.utils
+import lab.maxb.dark.domain.operations.randomUUID
 
-import java.util.*
-
-data class ItemHolder<T>(
+class ItemHolder<T>(
     var value: T,
-    val id: UUID = UUID.randomUUID(),
+    val id: String = randomUUID,
 )
-
-fun <T> T.asItemHolder()
-    = ItemHolder(this)
 
 fun <T, R> ItemHolder<T>.map(value: R)
     = ItemHolder(value, id)

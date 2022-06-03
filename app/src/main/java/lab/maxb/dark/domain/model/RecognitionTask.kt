@@ -4,7 +4,7 @@ import lab.maxb.dark.domain.operations.randomUUID
 
 open class RecognitionTask(
     open var names: Set<String>? = null,
-    open var images: List<Image>? = null,
+    open var images: List<String>? = null,
     open var owner: User? = null,
     open var reviewed: Boolean = false,
     open var id: String = randomUUID,

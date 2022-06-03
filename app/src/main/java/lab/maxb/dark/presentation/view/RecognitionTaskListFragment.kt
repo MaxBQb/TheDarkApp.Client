@@ -1,13 +1,16 @@
 package lab.maxb.dark.presentation.view
 
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.RecognitionTaskListFragmentBinding
 import lab.maxb.dark.domain.model.RecognitionTask
+import lab.maxb.dark.presentation.extra.GlideApp
 import lab.maxb.dark.presentation.extra.delegates.autoCleaned
 import lab.maxb.dark.presentation.extra.delegates.viewBinding
 import lab.maxb.dark.presentation.extra.navigate
@@ -21,18 +24,31 @@ class RecognitionTaskListFragment : Fragment(R.layout.recognition_task_list_frag
     private val mViewModel: RecognitionTaskListViewModel by sharedViewModel()
     private val mBinding: RecognitionTaskListFragmentBinding by viewBinding()
     private var mAdapter: RecognitionTaskListAdapter by autoCleaned()
+    private var mPlaceholder: AnimatedVectorDrawable by autoCleaned()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mViewModel.isTaskCreationAllowed observe {
             mBinding.fab.isVisible = it
         }
-        mBinding.fab.setOnClickListener { v ->
+        mBinding.fab.setOnClickListener {
             RecognitionTaskListFragmentDirections.navToAddTaskFragment().navigate()
         }
-
-        mAdapter = RecognitionTaskListAdapter()
+        mPlaceholder = AppCompatResources.getDrawable(
+            requireContext(),
+            R.drawable.loading_vector
+        ) as AnimatedVectorDrawable
+        mPlaceholder.start()
+        mAdapter = RecognitionTaskListAdapter(GlideApp.with(this),
+            !mViewModel.isTaskCreationAllowed.value
+        ) {
+            load(mViewModel.getImage(it))
+                .transition(withCrossFade())
+                .placeholder(mPlaceholder)
+                .error(R.drawable.ic_error)
+        }
         mBinding.recognitionTaskListRecycler.adapter = mAdapter
+        mBinding.recognitionTaskListRecycler.addOnScrollListener(mAdapter.preloader.raw)
         mAdapter.onElementClickListener = { _: View, task: RecognitionTask ->
             RecognitionTaskListFragmentDirections.navToSolveTaskFragment(
                 task.id

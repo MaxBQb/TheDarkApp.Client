@@ -1,19 +1,30 @@
 package lab.maxb.dark.presentation.view.adapter
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.RequestManager
 import lab.maxb.dark.databinding.RecognitionTaskListElementBinding
 import lab.maxb.dark.domain.model.RecognitionTask
-import lab.maxb.dark.presentation.extra.toBitmap
 import lab.maxb.dark.presentation.view.adapter.RecognitionTaskListAdapter.TaskViewHolder
 
-class RecognitionTaskListAdapter:
-    PagingDataAdapter<RecognitionTask, TaskViewHolder>(COMPARATOR) {
+class RecognitionTaskListAdapter(
+    private val manager: RequestManager,
+    private val accentNonReviewed: Boolean,
+    private val getImageLoader: RequestManager.(String) -> RequestBuilder<*>,
+): PagingDataAdapter<RecognitionTask, TaskViewHolder>(COMPARATOR) {
+
+    val preloader = ImagePreloader(
+        manager,
+        getItem = {
+            getItem(it)?.images?.firstOrNull()
+        },
+        getImageLoader = getImageLoader
+    )
 
     companion object {
         private val COMPARATOR = object : DiffUtil.ItemCallback<RecognitionTask>() {
@@ -21,10 +32,9 @@ class RecognitionTaskListAdapter:
                 oldItem.id == newItem.id
 
             override fun areContentsTheSame(oldItem: RecognitionTask, newItem: RecognitionTask): Boolean =
-                oldItem.id == newItem.id &&
                 oldItem.owner?.id == newItem.owner?.id &&
                 oldItem.owner?.name == newItem.owner?.name &&
-                oldItem.images?.firstOrNull()?.id == newItem.images?.firstOrNull()?.id
+                oldItem.images?.firstOrNull() == newItem.images?.firstOrNull()
         }
     }
 
@@ -40,20 +50,16 @@ class RecognitionTaskListAdapter:
     var onElementClickListener: ((view: View, item: RecognitionTask) -> Unit)?
         = null
 
-    override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        val item = getItem(position) ?: return
-        holder.binding.taskOwnerName.text = item.owner?.name
-        try {
-            holder.binding.taskImage.setImageBitmap(
-                Uri.parse(item.images?.get(0)?.path).toBitmap(
-                    holder.itemView.context,
-                    holder.binding.taskImage.layoutParams.width,
-                    holder.binding.taskImage.layoutParams.height,
-                )
-            )
-        } catch (ignored: Throwable) {}
-        holder.itemView.setOnClickListener { v ->
-            if (position != RecyclerView.NO_POSITION)
+    override fun onBindViewHolder(holder: TaskViewHolder, position: Int) = with(holder.binding) {
+        val item = getItem(position)
+        taskOwnerName.text = item?.owner?.name ?: ""
+        if (accentNonReviewed)
+            root.alpha = if (item?.reviewed != true) 1f else 0.75f
+        item?.images?.firstOrNull()?.let {
+            getImageLoader(manager, it).into(taskImage)
+        } ?: manager.clear(taskImage)
+        root.setOnClickListener { v ->
+            if (position != RecyclerView.NO_POSITION && item != null)
                 onElementClickListener?.invoke(v, item)
         }
     }

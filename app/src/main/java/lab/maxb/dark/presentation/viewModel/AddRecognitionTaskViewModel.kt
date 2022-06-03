@@ -15,8 +15,8 @@ import lab.maxb.dark.presentation.repository.interfaces.ProfileRepository
 import lab.maxb.dark.presentation.repository.interfaces.RecognitionTasksRepository
 import lab.maxb.dark.presentation.repository.interfaces.SynonymsRepository
 import lab.maxb.dark.presentation.viewModel.utils.ItemHolder
-import lab.maxb.dark.presentation.viewModel.utils.asItemHolder
 import lab.maxb.dark.presentation.viewModel.utils.firstNotNull
+import lab.maxb.dark.presentation.viewModel.utils.map
 import lab.maxb.dark.presentation.viewModel.utils.stateIn
 import org.koin.android.annotation.KoinViewModel
 
@@ -30,7 +30,7 @@ class AddRecognitionTaskViewModel(
     private val _namesRaw = mutableListOf(ItemHolder(""))
     private val _names = MutableStateFlow(_namesRaw.toList())
     val names = _names.asStateFlow()
-    private var _imagesRaw = mutableListOf<ItemHolder<Uri>>()
+    private var _imagesRaw = mutableListOf<ItemHolder<String>>()
     private val _images = MutableStateFlow(_imagesRaw.toList())
     val images = _images.asStateFlow()
 
@@ -50,7 +50,7 @@ class AddRecognitionTaskViewModel(
         val user = profile.firstNotNull().user!!
         val task = createRecognitionTask(
             _namesRaw.map { it.value }.filter { it.isNotBlank() },
-            _imagesRaw.map { it.value.toString() },
+            _imagesRaw.map { it.value },
             user)!!
         recognitionTasksRepository.addRecognitionTask(task)
         true
@@ -108,14 +108,14 @@ class AddRecognitionTaskViewModel(
             if (!allowImageAddition)
                 return@forEach
             it.takePersistablePermission(getApplication())
-            _imagesRaw.add(it.asItemHolder())
+            _imagesRaw.add(ItemHolder(it.toString()))
         }
         updateImages()
     }
 
     fun updateImage(position: Int, uri: Uri) {
         uri.takePersistablePermission(getApplication())
-        _imagesRaw[position].value = uri
+        _imagesRaw[position] = _imagesRaw[position].map(uri.toString())
         updateImages()
     }
 }

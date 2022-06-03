@@ -47,22 +47,22 @@ class SolveRecognitionTaskViewModel(
         }
     }.stateIn(false)
 
-    suspend fun mark(isAllowed: Boolean) {
-        (getCurrentTask() ?: return).apply {
-            reviewed = isAllowed
-        }.also {
+    suspend fun mark(isAllowed: Boolean) =
+        getCurrentTask()?.let {
+            it.reviewed = isAllowed
             recognitionTasksRepository.markRecognitionTask(it)
-        }
-    }
+        } ?: false
 
     suspend fun solveRecognitionTask() = getCurrentTask()?.let {
         recognitionTasksRepository.solveRecognitionTask(
             it.id, answer.firstOrNull() ?: ""
         ).also { result ->
             if (result) {
-                usersRepository.getUser(profile.firstOrNull()!!.user!!.id, true).firstOrNull()
-                recognitionTasksRepository.getRecognitionTask(it.id, true).firstOrNull()
+                usersRepository.refresh(profile.firstOrNull()!!.user!!.id)
+                recognitionTasksRepository.refresh(it.id)
             }
         }
     } ?: false
+
+    fun getImage(path: String) = recognitionTasksRepository.getRecognitionTaskImage(path)
 }

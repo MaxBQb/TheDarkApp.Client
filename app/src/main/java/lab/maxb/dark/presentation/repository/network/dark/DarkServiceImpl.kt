@@ -1,9 +1,11 @@
 package lab.maxb.dark.presentation.repository.network.dark
 
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.google.gson.GsonBuilder
 import lab.maxb.dark.BuildConfig
 import lab.maxb.dark.presentation.repository.network.dark.model.AuthRequest
-import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskCreationDTO
+import lab.maxb.dark.presentation.repository.network.dark.model.RecognitionTaskCreationNetworkDTO
 import lab.maxb.dark.presentation.repository.network.logger
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -11,12 +13,16 @@ import org.koin.core.annotation.Single
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.EOFException
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 @Single
 class DarkServiceImpl(
-    private val authInterceptor: AuthInterceptor,
+    private val authInterceptor: AuthInterceptor
 ) : DarkService {
     private val api = buildDarkService()
+    override var onAuthRequired: (suspend () -> Unit)? = null
 
     override suspend fun getAllTasks(page: Int, size: Int) = catchAll {
         api.getAllTasks(page, size)
@@ -26,7 +32,7 @@ class DarkServiceImpl(
         api.getTask(id)
     }
 
-    override suspend fun addTask(task: RecognitionTaskCreationDTO) = catchAll {
+    override suspend fun addTask(task: RecognitionTaskCreationNetworkDTO) = catchAll {
         api.addTask(task)
     }
 
@@ -42,9 +48,12 @@ class DarkServiceImpl(
         api.addImage(id, filePart)
     }
 
-    override suspend fun downloadImage(path: String) = catchAll {
-        api.downloadImage(path)
-    }
+    override fun getImageSource(path: String) = GlideUrl(
+        "${BuildConfig.DARK_API_URL}/task/image/$path",
+        LazyHeaders.Builder()
+            .addHeader(authInterceptor.header, authInterceptor.value)
+            .build()
+    )
 
     override suspend fun getUser(id: String) = catchAll {
         api.getUser(id)
@@ -59,14 +68,39 @@ class DarkServiceImpl(
     }
 
     private suspend inline fun<reified T> catchAll(
-        crossinline block: suspend () -> T
+        crossinline block: suspend () -> T,
     ): T = try {
-        block()
+        retry(block)
     } catch (e: EOFException) {
         null as T
+    } catch (e: UnableToObtainResource) {
+        throw e
+    } catch (e: UnknownHostException) {
+        throw UnableToObtainResource()
+    } catch (e: ConnectException) {
+        throw UnableToObtainResource()
+    } catch (e: retrofit2.HttpException) {
+        when (e.code()) {
+            401, 403 -> onAuthRequired?.invoke()
+            else -> e.printStackTrace()
+        }
+        throw UnableToObtainResource()
     } catch (e: Throwable) {
         e.printStackTrace()
         throw e
+    }
+
+    private suspend inline fun<T> retry(
+        crossinline block: suspend () -> T,
+    ): T {
+        repeat(MAX_RETRY_COUNT) {
+            try {
+                return block()
+            } catch (e: SocketTimeoutException) {
+                // Ignore (delay included in timeout)
+            }
+        }
+        throw UnableToObtainResource()
     }
 
     // Initialization
@@ -88,4 +122,11 @@ class DarkServiceImpl(
     }.create().run {
         GsonConverterFactory.create(this)
     }
+
+    companion object {
+        const val MAX_RETRY_COUNT = 6
+    }
 }
+
+
+class UnableToObtainResource: Exception()

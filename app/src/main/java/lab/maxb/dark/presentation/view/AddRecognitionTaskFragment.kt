@@ -11,27 +11,29 @@ import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.RequestManager
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.AddRecognitionTaskFragmentBinding
 import lab.maxb.dark.domain.operations.unicname
+import lab.maxb.dark.presentation.extra.GlideApp
 import lab.maxb.dark.presentation.extra.delegates.autoCleaned
 import lab.maxb.dark.presentation.extra.delegates.viewBinding
 import lab.maxb.dark.presentation.extra.goBack
 import lab.maxb.dark.presentation.extra.launch
 import lab.maxb.dark.presentation.extra.observe
-import lab.maxb.dark.presentation.extra.toBitmap
 import lab.maxb.dark.presentation.view.adapter.ImageSliderAdapter
 import lab.maxb.dark.presentation.view.adapter.InputListAdapter
 import lab.maxb.dark.presentation.viewModel.AddRecognitionTaskViewModel
-import lab.maxb.dark.presentation.viewModel.utils.map
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragment) {
     private val mViewModel: AddRecognitionTaskViewModel by sharedViewModel()
     private val mBinding: AddRecognitionTaskFragmentBinding by viewBinding()
     private var mInputsAdapter: InputListAdapter by autoCleaned()
+    private var mGlide: RequestManager by autoCleaned()
     private var mImagesAdapter: ImageSliderAdapter by autoCleaned()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,23 +47,15 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
     }
 
     private fun setupImageUploadPanel() = with (mBinding) {
-        mImagesAdapter = ImageSliderAdapter()
+        mGlide = GlideApp.with(this@AddRecognitionTaskFragment)
+        mImagesAdapter = ImageSliderAdapter {
+            mGlide.load(it.toUri())
+                .error(R.drawable.ic_error)
+        }
         imageSlider.adapter = mImagesAdapter
 
         mViewModel.images observe { uris ->
-            uris.mapNotNull {
-                it.value.toBitmap(
-                    requireContext(),
-                    imageSlider.layoutParams.width,
-                    imageSlider.layoutParams.height,
-                )?.let { image ->
-                    it.map { uri ->
-                        uri.toString() to image
-                    }
-                }
-            }.also {
-                mImagesAdapter.submitList(it)
-            }
+            mImagesAdapter.submitList(uris)
             val hasUris = uris.isNotEmpty()
             addImageButtonAlternative.isVisible = !hasUris
             imageSlider.isVisible = hasUris

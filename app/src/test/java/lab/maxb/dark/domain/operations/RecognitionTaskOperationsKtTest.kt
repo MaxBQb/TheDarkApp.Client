@@ -1,7 +1,8 @@
 package lab.maxb.dark.domain.operations
 
 import lab.maxb.dark.domain.model.User
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 
 

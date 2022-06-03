@@ -4,8 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.core.widget.doOnTextChanged
-import androidx.recyclerview.widget.AsyncDifferConfig
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_POSITION
@@ -14,7 +12,7 @@ import lab.maxb.dark.presentation.viewModel.utils.ItemHolder
 
 
 class InputListAdapter :
-    ListAdapter<ItemHolder<String>, InputListAdapter.ViewHolder>(DiffCallback) {
+    ListAdapter<ItemHolder<String>, InputListAdapter.ViewHolder>(stringHolderDiffCallback) {
     var onItemTextChangedListener: ((input: EditText, position: Int, newValue: String?) -> Unit)?
         = null
 
@@ -34,26 +32,24 @@ class InputListAdapter :
         with (holder.binding.input){
             setText(item.value)
             doOnTextChanged { text, _, _, _ ->
-                if (holder.adapterPosition != NO_POSITION)
-                    onItemTextChangedListener?.invoke(this, holder.adapterPosition, text?.toString())
+                if (holder.absoluteAdapterPosition != NO_POSITION)
+                    onItemTextChangedListener?.invoke(
+                        this,
+                        holder.absoluteAdapterPosition,
+                        text?.toString()
+                    )
             }
             setOnFocusChangeListener { _, hasFocus ->
-                if (holder.adapterPosition != NO_POSITION)
-                    onItemFocusedListener?.invoke(this, holder.adapterPosition, hasFocus)
+                if (holder.absoluteAdapterPosition != NO_POSITION)
+                    onItemFocusedListener?.invoke(
+                        this,
+                        holder.absoluteAdapterPosition,
+                        hasFocus
+                    )
             }
         }
     }
 
     inner class ViewHolder(var binding: InputListItemBinding):
         RecyclerView.ViewHolder(binding.root)
-
-    companion object {
-        private val DiffCallback = object : DiffUtil.ItemCallback<ItemHolder<String>>() {
-            override fun areItemsTheSame(oldItem: ItemHolder<String>, newItem: ItemHolder<String>) =
-                oldItem.id == newItem.id
-
-            override fun areContentsTheSame(oldItem: ItemHolder<String>, newItem: ItemHolder<String>) =
-                oldItem.value == newItem.value
-        }.let { AsyncDifferConfig.Builder(it).build() }
-    }
 }

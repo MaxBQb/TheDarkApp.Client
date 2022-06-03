@@ -9,12 +9,16 @@ import retrofit2.converter.gson.GsonConverterFactory
 @Single
 class SynonymFounder : SynonymsRepository {
     private val api: RusTxtAPI
-    private suspend fun getSynonym(text: String): String? {
-        return api.getSynonym(MultipartBody.Builder().setType(MultipartBody.FORM)
+    private suspend fun getSynonym(text: String)
+        = try {
+            api.getSynonym(MultipartBody.Builder().setType(MultipartBody.FORM)
             .addFormDataPart("method","getSynText")
             .addFormDataPart("text", text)
             .build()
         )?.modified_text?.let { fixText(it) }
+    } catch (e: Throwable) {
+        e.printStackTrace()
+        null
     }
 
     private fun fixText(text: String)

@@ -26,6 +26,9 @@ android {
         // Google Client ID
         buildConfigField "String", "GOOGLE_CLIENT_ID", keystoreProperties["GOOGLE_CLIENT_ID"]
 
+        // MasterKey for encrypted SharedPreference
+        buildConfigField "String", "SECURE_PREFS_MASTER_KEY", keystoreProperties["SECURE_PREFS_MASTER_KEY"]
+
         // URL for main API
         buildConfigField "String", "DARK_API_URL", keystoreProperties["DARK_API_URL"]
 
@@ -54,6 +57,9 @@ android {
         freeCompilerArgs += "-Xcontext-receivers"
     }
     applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "DarkApp.apk"
+        }
         variant.sourceSets.java.each {
             it.srcDirs += "build/generated/ksp/${variant.name}/kotlin"
         }
@@ -133,6 +139,17 @@ dependencies {
 
     // Desugaring (Time-related features support for API 21+)
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+
+    // Images with Glide
+    def glide_version = "4.13.0"
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
+    implementation "com.github.bumptech.glide:okhttp3-integration:4.11.0"
+    implementation ("com.github.bumptech.glide:recyclerview-integration:4.11.0") {
+        // Excludes the support library because it's already included by Glide.
+        transitive = false
+    }
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
 
     // Tests
     testImplementation 'junit:junit:4.13.2'
