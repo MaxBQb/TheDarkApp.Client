@@ -22,6 +22,7 @@ android {
         targetSdkVersion 32
         versionCode 1
         versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
 
         // Google Client ID
         buildConfigField "String", "GOOGLE_CLIENT_ID", keystoreProperties["GOOGLE_CLIENT_ID"]
