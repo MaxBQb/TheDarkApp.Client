@@ -1,17 +1,20 @@
 package lab.maxb.dark.presentation.view
 
 import android.content.Intent
-import android.graphics.drawable.AnimatedVectorDrawable
+import android.graphics.drawable.Animatable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.bumptech.glide.RequestManager
 import com.wada811.databinding.dataBinding
 import lab.maxb.dark.R
@@ -25,14 +28,13 @@ import lab.maxb.dark.presentation.view.adapter.ImageSliderAdapter
 import lab.maxb.dark.presentation.viewModel.SolveRecognitionTaskViewModel
 import lab.maxb.dark.presentation.viewModel.utils.ItemHolder
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import java.util.*
 
 class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fragment) {
     private val mViewModel: SolveRecognitionTaskViewModel by sharedViewModel()
     private val mBinding: SolveRecognitionTaskFragmentBinding by dataBinding()
     private var mAdapter: ImageSliderAdapter by autoCleaned()
     private var mGlide: RequestManager by autoCleaned()
-    private var mPlaceholder: AnimatedVectorDrawable by autoCleaned()
+    private var mPlaceholder: Drawable by autoCleaned()
     private val args: SolveRecognitionTaskFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit = with(mBinding) {
@@ -40,8 +42,13 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
         mViewModel.init(args.id)
         data = mViewModel
         mGlide = GlideApp.with(this@SolveRecognitionTaskFragment)
-        mPlaceholder = getDrawable(requireContext(), R.drawable.loading_vector) as AnimatedVectorDrawable
-        mPlaceholder.start()
+        mPlaceholder = AnimatedVectorDrawableCompat.create(
+            requireContext(), R.drawable.loading_vector
+        )!!
+        with (mPlaceholder as Animatable) {
+            stop()
+            start()
+        }
         mAdapter = ImageSliderAdapter {
             mGlide.load(mViewModel.getImage(it))
                 .placeholder(mPlaceholder)

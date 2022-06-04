@@ -1,11 +1,14 @@
 package lab.maxb.dark.presentation.view
 
-import android.graphics.drawable.AnimatedVectorDrawable
+import android.graphics.drawable.Animatable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.RecognitionTaskListFragmentBinding
@@ -24,7 +27,7 @@ class RecognitionTaskListFragment : Fragment(R.layout.recognition_task_list_frag
     private val mViewModel: RecognitionTaskListViewModel by sharedViewModel()
     private val mBinding: RecognitionTaskListFragmentBinding by viewBinding()
     private var mAdapter: RecognitionTaskListAdapter by autoCleaned()
-    private var mPlaceholder: AnimatedVectorDrawable by autoCleaned()
+    private var mPlaceholder: Drawable by autoCleaned()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,11 +37,14 @@ class RecognitionTaskListFragment : Fragment(R.layout.recognition_task_list_frag
         mBinding.fab.setOnClickListener {
             RecognitionTaskListFragmentDirections.navToAddTaskFragment().navigate()
         }
-        mPlaceholder = AppCompatResources.getDrawable(
+        mPlaceholder = AnimatedVectorDrawableCompat.create(
             requireContext(),
             R.drawable.loading_vector
-        ) as AnimatedVectorDrawable
-        mPlaceholder.start()
+        )!!
+        with (mPlaceholder as Animatable) {
+            stop()
+            start()
+        }
         mAdapter = RecognitionTaskListAdapter(GlideApp.with(this),
             !mViewModel.isTaskCreationAllowed.value
         ) {
