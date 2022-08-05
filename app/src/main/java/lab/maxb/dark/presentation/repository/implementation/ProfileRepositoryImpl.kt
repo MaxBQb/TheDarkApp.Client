@@ -34,6 +34,8 @@ class ProfileRepositoryImpl(
 
     init {
         networkDataSource.onAuthRequired = {
+            userSettings.login = ""
+            userSettings.token = ""
             localDataSource.clear()
         }
     }
