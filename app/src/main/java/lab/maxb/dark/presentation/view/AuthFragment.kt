@@ -17,7 +17,7 @@ import lab.maxb.dark.NavGraphDirections
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.AuthFragmentBinding
 import lab.maxb.dark.domain.model.Profile
-import lab.maxb.dark.domain.operations.unicname
+import lab.maxb.dark.domain.operations.randomFieldKey
 import lab.maxb.dark.presentation.extra.navigate
 import lab.maxb.dark.presentation.extra.observe
 import lab.maxb.dark.presentation.extra.setPasswordVisibility
@@ -147,6 +147,6 @@ class AuthFragment : Fragment(R.layout.auth_fragment) {
     private fun show(message: Int) = show(getString(message))
 
     companion object {
-        val GET_GOOGLE_ACCOUNT = unicname
+        val GET_GOOGLE_ACCOUNT = randomFieldKey
     }
 }

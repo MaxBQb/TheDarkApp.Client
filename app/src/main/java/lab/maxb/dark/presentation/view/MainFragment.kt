@@ -5,8 +5,10 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import lab.maxb.dark.NavGraphDirections
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.MainFragmentBinding
@@ -26,7 +28,19 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.signout_menu, menu)
+            }
 
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.menu_sign_out -> signOut()
+                    else -> return false
+                }
+                return true
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
         mViewModel.profile observe {
             it.ifLoaded { profile ->
                 val user = profile?.user ?: run {
@@ -46,24 +60,6 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
     private fun setRating(user: User?) {
         mBinding.ratingLabel.text = (user?.rating ?: 0).toString()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.signout_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.menu_sign_out -> {
-            signOut()
-            true
-        }
-        else -> super.onOptionsItemSelected(item)
     }
 
     private fun signOut() = launch {

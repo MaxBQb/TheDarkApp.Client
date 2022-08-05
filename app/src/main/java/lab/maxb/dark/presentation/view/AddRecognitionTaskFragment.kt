@@ -12,12 +12,14 @@ import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import com.bumptech.glide.RequestManager
 import lab.maxb.dark.R
 import lab.maxb.dark.databinding.AddRecognitionTaskFragmentBinding
-import lab.maxb.dark.domain.operations.unicname
+import lab.maxb.dark.domain.operations.randomFieldKey
 import lab.maxb.dark.presentation.extra.GlideApp
 import lab.maxb.dark.presentation.extra.delegates.autoCleaned
 import lab.maxb.dark.presentation.extra.delegates.viewBinding
@@ -42,6 +44,19 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
             mViewModel.clear()
             goBack()
         }
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.submit_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.menu_submit -> createRecognitionTask()
+                    else -> return false
+                }
+                return true
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
         setupInputsList()
         setupImageUploadPanel()
     }
@@ -105,23 +120,9 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
         (activity as? MainActivity)?.withToolbar {
             setNavigationIcon(R.drawable.ic_close)
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.submit_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_submit -> createRecognitionTask()
-            else -> return super.onOptionsItemSelected(item)
-        }
-        return true
     }
 
     private fun createRecognitionTask() = launch {
@@ -165,7 +166,7 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
 
     companion object {
         val ALLOWED_CONTENT = arrayOf("image/*")
-        val ADD_URIS = unicname
-        val UPDATE_URI = unicname
+        val ADD_URIS = randomFieldKey
+        val UPDATE_URI = randomFieldKey
     }
 }

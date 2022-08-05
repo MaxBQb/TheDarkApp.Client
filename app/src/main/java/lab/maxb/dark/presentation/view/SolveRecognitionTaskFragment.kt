@@ -3,16 +3,16 @@ package lab.maxb.dark.presentation.view
 import android.content.Intent
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.navArgs
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.bumptech.glide.RequestManager
@@ -41,6 +41,20 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
         super.onViewCreated(view, savedInstanceState)
         mViewModel.init(args.id)
         data = mViewModel
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.share_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.menu_share -> shareTask()
+                    else -> return false
+                }
+                return true
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
         mGlide = GlideApp.with(this@SolveRecognitionTaskFragment)
         mPlaceholder = AnimatedVectorDrawableCompat.create(
             requireContext(), R.drawable.loading_vector
@@ -100,25 +114,6 @@ class SolveRecognitionTaskFragment : Fragment(R.layout.solve_recognition_task_fr
         if (mViewModel.mark(isAllowed))
             goBack()
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.share_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean
-        = when (item.itemId) {
-            R.id.menu_share -> {
-                shareTask()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
 
     private fun shareTask() = launchRepeatingOnLifecycle {
         startActivity(Intent.createChooser(Intent().apply {
