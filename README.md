@@ -11,3 +11,6 @@
 - **Репозиторий приложения**
 - [Документация на API](https://the-dark-app.herokuapp.com/docs/swagger-ui/index.html)
 - Адрес: `https://the-dark-app.herokuapp.com/`
+
+## Демонстрация функционала
+https://user-images.githubusercontent.com/27343275/183265463-e308891a-3f51-4237-97a5-bf5c1ff79747.mp4
