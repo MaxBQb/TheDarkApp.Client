@@ -26,6 +26,6 @@
         <item name="android:statusBarColor">@color/secondaryVariant</item>
         <!-- Customize your theme here -->
     </style>
-    <style name="Theme.Dark.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-    <style name="Theme.Dark.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.Dark.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
+    <style name="Theme.Dark.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
 </resources>
