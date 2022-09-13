@@ -46,4 +46,5 @@
     <!-- Welcome -->
     <string name="welcome_welcome">Добро пожаловать, %s!</string>
     <string name="welcome_anonymousWelcome">Вы не авторизованы!</string>
+    <string name="welcome_rating">Набрано очков</string>
 </resources>

@@ -13,8 +13,7 @@
     <fragment
         android:id="@+id/nav_main_fragment"
         android:name="lab.maxb.dark.presentation.view.MainFragment"
-        android:label="@string/nav_main_label"
-        tools:layout="@layout/main_fragment" />
+        android:label="@string/nav_main_label" />
 
     <fragment
         android:id="@+id/nav_auth_fragment"
