@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,8 +25,8 @@ import lab.maxb.dark.R
 import lab.maxb.dark.presentation.extra.navigate
 import lab.maxb.dark.presentation.viewModel.AuthViewModel
 import lab.maxb.dark.ui.theme.DarkAppTheme
-import lab.maxb.dark.ui.theme.units.sdp
-import lab.maxb.dark.ui.theme.units.ssp
+import lab.maxb.dark.ui.theme.fontSize
+import lab.maxb.dark.ui.theme.spacing
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
@@ -69,8 +70,8 @@ fun AuthHandleRootStateless() = DarkAppTheme { Surface {
         verticalArrangement = Arrangement.Center
     ) {
         Text(text = stringResource(id = R.string.handleAuth_pleaseWait),
-            modifier = Modifier.padding(16.sdp),
-            fontSize = 18.ssp
+            modifier = Modifier.padding(MaterialTheme.spacing.normal),
+            fontSize = MaterialTheme.fontSize.normalHeader
         )
         LoadingCircle(0.8f, width = 12)
     }

@@ -9,8 +9,8 @@ import androidx.compose.ui.unit.sp
 import lab.maxb.dark.ui.theme.units.ssp
 
 // Set of Material typography styles to start with
-@Composable
-fun getTypography() = Typography(
+
+val typography @Composable get() = Typography(
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,

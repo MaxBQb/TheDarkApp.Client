@@ -29,7 +29,8 @@ import lab.maxb.dark.presentation.viewModel.AuthViewModel
 import lab.maxb.dark.presentation.viewModel.utils.valueOrNull
 import lab.maxb.dark.ui.theme.DarkAppTheme
 import lab.maxb.dark.ui.theme.Golden
-import lab.maxb.dark.ui.theme.units.ssp
+import lab.maxb.dark.ui.theme.fontSize
+import lab.maxb.dark.ui.theme.spacing
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
@@ -54,7 +55,7 @@ fun WelcomeRoot(viewModel: AuthViewModel) = DarkAppTheme { Surface {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.normalMargin)),
+            .padding(MaterialTheme.spacing.normal),
     ) {
         val user = profile.valueOrNull?.user
         Greeting(user?.name)
@@ -70,7 +71,7 @@ fun WelcomeRoot(viewModel: AuthViewModel) = DarkAppTheme { Surface {
 @Composable
 fun Exit(modifier: Modifier = Modifier, onExit: () -> Unit) = Button(
     onClick = onExit,
-    modifier = modifier.padding(dimensionResource(id = R.dimen.normalMargin))
+    modifier = modifier.padding(MaterialTheme.spacing.normal)
 ) {
     Icon(
         Icons.Filled.ExitToApp,
@@ -104,7 +105,7 @@ fun Greeting(name: String?) {
         name?.let {
             stringResource(id = R.string.welcome_welcome, it)
         } ?: stringResource(id = R.string.welcome_anonymousWelcome),
-        fontSize = 18.ssp,
+        fontSize = MaterialTheme.fontSize.normalHeader,
         modifier = Modifier.fillMaxWidth(),
         textAlign = TextAlign.Center
     )

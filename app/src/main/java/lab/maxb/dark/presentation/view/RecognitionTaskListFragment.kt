@@ -37,6 +37,7 @@ import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.presentation.extra.navigate
 import lab.maxb.dark.presentation.viewModel.RecognitionTaskListViewModel
 import lab.maxb.dark.ui.theme.DarkAppTheme
+import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -85,7 +86,7 @@ fun RecognitionTaskListRoot(
                 onClick = onFabClick,
                 shape = CircleShape,
                 containerColor = colorScheme.secondaryContainer,
-                modifier = Modifier.padding(32.sdp)
+                modifier = Modifier.padding(MaterialTheme.spacing.large)
                     .wrapContentSize(Alignment.BottomEnd)
             ) {
                 Image(painterResource(id = R.drawable.ic_plus), null)
@@ -101,7 +102,7 @@ private fun RecognitionTaskList(
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(0.dp, 8.sdp)
+        contentPadding = PaddingValues(MaterialTheme.spacing.zero, MaterialTheme.spacing.small)
     ) {
         items(items = items, itemContent = { item ->
             item?.let {
@@ -114,7 +115,7 @@ private fun RecognitionTaskList(
                 LoadingCircle(
                     Modifier
                         .fillMaxWidth()
-                        .padding(16.sdp, 8.sdp)
+                        .padding(MaterialTheme.spacing.normal, MaterialTheme.spacing.small)
                         .wrapContentWidth(Alignment.CenterHorizontally),
                     5
                 )
@@ -136,7 +137,7 @@ fun RecognitionTaskCard(
         modifier = Modifier
             .fillMaxWidth()
             .height(200.sdp)
-            .padding(16.sdp, 8.sdp),
+            .padding(MaterialTheme.spacing.normal, MaterialTheme.spacing.small),
         tonalElevation = elevation.dp,
         shape = RoundedCornerShape(16.dp),
         onClick = onClick
