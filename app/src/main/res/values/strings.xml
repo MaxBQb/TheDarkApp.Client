@@ -43,6 +43,9 @@
         <string name="auth_message_passwordsNotMatch">Пароли не совпадают</string>
         <string name="auth_message_somethingWentWrong">Неизвесная ошибка</string>
 
+    <!-- Authorization handling -->
+    <string name="handleAuth_pleaseWait">Идёт подключение…</string>
+
     <!-- Welcome -->
     <string name="welcome_welcome">Добро пожаловать, %s!</string>
     <string name="welcome_anonymousWelcome">Вы не авторизованы!</string>

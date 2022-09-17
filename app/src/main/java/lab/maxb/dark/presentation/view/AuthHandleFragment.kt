@@ -1,32 +1,77 @@
 package lab.maxb.dark.presentation.view
 
 import android.os.Bundle
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
 import lab.maxb.dark.NavGraphDirections
 import lab.maxb.dark.R
-import lab.maxb.dark.databinding.AuthHandleFragmentBinding
-import lab.maxb.dark.presentation.extra.delegates.viewBinding
 import lab.maxb.dark.presentation.extra.navigate
-import lab.maxb.dark.presentation.extra.observe
 import lab.maxb.dark.presentation.viewModel.AuthViewModel
+import lab.maxb.dark.ui.theme.DarkAppTheme
+import lab.maxb.dark.ui.theme.units.sdp
+import lab.maxb.dark.ui.theme.units.ssp
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
-class AuthHandleFragment : Fragment(R.layout.auth_handle_fragment) {
+class AuthHandleFragment : Fragment() {
     private val mViewModel: AuthViewModel by sharedViewModel()
-    private val mBinding: AuthHandleFragmentBinding by viewBinding()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        mViewModel.profile observe {
-            it.ifLoaded { profile ->
-                if (profile == null) {
-                    mViewModel.handleNotAuthorizedYet()
-                    NavGraphDirections.navToAuthFragment().navigate()
-                } else
-                    NavGraphDirections.navToMainFragment().navigate()
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) = ComposeView(requireContext()).apply {
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent { AuthHandleRoot(
+            mViewModel,
+            onAuthorized = {
+                NavGraphDirections.navToMainFragment().navigate()
+            },
+            onNotAuthorized = {
+                mViewModel.handleNotAuthorizedYet()
+                NavGraphDirections.navToAuthFragment().navigate()
             }
-        }
+        ) }
     }
 }
+
+@Composable
+fun AuthHandleRoot(viewModel: AuthViewModel,
+                   onAuthorized: () -> Unit,
+                   onNotAuthorized: () -> Unit) {
+    AuthHandleRootStateless()
+
+    val profile by viewModel.profile.collectAsState()
+    profile.ifLoaded { it?.let { onAuthorized() } ?: onNotAuthorized() }
+}
+
+@Preview
+@Composable
+fun AuthHandleRootStateless() = DarkAppTheme { Surface {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(text = stringResource(id = R.string.handleAuth_pleaseWait),
+            modifier = Modifier.padding(16.sdp),
+            fontSize = 18.ssp
+        )
+        LoadingCircle(0.8f, width = 12)
+    }
+} }
