@@ -109,6 +109,7 @@ dependencies {
     // Paging
     def paging_version = "3.1.1"
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
+    implementation 'androidx.paging:paging-compose:1.0.0-alpha16'
 
     // Retrofit2 Networking
     def retrofit_version = "2.9.0"
@@ -155,6 +156,10 @@ dependencies {
         transitive = false
     }
     kapt "com.github.bumptech.glide:compiler:$glide_version"
+        // Use JC integrated landscapist's Glide version
+        def landscapist_glide_version = "2.0.0"
+        implementation "com.github.skydoves:landscapist-glide:$landscapist_glide_version"
+        implementation "com.github.skydoves:landscapist-animation:$landscapist_glide_version"
 
     // Compose
     def composeVersion = '1.2.1'

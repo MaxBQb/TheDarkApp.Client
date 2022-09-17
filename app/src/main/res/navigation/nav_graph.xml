@@ -24,8 +24,7 @@
     <fragment
         android:id="@+id/nav_taskList_fragment"
         android:name="lab.maxb.dark.presentation.view.RecognitionTaskListFragment"
-        android:label="@string/nav_taskList_label"
-        tools:layout="@layout/recognition_task_list_fragment" >
+        android:label="@string/nav_taskList_label">
         <action
             android:id="@+id/nav_to_addTask_fragment"
             app:destination="@id/nav_addTask_fragment" />
