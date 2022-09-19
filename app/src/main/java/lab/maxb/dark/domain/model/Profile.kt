@@ -9,7 +9,6 @@ open class Profile(
 ) {
     enum class AuthType {
         CREDENTIALS,
-        OAUTH_GOOGLE
     }
 }
 

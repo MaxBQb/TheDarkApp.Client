@@ -24,7 +24,6 @@ class AuthViewModel(
     private val usersRepository: UsersRepository,
     private val db: LocalDatabase,
     private val userSettings: UserSettings,
-//    private val mGoogleSignInLogic: GoogleSignInLogic,
 ) : ViewModel() {
     private var _wasAuthorized = false
     private val _profile = MutableStateFlow(UiState.Loading as UiState<Profile?>)
@@ -90,7 +89,6 @@ class AuthViewModel(
     fun isPasswordsNotMatch() = isAccountNew.value && password.value != passwordRepeat.value
 
     fun signOut() = launch(Dispatchers.Default) {
-//        mGoogleSignInLogic.signOut()
         userSettings.token = ""
         userSettings.login = ""
         isLoading.value = false

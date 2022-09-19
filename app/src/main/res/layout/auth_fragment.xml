@@ -93,14 +93,5 @@
             android:text="@{data.isAccountNew ? @string/auth_signup_button : @string/auth_login_button, default=@string/auth_login_button}"
             android:textSize="@dimen/normalText"
             app:cornerRadius="@dimen/_8sdp" />
-
-        <!--<com.google.android.gms.common.SignInButton
-            android:id="@+id/google_sign_in"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:enabled="@{!data.isLoading}"
-            android:visibility="gone"
-            app:colorScheme="dark" />-->
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>
