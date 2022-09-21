@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -207,11 +208,21 @@ fun LoadingError(modifier: Modifier = Modifier) {
 
 @Composable
 fun LoadingCircle(modifier: Modifier = Modifier, width: Int = 5) {
-    CircularProgressIndicator(
-        modifier,
-        color = colorScheme.onSurface.copy(0.1f),
-        strokeWidth = width.sdp
-    )
+    val color = colorScheme.onSurface.copy(0.1f)
+    val strokeWidth = width.sdp
+    if (LocalView.current.isInEditMode)
+        CircularProgressIndicator(
+            0.45f,
+            modifier,
+            color,
+            strokeWidth,
+        )
+    else
+        CircularProgressIndicator(
+            modifier,
+            color,
+            strokeWidth,
+        )
 }
 
 @Composable

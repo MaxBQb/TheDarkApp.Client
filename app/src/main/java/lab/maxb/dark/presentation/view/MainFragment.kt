@@ -63,6 +63,7 @@ fun WelcomeRoot(viewModel: AuthViewModel) = DarkAppTheme { Surface {
             UserRating(user?.rating ?: 0)
 
     }
+
     Exit(modifier = Modifier.wrapContentSize(Alignment.BottomCenter)) { uiScope.launch {
         viewModel.signOut()
     } }

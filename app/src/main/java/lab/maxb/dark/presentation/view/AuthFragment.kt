@@ -1,85 +1,331 @@
 package lab.maxb.dark.presentation.view
 
 import android.os.Bundle
-import android.view.View
+import android.view.KeyEvent.ACTION_DOWN
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.StringRes
-import androidx.core.view.isVisible
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
-import com.wada811.databinding.dataBinding
 import lab.maxb.dark.NavGraphDirections
 import lab.maxb.dark.R
-import lab.maxb.dark.databinding.AuthFragmentBinding
-import lab.maxb.dark.domain.model.Profile
-import lab.maxb.dark.domain.operations.randomFieldKey
 import lab.maxb.dark.presentation.extra.navigate
-import lab.maxb.dark.presentation.extra.observe
-import lab.maxb.dark.presentation.extra.setPasswordVisibility
+import lab.maxb.dark.presentation.viewModel.AuthUiEvent
+import lab.maxb.dark.presentation.viewModel.AuthUiState
 import lab.maxb.dark.presentation.viewModel.AuthViewModel
+import lab.maxb.dark.ui.theme.DarkAppTheme
+import lab.maxb.dark.ui.theme.spacing
+import lab.maxb.dark.ui.theme.units.sdp
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
-class AuthFragment : Fragment(R.layout.auth_fragment) {
-    private val mViewModel: AuthViewModel by sharedViewModel()
-    private val mBinding: AuthFragmentBinding by dataBinding()
+class AuthFragment : Fragment() {
+    private val viewModel: AuthViewModel by sharedViewModel()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        mBinding.data = mViewModel
-
-        mViewModel.isAccountNew observe {
-            mBinding.passwordRepeat.isVisible = it
-        }
-
-        mViewModel.showPassword observe {
-            mBinding.password.setPasswordVisibility(it)
-            mBinding.passwordRepeat.setPasswordVisibility(it)
-        }
-
-        mBinding.enter.setOnClickListener {
-            if (mViewModel.isLoading.value)
-                return@setOnClickListener
-
-            when {
-                mViewModel.hasEmptyFields() -> show(R.string.auth_message_hasEmptyFields)
-                mViewModel.isPasswordsNotMatch() -> show(R.string.auth_message_passwordsNotMatch)
-                else -> null
-            }?.let { return@setOnClickListener }
-
-            mViewModel.isLoading.value = true
-            mViewModel.authorize()
-        }
-
-        mViewModel.profile observe { state ->
-            if (!mViewModel.isLoading.value)
-                return@observe
-            
-            state.ifLoaded {
-                val message = if (mViewModel.isAccountNew.value)
-                    R.string.auth_message_signup_incorrectCredentials
-                else
-                    R.string.auth_message_login_incorrectCredentials
-                handleResult(message, it)
-            }
-        }
-    }
-
-    private fun handleResult(@StringRes message: Int?, profile: Profile?) {
-        profile?.let {
-            mViewModel.password.value = ""
-            mViewModel.passwordRepeat.value = ""
-            NavGraphDirections.navToMainFragment().navigate()
-        } ?: onNotAuthorized(message)
-    }
-
-    private fun onNotAuthorized(@StringRes message: Int?) {
-        message?.let { show(it) }
-        mViewModel.isLoading.value = false
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) = ComposeView(requireContext()).apply {
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent { AuthRoot() }
     }
 
     private fun show(message: String) = Toast.makeText(
         context, message, Toast.LENGTH_LONG
     ).show()
 
-    private fun show(message: Int) = show(getString(message))
+    @Composable
+    fun AuthRoot() {
+        val uiState by viewModel.uiState.collectAsState()
+
+        AuthRootStateless(
+            uiState = uiState,
+            onEvent = viewModel::onEvent,
+        )
+
+        val context = LocalContext.current
+        LaunchedEffect(context) { // TODO: Use scaffoldState
+            viewModel.errors.collect {
+                show(it.asString(context)) // TODO: replace with toast (snackbar)
+            }
+        }
+        LaunchedEffect(context) {
+            viewModel.profile.collect {
+                it.ifLoaded { profile ->
+                    viewModel.handleAuthResult(profile) {
+                        NavGraphDirections.navToMainFragment().navigate()
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun AuthRootPreview() = AuthRootStateless(
+    AuthUiState(
+        isAccountNew = true,
+        isLoading = false,
+    ),
+)
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@Composable
+fun AuthRootStateless(
+    uiState: AuthUiState,
+    onEvent: ((AuthUiEvent) -> Unit) = {},
+) = DarkAppTheme {
+    Surface {
+        val localFocus = LocalFocusManager.current
+        LaunchedEffect(true) {
+            localFocus.clearFocus(true)
+        }
+
+        Column(
+            modifier = Modifier
+                .padding(
+                    MaterialTheme.spacing.normal,
+                    MaterialTheme.spacing.zero,
+                )
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceAround
+        ) {
+            Text(
+                stringResource(
+                    if (uiState.isAccountNew)
+                        R.string.auth_signup_label
+                    else R.string.auth_login_label
+                ),
+                modifier = Modifier.padding(MaterialTheme.spacing.normal),
+                style = MaterialTheme.typography.titleLarge
+            )
+            val padding = Modifier.padding(
+                    MaterialTheme.spacing.zero,
+                    MaterialTheme.spacing.small,
+                ).widthIn(min = 220.sdp)
+
+            Column {
+                LabelledSwitch(
+                    checked = uiState.isAccountNew,
+                    onCheckedChange = {
+                        onEvent(AuthUiEvent.RegistrationNeededChanged(it))
+                    },
+                    label = stringResource(R.string.auth_isAccountNew),
+                    modifier = padding,
+                )
+                OutlinedTextField(
+                    value = uiState.login,
+                    onValueChange = {
+                        onEvent(AuthUiEvent.LoginChanged(it))
+                    },
+                    label = { Text(stringResource(R.string.auth_loginHint)) },
+                    modifier = padding.onPreviewKeyEvent(keyboardNext.event),
+                    keyboardOptions = keyboardNext.options,
+                    keyboardActions = keyboardNext.actions,
+                    maxLines = 1,
+                    singleLine = true,
+                )
+                OutlinedTextField(
+                    value = uiState.password,
+                    onValueChange = {
+                        onEvent(AuthUiEvent.PasswordChanged(it))
+                    },
+                    label = { Text(stringResource(R.string.auth_passwordHint)) },
+                    visualTransformation = getPasswordTransformation(uiState.showPassword),
+                    modifier = if (uiState.isAccountNew)
+                        padding.onPreviewKeyEvent(keyboardNext.event)
+                    else padding.onPreviewKeyEvent(keyboardClose.event),
+                    maxLines = 1,
+                    singleLine = true,
+                    keyboardOptions = if (uiState.isAccountNew) keyboardNext.options
+                        else keyboardClose.options,
+                    keyboardActions = if (uiState.isAccountNew) keyboardNext.actions
+                        else keyboardClose.actions,
+                )
+                AnimatedVisibility(uiState.isAccountNew) {
+                    OutlinedTextField(
+                        value = uiState.passwordRepeat,
+                        onValueChange = {
+                            onEvent(AuthUiEvent.PasswordRepeatChanged(it))
+                        },
+                        label = { Text(stringResource(R.string.auth_passwordRepeatHint)) },
+                        visualTransformation = getPasswordTransformation(uiState.showPassword),
+                        modifier = padding.onPreviewKeyEvent(keyboardClose.event),
+                        maxLines = 1,
+                        singleLine = true,
+                        keyboardOptions = keyboardClose.options,
+                        keyboardActions = keyboardClose.actions
+                    )
+                }
+                LabelledSwitch(
+                    checked = uiState.showPassword,
+                    onCheckedChange = {
+                        onEvent(AuthUiEvent.PasswordVisibilityChanged(it))
+                    },
+                    label = stringResource(R.string.auth_showPassword),
+                    modifier = padding,
+                )
+            }
+            Button(
+                modifier = Modifier
+                    .padding(
+                        MaterialTheme.spacing.large,
+                        MaterialTheme.spacing.small,
+                    )
+                    .fillMaxWidth(),
+                onClick = {
+                    onEvent(AuthUiEvent.Submit)
+                }
+            ) {
+                Text(
+                    stringResource(
+                        if (uiState.isAccountNew)
+                            R.string.auth_signup_button
+                        else R.string.auth_login_button
+                    ),
+                    fontWeight = FontWeight.ExtraBold
+                )
+            }
+        }
+        LoadingScreen(uiState.isLoading)
+    }
+}
+
+
+@Composable
+fun LabelledSwitch(
+    checked: Boolean,
+    onCheckedChange: ((Boolean) -> Unit),
+    label: String,
+    modifier: Modifier = Modifier,
+    switchModifier: Modifier = Modifier,
+    labelModifier: Modifier = Modifier,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .clip(MaterialTheme.shapes.small)
+            .clickable(
+                indication = rememberRipple(color = MaterialTheme.colorScheme.primary),
+                interactionSource = remember { MutableInteractionSource() },
+                onClick = { onCheckedChange(!checked) }
+            )
+            .requiredHeight(ButtonDefaults.MinHeight)
+    ) {
+        Switch(
+            checked = checked,
+            onCheckedChange = null,
+            modifier = switchModifier,
+        )
+        Spacer(Modifier.size(6.sdp))
+        Text(
+            text = label,
+            modifier = labelModifier,
+        )
+    }
+}
+
+@Composable
+fun LoadingScreen(show: Boolean, alpha: Float = 0.7f) = AnimatedVisibility(
+    visible = show,
+    enter = fadeIn(),
+    exit = fadeOut(),
+) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .alpha(alpha)
+            .background(MaterialTheme.colorScheme.surface),
+        Alignment.Center
+    ) {
+        LoadingCircle(
+            width = 14,
+            modifier = Modifier
+                .alpha(alpha)
+                .size(200.sdp)
+        )
+    }
+}
+
+fun getPasswordTransformation(showPassword: Boolean = false) = if (showPassword)
+    VisualTransformation.None
+else
+    PasswordVisualTransformation()
+
+
+data class InputOptions(
+    val actions: KeyboardActions,
+    val options: KeyboardOptions,
+    val event: (KeyEvent) -> Boolean,
+)
+
+
+@OptIn(ExperimentalComposeUiApi::class)
+val keyboardNext: InputOptions @Composable get() {
+    val localFocus = LocalFocusManager.current
+    return InputOptions(
+        actions = KeyboardActions(onNext = {
+            localFocus.moveFocus(FocusDirection.Down)
+        }),
+        options = KeyboardOptions(imeAction = ImeAction.Next),
+        event = {
+            if (it.key == Key.Tab && it.nativeKeyEvent.action == ACTION_DOWN){
+                localFocus.moveFocus(FocusDirection.Down)
+                true
+            } else false
+        }
+    )
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+val keyboardClose: InputOptions @Composable get() {
+    val localFocus = LocalFocusManager.current
+    return InputOptions(
+        actions = KeyboardActions(onDone = {
+            localFocus.clearFocus()
+        }),
+        options = KeyboardOptions(imeAction = ImeAction.Done),
+        event = {
+            if (it.key == Key.Tab && it.nativeKeyEvent.action == ACTION_DOWN){
+                localFocus.clearFocus()
+                true
+            } else false
+        }
+    )
 }

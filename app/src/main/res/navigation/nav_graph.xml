@@ -17,8 +17,7 @@
     <fragment
         android:id="@+id/nav_auth_fragment"
         android:name="lab.maxb.dark.presentation.view.AuthFragment"
-        android:label="@string/nav_auth_label"
-        tools:layout="@layout/auth_fragment" />
+        android:label="@string/nav_auth_label" />
 
     <fragment
         android:id="@+id/nav_taskList_fragment"

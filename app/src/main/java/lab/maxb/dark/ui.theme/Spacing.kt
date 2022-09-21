@@ -14,6 +14,7 @@ data class Spacing(
     val small: Dp,
     val normal: Dp,
     val large: Dp,
+    val larger: Dp,
     val extraLarge: Dp,
 ) {
     val zero = 0.dp
@@ -25,6 +26,7 @@ fun defaultScalableSpacing() = Spacing(
     small = 8.sdp,
     normal = 16.sdp,
     large = 32.sdp,
+    larger = 48.sdp,
     extraLarge = 64.sdp,
 )
 
@@ -33,6 +35,7 @@ fun defaultSpacing() = Spacing(
     small = 8.dp,
     normal = 16.dp,
     large = 32.dp,
+    larger = 48.dp,
     extraLarge = 64.dp,
 )
 

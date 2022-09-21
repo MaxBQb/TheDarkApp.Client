@@ -1,10 +1,8 @@
 package lab.maxb.dark.presentation.repository.implementation
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.*
 import lab.maxb.dark.domain.model.AuthCredentials
 import lab.maxb.dark.domain.model.Profile
 import lab.maxb.dark.domain.operations.toProfile
@@ -30,9 +28,13 @@ class ProfileRepositoryImpl(
     private val usersRepository: UsersRepository,
 ) : ProfileRepository {
     private val localDataSource = db.profiles()
-    private val _credentials = MutableStateFlow(AuthCredentials(userSettings.login))
+    private val _credentials = MutableSharedFlow<AuthCredentials>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    )
 
     init {
+        _credentials.tryEmit(AuthCredentials(userSettings.login))
         networkDataSource.onAuthRequired = {
             userSettings.login = ""
             userSettings.token = ""
@@ -75,6 +77,6 @@ class ProfileRepositoryImpl(
     }
 
     override fun sendCredentials(credentials: AuthCredentials) {
-        _credentials.value = credentials
+        _credentials.tryEmit(credentials)
     }
 }

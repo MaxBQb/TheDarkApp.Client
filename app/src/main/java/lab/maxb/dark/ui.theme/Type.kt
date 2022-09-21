@@ -18,6 +18,13 @@ val typography @Composable get() = Typography(
         lineHeight = 24.ssp,
         letterSpacing = 0.5.sp
     ),
+    bodyMedium = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.ssp,
+        lineHeight = 20.ssp,
+        letterSpacing = 0.2.sp
+    ),
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
