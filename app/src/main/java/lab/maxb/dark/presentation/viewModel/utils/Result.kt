@@ -1,5 +1,12 @@
 package lab.maxb.dark.presentation.viewModel.utils
 
+import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+
+// TODO: Drop `UiState` cause it's wrong naming for Result
 sealed class UiState<out T> {
     object Loading : UiState<Nothing>() {
         override fun ifLoading(block: () -> Unit) = block()
@@ -23,5 +30,37 @@ sealed class UiState<out T> {
 
 val<T> UiState<T>.valueOrNull get() = when (this) {
     is UiState.Success<T> -> value
+    else -> null
+}
+
+sealed interface Result<out T> {
+    data class Success<T>(val value: T) : Result<T>
+    data class Reloading<T>(val value: T?) : Result<T>
+    data class Error(val throwable: Throwable?) : Result<Nothing>
+    object Loading : Result<Nothing>
+}
+
+fun <T> Flow<T>.asResult(): Flow<Result<T>> {
+    return this
+        .map<T, Result<T>> {
+            Result.Success(it)
+        }
+        .onStart { emit(Result.Loading) }
+        .catch { emit(Result.Error(it)) }
+}
+
+
+context(ViewModel)
+fun<T> Flow<Result<T>>.stateIn() = stateIn(Result.Loading)
+
+context(ViewModel)
+fun<T> Flow<T>.stateInAsResult() = asResult().stateIn()
+
+
+val<T> Result<T>.isLoaded get() = this is Result.Success<T> || this is Result.Error
+
+val<T> Result<T>.valueOrNull get() = when (this) {
+    is Result.Success<T> -> value
+    is Result.Reloading<T> -> value
     else -> null
 }

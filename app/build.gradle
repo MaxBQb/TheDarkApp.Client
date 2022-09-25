@@ -168,6 +168,7 @@ dependencies {
         implementation "com.google.android.material:compose-theme-adapter:1.1.18"
         // Compose Material Design
         implementation "androidx.compose.ui:ui-tooling:$composeVersion"
+        implementation "androidx.compose.ui:ui-util:$composeVersion"
         implementation 'androidx.compose.material3:material3:1.0.0-beta01'
         // Animations
         implementation "androidx.compose.animation:animation:$composeVersion"
@@ -175,7 +176,10 @@ dependencies {
         implementation "androidx.compose.ui:ui-tooling:$composeVersion"
         // Integration with ViewModels
         implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
-
+        // ViewPager
+        def view_pager_version = "0.26.4-beta"
+        implementation "com.google.accompanist:accompanist-pager:$view_pager_version"
+        implementation "com.google.accompanist:accompanist-pager-indicators:$view_pager_version"
 
     // Tests
     testImplementation 'junit:junit:4.13.2'

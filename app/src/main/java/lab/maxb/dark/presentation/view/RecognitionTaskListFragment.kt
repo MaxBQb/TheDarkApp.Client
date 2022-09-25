@@ -146,29 +146,9 @@ fun RecognitionTaskCard(
         Box(
             modifier = Modifier.fillMaxWidth(),
         ) {
-            GlideImage(
+            RecognitionTaskImage(
                 resolveImage(item.images?.firstOrNull() ?: ""),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.sdp),
-                imageOptions = ImageOptions(contentScale = ContentScale.Inside),
-                failure = {
-                    LoadingError(
-                        Modifier
-                            .fillMaxSize()
-                            .padding(16.sdp))
-                },
-                loading = {
-                    Box(
-                        Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        LoadingCircle(0.7f)
-                    }
-                },
-                component = rememberImageComponent {
-                    +CrossfadePlugin(duration = 1500)
-                }
+                modifier = Modifier.fillMaxWidth().height(200.sdp),
             )
 
             Box(
@@ -196,6 +176,35 @@ fun RecognitionTaskCard(
         }
     }
 }
+
+@Composable
+fun RecognitionTaskImage(
+    imageModel: Any?,
+    modifier: Modifier = Modifier,
+    imageOptions: ImageOptions = ImageOptions(contentScale = ContentScale.Inside)
+) = GlideImage(
+    imageModel,
+    modifier = modifier,
+    imageOptions = imageOptions,
+    failure = {
+        LoadingError(
+            Modifier
+                .fillMaxSize()
+                .padding(16.sdp)
+        )
+    },
+    loading = {
+        Box(
+            Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            LoadingCircle(0.7f)
+        }
+    },
+    component = rememberImageComponent {
+        +CrossfadePlugin(duration = 1500)
+    }
+)
 
 @Composable
 fun LoadingError(modifier: Modifier = Modifier) {

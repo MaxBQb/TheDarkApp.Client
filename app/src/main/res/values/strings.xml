@@ -15,6 +15,7 @@
         <!-- Moderator actions -->
         <string name="solveTask_moderator_mark_reviewed">Одобрить</string>
         <string name="solveTask_moderator_delete">Удалить</string>
+        <string name="solveTask_moderator_revoke_reviewed">Отозвать рарешение</string>
 
     <!-- Navigation -->
     <string name="nav_auth_label">Авторизация</string>
