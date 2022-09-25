@@ -5,6 +5,7 @@ import android.text.InputType
 import android.view.View
 import android.view.View.*
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -44,3 +45,8 @@ fun EditText.setPasswordVisibility(visible: Boolean) {
     else
         InputType.TYPE_TEXT_VARIATION_PASSWORD
 }
+
+context (Fragment)
+fun UiText.show() = Toast.makeText(
+    context, this.asString(requireContext()), Toast.LENGTH_LONG
+).show()

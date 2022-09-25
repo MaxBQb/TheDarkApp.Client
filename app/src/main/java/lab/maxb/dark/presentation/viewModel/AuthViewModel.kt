@@ -3,7 +3,6 @@ package lab.maxb.dark.presentation.viewModel
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import lab.maxb.dark.R
 import lab.maxb.dark.domain.model.AuthCredentials
@@ -25,15 +24,21 @@ data class AuthUiState(
     val passwordRepeat: String = "",
     val isAccountNew: Boolean = false,
     val isLoading: Boolean = false,
+    val errors: UiTriggers<AuthUiEvent.Error> = UiTriggers(),
+    val authorized: AuthUiEvent.Authorized? = null,
 )
 
 sealed interface AuthUiEvent {
-    data class LoginChanged(val login: String): AuthUiEvent
-    data class PasswordChanged(val password: String): AuthUiEvent
-    data class PasswordRepeatChanged(val password: String): AuthUiEvent
-    data class PasswordVisibilityChanged(val showPassword: Boolean): AuthUiEvent
-    data class RegistrationNeededChanged(val isAccountNew: Boolean): AuthUiEvent
-    object Submit: AuthUiEvent
+    data class LoginChanged(val login: String) : AuthUiEvent
+    data class PasswordChanged(val password: String) : AuthUiEvent
+    data class PasswordRepeatChanged(val password: String) : AuthUiEvent
+    data class PasswordVisibilityChanged(val showPassword: Boolean) : AuthUiEvent
+    data class RegistrationNeededChanged(val isAccountNew: Boolean) : AuthUiEvent
+    object Submit : AuthUiEvent
+
+    // UiTriggers
+    data class Error(val message: UiText) : UiTrigger(), AuthUiEvent
+    object Authorized : UiTrigger(), AuthUiEvent
 }
 
 
@@ -54,9 +59,6 @@ class AuthViewModel(
     }.flatMapLatest {
         usersRepository.getUser(it.valueOrNull!!.user!!.id)
     }.stateIn(null)
-
-    private val errorChannel = Channel<UiText>()
-    val errors = errorChannel.receiveAsFlow()
 
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState = _uiState.asStateFlow()
@@ -79,24 +81,27 @@ class AuthViewModel(
                 it.copy(isAccountNew = isAccountNew)
             }
             is AuthUiEvent.Submit -> authorize()
+            is AuthUiEvent.Error -> _uiState.update {
+                it.copy(errors = it.errors - this)
+            }
+            is AuthUiEvent.Authorized -> _uiState.update {
+                it.copy(authorized = null)
+            }
         }
     }
-
 
     private fun setLoading(isLoading: Boolean) = _uiState.update {
         it.copy(isLoading = isLoading)
     }
 
     private fun setError(error: UiText) { launch {
-        errorChannel.send(error)
-        setLoading(false)
+        _uiState.update {
+            it.copy(
+                isLoading = false,
+                errors = it.errors + AuthUiEvent.Error(error)
+            )
+        }
     } }
-
-    private fun reset() = _uiState.update {
-        AuthUiState(
-            login = it.login,
-        )
-    }
 
     init {
         launch {
@@ -106,6 +111,11 @@ class AuthViewModel(
                 UiState.Error<Profile?>(it)
             }.also {
                 _profile.emitAll(it)
+            }
+        }
+        launch {
+            profile.collect {
+                it.ifLoaded(::handleAuthResult)
             }
         }
     }
@@ -169,14 +179,17 @@ class AuthViewModel(
         db.clearAllTables()
     }
 
-    fun handleAuthResult(profile: Profile?, onAuthorized: () -> Unit) {
+    private fun handleAuthResult(profile: Profile?) {
         val state = uiState.value
         if (!state.isLoading)
             return
         profile?.let {
-            reset()
-            onAuthorized()
-            return
+            return _uiState.update {
+                AuthUiState(
+                    login = it.login,
+                    authorized = AuthUiEvent.Authorized,
+                )
+            }
         }
         val message = if (state.isAccountNew)
             R.string.auth_message_signup_incorrectCredentials

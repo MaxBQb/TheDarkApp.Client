@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.KeyEvent.ACTION_DOWN
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -30,7 +29,6 @@ import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
@@ -42,7 +40,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
 import lab.maxb.dark.NavGraphDirections
 import lab.maxb.dark.R
+import lab.maxb.dark.presentation.extra.ChangedEffect
 import lab.maxb.dark.presentation.extra.navigate
+import lab.maxb.dark.presentation.extra.show
 import lab.maxb.dark.presentation.viewModel.AuthUiEvent
 import lab.maxb.dark.presentation.viewModel.AuthUiState
 import lab.maxb.dark.presentation.viewModel.AuthViewModel
@@ -63,33 +63,21 @@ class AuthFragment : Fragment() {
         setContent { AuthRoot() }
     }
 
-    private fun show(message: String) = Toast.makeText(
-        context, message, Toast.LENGTH_LONG
-    ).show()
-
     @Composable
     fun AuthRoot() {
         val uiState by viewModel.uiState.collectAsState()
+        val onEvent = viewModel::onEvent
 
         AuthRootStateless(
             uiState = uiState,
-            onEvent = viewModel::onEvent,
+            onEvent = onEvent,
         )
 
-        val context = LocalContext.current
-        LaunchedEffect(context) { // TODO: Use scaffoldState
-            viewModel.errors.collect {
-                show(it.asString(context)) // TODO: replace with toast (snackbar)
-            }
+        uiState.errors.ChangedEffect(onConsumed = onEvent) { // TODO: Use scaffoldState
+            it.message.show() // TODO: replace with toast (snackbar)
         }
-        LaunchedEffect(context) {
-            viewModel.profile.collect {
-                it.ifLoaded { profile ->
-                    viewModel.handleAuthResult(profile) {
-                        NavGraphDirections.navToMainFragment().navigate()
-                    }
-                }
-            }
+        uiState.authorized.ChangedEffect(onConsumed = onEvent) {
+            NavGraphDirections.navToMainFragment().navigate()
         }
     }
 }
