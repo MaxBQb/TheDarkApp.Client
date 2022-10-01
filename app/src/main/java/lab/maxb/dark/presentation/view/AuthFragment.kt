@@ -84,10 +84,25 @@ class AuthFragment : Fragment() {
 
 @Preview
 @Composable
-fun AuthRootPreview() = AuthRootStateless(
+fun AuthRootPreviewLogin() = AuthRootStateless(
+    AuthUiState(
+        isAccountNew = false,
+    ),
+)
+
+@Preview
+@Composable
+fun AuthRootPreviewSignup() = AuthRootStateless(
     AuthUiState(
         isAccountNew = true,
-        isLoading = false,
+    ),
+)
+
+@Preview
+@Composable
+fun AuthRootPreviewLoading() = AuthRootStateless(
+    AuthUiState(
+        isLoading = true,
     ),
 )
 
