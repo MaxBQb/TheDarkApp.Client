@@ -1,8 +1,8 @@
 package lab.maxb.dark.presentation.viewModel.utils
 import lab.maxb.dark.domain.operations.randomUUID
 
-class ItemHolder<T>(
-    var value: T,
+data class ItemHolder<T>(
+    val value: T,
     val id: String = randomUUID,
 )
 

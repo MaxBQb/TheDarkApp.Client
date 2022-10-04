@@ -1,49 +1,82 @@
 package lab.maxb.dark.presentation.view
 
+import android.app.Activity
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Toast
-import androidx.activity.addCallback
+import android.view.*
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toUri
+import androidx.compose.animation.*
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.platform.*
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.MenuProvider
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
-import com.bumptech.glide.RequestManager
+import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
+import com.google.accompanist.adaptive.TwoPane
+import com.google.accompanist.adaptive.VerticalTwoPaneStrategy
+import com.google.accompanist.adaptive.calculateDisplayFeatures
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.rememberPagerState
 import lab.maxb.dark.R
-import lab.maxb.dark.databinding.AddRecognitionTaskFragmentBinding
-import lab.maxb.dark.domain.operations.randomFieldKey
-import lab.maxb.dark.presentation.extra.GlideApp
-import lab.maxb.dark.presentation.extra.delegates.autoCleaned
-import lab.maxb.dark.presentation.extra.delegates.viewBinding
-import lab.maxb.dark.presentation.extra.goBack
-import lab.maxb.dark.presentation.extra.launch
-import lab.maxb.dark.presentation.extra.observe
-import lab.maxb.dark.presentation.view.adapter.ImageSliderAdapter
-import lab.maxb.dark.presentation.view.adapter.InputListAdapter
+import lab.maxb.dark.presentation.extra.*
 import lab.maxb.dark.presentation.viewModel.AddRecognitionTaskViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import lab.maxb.dark.presentation.viewModel.AddTaskUiEvent
+import lab.maxb.dark.presentation.viewModel.AddTaskUiState
+import lab.maxb.dark.presentation.viewModel.utils.ItemHolder
+import lab.maxb.dark.ui.theme.DarkAppTheme
+import lab.maxb.dark.ui.theme.spacing
+import lab.maxb.dark.ui.theme.units.sdp
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragment) {
-    private val mViewModel: AddRecognitionTaskViewModel by sharedViewModel()
-    private val mBinding: AddRecognitionTaskFragmentBinding by viewBinding()
-    private var mInputsAdapter: InputListAdapter by autoCleaned()
-    private var mGlide: RequestManager by autoCleaned()
-    private var mImagesAdapter: ImageSliderAdapter by autoCleaned()
+class AddRecognitionTaskFragment : Fragment() {
+    private val viewModel: AddRecognitionTaskViewModel by viewModel()
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) = ComposeView(requireContext()).apply {
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent { AddRecognitionTaskRoot() }
+    }
+
+    @Composable
+    private fun AddRecognitionTaskRoot() {
+        val uiState by viewModel.uiState.collectAsState()
+        val onEvent = viewModel::onEvent
+        val focus = LocalFocusManager.current
+        AddRecognitionTaskRootStateless(uiState, onEvent)
+        uiState.userMessages.ChangedEffect(onConsumed = onEvent) {
+            it.message.show()
+        }
+        uiState.submitSuccess.ChangedEffect(onConsumed = onEvent) {
+            focus.clearFocus()
+            goBack()
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            mViewModel.clear()
-            goBack()
-        }
         requireActivity().addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.submit_menu, menu)
@@ -51,122 +84,323 @@ class AddRecognitionTaskFragment : Fragment(R.layout.add_recognition_task_fragme
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 when (menuItem.itemId) {
-                    R.id.menu_submit -> createRecognitionTask()
+                    R.id.menu_submit -> viewModel.onEvent(AddTaskUiEvent.Submit)
                     else -> return false
                 }
                 return true
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-        setupInputsList()
-        setupImageUploadPanel()
-    }
-
-    private fun setupImageUploadPanel() = with (mBinding) {
-        mGlide = GlideApp.with(this@AddRecognitionTaskFragment)
-        mImagesAdapter = ImageSliderAdapter {
-            mGlide.load(it.toUri())
-                .error(R.drawable.ic_error)
-        }
-        imageSlider.adapter = mImagesAdapter
-
-        mViewModel.images observe { uris ->
-            mImagesAdapter.submitList(uris)
-            val hasUris = uris.isNotEmpty()
-            addImageButtonAlternative.isVisible = !hasUris
-            imageSlider.isVisible = hasUris
-            editImageButton.isVisible = hasUris
-            deleteImageButton.isVisible = hasUris
-            addImageButton.isVisible = hasUris && mViewModel.allowImageAddition
-        }
-
-        addImageButton.setOnClickListener{
-            getContent.launch(ALLOWED_CONTENT)
-        }
-        addImageButtonAlternative.setOnClickListener{
-            getContent.launch(ALLOWED_CONTENT)
-        }
-        deleteImageButton.setOnClickListener {
-            mViewModel.deleteImage(imageSlider.currentItem)
-        }
-        editImageButton.setOnClickListener {
-            updateContent.launch(ALLOWED_CONTENT)
-        }
-    }
-
-    private val getContent by lazy {
-        requireActivity().activityResultRegistry.register(ADD_URIS,
-            ActivityResultContracts.OpenMultipleDocuments()) {
-                uris: List<Uri?>? ->
-            uris?.filterNotNull()?.let {
-                mViewModel.addImages(it)
-            }
-        }
-    }
-
-    private val updateContent by lazy {
-        requireActivity().activityResultRegistry.register(UPDATE_URI,
-            ActivityResultContracts.OpenDocument()) {
-            it?.let {
-                mViewModel.updateImage(mBinding.imageSlider.currentItem, it)
-            }
-        }
-    }
-
-    override fun onDestroy() {
-        getContent.unregister()
-        updateContent.unregister()
-        super.onDestroy()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         (activity as? MainActivity)?.withToolbar {
             setNavigationIcon(R.drawable.ic_close)
         }
     }
+}
 
-    private fun createRecognitionTask() = launch {
-        if (mViewModel.addRecognitionTask()) {
-            mViewModel.clear()
-            goBack()
-        } else Toast.makeText(
-            context,
-            getString(R.string.addTask_message_notEnoughDataProvided),
-            Toast.LENGTH_SHORT
-        ).show()
-    }
+@Preview
+@Composable
+fun AddRecognitionTaskRootStatelessPreview() = AddRecognitionTaskRootStateless(
+    AddTaskUiState(
+        names = listOf(
+            ItemHolder("Some text"),
+            ItemHolder(""),
+        )
+    )
+)
 
-    private fun setupInputsList() {
-        mInputsAdapter = InputListAdapter()
-        mBinding.inputListRecycler.adapter = mInputsAdapter
-        mInputsAdapter.onItemTextChangedListener = { editText, position, text ->
-            mViewModel.setText(position, text ?: "")
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun AddRecognitionTaskRootStateless(
+    uiState: AddTaskUiState,
+    onEvent: (AddTaskUiEvent) -> Unit = {}
+) = DarkAppTheme {
+    Surface {
+        val isVerticalOrientation = (
+            LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
+        )
+        TwoPane(
+            displayFeatures = calculateDisplayFeatures(LocalContext.current as Activity),
+            strategy = if (isVerticalOrientation)
+                    VerticalTwoPaneStrategy(0.5f, MaterialTheme.spacing.small)
+                else HorizontalTwoPaneStrategy(0.5f),
+            modifier = Modifier.fillMaxSize(),
+            first = {
+                InputList(
+                    values = uiState.names,
+                    onValueChanged = {
+                        onEvent(AddTaskUiEvent.NameChanged(it))
+                    },
+                    suggestions = uiState.suggestions,
+                    queryLabel = {
+                        Text(
+                            stringResource(R.string.addTask_inputList_hint),
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    },
+                    modifier = Modifier.fillMaxSize().padding(horizontal=MaterialTheme.spacing.extraSmall)
+                )
+            },
+            second = {
+                val context = LocalContext.current.applicationContext
+                val getImages = rememberImagesRequest { result ->
+                    val list = result?.filterNotNull()?.map {
+                        it.takePersistablePermission(context)
+                        it
+                    }
+                    if (!list.isNullOrEmpty())
+                        onEvent(AddTaskUiEvent.ImagesAdded(list))
+                }
+                val pagerState = rememberPagerState()
+                val updateImage = rememberImageRequest {
+                    it?.let { image ->
+                        onEvent(AddTaskUiEvent.ImageChanged(pagerState.currentPage, image))
+                    }
+                }
 
-            text?.let {
-                mViewModel.suggestions observe { values: Set<String> ->
-                    ArrayAdapter(
-                        requireContext(),
-                        android.R.layout.simple_dropdown_item_1line,
-                        values.toList()
-                    ).apply { filter.filter(null) }
-                     .also { input ->
-                        (editText as AutoCompleteTextView).setAdapter(input)
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState()),
+                ) {
+                    AnimatedVisibility(
+                        visible = uiState.images.isEmpty(),
+                    ) {
+                        Text(
+                            text = stringResource(R.string.addTask_loadImagesTitle),
+                            style = MaterialTheme.typography.headlineSmall,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(MaterialTheme.spacing.extraSmall)
+                        )
+                    }
+                    AnimatedVisibility(
+                        visible = uiState.images.isNotEmpty(),
+                    ) {
+                        ImageSlider(
+                            images = uiState.images,
+                            pagerState = pagerState,
+                            modifier = Modifier.height(200.sdp),
+                        )
+                    }
+                    AnimatedVisibility(
+                        visible = uiState.images.isNotEmpty(),
+                    ) {
+                        ImageListEditPanel(
+                            onAdd = getImages,
+                            onEdit = updateImage,
+                            onDelete = {
+                                onEvent(AddTaskUiEvent.ImageRemoved(pagerState.currentPage))
+                            },
+                            allowAddition = uiState.allowedImageCount > 0
+                        )
+                    }
+                    AnimatedVisibility(
+                        visible = uiState.images.isEmpty(),
+                    ) {
+                        Image(
+                            painterResource(R.drawable.ic_add_photo_alternative),
+                            "",
+                            modifier = Modifier
+                                .padding(MaterialTheme.spacing.normal)
+                                .fillMaxSize()
+                                .clickable(onClick = getImages),
+                        )
                     }
                 }
             }
+        )
+    }
+}
+
+@Composable
+fun ImageListEditPanel(
+    onAdd: () -> Unit = {},
+    onEdit: () -> Unit = {},
+    onDelete: () -> Unit = {},
+    allowAddition: Boolean = true,
+) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Image(
+            painterResource(R.drawable.ic_delete),
+            "",
+            modifier = Modifier
+                .padding(MaterialTheme.spacing.small)
+                .clickable(onClick = onDelete),
+        )
+        Image(
+            painterResource(R.drawable.ic_edit),
+            "",
+            modifier = Modifier
+                .padding(MaterialTheme.spacing.small)
+                .clickable(onClick = onEdit),
+        )
+        AnimatedVisibility(
+            visible = allowAddition,
+        ) {
+            Image(
+                painterResource(R.drawable.ic_add_photo),
+                "",
+                modifier = Modifier
+                    .padding(MaterialTheme.spacing.small)
+                    .clickable(onClick = onAdd),
+            )
         }
-        mInputsAdapter.onItemFocusedListener = { _, _, focused: Boolean ->
-            if (!focused)
-                mViewModel.shrinkInputs()
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun InputList(
+    values: List<ItemHolder<String>>,
+    modifier: Modifier = Modifier,
+    queryLabel: (@Composable () -> Unit)? = null,
+    onValueChanged: (ItemHolder<String>) -> Unit = {},
+    suggestions: List<String> = emptyList(),
+) {
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Top,
+        contentPadding = PaddingValues(MaterialTheme.spacing.normal)
+    ) {
+        itemsIndexed(values, key = { pos, item -> item.id }) { pos, item ->
+            val keyboardActions = if (item.value.isBlank())
+                keyboardClose
+            else keyboardNext
+            AnimateAppearance(
+                modifier = Modifier.animateItemPlacement(),
+                initiallyVisible = item.value.isNotBlank()
+            ) {
+                AutoCompleteTextField(
+                    query = item.value,
+                    queryLabel = queryLabel,
+                    onQueryChanged = { onValueChanged(item.copy(value = it)) },
+                    predictions = suggestions,
+                    keyboardOptions = keyboardActions.options,
+                    keyboardActions = keyboardActions.actions,
+                    modifier = Modifier
+                        .onPreviewKeyEvent(keyboardActions.event)
+                        .height(56.sdp)
+                )
+            }
         }
-        mViewModel.names observe {
-            mInputsAdapter.submitList(it)
+    }
+}
+
+
+@Composable
+fun <T> T.AnimateAppearance(
+    modifier: Modifier = Modifier,
+    enter: EnterTransition = expandVertically() + fadeIn(),
+    exit: ExitTransition = fadeOut() + shrinkVertically(),
+    initiallyVisible: Boolean = false,
+    content: @Composable T.() -> Unit
+) {
+    val state = remember {
+        MutableTransitionState(initiallyVisible).apply {
+            targetState = true
         }
     }
 
-    companion object {
-        val ALLOWED_CONTENT = arrayOf("image/*")
-        val ADD_URIS = randomFieldKey
-        val UPDATE_URI = randomFieldKey
+    AnimatedVisibility(
+        modifier = modifier,
+        visibleState = state,
+        enter = enter,
+        exit = exit
+    ) { content() }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun QuerySearch(
+    modifier: Modifier = Modifier,
+    query: String,
+    label: @Composable (() -> Unit)? = null,
+    onQueryChanged: (String) -> Unit,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+) = OutlinedTextField(
+    modifier = modifier.fillMaxWidth(),
+    value = query,
+    onValueChange = onQueryChanged,
+    label = label,
+    singleLine = true,
+    trailingIcon = {
+        AnimatedVisibility(query.isNotEmpty()) {
+            IconButton(onClick = { onQueryChanged("") }) {
+                Icon(imageVector = Icons.Filled.Close, contentDescription = "Clear")
+            }
+        }
+    },
+    textStyle = MaterialTheme.typography.bodySmall,
+    keyboardActions = keyboardActions,
+    keyboardOptions = keyboardOptions,
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun <T> AutoCompleteTextField(
+    query: String,
+    modifier: Modifier = Modifier,
+    queryLabel: @Composable (() -> Unit)? = null,
+    onQueryChanged: (String) -> Unit = {},
+    predictions: List<T>,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    onItemClick: (T) -> Unit = {},
+    itemContent: @Composable (T) -> Unit = {}
+) {
+    val view = LocalView.current
+    val lazyListState = rememberLazyListState()
+    LazyColumn(
+        state = lazyListState,
+        modifier = Modifier.heightIn(max = TextFieldDefaults.MinHeight * 6)
+    ) {
+        item {
+            QuerySearch(
+                query = query,
+                label = queryLabel,
+                modifier = modifier,
+                onQueryChanged = onQueryChanged,
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions,
+            )
+        }
+
+        if (predictions.isNotEmpty()) {
+            items(predictions) { prediction ->
+                Row(
+                    Modifier
+                        .padding(MaterialTheme.spacing.normal)
+                        .fillMaxWidth()
+                        .clickable {
+                            view.clearFocus()
+                            onItemClick(prediction)
+                        }
+                ) {
+                    itemContent(prediction)
+                }
+            }
+        }
     }
+}
+
+@Composable
+fun rememberImagesRequest(onResult: (List<Uri?>?) -> Unit): () -> Unit {
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.OpenMultipleDocuments(),
+        onResult
+    )
+    return { launcher.launch(arrayOf("image/*")) }
+}
+
+@Composable
+fun rememberImageRequest(onResult: (Uri?) -> Unit): () -> Unit {
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.OpenDocument(),
+        onResult
+    )
+    return { launcher.launch(arrayOf("image/*")) }
 }

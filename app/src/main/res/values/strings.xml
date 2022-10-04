@@ -4,7 +4,7 @@
 
     <!-- Add Recognition Task -->
     <string name="addTask_loadImagesTitle">Загрузить картинки</string>
-    <string name="addTask_inputList_hint">Введите текст</string>
+    <string name="addTask_inputList_hint">Введите вариант ответа</string>
     <string name="addTask_message_notEnoughDataProvided">Вы ввели не все данные</string>
     <string name="addTask_menu_submit">Сохранить</string>
 

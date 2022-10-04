@@ -298,8 +298,10 @@ data class InputOptions(
     val event: (KeyEvent) -> Boolean,
 )
 
-
 @OptIn(ExperimentalComposeUiApi::class)
+private val goKeys = listOf(Key.Tab, Key.Enter)
+
+
 val keyboardNext: InputOptions @Composable get() {
     val localFocus = LocalFocusManager.current
     return InputOptions(
@@ -308,7 +310,7 @@ val keyboardNext: InputOptions @Composable get() {
         }),
         options = KeyboardOptions(imeAction = ImeAction.Next),
         event = {
-            if (it.key == Key.Tab && it.nativeKeyEvent.action == ACTION_DOWN){
+            if (it.key in goKeys && it.nativeKeyEvent.action == ACTION_DOWN){
                 localFocus.moveFocus(FocusDirection.Down)
                 true
             } else false
@@ -316,7 +318,7 @@ val keyboardNext: InputOptions @Composable get() {
     )
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+
 val keyboardClose: InputOptions @Composable get() {
     val localFocus = LocalFocusManager.current
     return InputOptions(
@@ -325,7 +327,7 @@ val keyboardClose: InputOptions @Composable get() {
         }),
         options = KeyboardOptions(imeAction = ImeAction.Done),
         event = {
-            if (it.key == Key.Tab && it.nativeKeyEvent.action == ACTION_DOWN){
+            if (it.key in goKeys && it.nativeKeyEvent.action == ACTION_DOWN){
                 localFocus.clearFocus()
                 true
             } else false
