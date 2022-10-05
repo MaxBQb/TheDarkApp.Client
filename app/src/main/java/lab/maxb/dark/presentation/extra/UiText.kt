@@ -2,6 +2,7 @@ package lab.maxb.dark.presentation.extra
 
 import android.content.Context
 import androidx.annotation.StringRes
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
@@ -15,9 +16,6 @@ sealed class UiText {
         is TextResource -> context.resources.getString(id, *formatArgs)
         is Empty -> ""
     }
-
-    @Composable
-    fun asString() = asString(LocalContext.current)
 }
 
 fun uiTextOf(value: String) = UiText.Text(value)
@@ -25,6 +23,15 @@ fun uiTextOf(value: String) = UiText.Text(value)
 fun uiTextOf(@StringRes id: Int, vararg formatArgs: Any)
         = UiText.TextResource(id, *formatArgs)
 
+@Composable
+fun UiText.asString() = asString(LocalContext.current)
+
+context(Context)
+fun UiText.asString() = asString(this@Context)
 
 inline val UiText.isEmpty get() = this is UiText.Empty
 inline val UiText.isNotEmpty get() = this !is UiText.Empty
+
+context(Context)
+suspend infix fun SnackbarHostState.show(message: UiText)
+    = showSnackbar(message.asString())

@@ -57,7 +57,7 @@ fun SolveRecognitionTaskScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val onEvent = viewModel::onEvent
-    val context = LocalContext.current.applicationContext
+    val snackbarState = rememberSnackbarHostState()
 
     LaunchedEffect(id) { viewModel.init(id) }
 
@@ -71,12 +71,14 @@ fun SolveRecognitionTaskScreen(
                     shareLink + SolveRecognitionTaskScreenDestination(id).route
                 ) },
             )
-        }
+        },
+        snackbarState = snackbarState,
     ) {
         SolveRecognitionTaskRootStateless(uiState, onEvent)
     }
-    uiState.userMessages.ChangedEffect(onConsumed = onEvent) { // TODO: Use scaffoldState
-        it.message.show(context) // TODO: replace with toast (snackbar)
+
+    uiState.userMessages.ChangedEffect(snackbarState, onConsumed = onEvent) {
+        snackbarState show it.message
     }
 
     uiState.taskNotFound.ChangedEffect(onConsumed = onEvent) {

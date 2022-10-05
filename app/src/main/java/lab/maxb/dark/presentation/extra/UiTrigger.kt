@@ -1,7 +1,9 @@
 package lab.maxb.dark.presentation.extra
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.CoroutineScope
 import lab.maxb.dark.domain.operations.randomUUID
 
@@ -37,11 +39,12 @@ data class UiTriggers<T : UiTrigger>(
 fun <T : UiTrigger> T?.ChangedEffect(
     vararg keys: Any?,
     onConsumed: (T) -> Unit,
-    block: suspend CoroutineScope.(T) -> Unit,
+    block: suspend context(Context, CoroutineScope) (T) -> Unit,
 ) = this?.let {
+    val context = LocalContext.current.applicationContext
     LaunchedEffect(it, *keys) {
         try {
-            block(it)
+            block(context, this, it)
         } finally {
             onConsumed(it)
         }
@@ -53,7 +56,7 @@ fun <T : UiTrigger> T?.ChangedEffect(
 fun <T : UiTrigger> UiTriggers<T>.ChangedEffect(
     vararg keys: Any?,
     onConsumed: (T) -> Unit,
-    block: suspend CoroutineScope.(T) -> Unit,
+    block: suspend context(Context, CoroutineScope) (T) -> Unit,
 ) = state.ChangedEffect(
     keys = keys,
     onConsumed = onConsumed,

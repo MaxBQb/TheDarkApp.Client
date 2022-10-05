@@ -25,7 +25,6 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -57,15 +56,17 @@ fun AuthScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val onEvent = viewModel::onEvent
-    val context = LocalContext.current.applicationContext
+    val snackbarState = rememberSnackbarHostState()
 
-    AuthRootStateless(
-        uiState = uiState,
-        onEvent = onEvent,
-    )
+    AppScaffold(snackbarState=snackbarState) {
+        AuthRootStateless(
+            uiState = uiState,
+            onEvent = onEvent,
+        )
+    }
 
-    uiState.errors.ChangedEffect(onConsumed = onEvent) { // TODO: Use scaffoldState
-        it.message.show(context) // TODO: replace with toast (snackbar)
+    uiState.errors.ChangedEffect(snackbarState, onConsumed = onEvent) {
+        snackbarState show it.message
     }
     uiState.authorized.ChangedEffect(onConsumed = onEvent) {
         navigator.navigate(WelcomeScreenDestination()) {

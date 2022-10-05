@@ -64,7 +64,8 @@ fun AddRecognitionTaskScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val onEvent = viewModel::onEvent
-    val context = LocalContext.current.applicationContext
+    val snackbarState = rememberSnackbarHostState()
+    
     ScaffoldWithDrawer(
         navController = navController,
         topBar = {
@@ -81,12 +82,13 @@ fun AddRecognitionTaskScreen(
                     }
                 }
             )
-        }
+        },
+        snackbarState = snackbarState,
     ) {
         AddRecognitionTaskRootStateless(uiState, onEvent)
     }
-    uiState.userMessages.ChangedEffect(onConsumed = onEvent) {
-        it.message.show(context)
+    uiState.userMessages.ChangedEffect(snackbarState, onConsumed = onEvent) {
+        snackbarState show it.message
     }
     uiState.submitSuccess.ChangedEffect(onConsumed = onEvent) {
         navController.navigateUp()

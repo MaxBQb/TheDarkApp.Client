@@ -11,12 +11,14 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
@@ -61,7 +63,9 @@ fun Drawer(
                 Image(
                     painterResource(R.drawable.ic_launcher_foreground),
                     null,
-                    modifier = Modifier.fillMaxWidth().align(CenterHorizontally)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(CenterHorizontally)
                 )
                 DrawerDestination.values().forEach { destination ->
                     NavigationDrawerItem(
@@ -88,6 +92,9 @@ fun Drawer(
         }, content = content
     )
 }
+
+@Composable
+fun rememberSnackbarHostState() = remember { SnackbarHostState() }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -119,18 +126,40 @@ fun ScaffoldWithDrawer(
     navController: NavController,
     modifier: Modifier = Modifier,
     drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
+    snackbarState: SnackbarHostState = rememberSnackbarHostState(),
     topBar: @Composable () -> Unit = {},
     content: @Composable BoxScope.() -> Unit = {},
 ) = Drawer(
     drawerState = drawerState,
     navController = navController,
 ) {
-    Scaffold(
-        modifier = modifier,
-        topBar = topBar,
-    ) {
-        Box(modifier=Modifier.fillMaxSize().padding(it), content=content)
+    AppScaffold(modifier, topBar, snackbarState, content)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AppScaffold(
+    modifier: Modifier = Modifier,
+    topBar: @Composable () -> Unit = {},
+    snackbarState: SnackbarHostState = rememberSnackbarHostState(),
+    content: @Composable() (BoxScope.() -> Unit) = {}
+) = Scaffold(
+    modifier = modifier,
+    topBar = topBar,
+    snackbarHost = {
+        SnackbarHost(snackbarState) {
+            Snackbar(
+                it,
+                containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp),
+                contentColor = MaterialTheme.colorScheme.onSurface,
+            )
+        }
     }
+) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .padding(it), content = content
+    )
 }
 
 
