@@ -1,104 +1,99 @@
 package lab.maxb.dark.presentation.view
 
 import android.content.Intent
-import android.os.Bundle
-import android.view.*
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.util.lerp
-import androidx.core.view.MenuProvider
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.navArgs
+import androidx.navigation.NavController
 import com.google.accompanist.pager.*
+import com.ramcosta.composedestinations.annotation.DeepLink
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.FULL_ROUTE_PLACEHOLDER
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import lab.maxb.dark.R
+import lab.maxb.dark.domain.operations.shareLink
 import lab.maxb.dark.presentation.extra.ChangedEffect
-import lab.maxb.dark.presentation.extra.goBack
 import lab.maxb.dark.presentation.extra.show
+import lab.maxb.dark.presentation.view.destinations.SolveRecognitionTaskScreenDestination
 import lab.maxb.dark.presentation.viewModel.SolveRecognitionTaskViewModel
 import lab.maxb.dark.presentation.viewModel.TaskSolveUiEvent
 import lab.maxb.dark.presentation.viewModel.TaskSolveUiState
 import lab.maxb.dark.ui.theme.DarkAppTheme
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.compose.getViewModel
 import kotlin.math.absoluteValue
 
-class SolveRecognitionTaskFragment : Fragment() {
-    private val viewModel: SolveRecognitionTaskViewModel by sharedViewModel()
-    private val args: SolveRecognitionTaskFragmentArgs by navArgs()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ) = ComposeView(requireContext()).apply {
-        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-        viewModel.init(args.id)
-        setContent { SolveRecognitionTaskRoot() }
-    }
+@OptIn(ExperimentalMaterial3Api::class)
+@Destination(
+    deepLinks = [
+        DeepLink(uriPattern = shareLink + FULL_ROUTE_PLACEHOLDER)
+    ]
+)
+@Composable
+fun SolveRecognitionTaskScreen(
+    id: String,
+    navigator: DestinationsNavigator,
+    navController: NavController,
+    viewModel: SolveRecognitionTaskViewModel = getViewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val onEvent = viewModel::onEvent
+    val context = LocalContext.current.applicationContext
 
-    @Composable
-    private fun SolveRecognitionTaskRoot() {
-        val uiState by viewModel.uiState.collectAsState()
-        val onEvent = viewModel::onEvent
+    LaunchedEffect(id) { viewModel.init(id) }
 
-        SolveRecognitionTaskRootStateless(uiState, onEvent)
-
-        uiState.userMessages.ChangedEffect(onConsumed = onEvent) { // TODO: Use scaffoldState
-            it.message.show() // TODO: replace with toast (snackbar)
-        }
-
-        uiState.taskNotFound.ChangedEffect(onConsumed = onEvent) {
-            goBack()
-        }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        requireActivity().addMenuProvider(
-            object : MenuProvider {
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                    menuInflater.inflate(R.menu.share_menu, menu)
-                }
-
-                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                    when (menuItem.itemId) {
-                        R.id.menu_share -> shareTask()
-                        else -> return false
-                    }
-                    return true
-                }
-            },
-            viewLifecycleOwner,
-            Lifecycle.State.RESUMED
-        )
-    }
-
-    private fun shareTask() {
-        startActivity(Intent.createChooser(Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(
-                Intent.EXTRA_TEXT,
-                viewModel.shareLink,
+    ScaffoldWithDrawer(
+        navController = navController,
+        topBar = {
+            TopBar(
+                title = stringResource(id = R.string.nav_solveTask_label),
+                navigationIcon = { NavBackIcon(navController = navController) },
+                actions = { ShareIcon(
+                    shareLink + SolveRecognitionTaskScreenDestination(id).route
+                ) },
             )
+        }
+    ) {
+        SolveRecognitionTaskRootStateless(uiState, onEvent)
+    }
+    uiState.userMessages.ChangedEffect(onConsumed = onEvent) { // TODO: Use scaffoldState
+        it.message.show(context) // TODO: replace with toast (snackbar)
+    }
+
+    uiState.taskNotFound.ChangedEffect(onConsumed = onEvent) {
+        navigator.navigateUp()
+    }
+}
+
+@Composable
+fun ShareIcon(link: String) {
+    val context = LocalContext.current
+    IconButton(onClick = {
+        context.startActivity(Intent.createChooser(Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, link)
             type = "text/plain"
         }, null))
-    }
+    }) { Icon(Icons.Filled.Share, null) }
 }
 
 @Preview

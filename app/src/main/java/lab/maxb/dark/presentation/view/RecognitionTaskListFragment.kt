@@ -1,8 +1,5 @@
 package lab.maxb.dark.presentation.view
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -19,80 +16,64 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.bumptech.glide.load.model.GlideUrl
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.animation.crossfade.CrossfadePlugin
 import com.skydoves.landscapist.components.rememberImageComponent
 import com.skydoves.landscapist.glide.GlideImage
 import lab.maxb.dark.R
 import lab.maxb.dark.domain.model.RecognitionTask
-import lab.maxb.dark.presentation.extra.navigate
+import lab.maxb.dark.presentation.view.destinations.AddRecognitionTaskScreenDestination
+import lab.maxb.dark.presentation.view.destinations.SolveRecognitionTaskScreenDestination
 import lab.maxb.dark.presentation.viewModel.RecognitionTaskListViewModel
-import lab.maxb.dark.ui.theme.DarkAppTheme
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.compose.getViewModel
 
 
-class RecognitionTaskListFragment : Fragment() {
-    private val mViewModel: RecognitionTaskListViewModel by sharedViewModel()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ) = ComposeView(requireContext()).apply {
-        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-        setContent {
-            RecognitionTaskListRoot(
-                mViewModel,
-                onItemClick = {
-                    RecognitionTaskListFragmentDirections
-                        .navToSolveTaskFragment(it.id).navigate()
-                },
-                onFabClick = {
-                    RecognitionTaskListFragmentDirections
-                        .navToAddTaskFragment().navigate()
-                }
-            )
-        }
-    }
-}
-
+@Destination
 @Composable
-fun RecognitionTaskListRoot(
-    viewModel: RecognitionTaskListViewModel,
-    onItemClick: (RecognitionTask) -> Unit,
-    onFabClick: () -> Unit,
-) = DarkAppTheme {
+fun RecognitionTaskListScreen(
+    navigator: DestinationsNavigator,
+    navController: NavController,
+    viewModel: RecognitionTaskListViewModel = getViewModel(),
+) = TopScaffold(
+    title = stringResource(id = R.string.nav_taskList_label),
+    navController = navController,
+) {
     val items = viewModel.recognitionTaskList.collectAsLazyPagingItems()
     val isTaskCreationAllowed by viewModel.isTaskCreationAllowed.collectAsState()
 
-    Surface {
-        RecognitionTaskList(
-            items,
-            onItemClick = onItemClick,
-            resolveImage = viewModel::getImage
-        )
-        if (isTaskCreationAllowed)
-            FloatingActionButton(
-                onClick = onFabClick,
-                shape = CircleShape,
-                containerColor = colorScheme.secondaryContainer,
-                modifier = Modifier.padding(MaterialTheme.spacing.large)
-                    .wrapContentSize(Alignment.BottomEnd)
-            ) {
-                Image(painterResource(id = R.drawable.ic_plus), null)
-            }
-    }
+    RecognitionTaskList(
+        items,
+        onItemClick = {
+            navigator.navigate(SolveRecognitionTaskScreenDestination(it.id))
+        },
+        resolveImage = viewModel::getImage
+    )
+    if (isTaskCreationAllowed)
+        FloatingActionButton(
+            onClick = {
+                navigator.navigate(AddRecognitionTaskScreenDestination())
+            },
+            shape = CircleShape,
+            containerColor = colorScheme.secondaryContainer,
+            modifier = Modifier
+                .padding(MaterialTheme.spacing.large)
+                .align(Alignment.BottomEnd)
+        ) {
+            Image(painterResource(id = R.drawable.ic_plus), null)
+        }
 }
 
 @Composable
@@ -148,7 +129,9 @@ fun RecognitionTaskCard(
         ) {
             RecognitionTaskImage(
                 resolveImage(item.images?.firstOrNull() ?: ""),
-                modifier = Modifier.fillMaxWidth().height(200.sdp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.sdp),
             )
 
             Box(

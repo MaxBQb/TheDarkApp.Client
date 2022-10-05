@@ -27,3 +27,6 @@ fun RecognitionTask.solve(name: String)
 
 fun prepareRecognitionTaskName(name: String)
     = name.trim().lowercase()
+
+
+const val shareLink = "https://the.dark.app/"

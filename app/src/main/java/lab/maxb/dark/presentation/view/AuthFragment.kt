@@ -1,9 +1,6 @@
 package lab.maxb.dark.presentation.view
 
-import android.os.Bundle
 import android.view.KeyEvent.ACTION_DOWN
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -28,56 +25,54 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.fragment.app.Fragment
-import lab.maxb.dark.NavGraphDirections
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.popUpTo
 import lab.maxb.dark.R
 import lab.maxb.dark.presentation.extra.ChangedEffect
-import lab.maxb.dark.presentation.extra.navigate
 import lab.maxb.dark.presentation.extra.show
+import lab.maxb.dark.presentation.view.destinations.AuthScreenDestination
+import lab.maxb.dark.presentation.view.destinations.WelcomeScreenDestination
 import lab.maxb.dark.presentation.viewModel.AuthUiEvent
 import lab.maxb.dark.presentation.viewModel.AuthUiState
 import lab.maxb.dark.presentation.viewModel.AuthViewModel
-import lab.maxb.dark.ui.theme.DarkAppTheme
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.compose.getViewModel
 
 
-class AuthFragment : Fragment() {
-    private val viewModel: AuthViewModel by sharedViewModel()
+@Destination
+@Composable
+fun AuthScreen(
+    navigator: DestinationsNavigator,
+    viewModel: AuthViewModel = getViewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val onEvent = viewModel::onEvent
+    val context = LocalContext.current.applicationContext
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ) = ComposeView(requireContext()).apply {
-        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-        setContent { AuthRoot() }
+    AuthRootStateless(
+        uiState = uiState,
+        onEvent = onEvent,
+    )
+
+    uiState.errors.ChangedEffect(onConsumed = onEvent) { // TODO: Use scaffoldState
+        it.message.show(context) // TODO: replace with toast (snackbar)
     }
-
-    @Composable
-    fun AuthRoot() {
-        val uiState by viewModel.uiState.collectAsState()
-        val onEvent = viewModel::onEvent
-
-        AuthRootStateless(
-            uiState = uiState,
-            onEvent = onEvent,
-        )
-
-        uiState.errors.ChangedEffect(onConsumed = onEvent) { // TODO: Use scaffoldState
-            it.message.show() // TODO: replace with toast (snackbar)
-        }
-        uiState.authorized.ChangedEffect(onConsumed = onEvent) {
-            NavGraphDirections.navToMainFragment().navigate()
+    uiState.authorized.ChangedEffect(onConsumed = onEvent) {
+        navigator.navigate(WelcomeScreenDestination()) {
+            launchSingleTop = true
+            popUpTo(AuthScreenDestination) {
+                inclusive = true
+            }
         }
     }
 }
@@ -106,58 +101,59 @@ fun AuthRootPreviewLoading() = AuthRootStateless(
     ),
 )
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthRootStateless(
     uiState: AuthUiState,
     onEvent: ((AuthUiEvent) -> Unit) = {},
-) = DarkAppTheme {
-    Surface {
-        val localFocus = LocalFocusManager.current
-        LaunchedEffect(true) {
-            localFocus.clearFocus(true)
-        }
+) {
+    val localFocus = LocalFocusManager.current
+    LaunchedEffect(true) {
+        localFocus.clearFocus(true)
+    }
 
-        Column(
-            modifier = Modifier
-                .padding(
-                    MaterialTheme.spacing.normal,
-                    MaterialTheme.spacing.zero,
-                )
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceAround
-        ) {
-            Text(
-                stringResource(
-                    if (uiState.isAccountNew)
-                        R.string.auth_signup_label
-                    else R.string.auth_login_label
-                ),
-                modifier = Modifier.padding(MaterialTheme.spacing.normal),
-                style = MaterialTheme.typography.titleLarge
+    Column(
+        modifier = Modifier
+            .padding(
+                MaterialTheme.spacing.normal,
+                MaterialTheme.spacing.zero,
             )
-            val padding = Modifier.padding(
-                    MaterialTheme.spacing.zero,
-                    MaterialTheme.spacing.small,
-                ).widthIn(min = 220.sdp)
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceAround
+    ) {
+        Text(
+            stringResource(
+                if (uiState.isAccountNew)
+                    R.string.auth_signup_label
+                else R.string.auth_login_label
+            ),
+            modifier = Modifier.padding(MaterialTheme.spacing.normal),
+            style = MaterialTheme.typography.titleLarge
+        )
+        val padding = Modifier
+            .padding(
+                MaterialTheme.spacing.zero,
+                MaterialTheme.spacing.small,
+            )
+            .widthIn(min = 220.sdp)
 
-            Column {
-                LabelledSwitch(
-                    checked = uiState.isAccountNew,
-                    onCheckedChange = {
-                        onEvent(AuthUiEvent.RegistrationNeededChanged(it))
-                    },
-                    label = stringResource(R.string.auth_isAccountNew),
-                    modifier = padding,
-                )
-                OutlinedTextField(
-                    value = uiState.login,
-                    onValueChange = {
-                        onEvent(AuthUiEvent.LoginChanged(it))
-                    },
-                    label = { Text(stringResource(R.string.auth_loginHint)) },
+        Column {
+            LabelledSwitch(
+                checked = uiState.isAccountNew,
+                onCheckedChange = {
+                    onEvent(AuthUiEvent.RegistrationNeededChanged(it))
+                },
+                label = stringResource(R.string.auth_isAccountNew),
+                modifier = padding,
+            )
+            OutlinedTextField(
+                value = uiState.login,
+                onValueChange = {
+                    onEvent(AuthUiEvent.LoginChanged(it))
+                },
+                label = { Text(stringResource(R.string.auth_loginHint)) },
                     modifier = padding.onPreviewKeyEvent(keyboardNext.event),
                     keyboardOptions = keyboardNext.options,
                     keyboardActions = keyboardNext.actions,
@@ -226,8 +222,7 @@ fun AuthRootStateless(
                 )
             }
         }
-        LoadingScreen(uiState.isLoading)
-    }
+    LoadingScreen(uiState.isLoading)
 }
 
 

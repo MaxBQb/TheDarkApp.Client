@@ -2,7 +2,6 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-android'
-    id 'androidx.navigation.safeargs.kotlin'
     id "com.google.devtools.ksp" version "1.7.10-1.0.6"
     id 'kotlin-kapt'
 }
@@ -34,8 +33,6 @@ android {
     }
 
     buildFeatures{
-        viewBinding true
-        dataBinding true
         compose true
     }
 
@@ -116,27 +113,19 @@ dependencies {
     implementation "com.google.code.gson:gson:$retrofit_version"
     implementation 'com.squareup.okhttp3:logging-interceptor:4.8.1'
 
-    // Fragment Navigation
-    implementation "androidx.fragment:fragment-ktx:1.5.1"
-    implementation "androidx.navigation:navigation-runtime-ktx:$navigation_version"
-    implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
+    // JC Navigation
+    def destination_version = "1.7.21-beta"
+    implementation "io.github.raamcosta.compose-destinations:core:$destination_version"
+    ksp "io.github.raamcosta.compose-destinations:ksp:$destination_version"
 
     // Android X/KTX
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.4.2'
 
-    // Views/Layouts
-    implementation 'com.google.android.material:material:1.6.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-
     // Scalable layout units
     def scalable_units_version = "1.0.6"
     implementation "com.intuit.sdp:sdp-android:$scalable_units_version"
     implementation "com.intuit.ssp:ssp-android:$scalable_units_version"
-
-    // Databinding utils
-    implementation 'com.github.wada811:DataBinding-ktx:6.0.0'
 
     // Desugaring (Time-related features support for API 21+)
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="h1">@dimen/_28ssp</dimen>
-    <dimen name="h3">@dimen/_24ssp</dimen>
-    <dimen name="normalText">@dimen/_16ssp</dimen>
-    <dimen name="normalMargin">@dimen/_16sdp</dimen>
-    <dimen name="halfMargin">@dimen/_8sdp</dimen>
-</resources>

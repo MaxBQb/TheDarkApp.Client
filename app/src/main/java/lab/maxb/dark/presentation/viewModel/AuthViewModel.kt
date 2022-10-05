@@ -11,6 +11,7 @@ import lab.maxb.dark.presentation.extra.*
 import lab.maxb.dark.presentation.repository.interfaces.ProfileRepository
 import lab.maxb.dark.presentation.repository.interfaces.UsersRepository
 import lab.maxb.dark.presentation.repository.room.LocalDatabase
+import lab.maxb.dark.presentation.viewModel.utils.FirstOnly
 import lab.maxb.dark.presentation.viewModel.utils.UiState
 import lab.maxb.dark.presentation.viewModel.utils.stateIn
 import lab.maxb.dark.presentation.viewModel.utils.valueOrNull
@@ -50,6 +51,7 @@ class AuthViewModel(
     private val db: LocalDatabase,
     private val userSettings: UserSettings,
 ) : ViewModel() {
+    private var signOutRequest by FirstOnly()
     private var _wasAuthorized = false
     private val _profile = MutableStateFlow(UiState.Loading as UiState<Profile?>)
     val profile = _profile.stateIn(UiState.Loading)
@@ -172,12 +174,12 @@ class AuthViewModel(
         isAccountNew && password != passwordRepeat
     }
 
-    fun signOut() = launch(Dispatchers.Default) {
+    fun signOut() { signOutRequest = launch(Dispatchers.Default) {
         userSettings.token = ""
         userSettings.login = ""
         setLoading(false)
         db.clearAllTables()
-    }
+    } }
 
     private fun handleAuthResult(profile: Profile?) {
         val state = uiState.value

@@ -1,8 +1,5 @@
 package lab.maxb.dark.presentation.view
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
@@ -10,46 +7,35 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.fragment.app.Fragment
-import kotlinx.coroutines.launch
+import androidx.navigation.NavController
+import com.ramcosta.composedestinations.annotation.Destination
 import lab.maxb.dark.R
 import lab.maxb.dark.domain.model.isUser
 import lab.maxb.dark.presentation.viewModel.AuthViewModel
 import lab.maxb.dark.presentation.viewModel.utils.valueOrNull
-import lab.maxb.dark.ui.theme.DarkAppTheme
 import lab.maxb.dark.ui.theme.Golden
 import lab.maxb.dark.ui.theme.fontSize
 import lab.maxb.dark.ui.theme.spacing
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.compose.getViewModel
 
 
-class MainFragment : Fragment() {
-    private val mViewModel: AuthViewModel by sharedViewModel()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ) = ComposeView(requireContext()).apply {
-        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-        setContent { WelcomeRoot(mViewModel) }
-    }
-}
-
-
+@Destination
 @Composable
-fun WelcomeRoot(viewModel: AuthViewModel) = DarkAppTheme { Surface {
+fun WelcomeScreen(
+    navController: NavController,
+    viewModel: AuthViewModel = getViewModel()
+) = TopScaffold(
+    title = stringResource(R.string.nav_main_label),
+    navController = navController,
+) {
     val profile by viewModel.profile.collectAsState()
-    val uiScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -60,13 +46,14 @@ fun WelcomeRoot(viewModel: AuthViewModel) = DarkAppTheme { Surface {
         Greeting(user?.name)
         if (profile.valueOrNull?.role?.isUser == true)
             UserRating(user?.rating ?: 0)
-
     }
-
-    Exit(modifier = Modifier.wrapContentSize(Alignment.BottomCenter)) { uiScope.launch {
-        viewModel.signOut()
-    } }
-} }
+    Box(
+        contentAlignment = Alignment.BottomCenter,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Exit { viewModel.signOut() }
+    }
+}
 
 @Composable
 fun Exit(modifier: Modifier = Modifier, onExit: () -> Unit) = Button(

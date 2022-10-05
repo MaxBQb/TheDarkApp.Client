@@ -16,3 +16,16 @@ class LatestOnly : ReadWriteProperty<Any, Job?> {
         this.value = value
     }
 }
+
+class FirstOnly : ReadWriteProperty<Any, Job?> {
+    private var value: Job? = null
+
+    override fun getValue(thisRef: Any, property: KProperty<*>): Job? {
+        return value
+    }
+
+    override fun setValue(thisRef: Any, property: KProperty<*>, value: Job?) {
+        if (this.value?.isCompleted == true)
+            this.value = value
+    }
+}

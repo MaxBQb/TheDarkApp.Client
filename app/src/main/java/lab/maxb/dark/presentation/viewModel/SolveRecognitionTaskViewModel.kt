@@ -43,7 +43,6 @@ class SolveRecognitionTaskViewModel(
     profileRepository: ProfileRepository,
 ) : ViewModel() {
     private val taskId = MutableStateFlow("")
-    val shareLink get() = "https://dark/task/${taskId.value}"
     private val profile = profileRepository.profile.stateInAsResult()
     private val task = taskId.filter { it.isNotEmpty() }.flatMapLatest {
         recognitionTasksRepository.getRecognitionTask(it).asResult()

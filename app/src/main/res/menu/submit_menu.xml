@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/menu_submit"
-        android:icon="@drawable/ic_submit"
-        android:title="@string/addTask_menu_submit"
-        app:showAsAction="always"/>
-</menu>

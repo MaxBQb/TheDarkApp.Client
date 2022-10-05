@@ -6,12 +6,10 @@
     <string name="addTask_loadImagesTitle">Загрузить картинки</string>
     <string name="addTask_inputList_hint">Введите вариант ответа</string>
     <string name="addTask_message_notEnoughDataProvided">Вы ввели не все данные</string>
-    <string name="addTask_menu_submit">Сохранить</string>
 
     <!-- Solve Recognition Task -->
     <string name="solveTask_checkSolution">Проверить</string>
     <string name="solveTask_answer">Ваш ответ</string>
-    <string name="solveTask_menu_share">Поделиться</string>
         <!-- Moderator actions -->
         <string name="solveTask_moderator_mark_reviewed">Одобрить</string>
         <string name="solveTask_moderator_delete">Удалить</string>
@@ -23,8 +21,6 @@
     <string name="nav_addTask_label">Добавление задачи</string>
     <string name="nav_solveTask_label">Что это?</string>
     <string name="nav_main_label">Главная</string>
-    <string name="nav_drawerDescription_open">Открыть боковыую панель</string>
-    <string name="nav_drawerDescription_close">Закрыть боковыую панель</string>
 
     <!-- Authorization -->
     <string name="auth_login_label">Вход</string>

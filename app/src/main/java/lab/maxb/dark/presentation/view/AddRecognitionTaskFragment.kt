@@ -3,8 +3,6 @@ package lab.maxb.dark.presentation.view
 import android.app.Activity
 import android.content.res.Configuration
 import android.net.Uri
-import android.os.Bundle
-import android.view.*
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
@@ -19,27 +17,34 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.ui.platform.*
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.view.MenuProvider
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavController
 import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
 import com.google.accompanist.adaptive.TwoPane
 import com.google.accompanist.adaptive.VerticalTwoPaneStrategy
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
+import com.ramcosta.composedestinations.annotation.Destination
 import lab.maxb.dark.R
-import lab.maxb.dark.presentation.extra.*
+import lab.maxb.dark.presentation.extra.ChangedEffect
+import lab.maxb.dark.presentation.extra.show
+import lab.maxb.dark.presentation.extra.takePersistablePermission
 import lab.maxb.dark.presentation.viewModel.AddRecognitionTaskViewModel
 import lab.maxb.dark.presentation.viewModel.AddTaskUiEvent
 import lab.maxb.dark.presentation.viewModel.AddTaskUiState
@@ -47,54 +52,47 @@ import lab.maxb.dark.presentation.viewModel.utils.ItemHolder
 import lab.maxb.dark.ui.theme.DarkAppTheme
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.compose.getViewModel
 
-class AddRecognitionTaskFragment : Fragment() {
-    private val viewModel: AddRecognitionTaskViewModel by viewModel()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ) = ComposeView(requireContext()).apply {
-        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-        setContent { AddRecognitionTaskRoot() }
-    }
-
-    @Composable
-    private fun AddRecognitionTaskRoot() {
-        val uiState by viewModel.uiState.collectAsState()
-        val onEvent = viewModel::onEvent
-        val focus = LocalFocusManager.current
-        AddRecognitionTaskRootStateless(uiState, onEvent)
-        uiState.userMessages.ChangedEffect(onConsumed = onEvent) {
-            it.message.show()
-        }
-        uiState.submitSuccess.ChangedEffect(onConsumed = onEvent) {
-            focus.clearFocus()
-            goBack()
-        }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        requireActivity().addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.submit_menu, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                when (menuItem.itemId) {
-                    R.id.menu_submit -> viewModel.onEvent(AddTaskUiEvent.Submit)
-                    else -> return false
+@OptIn(ExperimentalMaterial3Api::class)
+@Destination
+@Composable
+fun AddRecognitionTaskScreen(
+    navController: NavController,
+    viewModel: AddRecognitionTaskViewModel = getViewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val onEvent = viewModel::onEvent
+    val context = LocalContext.current.applicationContext
+    ScaffoldWithDrawer(
+        navController = navController,
+        topBar = {
+            TopBar(
+                title=stringResource(id = R.string.nav_addTask_label),
+                navigationIcon = {
+                    IconButton(onClick = { navController.navigateUp() }) {
+                        Icon(Icons.Filled.Close, null)
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { onEvent(AddTaskUiEvent.Submit) }) {
+                        Icon(Icons.Filled.Done, null)
+                    }
                 }
-                return true
-            }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-        (activity as? MainActivity)?.withToolbar {
-            setNavigationIcon(R.drawable.ic_close)
+            )
         }
+    ) {
+        AddRecognitionTaskRootStateless(uiState, onEvent)
+    }
+    uiState.userMessages.ChangedEffect(onConsumed = onEvent) {
+        it.message.show(context)
+    }
+    uiState.submitSuccess.ChangedEffect(onConsumed = onEvent) {
+        navController.navigateUp()
     }
 }
+
 
 @Preview
 @Composable
@@ -136,7 +134,9 @@ fun AddRecognitionTaskRootStateless(
                             style = MaterialTheme.typography.bodySmall
                         )
                     },
-                    modifier = Modifier.fillMaxSize().padding(horizontal=MaterialTheme.spacing.extraSmall)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = MaterialTheme.spacing.extraSmall)
                 )
             },
             second = {
