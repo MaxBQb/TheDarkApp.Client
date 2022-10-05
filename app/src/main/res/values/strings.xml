@@ -16,7 +16,6 @@
         <string name="solveTask_moderator_revoke_reviewed">Отозвать рарешение</string>
 
     <!-- Navigation -->
-    <string name="nav_auth_label">Авторизация</string>
     <string name="nav_taskList_label">Доступные задачи</string>
     <string name="nav_addTask_label">Добавление задачи</string>
     <string name="nav_solveTask_label">Что это?</string>
@@ -38,7 +37,6 @@
         <string name="auth_message_login_incorrectCredentials">Неверный логин или пароль</string>
         <string name="auth_message_hasEmptyFields">Не все данные введены</string>
         <string name="auth_message_passwordsNotMatch">Пароли не совпадают</string>
-        <string name="auth_message_somethingWentWrong">Неизвесная ошибка</string>
 
     <!-- Authorization handling -->
     <string name="handleAuth_pleaseWait">Идёт подключение…</string>
