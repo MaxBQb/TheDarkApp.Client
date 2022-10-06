@@ -53,3 +53,9 @@ fun ViewModel.launch(
     start: CoroutineStart = CoroutineStart.DEFAULT,
     block: suspend CoroutineScope.() -> Unit
 ) = viewModelScope.launch(context, start, block)
+
+context(ViewModel)
+fun<T> Flow<Result<T>>.stateIn() = stateIn(Result.Loading)
+
+context(ViewModel)
+fun<T> Flow<T>.stateInAsResult() = asResult().stateIn()

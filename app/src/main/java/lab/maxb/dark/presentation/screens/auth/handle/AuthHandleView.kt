@@ -9,17 +9,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavOptionsBuilder
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.popUpTo
 import lab.maxb.dark.R
 import lab.maxb.dark.presentation.components.LoadingCircle
-import lab.maxb.dark.presentation.screens.auth.AuthViewModel
+import lab.maxb.dark.presentation.extra.isLoading
+import lab.maxb.dark.presentation.extra.valueOrNull
 import lab.maxb.dark.presentation.screens.destinations.AuthHandleScreenDestination
 import lab.maxb.dark.presentation.screens.destinations.AuthScreenDestination
 import lab.maxb.dark.presentation.screens.destinations.WelcomeScreenDestination
@@ -34,24 +33,22 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun AuthHandleScreen(
     navigator: DestinationsNavigator,
-    viewModel: AuthViewModel = getViewModel(),
+    viewModel: AuthHandleViewModel = getViewModel(),
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+
     AuthHandleRootStateless()
 
-    val profile by viewModel.profile.collectAsState()
-    LaunchedEffect(profile, LocalContext.current) {
-        profile.ifLoaded {
-            val builder: NavOptionsBuilder.() -> Unit = {
-                launchSingleTop = true
-                popUpTo(AuthHandleScreenDestination) {
-                    inclusive = true
-                }
-            }
-            it?.let {
-                navigator.navigate(WelcomeScreenDestination(), builder=builder)
-            } ?: run {
-                viewModel.handleNotAuthorizedYet()
-                navigator.navigate(AuthScreenDestination(), builder=builder)
+    LaunchedEffect(uiState.authorized) {
+        if (uiState.authorized.isLoading)
+            return@LaunchedEffect
+        val destination = if (uiState.authorized.valueOrNull == true)
+                WelcomeScreenDestination
+            else AuthScreenDestination
+        navigator.navigate(destination) {
+            launchSingleTop = true
+            popUpTo(AuthHandleScreenDestination) {
+                inclusive = true
             }
         }
     }

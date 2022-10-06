@@ -17,10 +17,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.navigation.NavController
 import com.ramcosta.composedestinations.annotation.Destination
 import lab.maxb.dark.R
-import lab.maxb.dark.domain.model.isUser
+import lab.maxb.dark.presentation.components.LoadingComponent
 import lab.maxb.dark.presentation.components.TopScaffold
-import lab.maxb.dark.presentation.extra.valueOrNull
-import lab.maxb.dark.presentation.screens.auth.AuthViewModel
 import lab.maxb.dark.ui.theme.Golden
 import lab.maxb.dark.ui.theme.fontSize
 import lab.maxb.dark.ui.theme.spacing
@@ -31,28 +29,39 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun WelcomeScreen(
     navController: NavController,
-    viewModel: AuthViewModel = getViewModel()
-) = TopScaffold(
-    title = stringResource(R.string.nav_main_label),
-    navController = navController,
+    viewModel: WelcomeViewModel = getViewModel()
 ) {
-    val profile by viewModel.profile.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
+    val onEvent = viewModel::onEvent
+    TopScaffold(
+        title = stringResource(R.string.nav_main_label),
+        navController = navController,
+    ) {
+        LoadingComponent(result = uiState) {
+            WelcomeRootStateless(it, onEvent)
+        }
+    }
+}
 
+@Composable
+fun WelcomeRootStateless(
+    uiState: WelcomeUiState,
+    onEvent: (WelcomeUiEvent) -> Unit = {},
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(MaterialTheme.spacing.normal),
     ) {
-        val user = profile.valueOrNull?.user
-        Greeting(user?.name)
-        if (profile.valueOrNull?.role?.isUser == true)
-            UserRating(user?.rating ?: 0)
+        Greeting(uiState.user?.name)
+        if (uiState.isUser)
+            UserRating(uiState.user?.rating ?: 0)
     }
     Box(
         contentAlignment = Alignment.BottomCenter,
         modifier = Modifier.fillMaxSize()
     ) {
-        Exit { viewModel.signOut() }
+        Exit { onEvent(WelcomeUiEvent.SignOut) }
     }
 }
 
@@ -81,8 +90,7 @@ fun UserRating(rating: Int) {
                 append(rating.toString())
             }
         },
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = Modifier.fillMaxWidth()
     )
 }
 

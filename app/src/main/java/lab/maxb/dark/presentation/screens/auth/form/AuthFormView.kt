@@ -29,9 +29,6 @@ import lab.maxb.dark.presentation.components.utils.keyboardClose
 import lab.maxb.dark.presentation.components.utils.keyboardNext
 import lab.maxb.dark.presentation.extra.ChangedEffect
 import lab.maxb.dark.presentation.extra.show
-import lab.maxb.dark.presentation.screens.auth.AuthUiEvent
-import lab.maxb.dark.presentation.screens.auth.AuthUiState
-import lab.maxb.dark.presentation.screens.auth.AuthViewModel
 import lab.maxb.dark.presentation.screens.destinations.AuthScreenDestination
 import lab.maxb.dark.presentation.screens.destinations.WelcomeScreenDestination
 import lab.maxb.dark.ui.theme.spacing

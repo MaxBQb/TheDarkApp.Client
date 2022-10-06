@@ -1,4 +1,4 @@
-package lab.maxb.dark.presentation.screens.auth
+package lab.maxb.dark.presentation.screens.auth.form
 
 import lab.maxb.dark.presentation.extra.UiText
 import lab.maxb.dark.presentation.extra.UiTrigger

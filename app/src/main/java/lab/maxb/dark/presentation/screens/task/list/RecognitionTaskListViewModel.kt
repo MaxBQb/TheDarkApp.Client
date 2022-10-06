@@ -9,19 +9,18 @@ import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.mapLatest
 import lab.maxb.dark.domain.model.isUser
-import lab.maxb.dark.domain.repository.ProfileRepository
 import lab.maxb.dark.domain.repository.RecognitionTasksRepository
+import lab.maxb.dark.domain.usecase.profile.GetProfileUseCase
 import lab.maxb.dark.presentation.extra.launch
 import lab.maxb.dark.presentation.extra.stateIn
-import lab.maxb.dark.presentation.screens.auth.profileState
 import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class RecognitionTaskListViewModel(
     private val recognitionTasksRepository: RecognitionTasksRepository,
-    profileRepository: ProfileRepository,
+    getProfileUseCase: GetProfileUseCase
 ) : ViewModel() {
-    private val profile = profileRepository.profileState
+    private val profile = getProfileUseCase().stateIn(null)
 
     init {
         launch {

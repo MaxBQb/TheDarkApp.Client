@@ -9,11 +9,10 @@ import kotlinx.coroutines.flow.update
 import lab.maxb.dark.R
 import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.domain.operations.createRecognitionTask
-import lab.maxb.dark.domain.repository.ProfileRepository
 import lab.maxb.dark.domain.repository.RecognitionTasksRepository
 import lab.maxb.dark.domain.repository.SynonymsRepository
+import lab.maxb.dark.domain.usecase.profile.GetProfileUseCase
 import lab.maxb.dark.presentation.extra.*
-import lab.maxb.dark.presentation.screens.auth.profileState
 import org.koin.android.annotation.KoinViewModel
 import kotlin.math.max
 
@@ -21,13 +20,13 @@ import kotlin.math.max
 @KoinViewModel
 class AddRecognitionTaskViewModel(
     private val recognitionTasksRepository: RecognitionTasksRepository,
-    profileRepository: ProfileRepository,
     private val synonymsRepository: SynonymsRepository,
-    application: Application
+    application: Application,
+    getProfileUseCase: GetProfileUseCase,
 ) : AndroidViewModel(application) {
     private var suggestionsRequest by LatestOnly()
     private var addTaskRequest by LatestOnly()
-    private val profile = profileRepository.profileState
+    private val profile = getProfileUseCase().stateIn(null)
 
     fun onEvent(event: AddTaskUiEvent): Unit = with(event) {
         when (this) {

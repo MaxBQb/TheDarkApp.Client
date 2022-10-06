@@ -7,12 +7,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 
 @Composable
-fun <T> T.AnimateAppearance(
+fun AnimateAppearance(
     modifier: Modifier = Modifier,
     enter: EnterTransition = expandVertically() + fadeIn(),
     exit: ExitTransition = fadeOut() + shrinkVertically(),
     initiallyVisible: Boolean = false,
-    content: @Composable T.() -> Unit
+    content: @Composable () -> Unit
 ) {
     val state = remember {
         MutableTransitionState(initiallyVisible).apply {

@@ -1,10 +1,9 @@
 package lab.maxb.dark.data.repository
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapLatest
 import lab.maxb.dark.data.local.room.LocalDatabase
 import lab.maxb.dark.data.local.room.relations.toDomain
@@ -31,23 +30,13 @@ class ProfileRepositoryImpl(
     private val usersRepository: UsersRepository,
 ) : ProfileRepository {
     private val localDataSource = db.profiles()
-    private val _credentials = MutableSharedFlow<AuthCredentials>(
-        replay = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST,
-    )
+    private val _isTokenExpired = MutableStateFlow(false)
+    override val isTokenExpired = _isTokenExpired.asStateFlow()
 
     init {
-        _credentials.tryEmit(AuthCredentials(userSettings.login))
         networkDataSource.onAuthRequired = {
-            userSettings.login = ""
-            userSettings.token = ""
-            localDataSource.clear()
+            _isTokenExpired.value = true
         }
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override val profile = _credentials.flatMapLatest {
-        profileResource.query(it, true)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -79,7 +68,9 @@ class ProfileRepositoryImpl(
         localStore = { localDataSource.save(it.toLocalDTO()) }
     }
 
-    override fun sendCredentials(credentials: AuthCredentials) {
-        _credentials.tryEmit(credentials)
-    }
+    override val profile = profileResource.query(AuthCredentials(userSettings.login), true)
+
+    override suspend fun sendCredentials(credentials: AuthCredentials)
+            = profileResource.refresh(credentials)
+
 }

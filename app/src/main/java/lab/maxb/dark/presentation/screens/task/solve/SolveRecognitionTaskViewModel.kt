@@ -30,11 +30,11 @@ class SolveRecognitionTaskViewModel(
         val profile = profileResult.valueOrNull
         val task = taskResult.valueOrNull
         state.copy(
-            isLoading = !profileResult.isLoaded || !taskResult.isLoaded || state.isLoading,
+            isLoading = anyLoading(profileResult, taskResult) || state.isLoading,
             isReviewMode = isReviewMode(profile),
             isReviewed = task?.reviewed ?: false,
             images = task?.images?.map { getImage(it) } ?: emptyList(),
-            taskNotFound = if (task == null && taskResult.isLoaded)
+            taskNotFound = if (task == null && !taskResult.isLoading)
                 TaskSolveUiEvent.NoSuchTask else null,
         )
     }.stateIn(TaskSolveUiState())

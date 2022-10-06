@@ -5,6 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import lab.maxb.dark.data.local.room.converters.CollectionsConverter
 import lab.maxb.dark.data.local.room.dao.ProfilesDAO
 import lab.maxb.dark.data.local.room.dao.RecognitionTasksDAO
@@ -14,6 +16,7 @@ import lab.maxb.dark.data.model.local.ProfileLocalDTO
 import lab.maxb.dark.data.model.local.RecognitionTaskLocalDTO
 import lab.maxb.dark.data.model.local.RemoteKey
 import lab.maxb.dark.data.model.local.UserLocalDTO
+import lab.maxb.dark.domain.repository.LocalStorage
 
 @Database(entities = [
             UserLocalDTO::class,
@@ -22,7 +25,7 @@ import lab.maxb.dark.data.model.local.UserLocalDTO
             RemoteKey::class,
           ], version = 7, exportSchema = false)
 @TypeConverters(CollectionsConverter::class)
-abstract class LocalDatabase : RoomDatabase() {
+abstract class LocalDatabase : RoomDatabase(), LocalStorage {
     abstract fun recognitionTasks(): RecognitionTasksDAO
     abstract fun users(): UsersDAO
     abstract fun profiles(): ProfilesDAO
@@ -33,5 +36,9 @@ abstract class LocalDatabase : RoomDatabase() {
             app.applicationContext,
             LocalDatabase::class.java, "dark_database"
         ).fallbackToDestructiveMigration().build()
+    }
+
+    override suspend fun clear() = withContext(Dispatchers.Default) {
+        clearAllTables()
     }
 }

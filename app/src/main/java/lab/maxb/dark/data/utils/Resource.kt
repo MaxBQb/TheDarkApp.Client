@@ -25,7 +25,7 @@ open class Resource<Input, Output>(
     open var localStore: (suspend (Output) -> Unit)? = null
     open var clearLocalStore: (suspend (Input) -> Unit)? = null
 
-    suspend fun query(args: Input, force: Boolean = false, useCache: Boolean = false) = flow {
+    fun query(args: Input, force: Boolean = false, useCache: Boolean = false) = flow {
         val cache = fetchLocalSnapshot(args)
 
         if (useCache && !isEmptyCache(cache))
@@ -37,16 +37,17 @@ open class Resource<Input, Output>(
         emitAll(fetchLocal(args))
     }
 
-    suspend fun refresh(args: Input) {
-        try {
-            fetchRemote(args).also {
-                if (isEmptyResponse(it))
-                    clearLocalStore?.invoke(args)
-                else
-                    localStore?.invoke(it!!)
-            }
-            onRefresh?.invoke()
-        } catch (e: UnableToObtainResource) { /* ignored */ }
+    suspend fun refresh(args: Input) = try {
+        fetchRemote(args).also {
+            if (isEmptyResponse(it))
+                clearLocalStore?.invoke(args)
+            else
+                localStore?.invoke(it!!)
+        }
+        onRefresh?.invoke()
+        true
+    } catch (e: UnableToObtainResource) {
+        false
     }
 
     suspend fun checkIsFresh(args: Input)

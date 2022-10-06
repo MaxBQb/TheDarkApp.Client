@@ -21,4 +21,9 @@ class UserSettingsPrefImpl(context: Context) : UserSettings {
     )
     override var token: String by securePref.property()
     override var login: String by pref.property()
+
+    override fun clear() {
+        token = ""
+        login = ""
+    }
 }

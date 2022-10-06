@@ -10,6 +10,7 @@ import lab.maxb.dark.domain.operations.randomUUID
 @Entity(tableName = "profile",
     foreignKeys = [
         ForeignKey(
+            deferred = true,
             entity = UserLocalDTO::class,
             parentColumns = ["id"],
             childColumns = ["user_id"],

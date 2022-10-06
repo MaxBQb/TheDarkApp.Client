@@ -1,42 +1,16 @@
 package lab.maxb.dark.presentation.extra
 
-import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 
-// TODO: Drop `UiState` cause it's wrong naming for Result
-sealed class UiState<out T> {
-    object Loading : UiState<Nothing>() {
-        override fun ifLoading(block: () -> Unit) = block()
-    }
-
-    data class Success<T>(val value: T) : UiState<T>() {
-        override fun ifSuccess(block: (T) -> Unit) = block(value)
-        override fun ifLoaded(block: (T?) -> Unit) = block(value)
-    }
-
-    data class Error<T>(val throwable: Throwable?) : UiState<T>() {
-        override fun ifError(block: (Throwable?) -> Unit) = block(throwable)
-        override fun ifLoaded(block: (T?) -> Unit) = block(null)
-    }
-
-    open fun ifSuccess(block: (T) -> Unit) {}
-    open fun ifError(block: (Throwable?) -> Unit) {}
-    open fun ifLoading(block: () -> Unit) {}
-    open fun ifLoaded(block: (T?) -> Unit) {}
-}
-
-val<T> UiState<T>.valueOrNull get() = when (this) {
-    is UiState.Success<T> -> value
-    else -> null
-}
-
 sealed interface Result<out T> {
     data class Success<T>(val value: T) : Result<T>
-    data class Reloading<T>(val value: T?) : Result<T>
-    data class Error(val throwable: Throwable?) : Result<Nothing>
+    data class Error(
+        val throwable: Throwable?,
+        val message: UiText = uiTextOf(throwable?.message ?: "")
+    ) : Result<Nothing>
     object Loading : Result<Nothing>
 }
 
@@ -49,18 +23,24 @@ fun <T> Flow<T>.asResult(): Flow<Result<T>> {
         .catch { emit(Result.Error(it)) }
 }
 
+inline val Result<*>.isLoading get()
+    = this is Result.Loading
 
-context(ViewModel)
-fun<T> Flow<Result<T>>.stateIn() = stateIn(Result.Loading)
+inline val Result<*>.isError get()
+    = this is Result.Error
 
-context(ViewModel)
-fun<T> Flow<T>.stateInAsResult() = asResult().stateIn()
+inline val<T> Result<T>.isSuccess get()
+    = this is Result.Success<T>
 
+fun<T> anyLoading(vararg args: Result<T>)
+    = args.any { it.isLoading }
 
-val<T> Result<T>.isLoaded get() = this is Result.Success<T> || this is Result.Error
+fun<T> anyError(vararg args: Result<T>)
+    = args.any { it.isError }
 
 val<T> Result<T>.valueOrNull get() = when (this) {
     is Result.Success<T> -> value
-    is Result.Reloading<T> -> value
     else -> null
 }
+
+fun<T> Result<T>.require() = valueOrNull!!
