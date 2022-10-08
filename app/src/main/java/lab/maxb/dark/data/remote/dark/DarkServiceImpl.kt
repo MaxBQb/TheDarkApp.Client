@@ -3,6 +3,7 @@ package lab.maxb.dark.data.remote.dark
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.CancellationException
 import lab.maxb.dark.BuildConfig
 import lab.maxb.dark.data.model.remote.AuthRequest
 import lab.maxb.dark.data.model.remote.RecognitionTaskCreationNetworkDTO
@@ -16,6 +17,7 @@ import java.io.EOFException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import java.util.concurrent.TimeUnit
 
 @Single
 class DarkServiceImpl(
@@ -70,15 +72,13 @@ class DarkServiceImpl(
     private suspend inline fun<reified T> catchAll(
         crossinline block: suspend () -> T,
     ): T = try {
-        retry(block)
+        block()
     } catch (e: EOFException) {
         null as T
     } catch (e: UnableToObtainResource) {
         throw e
-    } catch (e: UnknownHostException) {
-        throw UnableToObtainResource()
-    } catch (e: ConnectException) {
-        throw UnableToObtainResource()
+    } catch (e: CancellationException) {
+        throw e
     } catch (e: retrofit2.HttpException) {
         when (e.code()) {
             401, 403 -> onAuthRequired?.invoke()
@@ -86,21 +86,14 @@ class DarkServiceImpl(
         }
         throw UnableToObtainResource()
     } catch (e: Throwable) {
+        when (e) {
+           is UnknownHostException,
+           is SocketTimeoutException,
+           is ConnectException,
+           -> throw UnableToObtainResource()
+        }
         e.printStackTrace()
         throw e
-    }
-
-    private suspend inline fun<T> retry(
-        crossinline block: suspend () -> T,
-    ): T {
-        repeat(MAX_RETRY_COUNT) {
-            try {
-                return block()
-            } catch (e: SocketTimeoutException) {
-                // Ignore (delay included in timeout)
-            }
-        }
-        throw UnableToObtainResource()
     }
 
     // Initialization
@@ -115,16 +108,15 @@ class DarkServiceImpl(
     private val okhttpClient get() = OkHttpClient.Builder()
         .addInterceptor(logger)
         .addInterceptor(authInterceptor)
+        .connectTimeout(90, TimeUnit.SECONDS)
+        .writeTimeout(90, TimeUnit.SECONDS)
+        .readTimeout(90, TimeUnit.SECONDS)
         .build()
 
     private val converter get() = GsonBuilder().apply {
         setLenient()
     }.create().run {
         GsonConverterFactory.create(this)
-    }
-
-    companion object {
-        const val MAX_RETRY_COUNT = 6
     }
 }
 
