@@ -40,6 +40,8 @@
 
     <!-- Authorization handling -->
     <string name="handleAuth_pleaseWait">Идёт подключение…</string>
+    <string name="handleAuth_message_ProfileNotFound">Не удалось получить данные профиля, попробуйте позже…</string>
+    <string name="handleAuth_retry">Попробовать снова</string>
 
     <!-- Welcome -->
     <string name="welcome_welcome">Добро пожаловать, %s!</string>

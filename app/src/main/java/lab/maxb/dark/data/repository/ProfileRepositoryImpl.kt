@@ -1,16 +1,14 @@
 package lab.maxb.dark.data.repository
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.*
 import lab.maxb.dark.data.local.room.LocalDatabase
 import lab.maxb.dark.data.local.room.relations.toDomain
 import lab.maxb.dark.data.model.local.toLocalDTO
 import lab.maxb.dark.data.model.remote.toDomain
 import lab.maxb.dark.data.model.remote.toNetworkDTO
 import lab.maxb.dark.data.remote.dark.DarkService
+import lab.maxb.dark.data.remote.dark.UnableToObtainResource
 import lab.maxb.dark.data.utils.RefreshControllerImpl
 import lab.maxb.dark.data.utils.Resource
 import lab.maxb.dark.domain.model.AuthCredentials
@@ -31,6 +29,7 @@ class ProfileRepositoryImpl(
 ) : ProfileRepository {
     private val localDataSource = db.profiles()
     private val _isTokenExpired = MutableStateFlow(false)
+    private val _credentials = MutableStateFlow(AuthCredentials(userSettings.login))
     override val isTokenExpired = _isTokenExpired.asStateFlow()
 
     init {
@@ -49,8 +48,9 @@ class ProfileRepositoryImpl(
         fetchRemote = remote@ {
             it.password ?: run {
                 localDataSource.getUserIdByLogin(it.login)?.let { id ->
-                    usersRepository.refresh(id)
-                }
+                    if (!usersRepository.refresh(id))
+                        throw UnableToObtainResource()
+                } ?: throw UnableToObtainResource()
                 return@remote null
             }
 
@@ -68,9 +68,16 @@ class ProfileRepositoryImpl(
         localStore = { localDataSource.save(it.toLocalDTO()) }
     }
 
-    override val profile = profileResource.query(AuthCredentials(userSettings.login), true)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override val profile = _credentials.flatMapLatest {
+        profileResource.query(it, true)
+    }
 
-    override suspend fun sendCredentials(credentials: AuthCredentials)
-            = profileResource.refresh(credentials)
+    override suspend fun sendCredentials(credentials: AuthCredentials): Profile? {
+        _credentials.value = credentials
+        return profile.firstOrNull()
+    }
+
+    override suspend fun retry() = profileResource.retry()
 
 }

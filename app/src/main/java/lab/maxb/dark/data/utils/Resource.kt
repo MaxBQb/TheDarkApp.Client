@@ -1,14 +1,12 @@
 package lab.maxb.dark.data.utils
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
 import lab.maxb.dark.data.remote.dark.UnableToObtainResource
 
 open class Resource<Input, Output>(
     var refreshController: RefreshController = RefreshControllerImpl()
 ) {
+    protected open var cachedArgs: Input? = null
     open lateinit var fetchLocal: suspend (Input) -> Flow<Output?>
     open var fetchLocalSnapshot: suspend (Input) -> Output? = {
         fetchLocal(it).firstOrNull()
@@ -27,6 +25,7 @@ open class Resource<Input, Output>(
 
     fun query(args: Input, force: Boolean = false, useCache: Boolean = false) = flow {
         val cache = fetchLocalSnapshot(args)
+        cachedArgs = args
 
         if (useCache && !isEmptyCache(cache))
             emit(cache)
@@ -34,10 +33,11 @@ open class Resource<Input, Output>(
         if (force || !isFresh(args, cache))
             refresh(args)
 
-        emitAll(fetchLocal(args))
+        emitAll(fetchLocal(args).distinctUntilChanged())
     }
 
     suspend fun refresh(args: Input) = try {
+        cachedArgs = args
         fetchRemote(args).also {
             if (isEmptyResponse(it))
                 clearLocalStore?.invoke(args)
@@ -49,6 +49,8 @@ open class Resource<Input, Output>(
     } catch (e: UnableToObtainResource) {
         false
     }
+
+    suspend fun retry() = refresh(cachedArgs!!)
 
     suspend fun checkIsFresh(args: Input)
         = isFresh(args, fetchLocalSnapshot(args))

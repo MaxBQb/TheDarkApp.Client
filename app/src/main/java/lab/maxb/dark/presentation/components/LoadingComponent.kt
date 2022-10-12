@@ -22,28 +22,35 @@ import lab.maxb.dark.ui.theme.spacing
 @Composable
 fun <T> LoadingComponent(
     result: Result<T>,
-    content: @Composable (T) -> Unit,
+    onLoading: @Composable () -> Unit = { LoadingScreen(true) },
+    onError: @Composable (Result.Error) -> Unit = { DefaultOnLoadingError(it) },
+    content: @Composable (T) -> Unit = {},
 ) = when(result) {
-    is Result.Loading -> LoadingScreen(true)
+    is Result.Loading -> onLoading()
     is Result.Error -> AnimateAppearance {
-        Column(
-            Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-        ) {
-            LoadingError(
-                Modifier
-                    .fillMaxSize(0.5f)
-                    .padding(MaterialTheme.spacing.extraSmall)
-            )
-            Text(text = result.message.asString())
-        }
+        onError(result)
     }
     is Result.Success<T> -> AnimateAppearance(
         enter = fadeIn(),
         exit = fadeOut(),
     ) {
         content(result.value)
+    }
+}
+
+@Composable
+fun DefaultOnLoadingError(result: Result.Error) {
+    Column(
+        Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        LoadingError(
+            Modifier
+                .fillMaxSize(0.5f)
+                .padding(MaterialTheme.spacing.extraSmall)
+        )
+        Text(text = result.message.asString())
     }
 }
 

@@ -4,3 +4,7 @@ import lab.maxb.dark.presentation.extra.Result
 data class AuthHandleUiState(
     val authorized: Result<Boolean> = Result.Loading,
 )
+
+sealed interface AuthHandleUiEvent {
+    object Retry: AuthHandleUiEvent
+}

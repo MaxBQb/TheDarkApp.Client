@@ -13,7 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.navigation.popUpTo
+import lab.maxb.dark.presentation.extra.initialNavigate
 import lab.maxb.dark.presentation.extra.isSuccess
 import lab.maxb.dark.presentation.extra.localDestination
 import lab.maxb.dark.presentation.extra.require
@@ -55,12 +55,7 @@ class MainActivity : AppCompatActivity() {
                 || currentDestination == AuthHandleScreenDestination
                 || currentDestination == AuthScreenDestination)
                 return@LaunchedEffect
-            navController.navigate(AuthScreenDestination.route) {
-                launchSingleTop = true
-                popUpTo(currentDestination) {
-                    inclusive = true
-                }
-            }
+            navController.initialNavigate(AuthHandleScreenDestination, currentDestination)
         }
     }
 

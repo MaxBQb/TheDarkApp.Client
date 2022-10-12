@@ -31,7 +31,5 @@ class UsersRepositoryImpl(
     override suspend fun getUser(id: String, fresh: Boolean): Flow<User?>
         = userResource.query(id, fresh, true)
 
-    override suspend fun refresh(id: String) {
-        userResource.refresh(id)
-    }
+    override suspend fun refresh(id: String) = userResource.refresh(id)
 }

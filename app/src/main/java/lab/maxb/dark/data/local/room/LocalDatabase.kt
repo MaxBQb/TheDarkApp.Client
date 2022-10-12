@@ -5,8 +5,6 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import lab.maxb.dark.data.local.room.converters.CollectionsConverter
 import lab.maxb.dark.data.local.room.dao.ProfilesDAO
 import lab.maxb.dark.data.local.room.dao.RecognitionTasksDAO
@@ -38,7 +36,7 @@ abstract class LocalDatabase : RoomDatabase(), LocalStorage {
         ).fallbackToDestructiveMigration().build()
     }
 
-    override suspend fun clear() = withContext(Dispatchers.Default) {
+    override suspend fun clear() {
         clearAllTables()
     }
 }

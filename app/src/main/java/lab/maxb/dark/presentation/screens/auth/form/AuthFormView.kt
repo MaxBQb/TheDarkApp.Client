@@ -18,7 +18,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.popUpTo
 import lab.maxb.dark.R
 import lab.maxb.dark.presentation.components.AppScaffold
 import lab.maxb.dark.presentation.components.LabelledSwitch
@@ -28,6 +27,7 @@ import lab.maxb.dark.presentation.components.utils.getPasswordTransformation
 import lab.maxb.dark.presentation.components.utils.keyboardClose
 import lab.maxb.dark.presentation.components.utils.keyboardNext
 import lab.maxb.dark.presentation.extra.ChangedEffect
+import lab.maxb.dark.presentation.extra.initialNavigate
 import lab.maxb.dark.presentation.extra.show
 import lab.maxb.dark.presentation.screens.destinations.AuthScreenDestination
 import lab.maxb.dark.presentation.screens.destinations.WelcomeScreenDestination
@@ -57,12 +57,7 @@ fun AuthScreen(
         snackbarState show it.message
     }
     uiState.authorized.ChangedEffect(onConsumed = onEvent) {
-        navigator.navigate(WelcomeScreenDestination()) {
-            launchSingleTop = true
-            popUpTo(AuthScreenDestination) {
-                inclusive = true
-            }
-        }
+        navigator.initialNavigate(WelcomeScreenDestination(), AuthScreenDestination)
     }
 }
 

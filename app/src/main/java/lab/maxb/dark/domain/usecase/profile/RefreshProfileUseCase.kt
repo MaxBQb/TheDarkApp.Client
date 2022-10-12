@@ -4,8 +4,8 @@ import lab.maxb.dark.domain.repository.ProfileRepository
 import org.koin.core.annotation.Singleton
 
 @Singleton
-open class GetProfileUseCase(
+open class RefreshProfileUseCase(
     private val profileRepository: ProfileRepository,
 ) {
-    open operator fun invoke() = profileRepository.profile
+    open suspend operator fun invoke() = profileRepository.retry()
 }
