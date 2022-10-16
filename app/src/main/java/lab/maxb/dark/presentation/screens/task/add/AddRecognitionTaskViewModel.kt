@@ -1,17 +1,14 @@
 package lab.maxb.dark.presentation.screens.task.add
 
-import android.app.Application
 import android.net.Uri
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import lab.maxb.dark.R
 import lab.maxb.dark.domain.model.RecognitionTask
-import lab.maxb.dark.domain.operations.createRecognitionTask
-import lab.maxb.dark.domain.repository.RecognitionTasksRepository
-import lab.maxb.dark.domain.repository.SynonymsRepository
-import lab.maxb.dark.domain.usecase.profile.GetProfileUseCase
+import lab.maxb.dark.domain.usecase.task.CreateRecognitionTaskUseCase
+import lab.maxb.dark.domain.usecase.task.GetTaskNameSynonymsUseCase
 import lab.maxb.dark.presentation.extra.*
 import org.koin.android.annotation.KoinViewModel
 import kotlin.math.max
@@ -19,14 +16,11 @@ import kotlin.math.max
 
 @KoinViewModel
 class AddRecognitionTaskViewModel(
-    private val recognitionTasksRepository: RecognitionTasksRepository,
-    private val synonymsRepository: SynonymsRepository,
-    application: Application,
-    getProfileUseCase: GetProfileUseCase,
-) : AndroidViewModel(application) {
+    private val getTaskNameSynonymsUseCase: GetTaskNameSynonymsUseCase,
+    private val createRecognitionTaskUseCase: CreateRecognitionTaskUseCase,
+) : ViewModel() {
     private var suggestionsRequest by LatestOnly()
     private var addTaskRequest by LatestOnly()
-    private val profile = getProfileUseCase().stateIn(null)
 
     fun onEvent(event: AddTaskUiEvent): Unit = with(event) {
         when (this) {
@@ -48,14 +42,11 @@ class AddRecognitionTaskViewModel(
     private fun createRecognitionTask() {
         addTaskRequest = launch {
             try {
-                val user = profile.firstNotNull().user!!
                 val state = uiState.value
-                val task = createRecognitionTask(
-                    state.names.map { it.value }.filter { it.isNotBlank() },
+                createRecognitionTaskUseCase(
+                    state.names.map { it.value },
                     state.images.map { it.toString() },
-                    user
-                )!!
-                recognitionTasksRepository.addRecognitionTask(task)
+                )
                 _uiState.update { it.copy(submitSuccess = AddTaskUiEvent.SubmitSuccess) }
             } catch (e: Throwable) {
                 e.printStackTrace()
@@ -70,12 +61,10 @@ class AddRecognitionTaskViewModel(
         }
     }
 
-    private fun setTexts(text: ItemHolder<String>) {
-        _uiState.update { state ->
-            val names = getInputList(state.names, text.map { it.trim() })
-            requestSuggestions(names.map { it.value })
-            state.copy(names = names)
-        }
+    private fun setTexts(text: ItemHolder<String>) = _uiState.update { state ->
+        val names = getInputList(state.names, text.map { it.trim() })
+        requestSuggestions(names.map { it.value })
+        state.copy(names = names)
     }
 
     private fun getInputList(
@@ -98,41 +87,32 @@ class AddRecognitionTaskViewModel(
 
     private fun requestSuggestions(names: List<String>) {
         suggestionsRequest = launch {
-            val suggestions = synonymsRepository.getSynonyms(names.toSet())
-                .map { it.trim() }
-                .filterNot { it.isEmpty() }
-                .toSet()
+            val suggestions = getTaskNameSynonymsUseCase(names)
             _uiState.update {
                 it.copy(suggestions = suggestions.toList())
             }
         }
     }
 
-    fun deleteImage(position: Int) {
-        _uiState.update { state ->
-            state.withImages(
-                state.images.filterIndexed { pos, _ -> position != pos }
-            )
-        }
+    private fun deleteImage(position: Int) = _uiState.update { state ->
+        state.withImages(
+            state.images.filterIndexed { pos, _ -> position != pos }
+        )
     }
 
-    fun addImages(uris: List<Uri>) {
-        _uiState.update { state ->
-            state.withImages(
-                state.images + uris.take(state.allowedImageCount)
-            )
-        }
+    private fun addImages(uris: List<Uri>) = _uiState.update { state ->
+        state.withImages(
+            state.images + uris.take(state.allowedImageCount)
+        )
     }
 
-    private fun updateImage(position: Int, uri: Uri) {
-        _uiState.update { state ->
-            state.withImages(
-                state.images.mapIndexed { pos, it ->
-                    if (position == pos) uri
-                    else it
-                }
-            )
-        }
+    private fun updateImage(position: Int, uri: Uri) = _uiState.update { state ->
+        state.withImages(
+            state.images.mapIndexed { pos, it ->
+                if (position == pos) uri
+                else it
+            }
+        )
     }
 
     private fun AddTaskUiState.withImages(images: List<Uri>) = copy(

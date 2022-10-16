@@ -5,24 +5,28 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import lab.maxb.dark.domain.model.Profile
 import lab.maxb.dark.domain.model.Role
-import lab.maxb.dark.domain.repository.ProfileRepository
-import lab.maxb.dark.domain.repository.RecognitionTasksRepository
-import lab.maxb.dark.domain.repository.UsersRepository
+import lab.maxb.dark.domain.usecase.task.GetRecognitionTaskImageUseCase
+import lab.maxb.dark.domain.usecase.task.GetRecognitionTaskUseCase
+import lab.maxb.dark.domain.usecase.task.MarkRecognitionTaskUseCase
+import lab.maxb.dark.domain.usecase.task.SolveRecognitionTaskUseCase
 import lab.maxb.dark.presentation.extra.*
+import lab.maxb.dark.domain.usecase.profile.GetProfileUseCase
 import org.koin.android.annotation.KoinViewModel
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @KoinViewModel
 class SolveRecognitionTaskViewModel(
-    private val recognitionTasksRepository: RecognitionTasksRepository,
-    private val usersRepository: UsersRepository,
-    profileRepository: ProfileRepository,
+    private val getRecognitionTaskImageUseCase: GetRecognitionTaskImageUseCase,
+    private val solveRecognitionTaskUseCase: SolveRecognitionTaskUseCase,
+    private val markRecognitionTaskUseCase: MarkRecognitionTaskUseCase,
+    getProfileUseCase: GetProfileUseCase,
+    getRecognitionTaskUseCase: GetRecognitionTaskUseCase,
 ) : ViewModel() {
     private val taskId = MutableStateFlow("")
-    private val profile = profileRepository.profile.stateInAsResult()
+    private val profile = getProfileUseCase().stateInAsResult()
     private val task = taskId.filter { it.isNotEmpty() }.flatMapLatest {
-        recognitionTasksRepository.getRecognitionTask(it).asResult()
+        getRecognitionTaskUseCase(it).asResult()
     }.stateIn()
 
     private val _uiState = MutableStateFlow(TaskSolveUiState())
@@ -80,35 +84,31 @@ class SolveRecognitionTaskViewModel(
 
     private fun mark(isAllowed: Boolean) = launch {
         // TODO: Fix mark not caught properly
-        task.firstOrNull()?.valueOrNull?.let { withLoading {
-            it.reviewed = isAllowed
-            recognitionTasksRepository.markRecognitionTask(it)
-        } }
-    }
-
-    private fun solveRecognitionTask(answer: String) = launch {
-        task.firstOrNull()?.valueOrNull?.let { withLoading {
-            recognitionTasksRepository.solveRecognitionTask(
-                it.id, answer
-            ).also { result ->
-                if (result) {
-                    usersRepository.refresh(profile.firstOrNull()!!.valueOrNull!!.user!!.id)
-                    recognitionTasksRepository.refresh(it.id)
-                } else {
-                    showMessage(uiTextOf("Неверно"))
-                }
+        task.firstOrNull()?.valueOrNull?.let {
+            withLoading {
+                markRecognitionTaskUseCase(
+                    it,
+                    isAllowed,
+                )
             }
-        } }
-    }
-
-    private fun showMessage(message: UiText) {
-        _uiState.update { state ->
-            state.copy(
-                userMessages = state.userMessages +
-                        TaskSolveUiEvent.UserMessage(message)
-            )
         }
     }
 
-    private fun getImage(path: String) = recognitionTasksRepository.getRecognitionTaskImage(path)
+    private fun solveRecognitionTask(answer: String) = launch {
+        task.firstOrNull()?.valueOrNull?.let {
+            withLoading {
+                if (!solveRecognitionTaskUseCase(it.id, answer))
+                    showMessage(uiTextOf("Неверно"))
+            }
+        }
+    }
+
+    private fun showMessage(message: UiText) = _uiState.update { state ->
+        state.copy(
+            userMessages = state.userMessages +
+                    TaskSolveUiEvent.UserMessage(message)
+        )
+    }
+
+    private fun getImage(path: String) = getRecognitionTaskImageUseCase(path)
 }
