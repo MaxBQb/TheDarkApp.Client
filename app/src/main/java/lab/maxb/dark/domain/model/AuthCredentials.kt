@@ -2,7 +2,7 @@ package lab.maxb.dark.domain.model
 
 data class AuthCredentials(
     val login: String,
-    val password: String? = null,
+    val password: String,
     val initial: Boolean = false,
 )
 

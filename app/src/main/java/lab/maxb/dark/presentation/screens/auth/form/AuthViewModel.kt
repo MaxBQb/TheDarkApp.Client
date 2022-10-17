@@ -87,13 +87,12 @@ class AuthViewModel(
         }
     }
 
-    fun hasEmptyFields() = with(uiState.value) {
-        login.isEmpty() ||
-                password.isEmpty() ||
-                isAccountNew && passwordRepeat.isEmpty()
+    private fun hasEmptyFields() = with(uiState.value) {
+        login.isEmpty() || password.isEmpty()
+        || isAccountNew && passwordRepeat.isEmpty()
     }
 
-    fun isPasswordsNotMatch() = with(uiState.value) {
+    private fun isPasswordsNotMatch() = with(uiState.value) {
         isAccountNew && password != passwordRepeat
     }
 

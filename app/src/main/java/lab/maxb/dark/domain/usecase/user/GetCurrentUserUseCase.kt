@@ -15,6 +15,6 @@ open class GetCurrentUserUseCase(
     @OptIn(ExperimentalCoroutinesApi::class)
     open operator fun invoke() = profileRepository.profile
         .filterNotNull().flatMapLatest {
-            usersRepository.getUser(it.user!!.id)
+            usersRepository.getUser(it.userId)
         }
 }

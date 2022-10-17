@@ -17,7 +17,7 @@ class AuthResponse(
 
 fun AuthCredentials.toNetworkDTO() = AuthRequest(
     login,
-    password!!,
+    password,
 )
 
 fun AuthResponse.toDomain(request: AuthCredentials) = ReceivedAuthCredentials(

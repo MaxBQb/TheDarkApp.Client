@@ -2,34 +2,26 @@ package lab.maxb.dark.data.repository
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
-import lab.maxb.dark.data.local.room.LocalDatabase
-import lab.maxb.dark.data.local.room.relations.toDomain
-import lab.maxb.dark.data.model.local.toLocalDTO
+import lab.maxb.dark.data.local.dataStore.ProfileDataSource
 import lab.maxb.dark.data.model.remote.toDomain
 import lab.maxb.dark.data.model.remote.toNetworkDTO
 import lab.maxb.dark.data.remote.dark.DarkService
-import lab.maxb.dark.data.remote.dark.UnableToObtainResource
 import lab.maxb.dark.data.utils.RefreshControllerImpl
 import lab.maxb.dark.data.utils.Resource
 import lab.maxb.dark.domain.model.AuthCredentials
 import lab.maxb.dark.domain.model.Profile
 import lab.maxb.dark.domain.operations.toProfile
 import lab.maxb.dark.domain.repository.ProfileRepository
-import lab.maxb.dark.domain.repository.UserSettings
-import lab.maxb.dark.domain.repository.UsersRepository
 import org.koin.core.annotation.Single
 import java.time.Duration
 
 @Single
 class ProfileRepositoryImpl(
-    db: LocalDatabase,
     private val networkDataSource: DarkService,
-    private val userSettings: UserSettings,
-    private val usersRepository: UsersRepository,
+    private val localDataSource: ProfileDataSource,
 ) : ProfileRepository {
-    private val localDataSource = db.profiles()
     private val _isTokenExpired = MutableStateFlow(false)
-    private val _credentials = MutableStateFlow(AuthCredentials(userSettings.login))
+    private val _credentials = MutableStateFlow<AuthCredentials?>(null)
     override val isTokenExpired = _isTokenExpired.asStateFlow()
 
     init {
@@ -38,34 +30,20 @@ class ProfileRepositoryImpl(
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val profileResource = Resource<AuthCredentials, Profile>(
+    private val profileResource = Resource<AuthCredentials?, Profile>(
         RefreshControllerImpl(Duration.ofHours(12).toMillis())
     ).apply {
-        fetchLocal = {
-            localDataSource.getByLogin(it.login).mapLatest { x -> x?.toDomain() }
-        }
+        fetchLocal = { localDataSource.data }
         fetchRemote = remote@ {
-            it.password ?: run {
-                localDataSource.getUserIdByLogin(it.login)?.let { id ->
-                    if (!usersRepository.refresh(id))
-                        throw UnableToObtainResource()
-                } ?: throw UnableToObtainResource()
-                return@remote null
-            }
-
+            it ?: return@remote null
             val request = it.toNetworkDTO()
             val response = (if (it.initial)
                 networkDataSource.signup(request)
             else
                 networkDataSource.login(request)).toDomain(it)
-            userSettings.token = response.token
-            userSettings.login = it.login
-            response.toProfile { id ->
-                usersRepository.getUser(id).firstOrNull() ?: return@remote null
-            }
+            response.toProfile()
         }
-        localStore = { localDataSource.save(it.toLocalDTO()) }
+        localStore = { value -> localDataSource.updateData { value } }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -79,5 +57,5 @@ class ProfileRepositoryImpl(
     }
 
     override suspend fun retry() = profileResource.retry()
-
+    override suspend fun clear() = localDataSource.clear()
 }

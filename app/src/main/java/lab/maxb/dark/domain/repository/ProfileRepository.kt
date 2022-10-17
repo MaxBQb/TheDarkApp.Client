@@ -8,6 +8,7 @@ import lab.maxb.dark.domain.model.Profile
 interface ProfileRepository {
     suspend fun sendCredentials(credentials: AuthCredentials): Profile?
     suspend fun retry(): Boolean
+    suspend fun clear()
     val profile: Flow<Profile?>
     val isTokenExpired: StateFlow<Boolean>
 }

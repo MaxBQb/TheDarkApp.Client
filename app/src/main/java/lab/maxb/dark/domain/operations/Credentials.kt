@@ -2,13 +2,10 @@ package lab.maxb.dark.domain.operations
 
 import lab.maxb.dark.domain.model.Profile
 import lab.maxb.dark.domain.model.ReceivedAuthCredentials
-import lab.maxb.dark.domain.model.User
 
-inline fun ReceivedAuthCredentials.toProfile(
-    user: (String) -> User? = { null },
-) = Profile(
+fun ReceivedAuthCredentials.toProfile() = Profile(
     request.login,
-    user(id),
+    id,
     token,
     role = role
 )

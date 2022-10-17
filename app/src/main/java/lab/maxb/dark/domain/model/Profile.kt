@@ -1,11 +1,12 @@
 package lab.maxb.dark.domain.model
 
-open class Profile(
-    open var login: String,
-    open var user: User? = null,
-    open var token: String,
-    open var type: AuthType = AuthType.CREDENTIALS,
-    open var role: Role = Role.USER
+@kotlinx.serialization.Serializable
+data class Profile(
+    var login: String,
+    var userId: String,
+    var token: String,
+    var type: AuthType = AuthType.CREDENTIALS,
+    var role: Role = Role.USER
 ) {
     enum class AuthType {
         CREDENTIALS,
