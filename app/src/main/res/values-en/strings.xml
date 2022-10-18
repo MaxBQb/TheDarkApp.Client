@@ -1,0 +1,50 @@
+<resources>
+    <!-- App -->
+    <string name="app_name">Dark</string>
+
+    <!-- Add Recognition Task -->
+    <string name="addTask_loadImagesTitle">Upload pictures</string>
+    <string name="addTask_inputList_hint">Enter an answer</string>
+    <string name="addTask_message_notEnoughDataProvided">You have not entered all the data</string>
+
+    <!-- Solve Recognition Task -->
+    <string name="solveTask_checkSolution">Check answer</string>
+    <string name="solveTask_answer">Your reply</string>
+        <!-- Moderator actions -->
+        <string name="solveTask_moderator_mark_reviewed">Approve</string>
+        <string name="solveTask_moderator_delete">Delete</string>
+        <string name="solveTask_moderator_revoke_reviewed">Revoke</string>
+
+    <!-- Navigation -->
+    <string name="nav_taskList_label">Available tasks</string>
+    <string name="nav_addTask_label">Task creation</string>
+    <string name="nav_solveTask_label">What is this?</string>
+    <string name="nav_main_label">Home</string>
+
+    <!-- Authorization -->
+    <string name="auth_login_label">Sign in</string>
+    <string name="auth_signup_label">Sign up</string>
+    <string name="auth_isAccountNew">No account yet</string>
+    <string name="auth_loginHint">Login</string>
+    <string name="auth_passwordHint">Password</string>
+    <string name="auth_passwordRepeatHint">Repeat password</string>
+    <string name="auth_showPassword">Show password</string>
+    <string name="auth_login_button">Submit</string>
+    <string name="auth_signup_button">Create account</string>
+    <string name="auth_menu_signOut">Sign out</string>
+        <!-- Messages -->
+        <string name="auth_message_signup_incorrectCredentials">The data is invalid or the user already exists</string>
+        <string name="auth_message_login_incorrectCredentials">Wrong login or password</string>
+        <string name="auth_message_hasEmptyFields">Some fields are empty</string>
+        <string name="auth_message_passwordsNotMatch">Passwords do not match</string>
+
+    <!-- Authorization handling -->
+    <string name="handleAuth_pleaseWait">Connection in progress…</string>
+    <string name="handleAuth_message_ProfileNotFound">Failed to get profile data, please try again later…</string>
+    <string name="handleAuth_retry">Retry</string>
+
+    <!-- Welcome -->
+    <string name="welcome_welcome">Welcome, %s!</string>
+    <string name="welcome_anonymousWelcome">How did you get there?!</string>
+    <string name="welcome_rating">Score</string>
+</resources>

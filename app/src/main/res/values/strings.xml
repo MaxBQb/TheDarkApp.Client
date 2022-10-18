@@ -13,7 +13,7 @@
         <!-- Moderator actions -->
         <string name="solveTask_moderator_mark_reviewed">Одобрить</string>
         <string name="solveTask_moderator_delete">Удалить</string>
-        <string name="solveTask_moderator_revoke_reviewed">Отозвать рарешение</string>
+        <string name="solveTask_moderator_revoke_reviewed">Отозвать разрешение</string>
 
     <!-- Navigation -->
     <string name="nav_taskList_label">Доступные задачи</string>
