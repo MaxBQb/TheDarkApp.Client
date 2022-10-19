@@ -16,7 +16,7 @@
         <string name="solveTask_moderator_revoke_reviewed">Отозвать разрешение</string>
 
     <!-- Navigation -->
-    <string name="nav_taskList_title">Доступные задачи</string>
+    <string name="nav_taskList_title">Задачи</string>
     <string name="nav_addTask_title">Добавление задачи</string>
     <string name="nav_solveTask_title">Что это?</string>
     <string name="nav_home_title">Главная</string>
