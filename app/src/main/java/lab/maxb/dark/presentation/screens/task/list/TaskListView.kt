@@ -45,37 +45,38 @@ fun RecognitionTaskListScreen(
     navController: NavController,
     viewModel: RecognitionTaskListViewModel = getViewModel(),
 ) = TopScaffold(
-    title = stringResource(id = R.string.nav_taskList_label),
     navController = navController,
-) {
-    val items = viewModel.recognitionTaskList.collectAsLazyPagingItems()
-    val isTaskCreationAllowed by viewModel.isTaskCreationAllowed.collectAsState()
+    title = stringResource(id = R.string.nav_taskList_title),
+    content = {
+        val items = viewModel.recognitionTaskList.collectAsLazyPagingItems()
+        val isTaskCreationAllowed by viewModel.isTaskCreationAllowed.collectAsState()
 
-    RecognitionTaskList(
-        items,
-        onItemClick = {
-            navigator.navigate(SolveRecognitionTaskScreenDestination(it.id))
-        },
-        resolveImage = viewModel::getImage
-    )
-    AnimatedVisibility(
-        isTaskCreationAllowed,
-        modifier = Modifier.align(Alignment.BottomEnd)
-    ) {
-        FloatingActionButton(
-            onClick = {
-                navigator.navigate(AddRecognitionTaskScreenDestination())
+        RecognitionTaskList(
+            items,
+            onItemClick = {
+                navigator.navigate(SolveRecognitionTaskScreenDestination(it.id))
             },
-            shape = CircleShape,
-            containerColor = colorScheme.secondaryContainer,
-            modifier = Modifier
-                .padding(MaterialTheme.spacing.large)
-                .align(Alignment.BottomEnd)
+            resolveImage = viewModel::getImage
+        )
+        AnimatedVisibility(
+            isTaskCreationAllowed,
+            modifier = Modifier.align(Alignment.BottomEnd)
         ) {
-            Image(painterResource(id = R.drawable.ic_plus), null)
+            FloatingActionButton(
+                onClick = {
+                    navigator.navigate(AddRecognitionTaskScreenDestination())
+                },
+                shape = CircleShape,
+                containerColor = colorScheme.secondaryContainer,
+                modifier = Modifier
+                    .padding(MaterialTheme.spacing.large)
+                    .align(Alignment.BottomEnd)
+            ) {
+                Image(painterResource(id = R.drawable.ic_plus), null)
+            }
         }
-    }
-}
+    },
+)
 
 @Composable
 private fun RecognitionTaskList(

@@ -19,9 +19,7 @@ import lab.maxb.dark.ui.theme.spacing
 
 @Composable
 fun LanguageToggleButton(onClick: () -> Unit = {}) {
-    val languageCode = remember(Locale.current) {
-        Locale.current.toLanguageTag().split('-')[0].uppercase()
-    }
+    val languageCode = getLanguageCode()
     Row(
         modifier = Modifier.clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically,
@@ -33,4 +31,9 @@ fun LanguageToggleButton(onClick: () -> Unit = {}) {
             fontWeight = FontWeight.Bold,
         )
     }
+}
+
+@Composable
+fun getLanguageCode() = remember(Locale.current) {
+    Locale.current.toLanguageTag().split('-')[0].uppercase()
 }

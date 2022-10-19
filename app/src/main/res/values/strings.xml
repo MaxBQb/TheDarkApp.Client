@@ -16,10 +16,11 @@
         <string name="solveTask_moderator_revoke_reviewed">Отозвать разрешение</string>
 
     <!-- Navigation -->
-    <string name="nav_taskList_label">Доступные задачи</string>
-    <string name="nav_addTask_label">Добавление задачи</string>
-    <string name="nav_solveTask_label">Что это?</string>
-    <string name="nav_main_label">Главная</string>
+    <string name="nav_taskList_title">Доступные задачи</string>
+    <string name="nav_addTask_title">Добавление задачи</string>
+    <string name="nav_solveTask_title">Что это?</string>
+    <string name="nav_home_title">Главная</string>
+    <string name="nav_settings_title">Настройки</string>
 
     <!-- Authorization -->
     <string name="auth_login_label">Вход</string>
@@ -53,4 +54,8 @@
     <string name="dialogChooseLocale_systemDefault">Системное значение</string>
     <string name="dialogChooseLocale_button_apply">Применить</string>
     <string name="dialogChooseLocale_button_cancel">Отмена</string>
+
+    <!-- Settings -->
+    <string name="settings_language_title">Язык интерфейса</string>
+    <string name="settings_language_auto">Системное значение (%s)</string>
 </resources>

@@ -61,7 +61,7 @@ fun AddRecognitionTaskScreen(
         navController = navController,
         topBar = {
             TopBar(
-                title=stringResource(id = R.string.nav_addTask_label),
+                title=stringResource(id = R.string.nav_addTask_title),
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(Icons.Filled.Close, null)

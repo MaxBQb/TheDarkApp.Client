@@ -16,8 +16,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.navigation.NavController
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import lab.maxb.dark.R
 import lab.maxb.dark.presentation.components.LoadingComponent
+import lab.maxb.dark.presentation.components.SettingsButton
 import lab.maxb.dark.presentation.components.TopScaffold
 import lab.maxb.dark.ui.theme.Golden
 import lab.maxb.dark.ui.theme.fontSize
@@ -28,14 +30,16 @@ import org.koin.androidx.compose.getViewModel
 @Destination
 @Composable
 fun WelcomeScreen(
+    navigator: DestinationsNavigator,
     navController: NavController,
     viewModel: WelcomeViewModel = getViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val onEvent = viewModel::onEvent
     TopScaffold(
-        title = stringResource(R.string.nav_main_label),
         navController = navController,
+        title = stringResource(R.string.nav_home_title),
+        actions = { SettingsButton(navigator) }
     ) {
         LoadingComponent(result = uiState) {
             WelcomeRootStateless(it, onEvent)

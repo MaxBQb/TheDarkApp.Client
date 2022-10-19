@@ -1,10 +1,7 @@
 package lab.maxb.dark.presentation.components
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
@@ -70,7 +67,8 @@ fun TopScaffold(
     navController: NavController,
     modifier: Modifier = Modifier,
     title: String = "",
-    content: @Composable BoxScope.() -> Unit = {},
+    actions: @Composable() (RowScope.() -> Unit) = {},
+    content: @Composable() (BoxScope.() -> Unit) = {},
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -86,7 +84,7 @@ fun TopScaffold(
                 ) {
                     Icon(Icons.Filled.Menu, contentDescription = "")
                 }
-            })
+            }, actions = actions)
         },
         content = content
     )

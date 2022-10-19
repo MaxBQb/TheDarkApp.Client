@@ -55,7 +55,7 @@ fun SolveRecognitionTaskScreen(
         navController = navController,
         topBar = {
             TopBar(
-                title = stringResource(id = R.string.nav_solveTask_label),
+                title = stringResource(id = R.string.nav_solveTask_title),
                 navigationIcon = { NavBackIcon(navController = navController) },
                 actions = { ShareIcon(
                     shareLink + SolveRecognitionTaskScreenDestination(id).route

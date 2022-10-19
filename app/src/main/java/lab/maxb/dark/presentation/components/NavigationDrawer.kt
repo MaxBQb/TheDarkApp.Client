@@ -28,8 +28,8 @@ enum class DrawerDestination(
     @DrawableRes val icon: Int,
     @StringRes val label: Int
 ) {
-    Welcome(WelcomeScreenDestination, R.drawable.ic_home, R.string.nav_main_label),
-    Tasks(RecognitionTaskListScreenDestination, R.drawable.ic_list, R.string.nav_taskList_label),
+    Welcome(WelcomeScreenDestination, R.drawable.ic_home, R.string.nav_home_title),
+    Tasks(RecognitionTaskListScreenDestination, R.drawable.ic_list, R.string.nav_taskList_title),
 }
 
 

@@ -16,10 +16,11 @@
         <string name="solveTask_moderator_revoke_reviewed">Revoke</string>
 
     <!-- Navigation -->
-    <string name="nav_taskList_label">Available tasks</string>
-    <string name="nav_addTask_label">Task creation</string>
-    <string name="nav_solveTask_label">What is this?</string>
-    <string name="nav_main_label">Home</string>
+    <string name="nav_taskList_title">Available tasks</string>
+    <string name="nav_addTask_title">Task creation</string>
+    <string name="nav_solveTask_title">What is this?</string>
+    <string name="nav_home_title">Home</string>
+    <string name="nav_settings_title">Settings</string>
 
     <!-- Authorization -->
     <string name="auth_login_label">Sign in</string>
@@ -53,4 +54,8 @@
     <string name="dialogChooseLocale_systemDefault">System default</string>
     <string name="dialogChooseLocale_button_apply">Apply</string>
     <string name="dialogChooseLocale_button_cancel">Cancel</string>
+
+    <!-- Settings -->
+    <string name="settings_language_title">Interface language</string>
+    <string name="settings_language_auto">System default (%s)</string>
 </resources>
