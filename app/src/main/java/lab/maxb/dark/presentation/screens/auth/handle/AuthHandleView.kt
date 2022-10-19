@@ -16,6 +16,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import lab.maxb.dark.R
+import lab.maxb.dark.presentation.components.AnimateAppearance
 import lab.maxb.dark.presentation.components.LoadingCircle
 import lab.maxb.dark.presentation.components.LoadingComponent
 import lab.maxb.dark.presentation.components.LoadingError
@@ -61,7 +62,7 @@ fun AuthHandleScreen(
 
 @Preview
 @Composable
-fun AuthHandleLoading() {
+fun AuthHandleLoading() = AnimateAppearance(Modifier.fillMaxSize()) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
