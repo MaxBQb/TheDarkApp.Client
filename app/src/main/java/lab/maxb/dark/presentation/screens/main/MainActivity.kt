@@ -4,11 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.core.os.LocaleListCompat
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -22,12 +24,14 @@ import lab.maxb.dark.presentation.screens.destinations.AuthHandleScreenDestinati
 import lab.maxb.dark.presentation.screens.destinations.AuthScreenDestination
 import lab.maxb.dark.ui.theme.DarkAppTheme
 import org.koin.androidx.viewmodel.ext.android.getViewModel
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        handleLocale()
         super.onCreate(savedInstanceState)
         setContent {
             DarkAppTheme {
@@ -36,6 +40,18 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun handleLocale(
+        viewModel: MainViewModel = getViewModel()
+    ) {
+        val locale = viewModel.getLocale(
+            AppCompatDelegate.getApplicationLocales().toLanguageTags(),
+            Locale.getDefault().toLanguageTag(),
+        )
+        AppCompatDelegate.setApplicationLocales(
+            LocaleListCompat.forLanguageTags(locale)
+        )
     }
 
     @Composable

@@ -15,7 +15,6 @@ android {
     def keystoreProperties = new Properties()
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
-
     defaultConfig {
         applicationId "lab.maxb.dark"
         minSdkVersion 21
@@ -31,6 +30,7 @@ android {
         buildConfigField "String", "DARK_API_URL", keystoreProperties["DARK_API_URL"]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        resConfigs "ru", "en"
     }
 
     buildFeatures{
@@ -114,6 +114,11 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-paging:$room_version"
 
+    // JC Dialogs
+    def dialogs_version = "0.9.0"
+    implementation "io.github.vanpra.compose-material-dialogs:core:$dialogs_version"
+//    implementation "io.github.vanpra.compose-material-dialogs:color:$dialogs_version"
+
     // Paging
     def paging_version = "3.1.1"
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
@@ -133,7 +138,7 @@ dependencies {
 
     // Android X/KTX
     implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0-alpha01'
 
     // Scalable layout units
     def scalable_units_version = "1.0.6"

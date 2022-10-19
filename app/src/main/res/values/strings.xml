@@ -47,4 +47,10 @@
     <string name="welcome_welcome">Добро пожаловать, %s!</string>
     <string name="welcome_anonymousWelcome">Вы не авторизованы!</string>
     <string name="welcome_rating">Набрано очков</string>
+
+    <!-- Choose Locale Dialog -->
+    <string name="dialogChooseLocale_title">Список языков</string>
+    <string name="dialogChooseLocale_systemDefault">Системное значение</string>
+    <string name="dialogChooseLocale_button_apply">Применить</string>
+    <string name="dialogChooseLocale_button_cancel">Отмена</string>
 </resources>

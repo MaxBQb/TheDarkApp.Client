@@ -45,14 +45,24 @@ fun DarkAppTheme(
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
         }
     }
+    val materialColors = androidx.compose.material.darkColors(
+        surface = colorScheme.background,
+        background = colorScheme.background,
+        secondaryVariant = colorScheme.background,
+        primary = colorScheme.onBackground,
+    )
     CompositionLocalProvider(
         LocalSpacing provides defaultScalableSpacing(),
         LocalFontSize provides defaultScalableFontSize(),
     ) {
-        MaterialTheme(
-            colorScheme = colorScheme,
-            typography = typography,
-            content = content
-        )
+        androidx.compose.material.MaterialTheme(
+            colors = materialColors,
+        ) {
+            MaterialTheme(
+                colorScheme = colorScheme,
+                typography = typography,
+                content = content
+            )
+        }
     }
 }

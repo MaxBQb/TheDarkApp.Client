@@ -7,6 +7,7 @@
         android:name=".DarkApplication"
         android:allowBackup="true"
         android:fullBackupOnly="true"
+        android:localeConfig="@xml/locales_config"
         android:windowSoftInputMode="adjustResize|stateHidden"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher"
@@ -33,5 +34,13 @@
                 <data android:host="the.dark.app" android:scheme="http" />
             </intent-filter>
         </activity>
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="false" />
+        </service>
     </application>
 </manifest>

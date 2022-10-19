@@ -2,12 +2,14 @@ package lab.maxb.dark.presentation.screens.auth.form
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import lab.maxb.dark.R
 import lab.maxb.dark.domain.model.AuthCredentials
 import lab.maxb.dark.domain.model.Profile
 import lab.maxb.dark.domain.usecase.auth.AuthorizeUseCase
+import lab.maxb.dark.domain.usecase.settings.locale.ChangeLocaleUseCase
+import lab.maxb.dark.domain.usecase.settings.locale.GetCurrentLocaleUseCase
 import lab.maxb.dark.presentation.extra.*
 import org.koin.android.annotation.KoinViewModel
 
@@ -15,11 +17,15 @@ import org.koin.android.annotation.KoinViewModel
 @KoinViewModel
 class AuthViewModel(
     private val authorizeUseCase: AuthorizeUseCase,
+    getCurrentLocaleUseCase: GetCurrentLocaleUseCase,
+    private val changeLocaleUseCase: ChangeLocaleUseCase,
 ) : ViewModel() {
     private var authRequest by FirstOnly()
 
     private val _uiState = MutableStateFlow(AuthUiState())
-    val uiState = _uiState.asStateFlow()
+    val uiState = combine(_uiState, getCurrentLocaleUseCase()) { state, locale ->
+        state.copy(locale=locale)
+    }.stateIn(AuthUiState())
 
     fun onEvent(event: AuthUiEvent) = with(event) {
         when (this) {
@@ -44,6 +50,10 @@ class AuthViewModel(
             }
             is AuthUiEvent.Authorized -> _uiState.update {
                 it.copy(authorized = null)
+            }
+            is AuthUiEvent.LocaleChanged -> changeLocale(locale)
+            is AuthUiEvent.LocaleUpdated -> _uiState.update {
+                it.copy(localeUpdated = null)
             }
         }
     }
@@ -110,5 +120,14 @@ class AuthViewModel(
         else
             R.string.auth_message_login_incorrectCredentials
         state.withError(uiTextOf(message))
+    }
+
+    private fun changeLocale(locale: String) {
+        launch {
+            val newLocale = changeLocaleUseCase(locale)
+            _uiState.update {
+                it.copy(localeUpdated = AuthUiEvent.LocaleUpdated(newLocale))
+            }
+        }
     }
 }

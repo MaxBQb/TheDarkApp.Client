@@ -1,14 +1,12 @@
 package lab.maxb.dark.presentation.screens.auth.form
 
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.onPreviewKeyEvent
@@ -16,13 +14,12 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.os.LocaleListCompat
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import lab.maxb.dark.R
-import lab.maxb.dark.presentation.components.AppScaffold
-import lab.maxb.dark.presentation.components.LabelledSwitch
-import lab.maxb.dark.presentation.components.LoadingScreen
-import lab.maxb.dark.presentation.components.rememberSnackbarHostState
+import lab.maxb.dark.presentation.components.*
 import lab.maxb.dark.presentation.components.utils.getPasswordTransformation
 import lab.maxb.dark.presentation.components.utils.keyboardClose
 import lab.maxb.dark.presentation.components.utils.keyboardNext
@@ -31,6 +28,7 @@ import lab.maxb.dark.presentation.extra.initialNavigate
 import lab.maxb.dark.presentation.extra.show
 import lab.maxb.dark.presentation.screens.destinations.AuthScreenDestination
 import lab.maxb.dark.presentation.screens.destinations.WelcomeScreenDestination
+import lab.maxb.dark.ui.theme.DarkAppTheme
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
 import org.koin.androidx.compose.getViewModel
@@ -59,11 +57,23 @@ fun AuthScreen(
     uiState.authorized.ChangedEffect(onConsumed = onEvent) {
         navigator.initialNavigate(WelcomeScreenDestination(), AuthScreenDestination)
     }
+    uiState.localeUpdated.ChangedEffect(onConsumed = onEvent) {
+        AppCompatDelegate.setApplicationLocales(
+            LocaleListCompat.forLanguageTags(it.locale)
+        )
+    }
+}
+
+@Composable
+fun AuthRootPreview(uiState: AuthUiState) = DarkAppTheme {
+    Surface {
+        AuthRootStateless(uiState)
+    }
 }
 
 @Preview
 @Composable
-fun AuthRootPreviewLogin() = AuthRootStateless(
+fun AuthRootPreviewLogin() = AuthRootPreview(
     AuthUiState(
         isAccountNew = false,
     ),
@@ -71,7 +81,7 @@ fun AuthRootPreviewLogin() = AuthRootStateless(
 
 @Preview
 @Composable
-fun AuthRootPreviewSignup() = AuthRootStateless(
+fun AuthRootPreviewSignup() = AuthRootPreview(
     AuthUiState(
         isAccountNew = true,
     ),
@@ -79,7 +89,7 @@ fun AuthRootPreviewSignup() = AuthRootStateless(
 
 @Preview
 @Composable
-fun AuthRootPreviewLoading() = AuthRootStateless(
+fun AuthRootPreviewLoading() = AuthRootPreview(
     AuthUiState(
         isLoading = true,
     ),
@@ -95,6 +105,7 @@ fun AuthRootStateless(
     LaunchedEffect(true) {
         localFocus.clearFocus(true)
     }
+    val dialogState = rememberMaterialDialogState()
 
     Column(
         modifier = Modifier
@@ -107,15 +118,23 @@ fun AuthRootStateless(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround
     ) {
-        Text(
-            stringResource(
-                if (uiState.isAccountNew)
-                    R.string.auth_signup_label
-                else R.string.auth_login_label
-            ),
-            modifier = Modifier.padding(MaterialTheme.spacing.normal),
-            style = MaterialTheme.typography.titleLarge
-        )
+        Column(
+            modifier = Modifier.fillMaxSize().padding(horizontal = MaterialTheme.spacing.small),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                stringResource(
+                    if (uiState.isAccountNew)
+                        R.string.auth_signup_label
+                    else R.string.auth_login_label
+                ),
+                modifier = Modifier.padding(MaterialTheme.spacing.normal),
+                style = MaterialTheme.typography.titleLarge
+            )
+            LanguageToggleButton { dialogState.show() }
+        }
+
         val padding = Modifier
             .padding(
                 MaterialTheme.spacing.zero,
@@ -205,6 +224,13 @@ fun AuthRootStateless(
                     fontWeight = FontWeight.ExtraBold
                 )
             }
-        }
+    }
+
+    ChooseLocaleDialog(
+        dialogState,
+        uiState.locale,
+    ) {
+        onEvent(AuthUiEvent.LocaleChanged(it))
+    }
     LoadingScreen(uiState.isLoading)
 }
