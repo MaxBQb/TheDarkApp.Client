@@ -20,7 +20,7 @@ class AddRecognitionTaskViewModel(
     private val createRecognitionTaskUseCase: CreateRecognitionTaskUseCase,
 ) : ViewModel() {
     private var suggestionsRequest by LatestOnly()
-    private var addTaskRequest by LatestOnly()
+    private var addTaskRequest by FirstOnly()
 
     fun onEvent(event: AddTaskUiEvent): Unit = with(event) {
         when (this) {
@@ -43,12 +43,14 @@ class AddRecognitionTaskViewModel(
         addTaskRequest = launch {
             try {
                 val state = uiState.value
+                _uiState.update { it.copy(isLoading = true) }
                 createRecognitionTaskUseCase(
                     state.names.map { it.value },
                     state.images.map { it.toString() },
                 )
                 _uiState.update { it.copy(submitSuccess = AddTaskUiEvent.SubmitSuccess) }
             } catch (e: Throwable) {
+                e.throwIfCancellation()
                 e.printStackTrace()
                 _uiState.update {
                     it.copy(
@@ -57,6 +59,8 @@ class AddRecognitionTaskViewModel(
                         )
                     )
                 }
+            } finally {
+                _uiState.update { it.copy(isLoading = false) }
             }
         }
     }
@@ -120,4 +124,3 @@ class AddRecognitionTaskViewModel(
         allowedImageCount = max(RecognitionTask.MAX_IMAGES_COUNT - images.size, 0),
     )
 }
-

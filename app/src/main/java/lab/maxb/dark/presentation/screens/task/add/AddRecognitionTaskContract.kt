@@ -14,6 +14,7 @@ data class AddTaskUiState(
     val userMessages: UiTriggers<AddTaskUiEvent.UserMessage> = UiTriggers(),
     val submitSuccess: AddTaskUiEvent.SubmitSuccess? = null,
     val allowedImageCount: Int = RecognitionTask.MAX_IMAGES_COUNT,
+    val isLoading: Boolean = false,
 )
 
 sealed interface AddTaskUiEvent {

@@ -40,7 +40,6 @@ import lab.maxb.dark.presentation.extra.ChangedEffect
 import lab.maxb.dark.presentation.extra.ItemHolder
 import lab.maxb.dark.presentation.extra.show
 import lab.maxb.dark.presentation.extra.takePersistablePermission
-import lab.maxb.dark.ui.theme.DarkAppTheme
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
 import org.koin.androidx.compose.getViewModel
@@ -68,7 +67,10 @@ fun AddRecognitionTaskScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { onEvent(AddTaskUiEvent.Submit) }) {
+                    IconButton(
+                        onClick = { onEvent(AddTaskUiEvent.Submit) },
+                        enabled = !uiState.isLoading,
+                    ) {
                         Icon(Icons.Filled.Done, null)
                     }
                 }
@@ -103,68 +105,66 @@ fun AddRecognitionTaskRootStatelessPreview() = AddRecognitionTaskRootStateless(
 fun AddRecognitionTaskRootStateless(
     uiState: AddTaskUiState,
     onEvent: (AddTaskUiEvent) -> Unit = {}
-) = DarkAppTheme {
-    Surface {
-        val isVerticalOrientation = (
-            LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
-        )
-        TwoPane(
-            displayFeatures = calculateDisplayFeatures(LocalContext.current as Activity),
-            strategy = if (isVerticalOrientation)
-                    VerticalTwoPaneStrategy(0.5f, MaterialTheme.spacing.small)
-                else HorizontalTwoPaneStrategy(0.5f),
-            modifier = Modifier.fillMaxSize(),
-            first = {
-                InputList(
-                    values = uiState.names,
-                    onValueChanged = {
-                        onEvent(AddTaskUiEvent.NameChanged(it))
-                    },
-                    suggestions = uiState.suggestions,
-                    queryLabel = {
-                        Text(
-                            stringResource(R.string.addTask_inputList_hint),
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = MaterialTheme.spacing.extraSmall)
-                )
-            },
-            second = {
-                val context = LocalContext.current.applicationContext
-                val getImages = rememberImagesRequest { result ->
-                    val list = result?.filterNotNull()?.map {
-                        it.takePersistablePermission(context)
-                        it
-                    }
-                    if (!list.isNullOrEmpty())
-                        onEvent(AddTaskUiEvent.ImagesAdded(list))
+) {
+    val isVerticalOrientation = LocalConfiguration.current.orientation ==
+            Configuration.ORIENTATION_PORTRAIT
+    TwoPane(
+        displayFeatures = calculateDisplayFeatures(LocalContext.current as Activity),
+        strategy = if (isVerticalOrientation)
+            VerticalTwoPaneStrategy(0.5f, MaterialTheme.spacing.small)
+        else HorizontalTwoPaneStrategy(0.5f),
+        modifier = Modifier.fillMaxSize(),
+        first = {
+            InputList(
+                values = uiState.names,
+                onValueChanged = {
+                    onEvent(AddTaskUiEvent.NameChanged(it))
+                },
+                suggestions = uiState.suggestions,
+                queryLabel = {
+                    Text(
+                        stringResource(R.string.addTask_inputList_hint),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = MaterialTheme.spacing.extraSmall)
+            )
+        },
+        second = {
+            val context = LocalContext.current.applicationContext
+            val getImages = rememberImagesRequest { result ->
+                val list = result?.filterNotNull()?.map {
+                    it.takePersistablePermission(context)
+                    it
                 }
-                val pagerState = rememberPagerState()
-                val updateImage = rememberImageRequest {
-                    it?.let { image ->
-                        onEvent(AddTaskUiEvent.ImageChanged(pagerState.currentPage, image))
-                    }
+                if (!list.isNullOrEmpty())
+                    onEvent(AddTaskUiEvent.ImagesAdded(list))
+            }
+            val pagerState = rememberPagerState()
+            val updateImage = rememberImageRequest {
+                it?.let { image ->
+                    onEvent(AddTaskUiEvent.ImageChanged(pagerState.currentPage, image))
                 }
+            }
 
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState()),
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+            ) {
+                AnimatedVisibility(
+                    visible = uiState.images.isEmpty(),
                 ) {
-                    AnimatedVisibility(
-                        visible = uiState.images.isEmpty(),
-                    ) {
-                        Text(
-                            text = stringResource(R.string.addTask_loadImagesTitle),
-                            style = MaterialTheme.typography.headlineSmall,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(MaterialTheme.spacing.extraSmall)
-                        )
+                    Text(
+                        text = stringResource(R.string.addTask_loadImagesTitle),
+                        style = MaterialTheme.typography.headlineSmall,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(MaterialTheme.spacing.extraSmall)
+                    )
                     }
                     AnimatedVisibility(
                         visible = uiState.images.isNotEmpty(),
@@ -199,10 +199,10 @@ fun AddRecognitionTaskRootStateless(
                                 .clickable(onClick = getImages),
                         )
                     }
-                }
             }
-        )
-    }
+        }
+    )
+    LoadingScreen(show = uiState.isLoading)
 }
 
 
