@@ -3,11 +3,12 @@ package lab.maxb.dark.presentation.components
 import androidx.compose.runtime.*
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.os.LocaleListCompat
 import com.vanpra.composematerialdialogs.*
+import lab.maxb.dark.BuildConfig
 import lab.maxb.dark.R
 import lab.maxb.dark.ui.theme.DarkAppTheme
 import java.util.*
+
 
 @Composable
 fun ChooseLocaleDialog(
@@ -42,19 +43,17 @@ fun ChooseLocaleDialog(
 
 @Composable
 private fun getLocalesMap(defaultValueText: String) = remember(defaultValueText) {
-    val locales = LocaleListCompat.getDefault()
     val names = mutableListOf(defaultValueText)
     val keys = mutableListOf("")
-    for (i in 0 until locales.size()) {
-        val item = locales.get(i)!!
-        names.add(getLanguageName(item))
-        keys.add(item.toLanguageTag())
+    getSupportedLocales().forEach {
+        names.add(getLanguageName(it))
+        keys.add(it.toLanguageTag())
     }
     names to keys
 }
 
-fun getLanguageName(locale: Locale = Locale.getDefault())
-    = locale.displayLanguage.replaceFirstChar(Char::titlecase)
+fun getLanguageName(locale: Locale = Locale.getDefault()) =
+    locale.displayLanguage.replaceFirstChar(Char::titlecase)
 
 @Preview
 @Composable
@@ -63,3 +62,5 @@ fun ChooseLocaleDialogPreview() = DarkAppTheme {
     ChooseLocaleDialog(dialogState)
     dialogState.show()
 }
+
+fun getSupportedLocales() = BuildConfig.LOCALES.map(Locale::forLanguageTag)

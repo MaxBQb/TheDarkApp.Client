@@ -7,6 +7,11 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
+ext {
+    supportedLocales = ['en', 'ru']
+    resToLoc = { res -> res.replaceAll(/-r/, '-').replaceAll(/^b\+/, '').replaceAll(/\+/, '-') }
+}
+
 android {
     compileSdkVersion 33
     buildToolsVersion "30.0.3"
@@ -30,7 +35,9 @@ android {
         buildConfigField "String", "DARK_API_URL", keystoreProperties["DARK_API_URL"]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        resConfigs "ru", "en"
+        resConfigs supportedLocales
+        buildConfigField "String[]", "LOCALES", '{"' +
+                supportedLocales.collect { resToLoc(it) }.join('","') + '"}'
     }
 
     buildFeatures{
