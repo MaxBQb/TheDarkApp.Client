@@ -5,22 +5,22 @@ import lab.maxb.dark.domain.model.User
 
 
 class RecognitionTaskListViewNetworkDTO (
-    var image: String?,
+    val image: String?,
     val owner_id: String,
     val reviewed: Boolean,
-    var id: String,
+    val id: String,
 )
 
 class RecognitionTaskFullViewNetworkDTO(
-    var names: Set<String>?,
-    var images: List<String>?,
+    val names: Set<String>?,
+    val images: List<String>?,
     val owner_id: String,
     val reviewed: Boolean,
-    var id: String,
+    val id: String,
 )
 
 class RecognitionTaskCreationNetworkDTO(
-    var names: Set<String>
+    val names: Set<String>
 )
 
 fun RecognitionTask.toNetworkDTO() = RecognitionTaskCreationNetworkDTO(

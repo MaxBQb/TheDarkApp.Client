@@ -2,11 +2,11 @@ package lab.maxb.dark.domain.model
 
 @kotlinx.serialization.Serializable
 data class Profile(
-    var login: String,
-    var userId: String,
-    var token: String,
-    var type: AuthType = AuthType.CREDENTIALS,
-    var role: Role = Role.USER
+    val login: String,
+    val userId: String,
+    val token: String,
+    val type: AuthType = AuthType.CREDENTIALS,
+    val role: Role = Role.USER
 ) {
     enum class AuthType {
         CREDENTIALS,
