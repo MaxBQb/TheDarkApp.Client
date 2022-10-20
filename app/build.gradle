@@ -24,12 +24,8 @@ android {
         applicationId "lab.maxb.dark"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 1
-        versionName "1.0"
-        vectorDrawables.useSupportLibrary = true
-
-        // MasterKey for encrypted SharedPreference
-        buildConfigField "String", "SECURE_PREFS_MASTER_KEY", keystoreProperties["SECURE_PREFS_MASTER_KEY"]
+        versionCode 2
+        versionName "0.3.1"
 
         // URL for main API
         buildConfigField "String", "DARK_API_URL", keystoreProperties["DARK_API_URL"]
