@@ -7,6 +7,11 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
+ext {
+    supportedLocales = ['en', 'ru']
+    resToLoc = { res -> res.replaceAll(/-r/, '-').replaceAll(/^b\+/, '').replaceAll(/\+/, '-') }
+}
+
 android {
     compileSdkVersion 33
     buildToolsVersion "30.0.3"
@@ -19,18 +24,16 @@ android {
         applicationId "lab.maxb.dark"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 1
-        versionName "1.0"
-        vectorDrawables.useSupportLibrary = true
-
-        // MasterKey for encrypted SharedPreference
-        buildConfigField "String", "SECURE_PREFS_MASTER_KEY", keystoreProperties["SECURE_PREFS_MASTER_KEY"]
+        versionCode 2
+        versionName "0.3.1"
 
         // URL for main API
         buildConfigField "String", "DARK_API_URL", keystoreProperties["DARK_API_URL"]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        resConfigs "ru", "en"
+        resConfigs supportedLocales
+        buildConfigField "String[]", "LOCALES", '{"' +
+                supportedLocales.collect { resToLoc(it) }.join('","') + '"}'
     }
 
     buildFeatures{

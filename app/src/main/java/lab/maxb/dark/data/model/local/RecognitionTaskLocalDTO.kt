@@ -20,7 +20,7 @@ data class RecognitionTaskLocalDTO(
     var names: Set<String>?,
     var images: List<String>?,
     val owner_id: String,
-    var reviewed: Boolean = false,
+    val reviewed: Boolean = false,
 
     @PrimaryKey
     override var id: String = randomUUID,

@@ -7,11 +7,11 @@ import lab.maxb.dark.domain.operations.randomUUID
 
 @Entity(tableName = "user")
 data class UserLocalDTO(
-    var name: String,
-    var rating: Int,
+    val name: String,
+    val rating: Int,
 
     @PrimaryKey
-    override var id: String = randomUUID,
+    override val id: String = randomUUID,
 ): BaseLocalDTO()
 
 fun User.toLocalDTO() = UserLocalDTO(

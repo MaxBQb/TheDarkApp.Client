@@ -9,7 +9,8 @@ open class MarkRecognitionTaskUseCase(
     private val recognitionTasksRepository: RecognitionTasksRepository,
 ) {
     open suspend operator fun invoke(task: RecognitionTask, isAllowed: Boolean) {
-        task.reviewed = isAllowed
-        recognitionTasksRepository.markRecognitionTask(task)
+        recognitionTasksRepository.markRecognitionTask(task.copy(
+            reviewed = isAllowed
+        ))
     }
 }

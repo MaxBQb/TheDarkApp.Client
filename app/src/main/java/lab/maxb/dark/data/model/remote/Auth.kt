@@ -5,14 +5,14 @@ import lab.maxb.dark.domain.model.ReceivedAuthCredentials
 import lab.maxb.dark.domain.model.Role
 
 class AuthRequest(
-    var login: String,
-    var password: String,
+    val login: String,
+    val password: String,
 )
 
 class AuthResponse(
-    var token: String,
-    var id: String,
-    var role: Role,
+    val token: String,
+    val id: String,
+    val role: Role,
 )
 
 fun AuthCredentials.toNetworkDTO() = AuthRequest(
