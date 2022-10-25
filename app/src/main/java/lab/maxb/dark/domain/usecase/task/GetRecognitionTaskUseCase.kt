@@ -8,5 +8,5 @@ open class GetRecognitionTaskUseCase(
     private val recognitionTasksRepository: RecognitionTasksRepository,
 ) {
     open suspend operator fun invoke(id: String)
-        = recognitionTasksRepository.getRecognitionTask(id)
+        = recognitionTasksRepository.getRecognitionTask(id, true)
 }
