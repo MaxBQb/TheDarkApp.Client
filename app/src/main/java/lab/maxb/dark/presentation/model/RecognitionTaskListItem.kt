@@ -10,7 +10,7 @@ data class RecognitionTaskListItem(
 )
 
 fun RecognitionTaskWithOwner.toPresentation() = RecognitionTaskListItem(
-    image = task.images?.firstOrNull() ?: "",
+    image = task.images.firstOrNull() ?: "",
     ownerName = owner.name,
     reviewed = task.reviewed,
     id = task.id,

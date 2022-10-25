@@ -3,8 +3,8 @@ package lab.maxb.dark.domain.model
 import lab.maxb.dark.domain.operations.randomUUID
 
 data class RecognitionTask(
-    val names: Set<String>? = null,
-    val images: List<String>? = null,
+    val names: Set<String> = emptySet(),
+    val images: List<String> = emptyList(),
     val ownerId: String,
     val reviewed: Boolean = false,
     val id: String = randomUUID,

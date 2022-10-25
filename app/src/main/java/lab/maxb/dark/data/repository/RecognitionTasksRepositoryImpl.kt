@@ -90,7 +90,7 @@ class RecognitionTasksRepositoryImpl(
             task.toNetworkDTO()
         )?.also { taskLocal.id = it }
 
-        taskLocal.images = task.images!!.map {
+        taskLocal.images = task.images.map {
             networkDataSource.addImage(
                 taskLocal.id,
                 imageLoader.fromUri(it.toUri())

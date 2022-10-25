@@ -17,8 +17,8 @@ import lab.maxb.dark.domain.operations.randomUUID
         ]
 )
 data class RecognitionTaskLocalDTO(
-    var names: Set<String>?,
-    var images: List<String>?,
+    var names: Set<String>,
+    var images: List<String>,
     val owner_id: String,
     val reviewed: Boolean = false,
 

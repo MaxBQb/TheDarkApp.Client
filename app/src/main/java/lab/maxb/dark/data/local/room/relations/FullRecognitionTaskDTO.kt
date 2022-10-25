@@ -15,10 +15,10 @@ data class FullRecognitionTaskDTO(
         entityColumn = "id",
         entity = UserLocalDTO::class
     )
-    val owner: User?
+    val owner: User
 )
 
 fun FullRecognitionTaskDTO.toDomain() = RecognitionTaskWithOwner(
     recognition_task.toDomain(),
-    owner!!,
+    owner,
 )

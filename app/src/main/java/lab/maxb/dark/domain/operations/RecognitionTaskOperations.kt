@@ -23,7 +23,7 @@ fun createRecognitionTask(
 }
 
 fun RecognitionTask.solve(name: String)
-    = names?.contains(prepareRecognitionTaskName(name)) ?: false
+    = names.contains(prepareRecognitionTaskName(name))
 
 fun prepareRecognitionTaskName(name: String)
     = name.trim().lowercase()
