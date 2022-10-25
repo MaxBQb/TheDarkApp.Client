@@ -1,5 +1,6 @@
 package lab.maxb.dark.data.model.local
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -24,7 +25,13 @@ data class RecognitionTaskLocalDTO(
 
     @PrimaryKey
     override var id: String = randomUUID,
-): BaseLocalDTO()
+): BaseLocalDTO(), TimeContainer {
+    @ColumnInfo(name = TimeContainer.createdAt)
+    override var createdAt: Long = 0
+
+    @ColumnInfo(name = TimeContainer.modifiedAt)
+    override var modifiedAt: Long = 0
+}
 
 fun RecognitionTask.toLocalDTO() = RecognitionTaskLocalDTO(
     names,

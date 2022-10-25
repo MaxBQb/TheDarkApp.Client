@@ -5,6 +5,8 @@ import androidx.room.OnConflictStrategy.IGNORE
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import lab.maxb.dark.data.model.local.BaseLocalDTO
+import lab.maxb.dark.data.model.local.markCreated
+import lab.maxb.dark.data.model.local.markModified
 
 interface BaseDAO<DTO: BaseLocalDTO> {
     @Insert(onConflict = IGNORE)
@@ -35,8 +37,8 @@ abstract class AdvancedDAO<DTO: BaseLocalDTO>(
     @Transaction
     open suspend fun save(vararg value: DTO) {
         for (it in value)
-            if (add(it) == -1L)
-                update(it)
+            if (add(it.markCreated()) == -1L)
+                update(it.markModified())
     }
 
     @RawQuery

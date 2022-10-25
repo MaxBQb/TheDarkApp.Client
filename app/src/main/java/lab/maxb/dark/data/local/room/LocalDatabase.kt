@@ -18,7 +18,7 @@ import lab.maxb.dark.domain.repository.LocalStorage
             UserLocalDTO::class,
             RecognitionTaskLocalDTO::class,
             RemoteKey::class,
-          ], version = 9, exportSchema = false)
+          ], version = 10, exportSchema = false)
 @TypeConverters(CollectionsConverter::class)
 abstract class LocalDatabase : RoomDatabase(), LocalStorage {
     abstract fun recognitionTasks(): RecognitionTasksDAO

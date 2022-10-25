@@ -5,20 +5,20 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.map
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
 import lab.maxb.dark.data.local.room.LocalDatabase
 import lab.maxb.dark.data.local.room.relations.toDomain
+import lab.maxb.dark.data.model.local.RecognitionTaskLocalDTO
 import lab.maxb.dark.data.model.local.toDomain
 import lab.maxb.dark.data.model.local.toLocalDTO
 import lab.maxb.dark.data.model.remote.toDomain
 import lab.maxb.dark.data.model.remote.toNetworkDTO
 import lab.maxb.dark.data.remote.dark.DarkService
+import lab.maxb.dark.data.utils.DbRefreshController
 import lab.maxb.dark.data.utils.Resource
 import lab.maxb.dark.data.utils.pagination.Page
 import lab.maxb.dark.data.utils.pagination.RecognitionTaskMediator
@@ -37,13 +37,9 @@ class RecognitionTasksRepositoryImpl(
 ) : RecognitionTasksRepository {
     private val localDataSource = db.recognitionTasks()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val tasksResource = Resource<Page, List<RecognitionTask>>().apply {
-        fetchLocal = { _ ->
-            localDataSource.getAll().mapLatest {
-                data -> data?.map { it.toDomain() }
-            }
-        }
+    private val tasksResource = Resource<Page, List<RecognitionTask>, List<RecognitionTaskLocalDTO>>().apply {
+        fetchLocal = { _ -> localDataSource.getAll() }
+        localMapper = { x -> x?.map { it.toDomain() } }
         fetchRemote = { page ->
             networkDataSource.getAllTasks(page.page, page.size)?.map {
                 it.toDomain()
@@ -118,24 +114,17 @@ class RecognitionTasksRepositoryImpl(
             false
         }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val taskResource = Resource<String, RecognitionTask>().apply {
+    private val taskResource = Resource<String, RecognitionTask, RecognitionTaskLocalDTO>(
+        DbRefreshController()).apply {
         fetchRemote = { id ->
             networkDataSource.getTask(id)?.toDomain()?.also {
                 getUser(it.ownerId)
             }
         }
-        fetchLocal = { id ->
-            localDataSource.get(id).mapLatest {
-                it?.toDomain()
-            }
-        }
-        localStore = { task ->
-            localDataSource.save(task.toLocalDTO())
-        }
-        clearLocalStore = {
-            localDataSource.delete(it)
-        }
+        fetchLocal = { localDataSource.get(it) }
+        localMapper = { it?.toDomain() }
+        localStore = { localDataSource.save(it.toLocalDTO()) }
+        clearLocalStore = { localDataSource.delete(it) }
     }
 
     override suspend fun getRecognitionTask(id: String, forceUpdate: Boolean)

@@ -6,7 +6,7 @@ import lab.maxb.dark.data.local.dataStore.ProfileDataSource
 import lab.maxb.dark.data.model.remote.toDomain
 import lab.maxb.dark.data.model.remote.toNetworkDTO
 import lab.maxb.dark.data.remote.dark.DarkService
-import lab.maxb.dark.data.utils.RefreshControllerImpl
+import lab.maxb.dark.data.utils.InMemRefreshController
 import lab.maxb.dark.data.utils.Resource
 import lab.maxb.dark.domain.model.AuthCredentials
 import lab.maxb.dark.domain.model.Profile
@@ -30,8 +30,8 @@ class ProfileRepositoryImpl(
         }
     }
 
-    private val profileResource = Resource<AuthCredentials?, Profile>(
-        RefreshControllerImpl(Duration.ofHours(12).toMillis())
+    private val profileResource = Resource<AuthCredentials?, Profile, Profile>(
+        InMemRefreshController(Duration.ofHours(12).toMillis())
     ).apply {
         fetchLocal = { localDataSource.data }
         fetchRemote = remote@ {

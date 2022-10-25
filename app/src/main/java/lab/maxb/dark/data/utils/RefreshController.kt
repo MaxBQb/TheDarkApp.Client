@@ -1,6 +1,6 @@
 package lab.maxb.dark.data.utils
 
-interface RefreshController {
-    suspend fun isExpired(): Boolean
+interface RefreshController<T> {
+    suspend fun isExpired(data: T?): Boolean
     suspend fun refresh()
 }
