@@ -18,7 +18,7 @@ fun createRecognitionTask(
     return RecognitionTask(
         namesSet,
         images,
-        owner,
+        owner.id,
     )
 }
 

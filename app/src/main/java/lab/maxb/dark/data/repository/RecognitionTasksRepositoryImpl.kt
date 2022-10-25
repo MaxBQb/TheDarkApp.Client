@@ -6,11 +6,15 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.map
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import lab.maxb.dark.data.local.room.LocalDatabase
 import lab.maxb.dark.data.local.room.relations.toDomain
+import lab.maxb.dark.data.model.local.toDomain
 import lab.maxb.dark.data.model.local.toLocalDTO
 import lab.maxb.dark.data.model.remote.toDomain
 import lab.maxb.dark.data.model.remote.toNetworkDTO
@@ -35,14 +39,22 @@ class RecognitionTasksRepositoryImpl(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val tasksResource = Resource<Page, List<RecognitionTask>>().apply {
-        fetchLocal = { page ->
+        fetchLocal = { _ ->
             localDataSource.getAll().mapLatest {
                 data -> data?.map { it.toDomain() }
             }
         }
         fetchRemote = { page ->
             networkDataSource.getAllTasks(page.page, page.size)?.map {
-                it.toDomain { getUser(it.owner_id) }
+                it.toDomain()
+            }?.also {
+                coroutineScope {
+                    it.map {
+                        async {
+                            getUser(it.ownerId)
+                        }
+                    }.let { awaitAll(*it.toTypedArray()) }
+                }
             }
         }
         isEmptyResponse = { it.isNullOrEmpty() }
@@ -109,8 +121,8 @@ class RecognitionTasksRepositoryImpl(
     @OptIn(ExperimentalCoroutinesApi::class)
     private val taskResource = Resource<String, RecognitionTask>().apply {
         fetchRemote = { id ->
-            networkDataSource.getTask(id)?.let {
-                it.toDomain { getUser(it.owner_id) }
+            networkDataSource.getTask(id)?.toDomain()?.also {
+                getUser(it.ownerId)
             }
         }
         fetchLocal = { id ->

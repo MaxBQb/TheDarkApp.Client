@@ -4,7 +4,8 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import lab.maxb.dark.data.model.local.RecognitionTaskLocalDTO
 import lab.maxb.dark.data.model.local.UserLocalDTO
-import lab.maxb.dark.domain.model.RecognitionTask
+import lab.maxb.dark.data.model.local.toDomain
+import lab.maxb.dark.domain.model.RecognitionTaskWithOwner
 import lab.maxb.dark.domain.model.User
 
 data class FullRecognitionTaskDTO(
@@ -17,10 +18,7 @@ data class FullRecognitionTaskDTO(
     val owner: User?
 )
 
-fun FullRecognitionTaskDTO.toDomain() = RecognitionTask(
-    recognition_task.names,
-    recognition_task.images,
-    owner,
-    recognition_task.reviewed,
-    recognition_task.id,
+fun FullRecognitionTaskDTO.toDomain() = RecognitionTaskWithOwner(
+    recognition_task.toDomain(),
+    owner!!,
 )

@@ -18,7 +18,7 @@ open class GetRecognitionTaskListUseCase(
         = profileRepository.profile.flatMapLatest { profile ->
             recognitionTasksRepository.getAllRecognitionTasks().mapLatest { page ->
                 page.filter {
-                    it.owner?.id != profile?.userId
+                    it.owner.id != profile?.userId
                 }
             }
         }

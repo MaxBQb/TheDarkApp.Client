@@ -29,7 +29,7 @@ data class RecognitionTaskLocalDTO(
 fun RecognitionTask.toLocalDTO() = RecognitionTaskLocalDTO(
     names,
     images,
-    owner!!.id,
+    ownerId,
     reviewed,
     id,
 )
@@ -37,7 +37,7 @@ fun RecognitionTask.toLocalDTO() = RecognitionTaskLocalDTO(
 fun RecognitionTaskLocalDTO.toDomain() = RecognitionTask(
     names,
     images,
-    null,
+    owner_id,
     reviewed,
     id,
 )

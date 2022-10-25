@@ -27,10 +27,10 @@ import com.bumptech.glide.load.model.GlideUrl
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import lab.maxb.dark.R
-import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.presentation.components.LoadingCircle
 import lab.maxb.dark.presentation.components.RecognitionTaskImage
 import lab.maxb.dark.presentation.components.TopScaffold
+import lab.maxb.dark.presentation.model.RecognitionTaskListItem
 import lab.maxb.dark.presentation.screens.destinations.AddRecognitionTaskScreenDestination
 import lab.maxb.dark.presentation.screens.destinations.SolveRecognitionTaskScreenDestination
 import lab.maxb.dark.ui.theme.spacing
@@ -54,7 +54,7 @@ fun RecognitionTaskListScreen(
         RecognitionTaskList(
             items,
             onItemClick = {
-                navigator.navigate(SolveRecognitionTaskScreenDestination(it.id))
+                navigator.navigate(SolveRecognitionTaskScreenDestination(it))
             },
             resolveImage = viewModel::getImage
         )
@@ -80,8 +80,8 @@ fun RecognitionTaskListScreen(
 
 @Composable
 private fun RecognitionTaskList(
-    items: LazyPagingItems<RecognitionTask>,
-    onItemClick: (RecognitionTask) -> Unit,
+    items: LazyPagingItems<RecognitionTaskListItem>,
+    onItemClick: (String) -> Unit,
     resolveImage: (String) -> GlideUrl
 ) {
     LazyColumn(
@@ -92,7 +92,7 @@ private fun RecognitionTaskList(
             item?.let {
                 RecognitionTaskCard(
                     it,
-                    onClick = { onItemClick(it) },
+                    onClick = { onItemClick(it.id) },
                     resolveImage = resolveImage
                 )
             } ?: run {
@@ -111,11 +111,10 @@ private fun RecognitionTaskList(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecognitionTaskCard(
-    item: RecognitionTask,
+    item: RecognitionTaskListItem,
     onClick: () -> Unit,
     resolveImage: (String) -> GlideUrl
 ) {
-    val taskOwnerName = item.owner?.name ?: ""
     val elevation = if (item.reviewed) 300 else 500
     Surface(
         modifier = Modifier
@@ -130,7 +129,7 @@ fun RecognitionTaskCard(
             modifier = Modifier.fillMaxWidth(),
         ) {
             RecognitionTaskImage(
-                resolveImage(item.images?.firstOrNull() ?: ""),
+                resolveImage(item.image),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.sdp),
@@ -156,7 +155,7 @@ fun RecognitionTaskCard(
                     .padding(8.sdp),
                 contentAlignment = Alignment.TopCenter
             ) {
-                Text(taskOwnerName)
+                Text(item.ownerName)
             }
         }
     }

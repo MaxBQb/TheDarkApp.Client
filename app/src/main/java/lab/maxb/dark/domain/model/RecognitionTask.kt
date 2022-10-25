@@ -5,7 +5,7 @@ import lab.maxb.dark.domain.operations.randomUUID
 data class RecognitionTask(
     val names: Set<String>? = null,
     val images: List<String>? = null,
-    val owner: User? = null,
+    val ownerId: String,
     val reviewed: Boolean = false,
     val id: String = randomUUID,
 ) {

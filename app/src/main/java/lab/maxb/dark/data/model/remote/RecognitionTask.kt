@@ -1,7 +1,6 @@
 package lab.maxb.dark.data.model.remote
 
 import lab.maxb.dark.domain.model.RecognitionTask
-import lab.maxb.dark.domain.model.User
 
 
 class RecognitionTaskListViewNetworkDTO (
@@ -27,22 +26,18 @@ fun RecognitionTask.toNetworkDTO() = RecognitionTaskCreationNetworkDTO(
     names!!
 )
 
-inline fun RecognitionTaskListViewNetworkDTO.toDomain(
-    user: () -> User? = { null },
-) = RecognitionTask(
+fun RecognitionTaskListViewNetworkDTO.toDomain() = RecognitionTask(
     setOf(),
     image?.let { listOf(it) },
-    user(),
+    owner_id,
     reviewed,
     id,
 )
 
-inline fun RecognitionTaskFullViewNetworkDTO.toDomain(
-    user: () -> User? = { null }
-) = RecognitionTask(
+fun RecognitionTaskFullViewNetworkDTO.toDomain() = RecognitionTask(
     names,
     images,
-    user(),
+    owner_id,
     reviewed,
     id,
 )
