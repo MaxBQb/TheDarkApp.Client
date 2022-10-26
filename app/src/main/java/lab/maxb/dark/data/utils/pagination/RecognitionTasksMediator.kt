@@ -7,9 +7,8 @@ import androidx.paging.RemoteMediator
 import kotlinx.coroutines.flow.firstOrNull
 import lab.maxb.dark.data.local.room.dao.RemoteKeysDAO
 import lab.maxb.dark.data.local.room.relations.FullRecognitionTaskDTO
-import lab.maxb.dark.data.model.local.RecognitionTaskLocalDTO
 import lab.maxb.dark.data.model.local.RemoteKey
-import lab.maxb.dark.data.utils.Resource
+import lab.maxb.dark.domain.repository.utils.Resource
 import lab.maxb.dark.domain.model.RecognitionTask
 import retrofit2.HttpException
 import java.io.IOException
@@ -18,7 +17,7 @@ import java.io.InvalidObjectException
 
 @OptIn(ExperimentalPagingApi::class)
 class RecognitionTaskMediator(
-    private val resource: Resource<Page, List<RecognitionTask>, List<RecognitionTaskLocalDTO>>,
+    private val resource: Resource<Page, List<RecognitionTask>>,
     private val remoteKeys: RemoteKeysDAO,
 ) : RemoteMediator<Int, FullRecognitionTaskDTO>() {
 

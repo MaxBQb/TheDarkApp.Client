@@ -7,5 +7,5 @@ import org.koin.core.annotation.Singleton
 open class RefreshProfileUseCase(
     private val profileRepository: ProfileRepository,
 ) {
-    open suspend operator fun invoke() = profileRepository.retry()
+    open suspend operator fun invoke() = profileRepository.profileResource.retry()
 }

@@ -7,7 +7,7 @@ import lab.maxb.dark.data.model.remote.toDomain
 import lab.maxb.dark.data.model.remote.toNetworkDTO
 import lab.maxb.dark.data.remote.dark.DarkService
 import lab.maxb.dark.data.utils.InMemRefreshController
-import lab.maxb.dark.data.utils.Resource
+import lab.maxb.dark.data.utils.ResourceImpl
 import lab.maxb.dark.domain.model.AuthCredentials
 import lab.maxb.dark.domain.model.Profile
 import lab.maxb.dark.domain.operations.toProfile
@@ -30,10 +30,9 @@ class ProfileRepositoryImpl(
         }
     }
 
-    private val profileResource = Resource<AuthCredentials?, Profile, Profile>(
-        InMemRefreshController(Duration.ofHours(12).toMillis())
-    ).apply {
-        fetchLocal = { localDataSource.data }
+    override val profileResource = ResourceImpl<AuthCredentials?, Profile, Profile>(
+        refreshController = InMemRefreshController(Duration.ofHours(12).toMillis()),
+        fetchLocal = { localDataSource.data },
         fetchRemote = remote@ {
             it ?: return@remote null
             val request = it.toNetworkDTO()
@@ -42,9 +41,9 @@ class ProfileRepositoryImpl(
             else
                 networkDataSource.login(request)).toDomain(it)
             response.toProfile()
-        }
-        localStore = { value -> localDataSource.updateData { value } }
-    }
+        },
+        localStore = { value -> localDataSource.updateData { value } },
+    )
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override val profile = _credentials.flatMapLatest {
@@ -56,6 +55,5 @@ class ProfileRepositoryImpl(
         return profile.firstOrNull()
     }
 
-    override suspend fun retry() = profileResource.retry()
     override suspend fun clear() = localDataSource.clear()
 }

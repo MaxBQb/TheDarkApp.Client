@@ -19,7 +19,7 @@ import lab.maxb.dark.data.model.remote.toDomain
 import lab.maxb.dark.data.model.remote.toNetworkDTO
 import lab.maxb.dark.data.remote.dark.DarkService
 import lab.maxb.dark.data.utils.DbRefreshController
-import lab.maxb.dark.data.utils.Resource
+import lab.maxb.dark.data.utils.ResourceImpl
 import lab.maxb.dark.data.utils.pagination.Page
 import lab.maxb.dark.data.utils.pagination.RecognitionTaskMediator
 import lab.maxb.dark.domain.model.RecognitionTask
@@ -37,9 +37,9 @@ class RecognitionTasksRepositoryImpl(
 ) : RecognitionTasksRepository {
     private val localDataSource = db.recognitionTasks()
 
-    private val tasksResource = Resource<Page, List<RecognitionTask>, List<RecognitionTaskLocalDTO>>().apply {
-        fetchLocal = { _ -> localDataSource.getAll() }
-        localMapper = { x -> x?.map { it.toDomain() } }
+    private val tasksResource = ResourceImpl<Page, List<RecognitionTask>, List<RecognitionTaskLocalDTO>>(
+        fetchLocal = { localDataSource.getAll() },
+        localMapper = { x -> x?.map { it.toDomain() } },
         fetchRemote = { page ->
             networkDataSource.getAllTasks(page.page, page.size)?.map {
                 it.toDomain()
@@ -52,21 +52,21 @@ class RecognitionTasksRepositoryImpl(
                     }.let { awaitAll(*it.toTypedArray()) }
                 }
             }
-        }
-        isEmptyResponse = { it.isNullOrEmpty() }
-        isEmptyCache = { it.isNullOrEmpty() }
+        },
+        isEmptyResponse = { it.isNullOrEmpty() },
+        isEmptyCache = { it.isNullOrEmpty() },
         localStore = { tasks ->
             tasks.map {
                 it.toLocalDTO()
             }.toTypedArray().let {
                 localDataSource.saveOnly(*it)
             }
-        }
+        },
         clearLocalStore = { page ->
             if (page.page == 0)
                 localDataSource.clear()
-        }
-    }
+        },
+    )
 
     @OptIn(ExperimentalPagingApi::class)
     private val pager = Pager(
@@ -99,7 +99,7 @@ class RecognitionTasksRepositoryImpl(
     override suspend fun markRecognitionTask(task: RecognitionTask)
         = try {
             networkDataSource.markTask(task.id, task.reviewed).also {
-                if (it) refresh(task.id)
+                if (it) recognitionTaskResource.refresh(task.id)
             }
         } catch (e: Throwable) {
             e.printStackTrace()
@@ -114,29 +114,23 @@ class RecognitionTasksRepositoryImpl(
             false
         }
 
-    private val taskResource = Resource<String, RecognitionTask, RecognitionTaskLocalDTO>(
-        DbRefreshController()).apply {
+    override val recognitionTaskResource = ResourceImpl<String, RecognitionTask,
+            RecognitionTaskLocalDTO>(
+        refreshController = DbRefreshController(),
         fetchRemote = { id ->
             networkDataSource.getTask(id)?.toDomain()?.also {
                 getUser(it.ownerId)
             }
-        }
-        fetchLocal = { localDataSource.get(it) }
-        localMapper = { it?.toDomain() }
-        localStore = { localDataSource.save(it.toLocalDTO()) }
-        clearLocalStore = { localDataSource.delete(it) }
-    }
-
-    override suspend fun getRecognitionTask(id: String, forceUpdate: Boolean)
-        = taskResource.query(id, forceUpdate, true)
-
-    override suspend fun refresh(id: String) {
-        taskResource.refresh(id)
-    }
+        },
+        fetchLocal = { localDataSource.get(it) },
+        localMapper = { it?.toDomain() },
+        localStore = { localDataSource.save(it.toLocalDTO()) },
+        clearLocalStore = { localDataSource.delete(it) },
+    )
 
     override fun getRecognitionTaskImage(path: String)
         = networkDataSource.getImageSource(path)
 
     private suspend fun getUser(id: String)
-        = usersRepository.getUser(id).firstOrNull()!!
+        = usersRepository.userResource.query(id).firstOrNull()!!
 }

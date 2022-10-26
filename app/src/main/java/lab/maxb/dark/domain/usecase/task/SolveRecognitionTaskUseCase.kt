@@ -15,8 +15,7 @@ open class SolveRecognitionTaskUseCase(
     open suspend operator fun invoke(id: String, answer: String)
         = recognitionTasksRepository.solveRecognitionTask(id, answer).also {
         if (!it) return@also
-        usersRepository.refresh(profileRepository.profile.firstOrNull()!!.userId)
-        recognitionTasksRepository.refresh(id)
+        usersRepository.userResource.refresh(profileRepository.profile.firstOrNull()!!.userId)
+        recognitionTasksRepository.recognitionTaskResource.refresh(id)
     }
-
 }

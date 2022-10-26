@@ -1,9 +1,8 @@
 package lab.maxb.dark.domain.repository
 
-import kotlinx.coroutines.flow.Flow
 import lab.maxb.dark.domain.model.User
+import lab.maxb.dark.domain.repository.utils.Resource
 
 interface UsersRepository {
-    suspend fun getUser(id: String, fresh: Boolean = false): Flow<User?>
-    suspend fun refresh(id: String): Boolean
+    val userResource: Resource<String, User>
 }
