@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.ramcosta.composedestinations.annotation.DeepLink
@@ -29,7 +30,6 @@ import lab.maxb.dark.presentation.screens.destinations.SolveRecognitionTaskScree
 import lab.maxb.dark.ui.theme.DarkAppTheme
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
-import org.koin.androidx.compose.getViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,7 +43,7 @@ fun SolveRecognitionTaskScreen(
     id: String,
     navigator: DestinationsNavigator,
     navController: NavController,
-    viewModel: SolveRecognitionTaskViewModel = getViewModel(),
+    viewModel: SolveRecognitionTaskViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val onEvent = viewModel::onEvent

@@ -4,10 +4,11 @@ import kotlinx.coroutines.flow.firstOrNull
 import lab.maxb.dark.domain.repository.ProfileRepository
 import lab.maxb.dark.domain.repository.RecognitionTasksRepository
 import lab.maxb.dark.domain.repository.UsersRepository
-import org.koin.core.annotation.Singleton
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
-open class SolveRecognitionTaskUseCase(
+open class SolveRecognitionTaskUseCase @Inject constructor(
     private val recognitionTasksRepository: RecognitionTasksRepository,
     private val usersRepository: UsersRepository,
     private val profileRepository: ProfileRepository,

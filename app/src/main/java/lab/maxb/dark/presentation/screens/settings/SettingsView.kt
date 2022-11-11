@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.core.os.LocaleListCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.ramcosta.composedestinations.annotation.Destination
@@ -21,7 +22,6 @@ import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import lab.maxb.dark.R
 import lab.maxb.dark.presentation.components.*
 import lab.maxb.dark.presentation.extra.ChangedEffect
-import org.koin.androidx.compose.getViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,7 +29,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun SettingsScreen(
     navController: NavController,
-    viewModel: SettingsViewModel = getViewModel()
+    viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val onEvent = viewModel::onEvent

@@ -2,10 +2,11 @@ package lab.maxb.dark.domain.usecase.auth
 
 import kotlinx.coroutines.flow.combine
 import lab.maxb.dark.domain.repository.ProfileRepository
-import org.koin.core.annotation.Singleton
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
-open class HandleInitialAuthUseCase(
+open class HandleInitialAuthUseCase @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val signOutUseCase: SignOutUseCase,
 ) {

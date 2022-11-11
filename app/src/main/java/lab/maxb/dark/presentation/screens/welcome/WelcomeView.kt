@@ -14,6 +14,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -24,7 +25,6 @@ import lab.maxb.dark.presentation.components.TopScaffold
 import lab.maxb.dark.ui.theme.Golden
 import lab.maxb.dark.ui.theme.fontSize
 import lab.maxb.dark.ui.theme.spacing
-import org.koin.androidx.compose.getViewModel
 
 
 @Destination
@@ -32,7 +32,7 @@ import org.koin.androidx.compose.getViewModel
 fun WelcomeScreen(
     navigator: DestinationsNavigator,
     navController: NavController,
-    viewModel: WelcomeViewModel = getViewModel()
+    viewModel: WelcomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val onEvent = viewModel::onEvent

@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.os.LocaleListCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
@@ -31,14 +32,13 @@ import lab.maxb.dark.presentation.screens.destinations.WelcomeScreenDestination
 import lab.maxb.dark.ui.theme.DarkAppTheme
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
-import org.koin.androidx.compose.getViewModel
 
 
 @Destination
 @Composable
 fun AuthScreen(
     navigator: DestinationsNavigator,
-    viewModel: AuthViewModel = getViewModel(),
+    viewModel: AuthViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val onEvent = viewModel::onEvent

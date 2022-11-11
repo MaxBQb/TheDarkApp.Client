@@ -5,10 +5,11 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import lab.maxb.dark.domain.repository.ProfileRepository
 import lab.maxb.dark.domain.repository.UsersRepository
-import org.koin.core.annotation.Singleton
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
-open class GetCurrentUserUseCase(
+open class GetCurrentUserUseCase @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val usersRepository: UsersRepository,
 ) {

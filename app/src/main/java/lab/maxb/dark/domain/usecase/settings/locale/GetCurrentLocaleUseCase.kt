@@ -3,10 +3,11 @@ package lab.maxb.dark.domain.usecase.settings.locale
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.mapLatest
 import lab.maxb.dark.domain.repository.SettingsRepository
-import org.koin.core.annotation.Singleton
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
-open class GetCurrentLocaleUseCase(
+open class GetCurrentLocaleUseCase @Inject constructor(
     private val settingsRepository: SettingsRepository,
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)

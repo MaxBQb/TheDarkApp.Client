@@ -10,7 +10,6 @@ import lab.maxb.dark.data.model.remote.RecognitionTaskCreationNetworkDTO
 import lab.maxb.dark.data.remote.logger
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
-import org.koin.core.annotation.Single
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.EOFException
@@ -18,9 +17,11 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Singleton
 
-@Single
-class DarkServiceImpl(
+@Singleton
+class DarkServiceImpl @Inject constructor(
     private val authInterceptor: AuthInterceptor
 ) : DarkService {
     private val api = buildDarkService()

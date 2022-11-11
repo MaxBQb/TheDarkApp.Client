@@ -1,6 +1,7 @@
 package lab.maxb.dark.presentation.screens.auth.form
 
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
@@ -11,11 +12,11 @@ import lab.maxb.dark.domain.usecase.auth.AuthorizeUseCase
 import lab.maxb.dark.domain.usecase.settings.locale.ChangeLocaleUseCase
 import lab.maxb.dark.domain.usecase.settings.locale.GetCurrentLocaleUseCase
 import lab.maxb.dark.presentation.extra.*
-import org.koin.android.annotation.KoinViewModel
+import javax.inject.Inject
 
 
-@KoinViewModel
-class AuthViewModel(
+@HiltViewModel
+class AuthViewModel @Inject constructor(
     private val authorizeUseCase: AuthorizeUseCase,
     getCurrentLocaleUseCase: GetCurrentLocaleUseCase,
     private val changeLocaleUseCase: ChangeLocaleUseCase,

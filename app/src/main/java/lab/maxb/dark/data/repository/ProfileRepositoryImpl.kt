@@ -12,11 +12,12 @@ import lab.maxb.dark.domain.model.AuthCredentials
 import lab.maxb.dark.domain.model.Profile
 import lab.maxb.dark.domain.operations.toProfile
 import lab.maxb.dark.domain.repository.ProfileRepository
-import org.koin.core.annotation.Single
 import java.time.Duration
+import javax.inject.Inject
+import javax.inject.Singleton
 
-@Single
-class ProfileRepositoryImpl(
+@Singleton
+class ProfileRepositoryImpl @Inject constructor(
     private val networkDataSource: DarkService,
     private val localDataSource: ProfileDataSource,
 ) : ProfileRepository {

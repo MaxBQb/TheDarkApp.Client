@@ -5,12 +5,14 @@ import android.content.Intent
 import android.net.Uri
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.module.AppGlideModule
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.koin.core.annotation.Single
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
 @GlideModule
@@ -21,8 +23,10 @@ fun Uri.takePersistablePermission(context: Context) {
         Intent.FLAG_GRANT_READ_URI_PERMISSION)
 }
 
-@Single
-class ImageLoader(context: Context) {
+@Singleton
+class ImageLoader @Inject constructor(
+    @ApplicationContext context: Context
+) {
     private var context = context.applicationContext
 
     suspend fun fromUri(uri: Uri): MultipartBody.Part = withContext(Dispatchers.IO) {

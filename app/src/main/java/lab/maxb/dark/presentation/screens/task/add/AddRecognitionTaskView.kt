@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
 import com.google.accompanist.adaptive.TwoPane
@@ -42,7 +43,6 @@ import lab.maxb.dark.presentation.extra.show
 import lab.maxb.dark.presentation.extra.takePersistablePermission
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
-import org.koin.androidx.compose.getViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,7 +50,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun AddRecognitionTaskScreen(
     navController: NavController,
-    viewModel: AddRecognitionTaskViewModel = getViewModel(),
+    viewModel: AddRecognitionTaskViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val onEvent = viewModel::onEvent

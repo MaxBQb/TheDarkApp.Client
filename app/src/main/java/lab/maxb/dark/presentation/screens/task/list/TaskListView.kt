@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -35,7 +36,6 @@ import lab.maxb.dark.presentation.screens.destinations.AddRecognitionTaskScreenD
 import lab.maxb.dark.presentation.screens.destinations.SolveRecognitionTaskScreenDestination
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
-import org.koin.androidx.compose.getViewModel
 
 
 @Destination
@@ -43,7 +43,7 @@ import org.koin.androidx.compose.getViewModel
 fun RecognitionTaskListScreen(
     navigator: DestinationsNavigator,
     navController: NavController,
-    viewModel: RecognitionTaskListViewModel = getViewModel(),
+    viewModel: RecognitionTaskListViewModel = hiltViewModel(),
 ) = TopScaffold(
     navController = navController,
     title = stringResource(id = R.string.nav_taskList_title),

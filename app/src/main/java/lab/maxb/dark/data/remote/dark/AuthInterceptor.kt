@@ -9,10 +9,11 @@ import kotlinx.coroutines.flow.stateIn
 import lab.maxb.dark.data.local.dataStore.ProfileDataSource
 import okhttp3.Interceptor
 import okhttp3.Response
-import org.koin.core.annotation.Single
+import javax.inject.Inject
+import javax.inject.Singleton
 
-@Single
-class AuthInterceptor(
+@Singleton
+class AuthInterceptor @Inject constructor(
     profileDataSource: ProfileDataSource,
 ): Interceptor {
     @OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)

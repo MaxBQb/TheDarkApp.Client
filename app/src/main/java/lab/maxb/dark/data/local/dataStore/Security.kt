@@ -7,7 +7,7 @@ import com.google.crypto.tink.aead.AeadConfig
 import com.google.crypto.tink.integration.android.AndroidKeysetManager
 
 
-fun getAead(context: Context): Aead {
+internal fun getAead(context: Context): Aead {
     AeadConfig.register()
     return AndroidKeysetManager.Builder()
         .withSharedPref(

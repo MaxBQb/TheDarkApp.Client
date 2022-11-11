@@ -3,6 +3,7 @@ package lab.maxb.dark.presentation.screens.main
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.material3.Surface
@@ -15,6 +16,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.DestinationsNavHost
+import dagger.hilt.android.AndroidEntryPoint
 import lab.maxb.dark.presentation.extra.initialNavigate
 import lab.maxb.dark.presentation.extra.isSuccess
 import lab.maxb.dark.presentation.extra.localDestination
@@ -23,16 +25,17 @@ import lab.maxb.dark.presentation.screens.NavGraphs
 import lab.maxb.dark.presentation.screens.destinations.AuthHandleScreenDestination
 import lab.maxb.dark.presentation.screens.destinations.AuthScreenDestination
 import lab.maxb.dark.ui.theme.DarkAppTheme
-import org.koin.androidx.viewmodel.ext.android.getViewModel
 import java.util.*
 
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    private val viewModel: MainViewModel by viewModels()
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        handleLocale()
         super.onCreate(savedInstanceState)
+        handleLocale()
         setContent {
             DarkAppTheme {
                 Surface {
@@ -42,9 +45,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleLocale(
-        viewModel: MainViewModel = getViewModel()
-    ) {
+    private fun handleLocale() {
         val locale = viewModel.getLocale(
             AppCompatDelegate.getApplicationLocales().toLanguageTags(),
             Locale.getDefault().toLanguageTag(),
@@ -55,9 +56,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    private fun MainRoot(
-        viewModel: MainViewModel = getViewModel()
-    ) {
+    private fun MainRoot() {
         navController = rememberNavController()
         DestinationsNavHost(
             navGraph = NavGraphs.root,

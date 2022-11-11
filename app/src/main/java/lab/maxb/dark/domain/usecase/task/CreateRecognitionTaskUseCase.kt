@@ -4,10 +4,11 @@ import kotlinx.coroutines.flow.firstOrNull
 import lab.maxb.dark.domain.operations.createRecognitionTask
 import lab.maxb.dark.domain.repository.RecognitionTasksRepository
 import lab.maxb.dark.domain.usecase.user.GetCurrentUserUseCase
-import org.koin.core.annotation.Singleton
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
-open class CreateRecognitionTaskUseCase(
+open class CreateRecognitionTaskUseCase @Inject constructor(
     private val recognitionTasksRepository: RecognitionTasksRepository,
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
 ) {

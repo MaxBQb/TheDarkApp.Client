@@ -1,10 +1,11 @@
 package lab.maxb.dark.domain.usecase.task
 
 import lab.maxb.dark.domain.repository.RecognitionTasksRepository
-import org.koin.core.annotation.Singleton
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
-open class GetRecognitionTaskUseCase(
+open class GetRecognitionTaskUseCase @Inject constructor(
     private val recognitionTasksRepository: RecognitionTasksRepository,
 ) {
     open suspend operator fun invoke(id: String) =

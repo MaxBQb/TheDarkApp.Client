@@ -1,6 +1,7 @@
 package lab.maxb.dark.presentation.screens.welcome
 
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import lab.maxb.dark.domain.model.isUser
@@ -8,11 +9,11 @@ import lab.maxb.dark.domain.usecase.auth.SignOutUseCase
 import lab.maxb.dark.domain.usecase.profile.GetProfileUseCase
 import lab.maxb.dark.domain.usecase.user.GetCurrentUserUseCase
 import lab.maxb.dark.presentation.extra.*
-import org.koin.android.annotation.KoinViewModel
+import javax.inject.Inject
 
 
-@KoinViewModel
-class WelcomeViewModel(
+@HiltViewModel
+class WelcomeViewModel @Inject constructor(
     private val signOutUseCase: SignOutUseCase,
     getCurrentUserUseCase: GetCurrentUserUseCase,
     getProfileUseCase: GetProfileUseCase,

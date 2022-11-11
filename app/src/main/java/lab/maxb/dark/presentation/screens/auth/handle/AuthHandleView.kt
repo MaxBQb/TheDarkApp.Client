@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -29,7 +30,6 @@ import lab.maxb.dark.presentation.screens.destinations.WelcomeScreenDestination
 import lab.maxb.dark.ui.theme.fontSize
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
-import org.koin.androidx.compose.getViewModel
 
 
 @RootNavGraph(start = true)
@@ -37,7 +37,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun AuthHandleScreen(
     navigator: DestinationsNavigator,
-    viewModel: AuthHandleViewModel = getViewModel(),
+    viewModel: AuthHandleViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val onEvent = viewModel::onEvent

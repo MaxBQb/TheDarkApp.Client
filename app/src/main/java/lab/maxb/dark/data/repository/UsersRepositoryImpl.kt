@@ -10,10 +10,11 @@ import lab.maxb.dark.data.utils.DbRefreshController
 import lab.maxb.dark.data.utils.ResourceImpl
 import lab.maxb.dark.domain.model.User
 import lab.maxb.dark.domain.repository.UsersRepository
-import org.koin.core.annotation.Single
+import javax.inject.Inject
+import javax.inject.Singleton
 
-@Single
-class UsersRepositoryImpl(
+@Singleton
+class UsersRepositoryImpl @Inject constructor(
     db: LocalDatabase,
     private val networkDataSource: DarkService
 ) : UsersRepository {

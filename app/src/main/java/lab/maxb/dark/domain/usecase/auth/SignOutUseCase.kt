@@ -4,10 +4,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import lab.maxb.dark.domain.repository.LocalStorage
 import lab.maxb.dark.domain.repository.ProfileRepository
-import org.koin.core.annotation.Singleton
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
-open class SignOutUseCase(
+open class SignOutUseCase @Inject constructor(
     private val storage: LocalStorage,
     private val profileRepository: ProfileRepository,
 ) {

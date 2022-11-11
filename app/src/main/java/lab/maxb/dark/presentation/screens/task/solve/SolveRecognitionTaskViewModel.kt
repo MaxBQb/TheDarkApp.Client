@@ -1,22 +1,23 @@
 package lab.maxb.dark.presentation.screens.task.solve
 
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import lab.maxb.dark.domain.model.Profile
 import lab.maxb.dark.domain.model.Role
+import lab.maxb.dark.domain.usecase.profile.GetProfileUseCase
 import lab.maxb.dark.domain.usecase.task.GetRecognitionTaskImageUseCase
 import lab.maxb.dark.domain.usecase.task.GetRecognitionTaskUseCase
 import lab.maxb.dark.domain.usecase.task.MarkRecognitionTaskUseCase
 import lab.maxb.dark.domain.usecase.task.SolveRecognitionTaskUseCase
 import lab.maxb.dark.presentation.extra.*
-import lab.maxb.dark.domain.usecase.profile.GetProfileUseCase
-import org.koin.android.annotation.KoinViewModel
+import javax.inject.Inject
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@KoinViewModel
-class SolveRecognitionTaskViewModel(
+@HiltViewModel
+class SolveRecognitionTaskViewModel @Inject constructor(
     private val getRecognitionTaskImageUseCase: GetRecognitionTaskImageUseCase,
     private val solveRecognitionTaskUseCase: SolveRecognitionTaskUseCase,
     private val markRecognitionTaskUseCase: MarkRecognitionTaskUseCase,

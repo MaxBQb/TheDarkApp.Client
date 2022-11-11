@@ -2,6 +2,7 @@ package lab.maxb.dark.presentation.screens.task.add
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -10,12 +11,12 @@ import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.domain.usecase.task.CreateRecognitionTaskUseCase
 import lab.maxb.dark.domain.usecase.task.GetTaskNameSynonymsUseCase
 import lab.maxb.dark.presentation.extra.*
-import org.koin.android.annotation.KoinViewModel
+import javax.inject.Inject
 import kotlin.math.max
 
 
-@KoinViewModel
-class AddRecognitionTaskViewModel(
+@HiltViewModel
+class AddRecognitionTaskViewModel @Inject constructor(
     private val getTaskNameSynonymsUseCase: GetTaskNameSynonymsUseCase,
     private val createRecognitionTaskUseCase: CreateRecognitionTaskUseCase,
 ) : ViewModel() {

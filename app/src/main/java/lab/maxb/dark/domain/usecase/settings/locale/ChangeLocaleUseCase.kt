@@ -1,10 +1,11 @@
 package lab.maxb.dark.domain.usecase.settings.locale
 
 import lab.maxb.dark.domain.repository.SettingsRepository
-import org.koin.core.annotation.Singleton
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
-open class ChangeLocaleUseCase(
+open class ChangeLocaleUseCase @Inject constructor(
     private val settingsRepository: SettingsRepository,
 ) {
     open suspend operator fun invoke(locale: String) =

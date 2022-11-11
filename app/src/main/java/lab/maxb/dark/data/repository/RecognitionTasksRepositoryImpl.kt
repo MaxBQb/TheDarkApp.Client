@@ -26,10 +26,11 @@ import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.domain.repository.RecognitionTasksRepository
 import lab.maxb.dark.domain.repository.UsersRepository
 import lab.maxb.dark.presentation.extra.ImageLoader
-import org.koin.core.annotation.Single
+import javax.inject.Inject
+import javax.inject.Singleton
 
-@Single
-class RecognitionTasksRepositoryImpl(
+@Singleton
+class RecognitionTasksRepositoryImpl @Inject constructor(
     db: LocalDatabase,
     private val networkDataSource: DarkService,
     private val usersRepository: UsersRepository,

@@ -2,12 +2,13 @@ package lab.maxb.dark.data.remote.synonymizer
 
 import lab.maxb.dark.domain.repository.SynonymsRepository
 import okhttp3.MultipartBody
-import org.koin.core.annotation.Single
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
+import javax.inject.Singleton
 
-@Single
-class SynonymFounder : SynonymsRepository {
+@Singleton
+class SynonymFounder @Inject constructor() : SynonymsRepository {
     private val api: RusTxtAPI
     private suspend fun getSynonym(text: String)
         = try {

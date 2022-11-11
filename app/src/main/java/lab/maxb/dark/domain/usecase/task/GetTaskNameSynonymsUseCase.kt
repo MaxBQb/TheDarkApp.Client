@@ -1,10 +1,11 @@
 package lab.maxb.dark.domain.usecase.task
 
 import lab.maxb.dark.domain.repository.SynonymsRepository
-import org.koin.core.annotation.Singleton
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
-open class GetTaskNameSynonymsUseCase(
+open class GetTaskNameSynonymsUseCase @Inject constructor(
     private val synonymsRepository: SynonymsRepository,
 ) {
     open suspend operator fun invoke(names: List<String>)

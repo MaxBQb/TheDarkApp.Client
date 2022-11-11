@@ -1,6 +1,7 @@
 package lab.maxb.dark.presentation.screens.main
 
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.runBlocking
@@ -8,11 +9,11 @@ import lab.maxb.dark.domain.usecase.auth.HandleInitialAuthUseCase
 import lab.maxb.dark.domain.usecase.settings.locale.HandleCurrentLocaleUseCase
 import lab.maxb.dark.presentation.extra.stateIn
 import lab.maxb.dark.presentation.extra.stateInAsResult
-import org.koin.android.annotation.KoinViewModel
+import javax.inject.Inject
 
 
-@KoinViewModel
-class MainViewModel(
+@HiltViewModel
+class MainViewModel @Inject constructor(
     handleInitialAuthUseCase: HandleInitialAuthUseCase,
     private val handleCurrentLocaleUseCase: HandleCurrentLocaleUseCase,
 ) : ViewModel() {

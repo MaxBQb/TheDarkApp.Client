@@ -2,10 +2,11 @@ package lab.maxb.dark.domain.usecase.auth
 
 import lab.maxb.dark.domain.model.AuthCredentials
 import lab.maxb.dark.domain.repository.ProfileRepository
-import org.koin.core.annotation.Singleton
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
-open class AuthorizeUseCase(
+open class AuthorizeUseCase @Inject constructor(
     private val profileRepository: ProfileRepository,
 ) {
     open suspend operator fun invoke(credentials: AuthCredentials)

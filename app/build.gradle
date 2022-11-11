@@ -5,6 +5,7 @@ plugins {
     id 'com.google.devtools.ksp' version "1.7.10-1.0.6"
     id 'kotlin-kapt'
     id 'org.jetbrains.kotlin.plugin.serialization'
+    id 'dagger.hilt.android.plugin'
 }
 
 ext {
@@ -84,13 +85,11 @@ android {
 }
 
 dependencies {
-    // Dependency Injection
-    def koin_annotations_version = '1.0.1'
-    def koin_version = "3.2.0"
-    implementation "io.insert-koin:koin-android:$koin_version"
-    implementation "io.insert-koin:koin-androidx-compose:$koin_version"
-    implementation "io.insert-koin:koin-annotations:$koin_annotations_version"
-    ksp "io.insert-koin:koin-ksp-compiler:$koin_annotations_version"
+    // Dependency Injection (Already hate Hilt)
+    def hilt_version = "2.44"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
     // Coroutines + LiveData
     def coroutines_version = '1.6.1-native-mt'
@@ -198,10 +197,10 @@ dependencies {
     // Tests
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-        // Koin
-        testImplementation "io.insert-koin:koin-test:$koin_version"
-        testImplementation "io.insert-koin:koin-test-junit4:$koin_version"
-        testImplementation "io.insert-koin:koin-test-junit5:$koin_version"
         // JetpackCompose UI
         androidTestImplementation "androidx.compose.ui:ui-test-junit4:$composeVersion"
+}
+
+kapt {
+    correctErrorTypes true
 }
