@@ -5,7 +5,7 @@ import lab.maxb.dark.domain.model.RecognitionTask
 
 class RecognitionTaskListViewNetworkDTO (
     val image: String?,
-    val owner_id: String,
+    val ownerId: String,
     val reviewed: Boolean,
     val id: String,
 )
@@ -13,23 +13,25 @@ class RecognitionTaskListViewNetworkDTO (
 class RecognitionTaskFullViewNetworkDTO(
     val names: Set<String>?,
     val images: List<String>?,
-    val owner_id: String,
+    val ownerId: String,
     val reviewed: Boolean,
     val id: String,
 )
 
 class RecognitionTaskCreationNetworkDTO(
-    val names: Set<String>
+    val names: Set<String>,
+    val images: List<String>,
 )
 
 fun RecognitionTask.toNetworkDTO() = RecognitionTaskCreationNetworkDTO(
-    names
+    names,
+    images,
 )
 
 fun RecognitionTaskListViewNetworkDTO.toDomain() = RecognitionTask(
     setOf(),
     image?.let { listOf(it) } ?: emptyList(),
-    owner_id,
+    ownerId,
     reviewed,
     id,
 )
@@ -37,7 +39,7 @@ fun RecognitionTaskListViewNetworkDTO.toDomain() = RecognitionTask(
 fun RecognitionTaskFullViewNetworkDTO.toDomain() = RecognitionTask(
     names ?: emptySet(),
     images ?: emptyList(),
-    owner_id,
+    ownerId,
     reviewed,
     id,
 )

@@ -81,18 +81,13 @@ class RecognitionTasksRepositoryImpl(
     override fun getAllRecognitionTasks() = pager
 
     override suspend fun addRecognitionTask(task: RecognitionTask) {
-        val taskLocal = task.toLocalDTO()
-        networkDataSource.addTask(
-            task.toNetworkDTO()
-        )?.also { taskLocal.id = it }
-
-        taskLocal.images = task.images.map {
+        val newTask = task.copy(images=task.images.map {
             networkDataSource.addImage(
-                taskLocal.id,
                 imageLoader.fromUri(it.toUri())
             )!!
-        }
-
+        }).toNetworkDTO()
+        val taskResponse = networkDataSource.addTask(newTask)!!
+        val taskLocal = taskResponse.toDomain().toLocalDTO()
         localDataSource.save(taskLocal)
     }
 

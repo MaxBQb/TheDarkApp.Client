@@ -9,10 +9,10 @@ import okhttp3.MultipartBody
 interface DarkService {
     suspend fun getAllTasks(page: Int, size: Int): List<RecognitionTaskListViewNetworkDTO>?
     suspend fun getTask(id: String): RecognitionTaskFullViewNetworkDTO?
-    suspend fun addTask(task: RecognitionTaskCreationNetworkDTO): String?
+    suspend fun addTask(task: RecognitionTaskCreationNetworkDTO): RecognitionTaskFullViewNetworkDTO?
     suspend fun markTask(id: String, isAllowed: Boolean): Boolean
     suspend fun solveTask(id: String, answer: String): Boolean
-    suspend fun addImage(id: String, filePart: MultipartBody.Part): String?
+    suspend fun addImage(filePart: MultipartBody.Part): String?
     fun getImageSource(path: String): GlideUrl
     suspend fun getUser(id: String): User?
     suspend fun login(request: AuthRequest): AuthResponse

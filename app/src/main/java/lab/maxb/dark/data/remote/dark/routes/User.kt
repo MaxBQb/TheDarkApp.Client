@@ -9,6 +9,6 @@ interface User {
     suspend fun getUser(@Path("id") id: String): User?
 
     companion object {
-        const val path = "/user"
+        const val path = "/users"
     }
 }

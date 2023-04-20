@@ -7,6 +7,7 @@ import kotlinx.coroutines.CancellationException
 import lab.maxb.dark.BuildConfig
 import lab.maxb.dark.data.model.remote.AuthRequest
 import lab.maxb.dark.data.model.remote.RecognitionTaskCreationNetworkDTO
+import lab.maxb.dark.data.remote.dark.routes.getImage
 import lab.maxb.dark.data.remote.logger
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -38,20 +39,24 @@ class DarkServiceImpl(
         api.addTask(task)
     }
 
-    override suspend fun markTask(id: String, isAllowed: Boolean) = catchAll {
-        api.markTask(id, isAllowed)
-    }
+    override suspend fun markTask(id: String, isAllowed: Boolean) = catchAll<Boolean?> {
+        if (isAllowed)
+            api.approveTask(id)
+        else
+            api.declineTask(id)
+        true
+    } ?: false
 
     override suspend fun solveTask(id: String, answer: String) = catchAll {
         api.solveTask(id, answer)
     }
 
-    override suspend fun addImage(id: String, filePart: MultipartBody.Part) = catchAll {
-        api.addImage(id, filePart)
+    override suspend fun addImage(filePart: MultipartBody.Part) = catchAll {
+        api.addImage(filePart)
     }
 
     override fun getImageSource(path: String) = GlideUrl(
-        "${BuildConfig.DARK_API_URL}/task/image/$path",
+        api.getImage(path),
         LazyHeaders.Builder()
             .addHeader(authInterceptor.header, authInterceptor.value)
             .build()
@@ -71,29 +76,33 @@ class DarkServiceImpl(
 
     private suspend inline fun<reified T> catchAll(
         crossinline block: suspend () -> T,
-    ): T = try {
-        block()
-    } catch (e: EOFException) {
-        null as T
-    } catch (e: UnableToObtainResource) {
-        throw e
-    } catch (e: CancellationException) {
-        throw e
-    } catch (e: retrofit2.HttpException) {
-        when (e.code()) {
-            401, 403 -> onAuthRequired?.invoke()
-            else -> e.printStackTrace()
+    ): T {
+        try {
+            return block()
+        } catch (e: EOFException) {
+            return null as T
+        } catch (e: UnableToObtainResource) {
+            throw e
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: retrofit2.HttpException) {
+            when (e.code()) {
+                401, 403 -> onAuthRequired?.invoke()
+                404 -> return null as T
+                // TODO: Handle 400 and 422
+                else -> e.printStackTrace()
+            }
+            throw UnableToObtainResource()
+        } catch (e: Throwable) {
+            when (e) {
+                is UnknownHostException,
+                is SocketTimeoutException,
+                is ConnectException,
+                -> throw UnableToObtainResource()
+            }
+            e.printStackTrace()
+            throw e
         }
-        throw UnableToObtainResource()
-    } catch (e: Throwable) {
-        when (e) {
-           is UnknownHostException,
-           is SocketTimeoutException,
-           is ConnectException,
-           -> throw UnableToObtainResource()
-        }
-        e.printStackTrace()
-        throw e
     }
 
     // Initialization
