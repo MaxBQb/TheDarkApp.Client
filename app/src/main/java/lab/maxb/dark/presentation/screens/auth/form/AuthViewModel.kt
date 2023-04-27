@@ -11,6 +11,7 @@ import lab.maxb.dark.domain.usecase.auth.AuthorizeUseCase
 import lab.maxb.dark.domain.usecase.settings.locale.ChangeLocaleUseCase
 import lab.maxb.dark.domain.usecase.settings.locale.GetCurrentLocaleUseCase
 import lab.maxb.dark.presentation.extra.*
+import lab.maxb.dark.presentation.screens.core.BaseViewModel
 import org.koin.android.annotation.KoinViewModel
 
 
@@ -19,15 +20,15 @@ class AuthViewModel(
     private val authorizeUseCase: AuthorizeUseCase,
     getCurrentLocaleUseCase: GetCurrentLocaleUseCase,
     private val changeLocaleUseCase: ChangeLocaleUseCase,
-) : ViewModel() {
+) : BaseViewModel<AuthUiState, AuthUiEvent>, ViewModel() {
     private var authRequest by FirstOnly()
 
     private val _uiState = MutableStateFlow(AuthUiState())
-    val uiState = combine(_uiState, getCurrentLocaleUseCase()) { state, locale ->
+    override val uiState = combine(_uiState, getCurrentLocaleUseCase()) { state, locale ->
         state.copy(locale=locale)
     }.stateIn(AuthUiState())
 
-    fun onEvent(event: AuthUiEvent) = with(event) {
+    override fun onEvent(event: AuthUiEvent) = with(event) {
         when (this) {
             is AuthUiEvent.LoginChanged -> _uiState.update {
                 it.copy(login = login)

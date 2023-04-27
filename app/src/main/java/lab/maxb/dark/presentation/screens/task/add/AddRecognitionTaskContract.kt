@@ -6,6 +6,8 @@ import lab.maxb.dark.presentation.extra.ItemHolder
 import lab.maxb.dark.presentation.extra.UiText
 import lab.maxb.dark.presentation.extra.UiTrigger
 import lab.maxb.dark.presentation.extra.UiTriggers
+import lab.maxb.dark.presentation.screens.core.UiEvent
+import lab.maxb.dark.presentation.screens.core.UiState
 
 data class AddTaskUiState(
     val names: List<ItemHolder<String>> = listOf(ItemHolder("")),
@@ -15,9 +17,9 @@ data class AddTaskUiState(
     val submitSuccess: AddTaskUiEvent.SubmitSuccess? = null,
     val allowedImageCount: Int = RecognitionTask.MAX_IMAGES_COUNT,
     val isLoading: Boolean = false,
-)
+) : UiState
 
-sealed interface AddTaskUiEvent {
+sealed interface AddTaskUiEvent : UiEvent {
     data class NameChanged(val answer: ItemHolder<String>) : AddTaskUiEvent
     data class ImageChanged(val position: Int, val image: Uri) : AddTaskUiEvent
     data class ImageRemoved(val position: Int) : AddTaskUiEvent

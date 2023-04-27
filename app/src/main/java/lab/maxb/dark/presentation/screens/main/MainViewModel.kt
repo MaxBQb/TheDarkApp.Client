@@ -8,6 +8,7 @@ import lab.maxb.dark.domain.usecase.auth.HandleInitialAuthUseCase
 import lab.maxb.dark.domain.usecase.settings.locale.HandleCurrentLocaleUseCase
 import lab.maxb.dark.presentation.extra.stateIn
 import lab.maxb.dark.presentation.extra.stateInAsResult
+import lab.maxb.dark.presentation.screens.core.BaseViewModel
 import org.koin.android.annotation.KoinViewModel
 
 
@@ -15,12 +16,14 @@ import org.koin.android.annotation.KoinViewModel
 class MainViewModel(
     handleInitialAuthUseCase: HandleInitialAuthUseCase,
     private val handleCurrentLocaleUseCase: HandleCurrentLocaleUseCase,
-) : ViewModel() {
+) : BaseViewModel<MainUiState, MainUiEvent>, ViewModel() {
     private val isAuthorized = handleInitialAuthUseCase().stateInAsResult()
     private val _uiState = MutableStateFlow(MainUiState())
-    val uiState = combine(_uiState, isAuthorized) { state, isAuthorized ->
+    override val uiState = combine(_uiState, isAuthorized) { state, isAuthorized ->
         state.copy(authorized = isAuthorized)
     }.stateIn(MainUiState())
+
+    override fun onEvent(event: MainUiEvent) {}
 
     fun getLocale(current: String, system: String) = runBlocking {
         handleCurrentLocaleUseCase(current, system)

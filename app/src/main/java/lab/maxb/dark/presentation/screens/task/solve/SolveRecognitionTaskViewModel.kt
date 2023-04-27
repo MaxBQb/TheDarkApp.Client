@@ -11,6 +11,7 @@ import lab.maxb.dark.domain.usecase.task.MarkRecognitionTaskUseCase
 import lab.maxb.dark.domain.usecase.task.SolveRecognitionTaskUseCase
 import lab.maxb.dark.presentation.extra.*
 import lab.maxb.dark.domain.usecase.profile.GetProfileUseCase
+import lab.maxb.dark.presentation.screens.core.BaseViewModel
 import org.koin.android.annotation.KoinViewModel
 
 
@@ -22,7 +23,7 @@ class SolveRecognitionTaskViewModel(
     private val markRecognitionTaskUseCase: MarkRecognitionTaskUseCase,
     getProfileUseCase: GetProfileUseCase,
     getRecognitionTaskUseCase: GetRecognitionTaskUseCase,
-) : ViewModel() {
+) : BaseViewModel<TaskSolveUiState, TaskSolveUiEvent>, ViewModel() {
     private val taskId = MutableStateFlow("")
     private val profile = getProfileUseCase().stateInAsResult()
     private val task = taskId.filter { it.isNotEmpty() }.flatMapLatest {
@@ -30,7 +31,7 @@ class SolveRecognitionTaskViewModel(
     }.stateIn()
 
     private val _uiState = MutableStateFlow(TaskSolveUiState())
-    val uiState = combine(_uiState, profile, task) { state, profileResult, taskResult ->
+    override val uiState = combine(_uiState, profile, task) { state, profileResult, taskResult ->
         val profile = profileResult.valueOrNull
         val task = taskResult.valueOrNull
         state.copy(
@@ -47,7 +48,7 @@ class SolveRecognitionTaskViewModel(
         taskId.value = id
     }
 
-    fun onEvent(event: TaskSolveUiEvent): Unit = with(event) {
+    override fun onEvent(event: TaskSolveUiEvent): Unit = with(event) {
         when (this) {
             is TaskSolveUiEvent.AnswerChanged -> _uiState.update {
                 it.copy(answer = answer)

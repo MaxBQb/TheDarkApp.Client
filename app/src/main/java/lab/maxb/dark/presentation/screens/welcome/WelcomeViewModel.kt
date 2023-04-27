@@ -8,6 +8,7 @@ import lab.maxb.dark.domain.usecase.auth.SignOutUseCase
 import lab.maxb.dark.domain.usecase.profile.GetProfileUseCase
 import lab.maxb.dark.domain.usecase.user.GetCurrentUserUseCase
 import lab.maxb.dark.presentation.extra.*
+import lab.maxb.dark.presentation.screens.core.BaseViewModel
 import org.koin.android.annotation.KoinViewModel
 
 
@@ -16,13 +17,13 @@ class WelcomeViewModel(
     private val signOutUseCase: SignOutUseCase,
     getCurrentUserUseCase: GetCurrentUserUseCase,
     getProfileUseCase: GetProfileUseCase,
-) : ViewModel() {
+) : BaseViewModel<Result<WelcomeUiState>, WelcomeUiEvent>, ViewModel() {
     private var signOutRequest by FirstOnly()
     private val profile = getProfileUseCase().stateInAsResult()
     private val user = getCurrentUserUseCase().stateInAsResult()
 
     private val _uiState = MutableStateFlow(WelcomeUiState())
-    val uiState = combine(_uiState, profile, user) { state, profileResult, userResult ->
+    override val uiState = combine(_uiState, profile, user) { state, profileResult, userResult ->
         if (anyLoading(profileResult, userResult))
             Result.Loading
         else if (anyError(profileResult, userResult))
@@ -34,7 +35,7 @@ class WelcomeViewModel(
             ))
     }.stateIn()
 
-    fun onEvent(event: WelcomeUiEvent) = with(event) {
+    override fun onEvent(event: WelcomeUiEvent): Unit = with(event) {
         when (this) {
             is WelcomeUiEvent.SignOut -> signOut()
         }

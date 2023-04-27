@@ -10,6 +10,7 @@ import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.domain.usecase.task.CreateRecognitionTaskUseCase
 import lab.maxb.dark.domain.usecase.task.GetTaskNameSynonymsUseCase
 import lab.maxb.dark.presentation.extra.*
+import lab.maxb.dark.presentation.screens.core.BaseViewModel
 import org.koin.android.annotation.KoinViewModel
 import kotlin.math.max
 
@@ -18,11 +19,11 @@ import kotlin.math.max
 class AddRecognitionTaskViewModel(
     private val getTaskNameSynonymsUseCase: GetTaskNameSynonymsUseCase,
     private val createRecognitionTaskUseCase: CreateRecognitionTaskUseCase,
-) : ViewModel() {
+) : BaseViewModel<AddTaskUiState, AddTaskUiEvent>, ViewModel() {
     private var suggestionsRequest by LatestOnly()
     private var addTaskRequest by FirstOnly()
 
-    fun onEvent(event: AddTaskUiEvent): Unit = with(event) {
+    override fun onEvent(event: AddTaskUiEvent): Unit = with(event) {
         when (this) {
             is AddTaskUiEvent.NameChanged -> setTexts(answer)
             is AddTaskUiEvent.ImagesAdded -> addImages(images)
@@ -37,7 +38,7 @@ class AddRecognitionTaskViewModel(
     }
 
     private val _uiState = MutableStateFlow(AddTaskUiState())
-    val uiState = _uiState.asStateFlow()
+    override val uiState = _uiState.asStateFlow()
 
     private fun createRecognitionTask() {
         addTaskRequest = launch {

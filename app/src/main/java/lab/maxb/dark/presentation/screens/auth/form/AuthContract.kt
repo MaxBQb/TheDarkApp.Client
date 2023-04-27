@@ -3,6 +3,8 @@ package lab.maxb.dark.presentation.screens.auth.form
 import lab.maxb.dark.presentation.extra.UiText
 import lab.maxb.dark.presentation.extra.UiTrigger
 import lab.maxb.dark.presentation.extra.UiTriggers
+import lab.maxb.dark.presentation.screens.core.UiEvent
+import lab.maxb.dark.presentation.screens.core.UiState
 
 data class AuthUiState(
     val login: String = "",
@@ -15,9 +17,9 @@ data class AuthUiState(
     val errors: UiTriggers<AuthUiEvent.Error> = UiTriggers(),
     val authorized: AuthUiEvent.Authorized? = null,
     val localeUpdated: AuthUiEvent.LocaleUpdated? = null,
-)
+) : UiState
 
-sealed interface AuthUiEvent {
+sealed interface AuthUiEvent : UiEvent {
     data class LoginChanged(val login: String) : AuthUiEvent
     data class LocaleChanged(val locale: String) : AuthUiEvent
     data class PasswordChanged(val password: String) : AuthUiEvent

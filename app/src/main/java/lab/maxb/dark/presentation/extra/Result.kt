@@ -4,8 +4,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
+import lab.maxb.dark.presentation.screens.core.UiState
 
-sealed interface Result<out T> {
+sealed interface Result<out T> : UiState {
     data class Success<T>(val value: T) : Result<T>
     data class Error(
         val throwable: Throwable?,
