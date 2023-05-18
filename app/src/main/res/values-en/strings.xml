@@ -49,6 +49,13 @@
     <string name="welcome_welcome">Welcome, %s!</string>
     <string name="welcome_anonymousWelcome">How did you get there?!</string>
     <string name="welcome_rating">Score</string>
+    <string name="welcome_role">Role</string>
+        <!-- Roles -->
+        <string name="role_admin">Administrator</string>
+        <string name="role_moderator">Moderator</string>
+        <string name="role_user">User</string>
+        <string name="role_premium_user">Premium user</string>
+        <string name="role_consultor">Consultor</string>
 
     <!-- Choose Locale Dialog -->
     <string name="dialogChooseLocale_title">List of languages</string>

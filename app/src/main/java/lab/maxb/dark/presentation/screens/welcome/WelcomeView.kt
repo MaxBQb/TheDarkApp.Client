@@ -1,14 +1,25 @@
 package lab.maxb.dark.presentation.screens.welcome
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -18,6 +29,8 @@ import androidx.navigation.NavController
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import lab.maxb.dark.R
+import lab.maxb.dark.domain.model.Role
+import lab.maxb.dark.domain.model.isUser
 import lab.maxb.dark.presentation.components.LoadingComponent
 import lab.maxb.dark.presentation.components.SettingsButton
 import lab.maxb.dark.presentation.components.TopScaffold
@@ -58,7 +71,8 @@ fun WelcomeRootStateless(
             .padding(MaterialTheme.spacing.normal),
     ) {
         Greeting(uiState.user?.name)
-        if (uiState.isUser)
+        RoleName(uiState.role)
+        if (uiState.role.isUser)
             UserRating(uiState.user?.rating ?: 0)
     }
     Box(
@@ -108,5 +122,25 @@ fun Greeting(name: String?) {
         fontSize = MaterialTheme.fontSize.normalHeader,
         modifier = Modifier.fillMaxWidth(),
         textAlign = TextAlign.Center
+    )
+}
+
+@Composable
+fun RoleName(role: Role) {
+    Text(
+        buildAnnotatedString {
+            append(stringResource(id = R.string.welcome_role))
+            append(": ")
+            withStyle(SpanStyle(Color.LightGray)) {
+                append(stringResource(id = when (role) {
+                    Role.USER -> R.string.role_user
+                    Role.PREMIUM_USER -> R.string.role_premium_user
+                    Role.MODERATOR -> R.string.role_moderator
+                    Role.ADMINISTRATOR -> R.string.role_admin
+                    Role.CONSULTOR -> R.string.role_consultor
+                }))
+            }
+        },
+        modifier = Modifier.fillMaxWidth()
     )
 }

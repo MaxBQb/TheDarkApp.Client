@@ -3,11 +3,18 @@ package lab.maxb.dark.presentation.screens.welcome
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import lab.maxb.dark.domain.model.isUser
+import lab.maxb.dark.domain.model.Role
 import lab.maxb.dark.domain.usecase.auth.SignOutUseCase
 import lab.maxb.dark.domain.usecase.profile.GetProfileUseCase
 import lab.maxb.dark.domain.usecase.user.GetCurrentUserUseCase
-import lab.maxb.dark.presentation.extra.*
+import lab.maxb.dark.presentation.extra.FirstOnly
+import lab.maxb.dark.presentation.extra.Result
+import lab.maxb.dark.presentation.extra.anyError
+import lab.maxb.dark.presentation.extra.anyLoading
+import lab.maxb.dark.presentation.extra.launch
+import lab.maxb.dark.presentation.extra.stateIn
+import lab.maxb.dark.presentation.extra.stateInAsResult
+import lab.maxb.dark.presentation.extra.valueOrNull
 import lab.maxb.dark.presentation.screens.core.BaseViewModel
 import org.koin.android.annotation.KoinViewModel
 
@@ -31,7 +38,7 @@ class WelcomeViewModel(
         else
             Result.Success(state.copy(
                 user = userResult.valueOrNull,
-                isUser = profileResult.valueOrNull?.role?.isUser == true,
+                role = profileResult.valueOrNull?.role ?: Role.USER,
             ))
     }.stateIn()
 
