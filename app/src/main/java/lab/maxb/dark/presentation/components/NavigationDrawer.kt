@@ -19,6 +19,7 @@ import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import lab.maxb.dark.R
 import lab.maxb.dark.presentation.extra.localDestination
+import lab.maxb.dark.presentation.screens.destinations.ArticlesScreenDestination
 import lab.maxb.dark.presentation.screens.destinations.RecognitionTaskListScreenDestination
 import lab.maxb.dark.presentation.screens.destinations.WelcomeScreenDestination
 
@@ -30,6 +31,7 @@ enum class DrawerDestination(
 ) {
     Welcome(WelcomeScreenDestination, R.drawable.ic_home, R.string.nav_home_title),
     Tasks(RecognitionTaskListScreenDestination, R.drawable.ic_list, R.string.nav_taskList_title),
+    Articles(ArticlesScreenDestination, R.drawable.ic_articles, R.string.nav_articles_title),
 }
 
 

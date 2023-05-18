@@ -68,10 +68,10 @@ android {
         test.java.srcDirs += 'src/test/kotlin'
     }
     // For KSP
-    applicationVariants.configureEach { variant ->
+    applicationVariants.all {
         kotlin.sourceSets {
             getByName(name) {
-                kotlin.srcDir("build/generated/ksp/${variant.name}/kotlin")
+                kotlin.srcDir("build/generated/ksp/$name/kotlin")
             }
         }
     }

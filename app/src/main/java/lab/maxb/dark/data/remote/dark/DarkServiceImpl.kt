@@ -5,6 +5,7 @@ import com.bumptech.glide.load.model.LazyHeaders
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CancellationException
 import lab.maxb.dark.BuildConfig
+import lab.maxb.dark.data.model.remote.ArticleCreationNetworkDTO
 import lab.maxb.dark.data.model.remote.AuthRequest
 import lab.maxb.dark.data.model.remote.RecognitionTaskCreationNetworkDTO
 import lab.maxb.dark.data.remote.dark.routes.getImage
@@ -61,6 +62,21 @@ class DarkServiceImpl(
             .addHeader(authInterceptor.header, authInterceptor.value)
             .build()
     )
+
+    override suspend fun getAllArticles(page: Int, size: Int) = catchAll  {
+        api.getAllArticles(page, size)
+    }
+
+    override suspend fun updateArticle(
+        id: String,
+        article: ArticleCreationNetworkDTO
+    ) = catchAll  {
+        api.updateArticle(id, article)
+    }
+
+    override suspend fun addArticle(article: ArticleCreationNetworkDTO) = catchAll {
+        api.addArticle(article)
+    }
 
     override suspend fun getUser(id: String) = catchAll {
         api.getUser(id)

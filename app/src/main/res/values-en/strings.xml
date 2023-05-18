@@ -17,6 +17,7 @@
 
     <!-- Navigation -->
     <string name="nav_taskList_title">Tasks</string>
+    <string name="nav_articles_title">Worth to know</string>
     <string name="nav_addTask_title">Task creation</string>
     <string name="nav_solveTask_title">What is this?</string>
     <string name="nav_home_title">Home</string>
