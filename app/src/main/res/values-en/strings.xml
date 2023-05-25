@@ -57,6 +57,15 @@
         <string name="role_premium_user">Premium user</string>
         <string name="role_consultor">Consultor</string>
 
+    <!-- Articles -->
+    <string name="articles_titleHint">Title</string>
+    <string name="articles_bodyHint">Description</string>
+    <string name="articles_bodyLength">%s/%s</string>
+        <!-- Messages -->
+        <string name="articles_message_saveError">Error, changes not saved</string>
+        <string name="articles_message_tooShortTitle">Minimum title length: %s chars</string>
+        <string name="articles_message_tooShortBody">Minimum description length: %s chars</string>
+
     <!-- Choose Locale Dialog -->
     <string name="dialogChooseLocale_title">List of languages</string>
     <string name="dialogChooseLocale_systemDefault">System default</string>

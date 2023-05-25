@@ -57,6 +57,14 @@
         <string name="role_premium_user">Премиальный пользователь</string>
         <string name="role_consultor">Консультант</string>
 
+    <!-- Articles -->
+    <string name="articles_titleHint">Заголовок</string>
+    <string name="articles_bodyHint">Описание</string>
+        <!-- Messages -->
+        <string name="articles_message_saveError">Не удалось сохранить изменения</string>
+        <string name="articles_message_tooShortTitle">Минимальная длинна заголовка: %s символов</string>
+        <string name="articles_message_tooShortBody">Минимальная длинна описания: %s символов</string>
+
     <!-- Choose Locale Dialog -->
     <string name="dialogChooseLocale_title">Список языков</string>
     <string name="dialogChooseLocale_systemDefault">Системное значение</string>
@@ -66,4 +74,5 @@
     <!-- Settings -->
     <string name="settings_language_title">Язык интерфейса</string>
     <string name="settings_language_auto">Системное значение (%s)</string>
+    <string name="articles_bodyLength">%s/%s</string>
 </resources>

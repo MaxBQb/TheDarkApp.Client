@@ -9,5 +9,7 @@ data class ArticleListItem(
 )
 
 fun Article.toPresentation() = ArticleListItem(
-    title, body, id
+    title = title,
+    body = body,
+    id = id,
 )

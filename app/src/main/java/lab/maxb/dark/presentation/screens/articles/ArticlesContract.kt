@@ -11,15 +11,16 @@ import lab.maxb.dark.presentation.screens.core.UiState
 data class ArticlesUiState(
     val articles: PagingData<ArticleListItem> = PagingData.empty(),
     val openedArticleId: String? = null,
+    val openedArticle: ArticleListItem? = null,
+    val isEditMode: Boolean = false,
     val userMessages: UiTriggers<ArticlesUiEvent.UserMessage> = UiTriggers(),
-    val submitSuccess: ArticlesUiEvent.SubmitSuccess? = null,
     val isMutable: Boolean = false,
     val isLoading: Boolean = false,
 ) : UiState
 
 sealed interface ArticlesUiEvent : UiEvent {
     data class ArticleToggled(val id: String) : ArticlesUiEvent
-    data class ArticleEditStarted(val id: String) : ArticlesUiEvent
+    data class ArticleEditStarted(val article: ArticleListItem) : ArticlesUiEvent
     object ArticleCreationStarted : ArticlesUiEvent
     data class TitleChanged(val title: String) : ArticlesUiEvent
     data class BodyChanged(val body: String) : ArticlesUiEvent
@@ -28,5 +29,4 @@ sealed interface ArticlesUiEvent : UiEvent {
 
     // UiTriggers
     data class UserMessage(val message: UiText) : UiTrigger(), ArticlesUiEvent
-    object SubmitSuccess : UiTrigger(), ArticlesUiEvent
 }

@@ -67,6 +67,7 @@ fun TopScaffold(
     navController: NavController,
     modifier: Modifier = Modifier,
     title: String = "",
+    snackbarState: SnackbarHostState = rememberSnackbarHostState(),
     actions: @Composable() (RowScope.() -> Unit) = {},
     content: @Composable() (BoxScope.() -> Unit) = {},
 ) {
@@ -76,6 +77,7 @@ fun TopScaffold(
         modifier = modifier,
         drawerState = drawerState,
         navController = navController,
+        snackbarState = snackbarState,
         topBar = {
             TopBar(title, navigationIcon = {
                 IconButton(

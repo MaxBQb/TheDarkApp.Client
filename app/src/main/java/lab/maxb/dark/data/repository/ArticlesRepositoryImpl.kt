@@ -86,7 +86,7 @@ class ArticlesRepositoryImpl(
 
     override suspend fun updateArticle(article: Article) {
         val requestModel = article.toNetworkDTO()
-        val response = networkDataSource.addArticle(requestModel)!!
+        val response = networkDataSource.updateArticle(article.id, requestModel)!!
         val localModel = response.toDomain().toLocalDTO()
         localDataSource.save(localModel)
     }

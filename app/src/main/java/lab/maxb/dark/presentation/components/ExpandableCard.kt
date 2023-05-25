@@ -21,9 +21,11 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -59,6 +61,7 @@ fun ExpandableCard(
     title: @Composable RowScope.() -> Unit,
     body: @Composable ColumnScope.() -> Unit,
     animationDuration: ExpandAnimationDuration = ExpandAnimationDuration(),
+    hideOnExpanded: Boolean = false,
 ) {
     val transitionState = remember {
         MutableTransitionState(expanded).apply {
@@ -100,18 +103,22 @@ fun ExpandableCard(
                     onExpandToggleClick()
             }
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.height(IntrinsicSize.Min),
+        ) {
             CardArrow(
                 expanded = expanded,
                 onClick = onExpandToggleClick,
-                animationDuration = if (expanded) animationDuration.collapse else animationDuration.expand
+                animationDuration = animationDuration,
+                hideOnExpanded = hideOnExpanded,
             )
             title()
         }
         ExpandableContent(
             visible = expanded,
             content = body,
-            animationDuration=animationDuration,
+            animationDuration = animationDuration,
         )
     }
 }
@@ -120,7 +127,8 @@ fun ExpandableCard(
 fun CardArrow(
     expanded: Boolean,
     onClick: () -> Unit,
-    animationDuration: Int = 400,
+    animationDuration: ExpandAnimationDuration = ExpandAnimationDuration(),
+    hideOnExpanded: Boolean = false,
 ) {
     val transitionState = remember {
         MutableTransitionState(expanded).apply {
@@ -130,28 +138,56 @@ fun CardArrow(
     val transition = updateTransition(transitionState, label = "transition")
 
     val rotation by transition.animateFloat({
-        tween(durationMillis = animationDuration)
+        tween(durationMillis = if (expanded) animationDuration.collapse else animationDuration.expand)
     }, label = "rotationDegreeTransition") {
-        if (expanded) 0f else -180f
+        if (it) 0f else -180f
     }
 
-    val alpha  by animateFloatAsState(
+    val alpha by animateFloatAsState(
         targetValue = if (expanded) 1f else 0.35f,
         animationSpec = tween(
-            durationMillis = animationDuration,
+            durationMillis = if (expanded) animationDuration.collapse else animationDuration.expand,
             easing = LinearEasing,
         ),
     )
 
-    IconButton(
-        modifier = Modifier.alpha(alpha),
-        onClick = onClick,
-    ) {
-        Icon(
-            Icons.Filled.KeyboardArrowDown,
-            "",
-            Modifier.rotate(rotation),
+    val enterFadeIn = remember {
+        fadeIn(
+            animationSpec = TweenSpec(
+                durationMillis = animationDuration.fadeIn,
+                easing = FastOutLinearInEasing
+            )
         )
+    }
+    val enterExpand = remember {
+        expandVertically(animationSpec = tween(animationDuration.expand))
+    }
+    val exitFadeOut = remember {
+        fadeOut(
+            animationSpec = TweenSpec(
+                durationMillis = animationDuration.fadeOut,
+                easing = LinearOutSlowInEasing
+            )
+        )
+    }
+    val exitCollapse = remember {
+        shrinkVertically(animationSpec = tween(animationDuration.collapse))
+    }
+    AnimatedVisibility(
+        visible = !(hideOnExpanded && expanded),
+        enter = enterExpand + enterFadeIn,
+        exit = exitCollapse + exitFadeOut
+    ) {
+        IconButton(
+            modifier = Modifier.alpha(alpha),
+            onClick = onClick,
+        ) {
+            Icon(
+                Icons.Filled.KeyboardArrowDown,
+                "",
+                Modifier.rotate(rotation),
+            )
+        }
     }
 }
 
@@ -189,7 +225,7 @@ fun ExpandableContent(
         enter = enterExpand + enterFadeIn,
         exit = exitCollapse + exitFadeOut
     ) {
-        Column(modifier = Modifier.padding(8.dp)) {
+        Column(modifier = Modifier.padding(MaterialTheme.spacing.small)) {
             content()
         }
     }
