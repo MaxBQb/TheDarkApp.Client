@@ -18,10 +18,10 @@ interface RecognitionTask {
     @POST("$path/")
     suspend fun addTask(@Body task: RecognitionTaskCreationNetworkDTO): RecognitionTaskFullViewNetworkDTO?
 
-    @POST("$path/{id}/approve")
+    @POST("$path/{id}/approve/")
     suspend fun approveTask(@Path("id") id: String)
 
-    @POST("$path/{id}/decline")
+    @POST("$path/{id}/decline/")
     suspend fun declineTask(@Path("id") id: String)
 
     @GET("$path/{id}/solutions/")
