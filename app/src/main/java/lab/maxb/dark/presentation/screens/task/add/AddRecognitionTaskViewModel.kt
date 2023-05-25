@@ -46,7 +46,7 @@ class AddRecognitionTaskViewModel(
                 val state = uiState.value
                 _uiState.update { it.copy(isLoading = true) }
                 createRecognitionTaskUseCase(
-                    state.names.map { it.value },
+                    state.names.map { it.value.trim() },
                     state.images.map { it.toString() },
                 )
                 _uiState.update { it.copy(submitSuccess = AddTaskUiEvent.SubmitSuccess) }
@@ -67,7 +67,7 @@ class AddRecognitionTaskViewModel(
     }
 
     private fun setTexts(text: ItemHolder<String>) = _uiState.update { state ->
-        val names = getInputList(state.names, text.map { it.trim() })
+        val names = getInputList(state.names, text.map { it.trimStart() })
         requestSuggestions(names.map { it.value })
         state.copy(names = names)
     }
