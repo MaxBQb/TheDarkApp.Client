@@ -24,7 +24,7 @@ interface RecognitionTask {
     @POST("$path/{id}/decline/")
     suspend fun declineTask(@Path("id") id: String)
 
-    @GET("$path/{id}/solutions/")
+    @POST("$path/{id}/solutions/")
     suspend fun solveTask(
         @Path("id") id: String,
         @Query("answer") answer: String
