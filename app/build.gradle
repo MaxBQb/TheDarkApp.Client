@@ -3,7 +3,6 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-android'
     id 'com.google.devtools.ksp' version "1.7.10-1.0.6"
-    id 'kotlin-kapt'
     id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
@@ -34,6 +33,14 @@ android {
         resourceConfigurations += supportedLocales
         buildConfigField "String[]", "LOCALES", '{"' +
                 supportedLocales.collect { resToLoc(it) }.join('","') + '"}'
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += [
+                    "room.schemaLocation":"$projectDir/schemas".toString(),
+                    "room.incremental":"true"
+                ]
+            }
+        }
     }
 
     buildFeatures{
@@ -114,7 +121,7 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-paging:$room_version"
 
     // JC Dialogs
@@ -163,7 +170,7 @@ dependencies {
         // Excludes the support library because it's already included by Glide.
         transitive = false
     }
-    kapt "com.github.bumptech.glide:compiler:$glide_version"
+    ksp "com.github.bumptech.glide:compiler:$glide_version"
         // Use JC integrated landscapist's Glide version
         def landscapist_glide_version = "2.0.0"
         implementation "com.github.skydoves:landscapist-glide:$landscapist_glide_version"
