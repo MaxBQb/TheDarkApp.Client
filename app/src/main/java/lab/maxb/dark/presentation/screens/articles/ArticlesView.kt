@@ -1,11 +1,11 @@
 package lab.maxb.dark.presentation.screens.articles
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -21,7 +21,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -43,11 +42,13 @@ import androidx.navigation.NavController
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.ramcosta.composedestinations.annotation.Destination
 import kotlinx.coroutines.flow.flowOf
 import lab.maxb.dark.R
 import lab.maxb.dark.domain.model.Article
+import lab.maxb.dark.presentation.components.AnimateAppearance
 import lab.maxb.dark.presentation.components.AnimatedElementSwitch
 import lab.maxb.dark.presentation.components.ExpandableCard
 import lab.maxb.dark.presentation.components.LoadingCircle
@@ -89,7 +90,7 @@ fun ArticlesScreen(
 }
 
 @Composable
-fun BoxScope.ArticlesRootStateless(
+fun ArticlesRootStateless(
     items: LazyPagingItems<ArticleListItem>,
     uiState: ArticlesUiState,
     onEvent: (ArticlesUiEvent) -> Unit = {},
@@ -113,7 +114,7 @@ fun BoxScope.ArticlesRootStateless(
         ) {
             AnimatedVisibility(uiState.isMutable && !uiState.isEditMode) {
                 FloatingActionButton(
-                    onClick = {},
+                    onClick = { onEvent(ArticlesUiEvent.ArticleCreationStarted) },
                     shape = CircleShape,
                     containerColor = colorScheme.secondaryContainer,
                     modifier = Modifier
@@ -140,6 +141,7 @@ fun ArticlesRootStatelessPreview() = Box(Modifier.fillMaxSize()) {
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ArticleList(
     items: LazyPagingItems<ArticleListItem>,
@@ -157,20 +159,27 @@ private fun ArticleList(
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(MaterialTheme.spacing.zero, MaterialTheme.spacing.small)
     ) {
-        items(items = items, itemContent = { item ->
+        items(
+            count = items.itemCount,
+            key = items.itemKey { it.id },
+            contentType = items.itemContentType { it::class }
+        ) { index ->
+            val item = items[index]
             item?.let {
-                ArticleCardWrapper(
-                    item = it,
-                    expanded = it.id == opened,
-                    mutable = mutable,
-                    isEditMode = isEditMode,
-                    onClick = { onItemClick(it.id) },
-                    onEditClick = { onItemEditClick(it) },
-                    onTitleChanged = onItemTitleChanged,
-                    onBodyChanged = onItemBodyChanged,
-                    onSubmit = onSubmit,
-                    onCancel = onCancel,
-                )
+                AnimateAppearance(Modifier.animateItemPlacement()) {
+                    ArticleCardWrapper(
+                        item = it,
+                        expanded = it.id == opened,
+                        mutable = mutable,
+                        isEditMode = isEditMode,
+                        onClick = { onItemClick(it.id) },
+                        onEditClick = { onItemEditClick(it) },
+                        onTitleChanged = onItemTitleChanged,
+                        onBodyChanged = onItemBodyChanged,
+                        onSubmit = onSubmit,
+                        onCancel = onCancel,
+                    )
+                }
             } ?: run {
                 LoadingCircle(
                     Modifier
@@ -180,7 +189,7 @@ private fun ArticleList(
                     5
                 )
             }
-        })
+        }
     }
 }
 
@@ -256,7 +265,6 @@ private fun SubmitPanel(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditableArticleCard(
     item: ArticleListItem,
@@ -299,7 +307,8 @@ fun EditableArticleCard(
                 Row(horizontalArrangement = Arrangement.SpaceBetween) {
                     Text(stringResource(R.string.articles_bodyHint))
                     val showLength = item.body.length >= 100
-                    Spacer(modifier = Modifier.weight(if (showLength) 2f else 0f))
+                    if (showLength)
+                        Spacer(modifier = Modifier.weight(2f))
                     AnimatedVisibility(showLength) {
                         Text(
                             stringResource(

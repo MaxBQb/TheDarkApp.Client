@@ -13,6 +13,7 @@ data class ArticlesUiState(
     val openedArticleId: String? = null,
     val openedArticle: ArticleListItem? = null,
     val isEditMode: Boolean = false,
+    val isCreationMode: Boolean = false,
     val userMessages: UiTriggers<ArticlesUiEvent.UserMessage> = UiTriggers(),
     val isMutable: Boolean = false,
     val isLoading: Boolean = false,

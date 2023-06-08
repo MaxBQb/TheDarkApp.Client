@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.insertHeaderItem
 import androidx.paging.map
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,6 +15,7 @@ import lab.maxb.dark.R
 import lab.maxb.dark.data.utils.pagination.replace
 import lab.maxb.dark.domain.model.Article
 import lab.maxb.dark.domain.model.Role
+import lab.maxb.dark.domain.usecase.article.CreateArticleUseCase
 import lab.maxb.dark.domain.usecase.article.GetArticlesListUseCase
 import lab.maxb.dark.domain.usecase.article.UpdateArticleUseCase
 import lab.maxb.dark.domain.usecase.profile.GetProfileUseCase
@@ -35,8 +37,10 @@ class ArticlesViewModel(
     getProfileUseCase: GetProfileUseCase,
     getArticlesUseCase: GetArticlesListUseCase,
     val updateArticleUseCase: UpdateArticleUseCase,
+    val createArticleUseCase: CreateArticleUseCase,
 ) : BaseViewModel<ArticlesUiState, ArticlesUiEvent>, ViewModel() {
     private val profile = getProfileUseCase().stateInAsResult()
+    private var createArticleRequest by FirstOnly()
     private var updateArticleRequest by FirstOnly()
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -47,8 +51,7 @@ class ArticlesViewModel(
     private val _uiState = MutableStateFlow(ArticlesUiState())
     override val uiState = combine(_uiState, profile, _articles) { state, profileResult, articlesResult ->
         state.copy(
-            articles = articlesResult.valueOrNull
-                ?.replace(state.openedArticle) { x, y -> x.id == y.id }
+            articles = articlesResult.valueOrNull?.withExtraArticle(state)
                 ?: PagingData.empty(),
             isMutable = profileResult.valueOrNull?.role?.hasModifyArticlePermission ?: false,
             isLoading = anyLoading(profileResult, articlesResult) || state.isLoading,
@@ -61,7 +64,15 @@ class ArticlesViewModel(
     override fun onEvent(event: ArticlesUiEvent): Unit = with(event) {
         when (this) {
             is ArticlesUiEvent.ArticleToggled -> toggleArticle(id)
-            ArticlesUiEvent.ArticleCreationStarted -> TODO()
+            ArticlesUiEvent.ArticleCreationStarted -> _uiState.update {
+                val article = ArticleListItem("", "", "new")
+                it.copy(
+                    openedArticleId = article.id,
+                    openedArticle = article,
+                    isEditMode = uiState.value.isMutable,
+                    isCreationMode = uiState.value.isMutable,
+                )
+            }
             is ArticlesUiEvent.ArticleEditStarted -> _uiState.update { it.copy(
                 openedArticleId = article.id,
                 openedArticle = article,
@@ -83,8 +94,10 @@ class ArticlesViewModel(
 
     private fun onSubmit() {
         val state = uiState.value
-        if (state.isEditMode)
-            updateArticle(state.openedArticle!!)
+        when {
+            state.isCreationMode -> createArticle(state.openedArticle!!)
+            state.isEditMode -> updateArticle(state.openedArticle!!)
+        }
     }
 
     private fun updateArticle(article: ArticleListItem) {
@@ -93,6 +106,28 @@ class ArticlesViewModel(
                 _uiState.update { it.copy(isLoading = true) }
                 val (title, body, id) = article
                 updateArticleUseCase(title, body, id)
+                _uiState.update { it.withEditEnded() }
+            } catch (e: Throwable) {
+                e.throwIfCancellation()
+                e.printStackTrace()
+                _uiState.update {
+                    it.copy(
+                        userMessages = it.userMessages + ArticlesUiEvent.UserMessage(
+                            uiTextOf(R.string.articles_message_saveError)
+                        )
+                    )
+                }
+            } finally {
+                _uiState.update { it.copy(isLoading = false) }
+            }
+        }
+    }
+
+    private fun createArticle(article: ArticleListItem) {
+        createArticleRequest = launch {
+            try {
+                _uiState.update { it.copy(isLoading = true) }
+                createArticleUseCase(article.title, article.body)
                 _uiState.update { it.withEditEnded() }
             } catch (e: Throwable) {
                 e.throwIfCancellation()
@@ -119,6 +154,7 @@ class ArticlesViewModel(
 
     private fun ArticlesUiState.withEditEnded() = copy(
         isEditMode = false,
+        isCreationMode = false,
     ).withClosedArticle()
 
     private fun updateOpenedArticle(
@@ -127,15 +163,31 @@ class ArticlesViewModel(
         it.copy(openedArticle = transformation(it.openedArticle!!))
     }
 
-    private fun toggleArticle(id: String) = _uiState.update {
-        if (it.openedArticleId == id)
-            it.copy(openedArticleId = null)
-        else
-            it.copy(openedArticleId = id)
+    private fun toggleArticle(id: String) = _uiState.update {state ->
+        val openedId = state.openedArticleId
+        state
+            .let {
+                if (it.isCreationMode)
+                    it.withEditEnded()
+                else
+                    it
+            }
+            .let {
+                if (openedId == id)
+                    it.copy(openedArticleId = null)
+                else
+                    it.copy(openedArticleId = id)
+            }
     }
 
     private inline val Role.hasModifyArticlePermission get() = when (this) {
         Role.MODERATOR, Role.CONSULTOR -> true
         else -> false
+    }
+
+    private fun PagingData<ArticleListItem>.withExtraArticle(state: ArticlesUiState) = when {
+        state.isCreationMode && state.openedArticle != null -> this.insertHeaderItem(item=state.openedArticle)
+        state.isEditMode -> replace(state.openedArticle) { x, y -> x.id == y.id }
+        else -> this
     }
 }
