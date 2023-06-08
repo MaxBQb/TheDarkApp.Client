@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.skydoves.landscapist.ImageOptions
@@ -21,29 +22,36 @@ fun RecognitionTaskImage(
     imageModel: Any?,
     modifier: Modifier = Modifier,
     imageOptions: ImageOptions = ImageOptions(contentScale = ContentScale.Inside)
-) = GlideImage(
-    { imageModel },
-    modifier = modifier,
-    imageOptions = imageOptions,
-    failure = {
-        LoadingError(
-            Modifier
-                .fillMaxSize()
-                .padding(16.sdp)
-        )
-    },
-    loading = {
-        Box(
-            Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            LoadingCircle(0.7f)
+) = ZoomableBox(minScale = 1f) {
+    GlideImage(
+        { imageModel },
+        modifier = modifier.graphicsLayer(
+            scaleX = scale,
+            scaleY = scale,
+            translationX = offsetX,
+            translationY = offsetY
+        ),
+        imageOptions = imageOptions,
+        failure = {
+            LoadingError(
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.sdp)
+            )
+        },
+        loading = {
+            Box(
+                Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                LoadingCircle(0.7f)
+            }
+        },
+        component = rememberImageComponent {
+            +CrossfadePlugin(duration = 1500)
         }
-    },
-    component = rememberImageComponent {
-        +CrossfadePlugin(duration = 1500)
-    }
-)
+    )
+}
 
 @Composable
 fun LoadingError(modifier: Modifier = Modifier) {
