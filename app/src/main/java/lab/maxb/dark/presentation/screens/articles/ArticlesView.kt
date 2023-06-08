@@ -59,6 +59,7 @@ import lab.maxb.dark.presentation.components.utils.keyboardClose
 import lab.maxb.dark.presentation.components.utils.keyboardNext
 import lab.maxb.dark.presentation.extra.ChangedEffect
 import lab.maxb.dark.presentation.extra.show
+import lab.maxb.dark.presentation.extra.synchronizeChanges
 import lab.maxb.dark.presentation.model.ArticleListItem
 import lab.maxb.dark.ui.theme.DarkAppTheme
 import lab.maxb.dark.ui.theme.spacing
@@ -277,9 +278,10 @@ fun EditableArticleCard(
     expanded = expanded,
     hideOnExpanded = true,
     title = {
+        val (synchronizedState, synchronizedOnChange) = synchronizeChanges(item.title, onTitleChanged)
         OutlinedTextField(
-            value = item.title,
-            onValueChange = onTitleChanged,
+            value = synchronizedState,
+            onValueChange = synchronizedOnChange,
             modifier = Modifier
                 .weight(1f, fill = false)
                 .padding(
@@ -297,9 +299,10 @@ fun EditableArticleCard(
         )
     },
     body = {
+        val (synchronizedState, synchronizedOnChange) = synchronizeChanges(item.body, onBodyChanged)
         OutlinedTextField(
-            item.body,
-            onBodyChanged,
+            synchronizedState,
+            synchronizedOnChange,
             modifier = Modifier.onPreviewKeyEvent(keyboardClose.event),
             keyboardOptions = keyboardClose.options,
             keyboardActions = keyboardClose.actions,

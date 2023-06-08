@@ -2,11 +2,23 @@ package lab.maxb.dark.presentation.screens.auth.form
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.onPreviewKeyEvent
@@ -19,7 +31,12 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import lab.maxb.dark.R
-import lab.maxb.dark.presentation.components.*
+import lab.maxb.dark.presentation.components.AppScaffold
+import lab.maxb.dark.presentation.components.ChooseLocaleDialog
+import lab.maxb.dark.presentation.components.LabelledSwitch
+import lab.maxb.dark.presentation.components.LanguageToggleButton
+import lab.maxb.dark.presentation.components.LoadingScreen
+import lab.maxb.dark.presentation.components.rememberSnackbarHostState
 import lab.maxb.dark.presentation.components.utils.getPasswordTransformation
 import lab.maxb.dark.presentation.components.utils.keyboardClose
 import lab.maxb.dark.presentation.components.utils.keyboardNext
@@ -95,7 +112,6 @@ fun AuthRootPreviewLoading() = AuthRootPreview(
     ),
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthRootStateless(
     uiState: AuthUiState,

@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import lab.maxb.dark.presentation.extra.synchronizeChanges
 
 @Composable
 fun QuerySearch(
@@ -21,20 +22,23 @@ fun QuerySearch(
     onQueryChanged: (String) -> Unit,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
-) = OutlinedTextField(
-    modifier = modifier.fillMaxWidth(),
-    value = query,
-    onValueChange = onQueryChanged,
-    placeholder = label,
-    singleLine = true,
-    trailingIcon = {
-        AnimatedVisibility(query.isNotEmpty()) {
-            IconButton(onClick = { onQueryChanged("") }) {
-                Icon(imageVector = Icons.Filled.Close, contentDescription = "Clear")
+) {
+    val (synchronizedState, synchronizedOnChange) = synchronizeChanges(query, onQueryChanged)
+    OutlinedTextField(
+        modifier = modifier.fillMaxWidth(),
+        value = synchronizedState,
+        onValueChange = synchronizedOnChange,
+        placeholder = label,
+        singleLine = true,
+        trailingIcon = {
+            AnimatedVisibility(query.isNotEmpty()) {
+                IconButton(onClick = { synchronizedOnChange("") }) {
+                    Icon(imageVector = Icons.Filled.Close, contentDescription = "Clear")
+                }
             }
-        }
-    },
-    textStyle = MaterialTheme.typography.bodySmall,
-    keyboardActions = keyboardActions,
-    keyboardOptions = keyboardOptions,
-)
+        },
+        textStyle = MaterialTheme.typography.bodySmall,
+        keyboardActions = keyboardActions,
+        keyboardOptions = keyboardOptions,
+    )
+}
