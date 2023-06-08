@@ -8,13 +8,20 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -34,7 +41,13 @@ import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.accompanist.pager.rememberPagerState
 import com.ramcosta.composedestinations.annotation.Destination
 import lab.maxb.dark.R
-import lab.maxb.dark.presentation.components.*
+import lab.maxb.dark.presentation.components.ImageListEditPanel
+import lab.maxb.dark.presentation.components.ImageSlider
+import lab.maxb.dark.presentation.components.InputList
+import lab.maxb.dark.presentation.components.LoadingScreen
+import lab.maxb.dark.presentation.components.ScaffoldWithDrawer
+import lab.maxb.dark.presentation.components.TopBar
+import lab.maxb.dark.presentation.components.rememberSnackbarHostState
 import lab.maxb.dark.presentation.extra.ChangedEffect
 import lab.maxb.dark.presentation.extra.ItemHolder
 import lab.maxb.dark.presentation.extra.show
@@ -44,7 +57,6 @@ import lab.maxb.dark.ui.theme.units.sdp
 import org.koin.androidx.compose.getViewModel
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Destination
 @Composable
 fun AddRecognitionTaskScreen(

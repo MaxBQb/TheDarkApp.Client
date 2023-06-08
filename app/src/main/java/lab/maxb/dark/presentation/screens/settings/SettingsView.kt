@@ -3,7 +3,6 @@ package lab.maxb.dark.presentation.screens.settings
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,12 +18,16 @@ import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import lab.maxb.dark.R
-import lab.maxb.dark.presentation.components.*
+import lab.maxb.dark.presentation.components.ChooseLocaleDialog
+import lab.maxb.dark.presentation.components.NavBackIcon
+import lab.maxb.dark.presentation.components.ScaffoldWithDrawer
+import lab.maxb.dark.presentation.components.TopBar
+import lab.maxb.dark.presentation.components.getLanguageCode
+import lab.maxb.dark.presentation.components.getLanguageName
 import lab.maxb.dark.presentation.extra.ChangedEffect
 import org.koin.androidx.compose.getViewModel
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Destination
 @Composable
 fun SettingsScreen(

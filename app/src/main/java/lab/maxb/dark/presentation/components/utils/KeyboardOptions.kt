@@ -3,7 +3,6 @@ package lab.maxb.dark.presentation.components.utils
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
@@ -17,7 +16,7 @@ data class InputOptions(
     val event: (KeyEvent) -> Boolean,
 )
 
-@OptIn(ExperimentalComposeUiApi::class)
+
 private val goKeys = listOf(Key.Tab, Key.Enter)
 val keyboardNext: InputOptions
     @Composable get() {
