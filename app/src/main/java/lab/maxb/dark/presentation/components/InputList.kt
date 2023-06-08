@@ -3,7 +3,7 @@ package lab.maxb.dark.presentation.components
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
@@ -14,7 +14,6 @@ import lab.maxb.dark.presentation.components.utils.keyboardClose
 import lab.maxb.dark.presentation.components.utils.keyboardNext
 import lab.maxb.dark.presentation.extra.ItemHolder
 import lab.maxb.dark.ui.theme.spacing
-import lab.maxb.dark.ui.theme.units.sdp
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -47,7 +46,7 @@ fun InputList(
                     keyboardActions = keyboardActions.actions,
                     modifier = Modifier
                         .onPreviewKeyEvent(keyboardActions.event)
-                        .height(56.sdp)
+                        .padding(vertical = MaterialTheme.spacing.extraSmall)
                 )
             }
         }

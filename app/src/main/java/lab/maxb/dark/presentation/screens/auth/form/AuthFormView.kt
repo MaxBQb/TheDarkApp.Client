@@ -55,7 +55,7 @@ fun AuthScreen(
         snackbarState show it.message
     }
     uiState.authorized.ChangedEffect(onConsumed = onEvent) {
-        navigator.initialNavigate(WelcomeScreenDestination(), AuthScreenDestination)
+        navigator.initialNavigate(WelcomeScreenDestination, AuthScreenDestination)
     }
     uiState.localeUpdated.ChangedEffect(onConsumed = onEvent) {
         AppCompatDelegate.setApplicationLocales(

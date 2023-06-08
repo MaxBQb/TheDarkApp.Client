@@ -10,7 +10,12 @@ import lab.maxb.dark.domain.model.Profile
 import lab.maxb.dark.domain.usecase.auth.AuthorizeUseCase
 import lab.maxb.dark.domain.usecase.settings.locale.ChangeLocaleUseCase
 import lab.maxb.dark.domain.usecase.settings.locale.GetCurrentLocaleUseCase
-import lab.maxb.dark.presentation.extra.*
+import lab.maxb.dark.presentation.extra.FirstOnly
+import lab.maxb.dark.presentation.extra.UiText
+import lab.maxb.dark.presentation.extra.isNotEmpty
+import lab.maxb.dark.presentation.extra.launch
+import lab.maxb.dark.presentation.extra.stateIn
+import lab.maxb.dark.presentation.extra.uiTextOf
 import lab.maxb.dark.presentation.screens.core.BaseViewModel
 import org.koin.android.annotation.KoinViewModel
 

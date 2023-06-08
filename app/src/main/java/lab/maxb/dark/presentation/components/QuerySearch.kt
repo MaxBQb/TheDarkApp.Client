@@ -6,11 +6,13 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuerySearch(
     modifier: Modifier = Modifier,
@@ -23,7 +25,7 @@ fun QuerySearch(
     modifier = modifier.fillMaxWidth(),
     value = query,
     onValueChange = onQueryChanged,
-    label = label,
+    placeholder = label,
     singleLine = true,
     trailingIcon = {
         AnimatedVisibility(query.isNotEmpty()) {

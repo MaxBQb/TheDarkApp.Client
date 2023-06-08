@@ -5,12 +5,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import lab.maxb.dark.domain.model.Profile
 import lab.maxb.dark.domain.model.Role
+import lab.maxb.dark.domain.usecase.profile.GetProfileUseCase
 import lab.maxb.dark.domain.usecase.task.GetRecognitionTaskImageUseCase
 import lab.maxb.dark.domain.usecase.task.GetRecognitionTaskUseCase
 import lab.maxb.dark.domain.usecase.task.MarkRecognitionTaskUseCase
 import lab.maxb.dark.domain.usecase.task.SolveRecognitionTaskUseCase
 import lab.maxb.dark.presentation.extra.*
-import lab.maxb.dark.domain.usecase.profile.GetProfileUseCase
 import lab.maxb.dark.presentation.screens.core.BaseViewModel
 import org.koin.android.annotation.KoinViewModel
 

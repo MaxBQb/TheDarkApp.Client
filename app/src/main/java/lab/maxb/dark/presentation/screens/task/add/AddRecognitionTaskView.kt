@@ -31,7 +31,6 @@ import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
 import com.google.accompanist.adaptive.TwoPane
 import com.google.accompanist.adaptive.VerticalTwoPaneStrategy
 import com.google.accompanist.adaptive.calculateDisplayFeatures
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import com.ramcosta.composedestinations.annotation.Destination
 import lab.maxb.dark.R
@@ -100,7 +99,6 @@ fun AddRecognitionTaskRootStatelessPreview() = AddRecognitionTaskRootStateless(
     )
 )
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun AddRecognitionTaskRootStateless(
     uiState: AddTaskUiState,

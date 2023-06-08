@@ -22,7 +22,7 @@ fun RecognitionTaskImage(
     modifier: Modifier = Modifier,
     imageOptions: ImageOptions = ImageOptions(contentScale = ContentScale.Inside)
 ) = GlideImage(
-    imageModel,
+    { imageModel },
     modifier = modifier,
     imageOptions = imageOptions,
     failure = {

@@ -28,7 +28,7 @@ import lab.maxb.dark.presentation.screens.destinations.AuthHandleScreenDestinati
 import lab.maxb.dark.presentation.screens.destinations.AuthScreenDestination
 import lab.maxb.dark.ui.theme.DarkAppTheme
 import org.koin.androidx.viewmodel.ext.android.getViewModel
-import java.util.*
+import java.util.Locale
 
 
 class MainActivity : AppCompatActivity() {

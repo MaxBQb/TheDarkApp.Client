@@ -1,13 +1,22 @@
 package lab.maxb.dark.presentation.components
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.vanpra.composematerialdialogs.*
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.MaterialDialogState
+import com.vanpra.composematerialdialogs.listItemsSingleChoice
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import com.vanpra.composematerialdialogs.title
 import lab.maxb.dark.BuildConfig
 import lab.maxb.dark.R
 import lab.maxb.dark.ui.theme.DarkAppTheme
-import java.util.*
+import java.util.Locale
 
 
 @Composable
@@ -19,7 +28,7 @@ fun ChooseLocaleDialog(
     val defaultValueText = stringResource(R.string.dialogChooseLocale_systemDefault)
     val (names, keys) = getLocalesMap(defaultValueText)
     var selectedItem by remember(selectedLocale) {
-        mutableStateOf(keys.indexOf(selectedLocale))
+        mutableIntStateOf(keys.indexOf(selectedLocale))
     }
     MaterialDialog(
         dialogState = dialogState,

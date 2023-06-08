@@ -9,7 +9,13 @@ import lab.maxb.dark.R
 import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.domain.usecase.task.CreateRecognitionTaskUseCase
 import lab.maxb.dark.domain.usecase.task.GetTaskNameSynonymsUseCase
-import lab.maxb.dark.presentation.extra.*
+import lab.maxb.dark.presentation.extra.FirstOnly
+import lab.maxb.dark.presentation.extra.ItemHolder
+import lab.maxb.dark.presentation.extra.LatestOnly
+import lab.maxb.dark.presentation.extra.launch
+import lab.maxb.dark.presentation.extra.map
+import lab.maxb.dark.presentation.extra.throwIfCancellation
+import lab.maxb.dark.presentation.extra.uiTextOf
 import lab.maxb.dark.presentation.screens.core.BaseViewModel
 import org.koin.android.annotation.KoinViewModel
 import kotlin.math.max
