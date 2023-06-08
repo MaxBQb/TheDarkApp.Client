@@ -28,6 +28,8 @@ android {
 
         // URL for main API
         buildConfigField "String", "DARK_API_URL", keystoreProperties["DARK_API_URL"]
+        // URL for code repository
+        buildConfigField "String", "APP_REPOSITORY", keystoreProperties["APP_REPOSITORY"]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resourceConfigurations += supportedLocales
