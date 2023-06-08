@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.SwitchDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,7 +23,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.core.os.LocaleListCompat
 import androidx.navigation.NavController
+import com.alorma.compose.settings.storage.base.rememberBooleanSettingState
 import com.alorma.compose.settings.ui.SettingsMenuLink
+import com.alorma.compose.settings.ui.SettingsSwitch
 import com.ramcosta.composedestinations.annotation.Destination
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import lab.maxb.dark.BuildConfig
@@ -92,13 +95,28 @@ fun SettingsRootStateless(
                 },
                 onClick = { chooseLocaleDialogState.show() },
             )
+            val useExternalSuggestionsState = rememberBooleanSettingState()
+            useExternalSuggestionsState.value = uiState.useExternalSuggestions
+            SettingsSwitch(
+                icon = { Icon(painterResource(R.drawable.ic_suggestions), contentDescription = null) },
+                enabled = false, // TODO: Fix external suggestions service or remove it completely
+                state = useExternalSuggestionsState,
+                title = { Text(stringResource(R.string.settings_useExternalSuggestions)) },
+                switchColors = SwitchDefaults.colors(
+                    uncheckedThumbColor = androidx.compose.material.MaterialTheme.colors.primary,
+                    checkedThumbColor = androidx.compose.material.MaterialTheme.colors.error,
+                ),
+                onCheckedChange = { onEvent(SettingsUiEvent.UseExternalSuggestionsToggled) },
+            )
         }
         val uriHandler = LocalUriHandler.current
         Row(
             horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth().clickable {
-                uriHandler.openUri(BuildConfig.APP_REPOSITORY)
-            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    uriHandler.openUri(BuildConfig.APP_REPOSITORY)
+                },
         ) {
             Text(
                 text = stringResource(

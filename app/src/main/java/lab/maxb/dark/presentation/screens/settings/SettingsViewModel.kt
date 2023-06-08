@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
+import lab.maxb.dark.domain.usecase.settings.UseExternalSuggestionsUseCases
 import lab.maxb.dark.domain.usecase.settings.locale.ChangeLocaleUseCase
 import lab.maxb.dark.domain.usecase.settings.locale.GetCurrentLocaleUseCase
 import lab.maxb.dark.presentation.extra.launch
@@ -16,19 +17,26 @@ import org.koin.android.annotation.KoinViewModel
 class SettingsViewModel(
     getCurrentLocaleUseCase: GetCurrentLocaleUseCase,
     private val changeLocaleUseCase: ChangeLocaleUseCase,
+    private val useExternalSuggestionsUseCases: UseExternalSuggestionsUseCases,
 ) : BaseViewModel<SettingsUiState, SettingsUiEvent>, ViewModel() {
 
     private val _uiState = MutableStateFlow(SettingsUiState())
-    override val uiState = combine(_uiState, getCurrentLocaleUseCase()) { state, locale ->
+    override val uiState = combine(
+        _uiState,
+        getCurrentLocaleUseCase(),
+        useExternalSuggestionsUseCases.get(),
+    ) { state, locale, useExternalSuggestions ->
         state.copy(
             locale = locale,
+            useExternalSuggestions = useExternalSuggestions,
         )
     }.stateIn(SettingsUiState())
 
-    override fun onEvent(event: SettingsUiEvent) = with(event) {
+    override fun onEvent(event: SettingsUiEvent): Unit = with(event) {
         when (this) {
             is SettingsUiEvent.LocaleChanged -> changeLocale(locale)
             is SettingsUiEvent.LocaleUpdated -> _uiState.update { it.copy(localeUpdated = null) }
+            SettingsUiEvent.UseExternalSuggestionsToggled -> launch { useExternalSuggestionsUseCases.toggle() }
         }
     }
 
