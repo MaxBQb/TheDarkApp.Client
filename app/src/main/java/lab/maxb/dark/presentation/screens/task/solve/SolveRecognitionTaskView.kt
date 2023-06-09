@@ -113,8 +113,9 @@ fun SolveRecognitionTaskRootStateless(
                 uiState.images,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.sdp),
-            ) // TODO: On Image click open zoomable preview
+                    .height(300.sdp),
+                zoomable = true,
+            )
             if (uiState.isReviewMode) {
                 ModeratorReviewPanel(uiState.isReviewed) {
                     onEvent(TaskSolveUiEvent.MarkChanged(it))

@@ -26,7 +26,8 @@ fun ImageSlider(
     images: List<Any?>,
     modifier: Modifier = Modifier,
     pagerState: PagerState = rememberPagerState(),
-    onItemClick: () -> Unit = {}
+    onItemClick: () -> Unit = {},
+    zoomable: Boolean = false,
 ) = Column(horizontalAlignment = Alignment.CenterHorizontally) {
     HorizontalPager(
         count = images.size,
@@ -57,6 +58,7 @@ fun ImageSlider(
                         fraction = 1f - pageOffset.coerceIn(0f, 1f)
                     )
                 },
+            zoomable=zoomable,
         )
     }
     AnimatedVisibility(visible = images.size > 1) {

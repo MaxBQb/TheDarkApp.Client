@@ -21,16 +21,39 @@ import lab.maxb.dark.ui.theme.units.sdp
 fun RecognitionTaskImage(
     imageModel: Any?,
     modifier: Modifier = Modifier,
-    imageOptions: ImageOptions = ImageOptions(contentScale = ContentScale.Inside)
-) = ZoomableBox(minScale = 1f) {
+    imageOptions: ImageOptions = ImageOptions(contentScale = ContentScale.Inside),
+    zoomable: Boolean = false,
+) {
+    if (zoomable)
+        ZoomableBox(minScale = 1f) {
+            _RecognitionTaskImage(
+                imageModel,
+                modifier.graphicsLayer(
+                    scaleX = scale,
+                    scaleY = scale,
+                    translationX = offsetX,
+                    translationY = offsetY
+                ),
+                imageOptions,
+            )
+        }
+    else
+        _RecognitionTaskImage(
+            imageModel,
+            modifier,
+            imageOptions,
+        )
+}
+
+@Composable
+private fun _RecognitionTaskImage(
+    imageModel: Any?,
+    modifier: Modifier,
+    imageOptions: ImageOptions
+) {
     GlideImage(
         { imageModel },
-        modifier = modifier.graphicsLayer(
-            scaleX = scale,
-            scaleY = scale,
-            translationX = offsetX,
-            translationY = offsetY
-        ),
+        modifier = modifier,
         imageOptions = imageOptions,
         failure = {
             LoadingError(
