@@ -28,6 +28,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
+import lab.maxb.dark.presentation.screens.drawer.Drawer
 
 @Composable
 fun rememberSnackbarHostState() = remember { SnackbarHostState() }

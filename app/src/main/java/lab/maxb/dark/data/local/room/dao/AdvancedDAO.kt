@@ -41,8 +41,16 @@ abstract class AdvancedDAO<DTO: BaseLocalDTO>(
     @Transaction
     open suspend fun save(vararg value: DTO) {
         for (it in value)
-            if (add(it.markCreated()) == -1L)
-                update(it.markModified())
+            save(it)
+    }
+
+    @Transaction
+    open suspend fun save(value: DTO) {
+        val storedValue = getById(value.id)
+        if (storedValue == null)
+            add(value.withLocalsDefault().markCreated())
+        else
+            update(value.withLocalsPreserved(storedValue).markModified())
     }
 
     @RawQuery
@@ -50,4 +58,7 @@ abstract class AdvancedDAO<DTO: BaseLocalDTO>(
 
     @RawQuery
     protected abstract suspend fun runForResult(query: SupportSQLiteQuery): DTO?
+
+    protected open suspend fun DTO.withLocalsDefault() = this
+    protected open suspend fun DTO.withLocalsPreserved(old: DTO) = this
 }

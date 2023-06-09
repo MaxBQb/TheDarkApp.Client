@@ -78,7 +78,17 @@ class RecognitionTasksRepositoryImpl(
         page.map { it.toDomain() }
     }
 
+    private val favoritePager = Pager(
+        config = PagingConfig(pageSize = 50),
+    ) {
+        localDataSource.getFavoritesPaged()
+    }.flow.map { page ->
+        page.map { it.toDomain() }
+    }
+
     override fun getAllRecognitionTasks() = pager
+    override fun getFavoriteRecognitionTasks() = favoritePager
+    override fun hasFavoriteRecognitionTasks() = localDataSource.hasFavorites()
 
     override suspend fun addRecognitionTask(task: RecognitionTask) {
         val newTask = task.copy(images=task.images.map {
@@ -100,6 +110,10 @@ class RecognitionTasksRepositoryImpl(
             e.printStackTrace()
             false
         }
+
+    override suspend fun markFavoriteRecognitionTask(task: RecognitionTask) {
+        localDataSource.save(task.toLocalDTO())
+    }
 
     override suspend fun solveRecognitionTask(id: String, answer: String)
         = try {

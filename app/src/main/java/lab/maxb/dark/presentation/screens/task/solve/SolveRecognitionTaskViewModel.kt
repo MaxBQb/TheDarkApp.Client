@@ -8,6 +8,7 @@ import lab.maxb.dark.domain.model.Role
 import lab.maxb.dark.domain.usecase.profile.GetProfileUseCase
 import lab.maxb.dark.domain.usecase.task.GetRecognitionTaskImageUseCase
 import lab.maxb.dark.domain.usecase.task.GetRecognitionTaskUseCase
+import lab.maxb.dark.domain.usecase.task.MarkFavoriteRecognitionTaskUseCase
 import lab.maxb.dark.domain.usecase.task.MarkRecognitionTaskUseCase
 import lab.maxb.dark.domain.usecase.task.SolveRecognitionTaskUseCase
 import lab.maxb.dark.presentation.extra.*
@@ -21,6 +22,7 @@ class SolveRecognitionTaskViewModel(
     private val getRecognitionTaskImageUseCase: GetRecognitionTaskImageUseCase,
     private val solveRecognitionTaskUseCase: SolveRecognitionTaskUseCase,
     private val markRecognitionTaskUseCase: MarkRecognitionTaskUseCase,
+    private val markFavoriteRecognitionTaskUseCase: MarkFavoriteRecognitionTaskUseCase,
     getProfileUseCase: GetProfileUseCase,
     getRecognitionTaskUseCase: GetRecognitionTaskUseCase,
 ) : BaseViewModel<TaskSolveUiState, TaskSolveUiEvent>, ViewModel() {
@@ -38,6 +40,7 @@ class SolveRecognitionTaskViewModel(
             isLoading = anyLoading(profileResult, taskResult) || state.isLoading,
             isReviewMode = isReviewMode(profile),
             isReviewed = task?.reviewed ?: false,
+            isFavorite = task?.favorite,
             images = task?.images?.map { getImage(it) } ?: emptyList(),
             taskNotFound = if (task == null && !taskResult.isLoading)
                 TaskSolveUiEvent.NoSuchTask else null,
@@ -53,15 +56,20 @@ class SolveRecognitionTaskViewModel(
             is TaskSolveUiEvent.AnswerChanged -> _uiState.update {
                 it.copy(answer = answer)
             }
+
             is TaskSolveUiEvent.SubmitTaskSolveSolution
             -> solveRecognitionTask(_uiState.value.answer)
+
             is TaskSolveUiEvent.MarkChanged -> mark(isAllowed)
             is TaskSolveUiEvent.UserMessage -> _uiState.update {
                 it.copy(userMessages = it.userMessages - this)
             }
+
             TaskSolveUiEvent.NoSuchTask -> _uiState.update {
                 it.copy(taskNotFound = null)
             }
+
+            is TaskSolveUiEvent.MarkFavorite -> markFavorite(id, isFavorite)
         }
     }
 
@@ -93,6 +101,13 @@ class SolveRecognitionTaskViewModel(
                 )
             }
         }
+    }
+
+    private fun markFavorite(id: String, isFavorite: Boolean) = launch {
+        markFavoriteRecognitionTaskUseCase(
+            taskId = id,
+            isFavorite = isFavorite,
+        )
     }
 
     private fun solveRecognitionTask(answer: String) = launch {

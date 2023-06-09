@@ -24,6 +24,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -37,6 +38,7 @@ import com.bumptech.glide.load.model.GlideUrl
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import lab.maxb.dark.R
+import lab.maxb.dark.presentation.components.FavoriteIcon
 import lab.maxb.dark.presentation.components.LoadingCircle
 import lab.maxb.dark.presentation.components.RecognitionTaskImage
 import lab.maxb.dark.presentation.components.TopScaffold
@@ -66,7 +68,9 @@ fun RecognitionTaskListScreen(
             onItemClick = {
                 navigator.navigate(SolveRecognitionTaskScreenDestination(it))
             },
-            resolveImage = viewModel::getImage
+            resolveImage = viewModel::getImage,
+            isTaskCreationAllowed,
+            viewModel::markFavorite,
         )
         AnimatedVisibility(
             isTaskCreationAllowed,
@@ -89,10 +93,12 @@ fun RecognitionTaskListScreen(
 )
 
 @Composable
-private fun RecognitionTaskList(
+fun RecognitionTaskList(
     items: LazyPagingItems<RecognitionTaskListItem>,
     onItemClick: (String) -> Unit,
-    resolveImage: (String) -> GlideUrl
+    resolveImage: (String) -> GlideUrl,
+    showFavorites: Boolean = false,
+    onItemFavoriteToggle: (String, Boolean) -> Unit = { _, _ -> },
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
@@ -103,7 +109,9 @@ private fun RecognitionTaskList(
                 RecognitionTaskCard(
                     it,
                     onClick = { onItemClick(it.id) },
-                    resolveImage = resolveImage
+                    resolveImage = resolveImage,
+                    showFavorites = showFavorites,
+                    onFavoriteToggled = { x -> onItemFavoriteToggle(it.id, x) }
                 )
             } ?: run {
                 LoadingCircle(
@@ -123,7 +131,9 @@ private fun RecognitionTaskList(
 fun RecognitionTaskCard(
     item: RecognitionTaskListItem,
     onClick: () -> Unit,
-    resolveImage: (String) -> GlideUrl
+    resolveImage: (String) -> GlideUrl,
+    showFavorites: Boolean = false,
+    onFavoriteToggled: (Boolean) -> Unit = {},
 ) {
     val elevation = if (item.reviewed) 300 else 500
     Surface(
@@ -166,6 +176,21 @@ fun RecognitionTaskCard(
                 contentAlignment = Alignment.TopCenter
             ) {
                 Text(item.ownerName)
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.sdp),
+                contentAlignment = Alignment.TopStart
+            ) {
+                AnimatedVisibility(showFavorites) {
+                    FavoriteIcon(
+                        item.favorite,
+                        Modifier.scale(1.15f),
+                        onFavoriteToggled,
+                    )
+                }
             }
         }
     }

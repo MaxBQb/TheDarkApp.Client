@@ -31,6 +31,7 @@ import com.ramcosta.composedestinations.annotation.FULL_ROUTE_PLACEHOLDER
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import lab.maxb.dark.R
 import lab.maxb.dark.domain.operations.shareLink
+import lab.maxb.dark.presentation.components.FavoriteIcon
 import lab.maxb.dark.presentation.components.ImageSlider
 import lab.maxb.dark.presentation.components.LoadingScreen
 import lab.maxb.dark.presentation.components.NavBackIcon
@@ -71,9 +72,14 @@ fun SolveRecognitionTaskScreen(
             TopBar(
                 title = stringResource(id = R.string.nav_solveTask_title),
                 navigationIcon = { NavBackIcon(navController = navController) },
-                actions = { ShareIcon(
-                    shareLink + SolveRecognitionTaskScreenDestination(id).route
-                ) },
+                actions = {
+                    AnimatedVisibility(!uiState.isReviewMode && uiState.isFavorite != null) {
+                        FavoriteIcon(uiState.isFavorite ?: false) {
+                            onEvent(TaskSolveUiEvent.MarkFavorite(id, it))
+                        }
+                    }
+                    ShareIcon(shareLink + SolveRecognitionTaskScreenDestination(id).route)
+                },
             )
         },
         snackbarState = snackbarState,

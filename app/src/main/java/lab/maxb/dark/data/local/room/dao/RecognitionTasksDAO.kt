@@ -20,6 +20,14 @@ abstract class RecognitionTasksDAO: AdvancedDAO<RecognitionTaskLocalDTO>(
     @Query("SELECT * FROM recognition_task ORDER BY reviewed ASC, id ASC")
     abstract fun getAllPaged(): PagingSource<Int, FullRecognitionTaskDTO>
 
+    @Transaction
+    @Query("SELECT * FROM recognition_task WHERE favorite")
+    abstract fun getFavoritesPaged(): PagingSource<Int, FullRecognitionTaskDTO>
+
+    @Transaction
+    @Query("SELECT EXISTS (SELECT 1 FROM recognition_task WHERE favorite)")
+    abstract fun hasFavorites(): Flow<Boolean>
+
     @Query("SELECT * FROM recognition_task WHERE id = :id")
     abstract fun get(id: String): Flow<RecognitionTaskLocalDTO?>
 
@@ -31,4 +39,14 @@ abstract class RecognitionTasksDAO: AdvancedDAO<RecognitionTaskLocalDTO>(
         save(*value)
         deleteOther(value.map { it.id })
     }
+
+    override suspend fun RecognitionTaskLocalDTO.withLocalsPreserved(
+        old: RecognitionTaskLocalDTO
+    ) = copy(
+        favorite = favorite ?: old.favorite
+    )
+
+    override suspend fun RecognitionTaskLocalDTO.withLocalsDefault() = copy(
+        favorite = favorite ?: false
+    )
 }

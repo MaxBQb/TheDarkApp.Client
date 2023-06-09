@@ -17,6 +17,7 @@
 
     <!-- Navigation -->
     <string name="nav_taskList_title">Задачи</string>
+    <string name="nav_favoriteTaskList_title">Избранное</string>
     <string name="nav_articles_title">Стоит знать</string>
     <string name="nav_addTask_title">Добавление задачи</string>
     <string name="nav_solveTask_title">Что это?</string>

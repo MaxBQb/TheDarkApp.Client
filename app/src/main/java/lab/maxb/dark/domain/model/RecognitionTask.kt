@@ -7,6 +7,7 @@ data class RecognitionTask(
     val images: List<String> = emptyList(),
     val ownerId: String,
     val reviewed: Boolean = false,
+    val favorite: Boolean? = false,
     val id: String = randomUUID,
 ) {
     companion object {

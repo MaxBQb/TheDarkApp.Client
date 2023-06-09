@@ -16,12 +16,16 @@ import lab.maxb.dark.data.model.local.RemoteKey
 import lab.maxb.dark.data.model.local.UserLocalDTO
 import lab.maxb.dark.domain.repository.LocalStorage
 
-@Database(entities = [
-            UserLocalDTO::class,
-            RecognitionTaskLocalDTO::class,
-            ArticleLocalDTO::class,
-            RemoteKey::class,
-          ], version = 11, exportSchema = false)
+@Database(
+    entities = [
+        UserLocalDTO::class,
+        RecognitionTaskLocalDTO::class,
+        ArticleLocalDTO::class,
+        RemoteKey::class,
+    ],
+    version = 12,
+    exportSchema = false,
+)
 @TypeConverters(CollectionsConverter::class)
 abstract class LocalDatabase : RoomDatabase(), LocalStorage {
     abstract fun articles(): ArticlesDAO

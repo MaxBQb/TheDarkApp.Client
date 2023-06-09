@@ -29,17 +29,19 @@ fun RecognitionTask.toNetworkDTO() = RecognitionTaskCreationNetworkDTO(
 )
 
 fun RecognitionTaskListViewNetworkDTO.toDomain() = RecognitionTask(
-    setOf(),
-    image?.let { listOf(it) } ?: emptyList(),
-    ownerId,
-    reviewed,
-    id,
+    names = setOf(),
+    images = image?.let { listOf(it) } ?: emptyList(),
+    ownerId = ownerId,
+    reviewed = reviewed,
+    favorite = null,
+    id=id,
 )
 
 fun RecognitionTaskFullViewNetworkDTO.toDomain() = RecognitionTask(
-    names ?: emptySet(),
-    images ?: emptyList(),
-    ownerId,
-    reviewed,
-    id,
+    names = names ?: emptySet(),
+    images = images ?: emptyList(),
+    ownerId = ownerId,
+    reviewed = reviewed,
+    favorite = null,
+    id=id,
 )

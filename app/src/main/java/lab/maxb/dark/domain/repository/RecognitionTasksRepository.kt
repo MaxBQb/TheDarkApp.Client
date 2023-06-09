@@ -10,8 +10,11 @@ import lab.maxb.dark.domain.repository.utils.Resource
 interface RecognitionTasksRepository {
     val recognitionTaskResource: Resource<String, RecognitionTask>
     fun getAllRecognitionTasks(): Flow<PagingData<RecognitionTaskWithOwner>>
+    fun getFavoriteRecognitionTasks(): Flow<PagingData<RecognitionTaskWithOwner>>
+    fun hasFavoriteRecognitionTasks(): Flow<Boolean>
     fun getRecognitionTaskImage(path: String): GlideUrl
     suspend fun addRecognitionTask(task: RecognitionTask)
     suspend fun markRecognitionTask(task: RecognitionTask): Boolean
+    suspend fun markFavoriteRecognitionTask(task: RecognitionTask)
     suspend fun solveRecognitionTask(id: String, answer: String): Boolean
 }
