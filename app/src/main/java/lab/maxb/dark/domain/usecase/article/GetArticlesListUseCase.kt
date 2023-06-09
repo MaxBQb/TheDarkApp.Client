@@ -7,5 +7,5 @@ import org.koin.core.annotation.Singleton
 open class GetArticlesListUseCase(
     private val articlesRepository: ArticlesRepository,
 ) {
-    open operator fun invoke() = articlesRepository.getAllArticles()
+    open operator fun invoke() = articlesRepository.getPagedArticles()
 }

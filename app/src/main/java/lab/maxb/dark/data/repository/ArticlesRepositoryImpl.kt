@@ -7,6 +7,7 @@ import androidx.paging.map
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import lab.maxb.dark.data.local.room.LocalDatabase
@@ -75,7 +76,10 @@ class ArticlesRepositoryImpl(
         page.map { it.toDomain() }
     }
 
-    override fun getAllArticles() = pager
+    override fun getPagedArticles() = pager
+    override fun getArticles() =
+        articlesResource.query(Page(0, 50), useCache = true).filterNotNull()
+
 
     override suspend fun addArticle(article: Article) {
         val newArticle = article.toNetworkDTO()

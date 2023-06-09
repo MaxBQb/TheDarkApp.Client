@@ -20,7 +20,7 @@
     <string name="nav_articles_title">Стоит знать</string>
     <string name="nav_addTask_title">Добавление задачи</string>
     <string name="nav_solveTask_title">Что это?</string>
-    <string name="nav_home_title">Главная</string>
+    <string name="nav_home_title">Профиль</string>
     <string name="nav_settings_title">Настройки</string>
 
     <!-- Authorization -->
@@ -33,7 +33,7 @@
     <string name="auth_showPassword">Показать пароль</string>
     <string name="auth_login_button">Войти</string>
     <string name="auth_signup_button">Зарегистрироваться</string>
-    <string name="auth_menu_signOut">Выйти</string>
+    <string name="auth_menu_signOut">Выйти из аккаунта</string>
         <!-- Messages -->
         <string name="auth_message_signup_incorrectCredentials">Данные не корректны или такой пользователь уже существует</string>
         <string name="auth_message_login_incorrectCredentials">Неверный логин или пароль</string>
@@ -49,6 +49,7 @@
     <string name="welcome_welcome">Добро пожаловать, %s!</string>
     <string name="welcome_anonymousWelcome">Вы не авторизованы!</string>
     <string name="welcome_rating">Набрано очков</string>
+    <string name="welcome_dailyArticle_title">Факт дня</string>
     <string name="welcome_role">Роль</string>
         <!-- Roles -->
         <string name="role_admin">Администратор</string>

@@ -8,6 +8,7 @@ import lab.maxb.dark.presentation.screens.core.UiState
 data class WelcomeUiState(
     val user: User? = null,
     val role: Role = Role.USER,
+    val dailyArticle: String? = null,
 ) : UiState
 
 sealed interface WelcomeUiEvent : UiEvent {

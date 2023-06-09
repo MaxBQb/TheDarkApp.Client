@@ -1,28 +1,34 @@
 package lab.maxb.dark.presentation.screens.welcome
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.navigation.NavController
@@ -37,6 +43,7 @@ import lab.maxb.dark.presentation.components.TopScaffold
 import lab.maxb.dark.ui.theme.Golden
 import lab.maxb.dark.ui.theme.fontSize
 import lab.maxb.dark.ui.theme.spacing
+import lab.maxb.dark.ui.theme.units.sdp
 import org.koin.androidx.compose.getViewModel
 
 
@@ -69,24 +76,51 @@ fun WelcomeRootStateless(
         modifier = Modifier
             .fillMaxSize()
             .padding(MaterialTheme.spacing.normal),
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        Greeting(uiState.user?.name)
-        RoleName(uiState.role)
-        if (uiState.role.isUser)
-            UserRating(uiState.user?.rating ?: 0)
+        Column {
+            Greeting(uiState.user?.name)
+            RoleName(uiState.role)
+            if (uiState.role.isUser)
+                UserRating(uiState.user?.rating ?: 0)
+            AnimatedVisibility(uiState.dailyArticle != null && uiState.role.isUser) {
+                DailyArticle(uiState.dailyArticle ?: "")
+            }
+        }
+        Column {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Exit { onEvent(WelcomeUiEvent.SignOut) }
+            }
+        }
     }
-    Box(
-        contentAlignment = Alignment.BottomCenter,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Exit { onEvent(WelcomeUiEvent.SignOut) }
+}
+
+@Composable
+private fun DailyArticle(text: String) {
+    Column(modifier=Modifier.padding(top=MaterialTheme.spacing.large)) {
+        Text(
+            text = stringResource(R.string.welcome_dailyArticle_title),
+            fontWeight = FontWeight.Bold,
+        )
+        Divider()
+        val scrollableState = rememberScrollState(0)
+        Text(
+            modifier = Modifier
+                .height((24*8).sdp)
+                .verticalScroll(scrollableState),
+            text = text,
+            textAlign = TextAlign.Justify,
+        )
     }
 }
 
 @Composable
 fun Exit(modifier: Modifier = Modifier, onExit: () -> Unit) = Button(
     onClick = onExit,
-    modifier = modifier.padding(MaterialTheme.spacing.normal)
+    modifier = modifier.padding(horizontal=MaterialTheme.spacing.normal)
 ) {
     Icon(
         Icons.Filled.ExitToApp,
@@ -120,8 +154,12 @@ fun Greeting(name: String?) {
             stringResource(id = R.string.welcome_welcome, it)
         } ?: stringResource(id = R.string.welcome_anonymousWelcome),
         fontSize = MaterialTheme.fontSize.normalHeader,
-        modifier = Modifier.fillMaxWidth(),
-        textAlign = TextAlign.Center
+        modifier = Modifier.fillMaxWidth().padding(
+            top = MaterialTheme.spacing.extraSmall,
+            bottom = MaterialTheme.spacing.normal,
+        ),
+        textAlign = TextAlign.Center,
+        fontWeight = FontWeight.Bold,
     )
 }
 

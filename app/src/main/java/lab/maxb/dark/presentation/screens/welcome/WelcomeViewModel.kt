@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import lab.maxb.dark.domain.model.Role
+import lab.maxb.dark.domain.usecase.article.GetDailyArticleUseCase
 import lab.maxb.dark.domain.usecase.auth.SignOutUseCase
 import lab.maxb.dark.domain.usecase.profile.GetProfileUseCase
 import lab.maxb.dark.domain.usecase.user.GetCurrentUserUseCase
@@ -24,13 +25,16 @@ class WelcomeViewModel(
     private val signOutUseCase: SignOutUseCase,
     getCurrentUserUseCase: GetCurrentUserUseCase,
     getProfileUseCase: GetProfileUseCase,
+    getDailyArticleUseCase: GetDailyArticleUseCase,
 ) : BaseViewModel<Result<WelcomeUiState>, WelcomeUiEvent>, ViewModel() {
     private var signOutRequest by FirstOnly()
     private val profile = getProfileUseCase().stateInAsResult()
     private val user = getCurrentUserUseCase().stateInAsResult()
+    private val dailyArticle = getDailyArticleUseCase().stateInAsResult()
 
     private val _uiState = MutableStateFlow(WelcomeUiState())
-    override val uiState = combine(_uiState, profile, user) { state, profileResult, userResult ->
+    override val uiState = combine(_uiState, profile, user, dailyArticle)
+    { state, profileResult, userResult, dailyArticleResult ->
         if (anyLoading(profileResult, userResult))
             Result.Loading
         else if (anyError(profileResult, userResult))
@@ -39,6 +43,7 @@ class WelcomeViewModel(
             Result.Success(state.copy(
                 user = userResult.valueOrNull,
                 role = profileResult.valueOrNull?.role ?: Role.USER,
+                dailyArticle = dailyArticleResult.valueOrNull?.body,
             ))
     }.stateIn()
 

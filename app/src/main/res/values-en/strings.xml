@@ -20,7 +20,7 @@
     <string name="nav_articles_title">Worth to know</string>
     <string name="nav_addTask_title">Task creation</string>
     <string name="nav_solveTask_title">What is this?</string>
-    <string name="nav_home_title">Home</string>
+    <string name="nav_home_title">Profile</string>
     <string name="nav_settings_title">Settings</string>
 
     <!-- Authorization -->
@@ -33,7 +33,7 @@
     <string name="auth_showPassword">Show password</string>
     <string name="auth_login_button">Submit</string>
     <string name="auth_signup_button">Create account</string>
-    <string name="auth_menu_signOut">Sign out</string>
+    <string name="auth_menu_signOut">Sign out from account</string>
         <!-- Messages -->
         <string name="auth_message_signup_incorrectCredentials">The data is invalid or the user already exists</string>
         <string name="auth_message_login_incorrectCredentials">Wrong login or password</string>
@@ -49,6 +49,7 @@
     <string name="welcome_welcome">Welcome, %s!</string>
     <string name="welcome_anonymousWelcome">How did you get there?!</string>
     <string name="welcome_rating">Score</string>
+    <string name="welcome_dailyArticle_title">Tip of the day</string>
     <string name="welcome_role">Role</string>
         <!-- Roles -->
         <string name="role_admin">Administrator</string>
