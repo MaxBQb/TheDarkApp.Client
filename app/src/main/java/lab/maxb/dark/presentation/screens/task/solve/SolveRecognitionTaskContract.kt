@@ -12,6 +12,7 @@ data class TaskSolveUiState(
     val isReviewMode: Boolean = false,
     val isReviewed: Boolean = false,
     val isFavorite: Boolean? = null,
+    val zoomEnabled: Boolean = false,
     val images: List<Any?> = emptyList(),
     val userMessages: UiTriggers<TaskSolveUiEvent.UserMessage> = UiTriggers(),
     val taskNotFound: TaskSolveUiEvent.NoSuchTask? = null,
@@ -20,6 +21,7 @@ data class TaskSolveUiState(
 sealed interface TaskSolveUiEvent : UiEvent {
     data class AnswerChanged(val answer: String) : TaskSolveUiEvent
     object SubmitTaskSolveSolution : TaskSolveUiEvent
+    data class ZoomToggled(val zoomEnabled: Boolean) : TaskSolveUiEvent
     data class MarkChanged(val isAllowed: Boolean) : TaskSolveUiEvent
     data class MarkFavorite(val id: String, val isFavorite: Boolean) : TaskSolveUiEvent
 

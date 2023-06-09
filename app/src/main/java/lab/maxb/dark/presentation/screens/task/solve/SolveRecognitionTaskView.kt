@@ -38,6 +38,7 @@ import lab.maxb.dark.presentation.components.NavBackIcon
 import lab.maxb.dark.presentation.components.ScaffoldWithDrawer
 import lab.maxb.dark.presentation.components.ShareIcon
 import lab.maxb.dark.presentation.components.TopBar
+import lab.maxb.dark.presentation.components.ZoomIcon
 import lab.maxb.dark.presentation.components.rememberSnackbarHostState
 import lab.maxb.dark.presentation.extra.ChangedEffect
 import lab.maxb.dark.presentation.extra.show
@@ -73,6 +74,9 @@ fun SolveRecognitionTaskScreen(
                 title = stringResource(id = R.string.nav_solveTask_title),
                 navigationIcon = { NavBackIcon(navController = navController) },
                 actions = {
+                    ZoomIcon(value = uiState.zoomEnabled) {
+                        onEvent(TaskSolveUiEvent.ZoomToggled(uiState.zoomEnabled))
+                    }
                     AnimatedVisibility(!uiState.isReviewMode && uiState.isFavorite != null) {
                         FavoriteIcon(uiState.isFavorite ?: false) {
                             onEvent(TaskSolveUiEvent.MarkFavorite(id, it))
@@ -120,7 +124,7 @@ fun SolveRecognitionTaskRootStateless(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.sdp),
-                zoomable = true,
+                zoomable = uiState.zoomEnabled,
             )
             if (uiState.isReviewMode) {
                 ModeratorReviewPanel(uiState.isReviewed) {

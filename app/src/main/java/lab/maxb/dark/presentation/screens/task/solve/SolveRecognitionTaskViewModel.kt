@@ -70,6 +70,7 @@ class SolveRecognitionTaskViewModel(
             }
 
             is TaskSolveUiEvent.MarkFavorite -> markFavorite(id, isFavorite)
+            is TaskSolveUiEvent.ZoomToggled -> _uiState.update {it.copy(zoomEnabled = !zoomEnabled) }
         }
     }
 

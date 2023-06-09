@@ -61,7 +61,7 @@ fun ImageSlider(
             zoomable=zoomable,
         )
     }
-    AnimatedVisibility(visible = images.size > 1) {
+    AnimatedVisibility(visible = images.size > 1 && !zoomable) {
         HorizontalPagerIndicator(
             pagerState = pagerState,
             modifier = Modifier.padding(MaterialTheme.spacing.extraSmall),
