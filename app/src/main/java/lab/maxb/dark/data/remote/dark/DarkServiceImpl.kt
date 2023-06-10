@@ -1,7 +1,5 @@
 package lab.maxb.dark.data.remote.dark
 
-import com.bumptech.glide.load.model.GlideUrl
-import com.bumptech.glide.load.model.LazyHeaders
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CancellationException
 import lab.maxb.dark.BuildConfig
@@ -56,12 +54,7 @@ class DarkServiceImpl(
         api.addImage(filePart)
     }
 
-    override fun getImageSource(path: String) = GlideUrl(
-        api.getImage(path),
-        LazyHeaders.Builder()
-            .addHeader(authInterceptor.header, authInterceptor.value)
-            .build()
-    )
+    override fun getImageSource(path: String) = api.getImage(path)
 
     override suspend fun getAllArticles(page: Int, size: Int) = catchAll  {
         api.getAllArticles(page, size)

@@ -157,20 +157,10 @@ dependencies {
     // Desugaring (Time-related features support for API 21+)
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.0'
 
-    // Images with Glide
-    def glide_version = '4.15.1'
-    implementation "com.github.bumptech.glide:glide:$glide_version"
-    annotationProcessor 'androidx.annotation:annotation:1.6.0'
-    annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
-    implementation "com.github.bumptech.glide:okhttp3-integration:4.15.1"
-    implementation ("com.github.bumptech.glide:recyclerview-integration:4.15.1") {
-        // Excludes the support library because it's already included by Glide.
-        transitive = false
-    }
-        // Use JC integrated landscapist's Glide version
-        def landscapist_glide_version = '2.2.1'
-        implementation "com.github.skydoves:landscapist-glide:$landscapist_glide_version"
-        implementation "com.github.skydoves:landscapist-animation:$landscapist_glide_version"
+    // Images with Coil by landscapist JC version
+    def landscapist_version = '2.2.1'
+    implementation "com.github.skydoves:landscapist-coil:$landscapist_version"
+    implementation "com.github.skydoves:landscapist-animation:$landscapist_version"
 
     // Compose
     def composeVersion = '1.4.7'

@@ -6,6 +6,7 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -38,7 +40,6 @@ import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
 import com.google.accompanist.adaptive.TwoPane
 import com.google.accompanist.adaptive.VerticalTwoPaneStrategy
 import com.google.accompanist.adaptive.calculateDisplayFeatures
-import com.google.accompanist.pager.rememberPagerState
 import com.ramcosta.composedestinations.annotation.Destination
 import lab.maxb.dark.R
 import lab.maxb.dark.presentation.components.ImageListEditPanel
@@ -66,12 +67,12 @@ fun AddRecognitionTaskScreen(
     val uiState by viewModel.uiState.collectAsState()
     val onEvent = viewModel::onEvent
     val snackbarState = rememberSnackbarHostState()
-    
+
     ScaffoldWithDrawer(
         navController = navController,
         topBar = {
             TopBar(
-                title=stringResource(id = R.string.nav_addTask_title),
+                title = stringResource(id = R.string.nav_addTask_title),
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(Icons.Filled.Close, null)
@@ -111,6 +112,7 @@ fun AddRecognitionTaskRootStatelessPreview() = AddRecognitionTaskRootStateless(
     )
 )
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AddRecognitionTaskRootStateless(
     uiState: AddTaskUiState,
@@ -121,7 +123,7 @@ fun AddRecognitionTaskRootStateless(
     TwoPane(
         displayFeatures = calculateDisplayFeatures(LocalContext.current as Activity),
         strategy = if (isVerticalOrientation)
-            VerticalTwoPaneStrategy(0.5f, MaterialTheme.spacing.small)
+            VerticalTwoPaneStrategy(0.466f, MaterialTheme.spacing.small)
         else HorizontalTwoPaneStrategy(0.5f),
         modifier = Modifier.fillMaxSize(),
         first = {
@@ -152,7 +154,10 @@ fun AddRecognitionTaskRootStateless(
                 if (!list.isNullOrEmpty())
                     onEvent(AddTaskUiEvent.ImagesAdded(list))
             }
-            val pagerState = rememberPagerState()
+            val pagerState = rememberPagerState(
+                initialPage = 0,
+                initialPageOffsetFraction = 0f
+            ) { uiState.images.size }
             val updateImage = rememberImageRequest {
                 it?.let { image ->
                     onEvent(AddTaskUiEvent.ImageChanged(pagerState.currentPage, image))
@@ -175,40 +180,40 @@ fun AddRecognitionTaskRootStateless(
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(MaterialTheme.spacing.extraSmall)
                     )
-                    }
-                    AnimatedVisibility(
-                        visible = uiState.images.isNotEmpty(),
-                    ) {
-                        ImageSlider(
-                            images = uiState.images,
-                            pagerState = pagerState,
-                            modifier = Modifier.height(200.sdp),
-                        )
-                    }
-                    AnimatedVisibility(
-                        visible = uiState.images.isNotEmpty(),
-                    ) {
-                        ImageListEditPanel(
-                            onAdd = getImages,
-                            onEdit = updateImage,
-                            onDelete = {
-                                onEvent(AddTaskUiEvent.ImageRemoved(pagerState.currentPage))
-                            },
-                            allowAddition = uiState.allowedImageCount > 0
-                        )
-                    }
-                    AnimatedVisibility(
-                        visible = uiState.images.isEmpty(),
-                    ) {
-                        Image(
-                            painterResource(R.drawable.ic_add_photo_alternative),
-                            "",
-                            modifier = Modifier
-                                .padding(MaterialTheme.spacing.normal)
-                                .fillMaxSize()
-                                .clickable(onClick = getImages),
-                        )
-                    }
+                }
+                AnimatedVisibility(
+                    visible = uiState.images.isNotEmpty(),
+                ) {
+                    ImageSlider(
+                        images = uiState.images,
+                        pagerState = pagerState,
+                        modifier = Modifier.height(175.sdp),
+                    )
+                }
+                AnimatedVisibility(
+                    visible = uiState.images.isNotEmpty(),
+                ) {
+                    ImageListEditPanel(
+                        onAdd = getImages,
+                        onEdit = updateImage,
+                        onDelete = {
+                            onEvent(AddTaskUiEvent.ImageRemoved(pagerState.currentPage))
+                        },
+                        allowAddition = uiState.allowedImageCount > 0
+                    )
+                }
+                AnimatedVisibility(
+                    visible = uiState.images.isEmpty(),
+                ) {
+                    Image(
+                        painterResource(R.drawable.ic_add_photo_alternative),
+                        "",
+                        modifier = Modifier
+                            .padding(bottom=MaterialTheme.spacing.normal)
+                            .fillMaxSize()
+                            .clickable(onClick = getImages),
+                    )
+                }
             }
         }
     )

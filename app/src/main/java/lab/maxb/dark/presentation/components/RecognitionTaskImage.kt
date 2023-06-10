@@ -9,13 +9,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import coil.ImageLoader
+import coil.request.CachePolicy
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.animation.crossfade.CrossfadePlugin
+import com.skydoves.landscapist.coil.CoilImage
 import com.skydoves.landscapist.components.rememberImageComponent
-import com.skydoves.landscapist.glide.GlideImage
 import lab.maxb.dark.R
+import lab.maxb.dark.data.remote.dark.AuthInterceptor
+import lab.maxb.dark.data.remote.logger
 import lab.maxb.dark.ui.theme.units.sdp
+import okhttp3.OkHttpClient
+import org.koin.compose.koinInject
 
 @Composable
 fun RecognitionTaskImage(
@@ -51,10 +58,32 @@ private fun _RecognitionTaskImage(
     modifier: Modifier,
     imageOptions: ImageOptions
 ) {
-    GlideImage(
-        { imageModel },
+    CoilImage(
+        imageModel = { imageModel },
         modifier = modifier,
         imageOptions = imageOptions,
+        imageLoader = {
+            val interceptor = koinInject<AuthInterceptor>()
+            ImageLoader.Builder(LocalContext.current)
+                .memoryCachePolicy(CachePolicy.ENABLED)
+                .networkCachePolicy(CachePolicy.ENABLED)
+                .diskCachePolicy(CachePolicy.ENABLED)
+                .okHttpClient {
+                    OkHttpClient.Builder()
+                        .addInterceptor(interceptor)
+                        .addInterceptor(logger)
+                        .addInterceptor {
+                            // TODO: Change cache-control on server
+                            val originalResponse = it.proceed(it.request())
+                            originalResponse.newBuilder()
+                                .removeHeader("Pragma")
+                                .removeHeader("Cache-Control")
+                                .addHeader("Cache-Control", "max-age=${60*60*24}")
+                                .build()
+                        }
+                        .build()
+                }.build()
+        },
         failure = {
             LoadingError(
                 Modifier

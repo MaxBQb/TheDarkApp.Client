@@ -1,6 +1,5 @@
 package lab.maxb.dark.data.remote.dark
 
-import com.bumptech.glide.load.model.GlideUrl
 import lab.maxb.dark.data.model.remote.ArticleCreationNetworkDTO
 import lab.maxb.dark.data.model.remote.ArticleNetworkDTO
 import lab.maxb.dark.data.model.remote.AuthRequest
@@ -19,7 +18,7 @@ interface DarkService {
     suspend fun markTask(id: String, isAllowed: Boolean): Boolean
     suspend fun solveTask(id: String, answer: String): Boolean
     suspend fun addImage(filePart: MultipartBody.Part): String?
-    fun getImageSource(path: String): GlideUrl
+    fun getImageSource(path: String): String
     suspend fun getAllArticles(page: Int, size: Int): List<ArticleNetworkDTO>?
     suspend fun updateArticle(id: String, article: ArticleCreationNetworkDTO): ArticleNetworkDTO?
     suspend fun addArticle(article: ArticleCreationNetworkDTO): ArticleNetworkDTO?

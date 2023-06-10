@@ -34,7 +34,6 @@ import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import com.bumptech.glide.load.model.GlideUrl
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import lab.maxb.dark.R
@@ -96,7 +95,7 @@ fun RecognitionTaskListScreen(
 fun RecognitionTaskList(
     items: LazyPagingItems<RecognitionTaskListItem>,
     onItemClick: (String) -> Unit,
-    resolveImage: (String) -> GlideUrl,
+    resolveImage: (String) -> String,
     showFavorites: Boolean = false,
     onItemFavoriteToggle: (String, Boolean) -> Unit = { _, _ -> },
 ) {
@@ -131,7 +130,7 @@ fun RecognitionTaskList(
 fun RecognitionTaskCard(
     item: RecognitionTaskListItem,
     onClick: () -> Unit,
-    resolveImage: (String) -> GlideUrl,
+    resolveImage: (String) -> String,
     showFavorites: Boolean = false,
     onFavoriteToggled: (Boolean) -> Unit = {},
 ) {

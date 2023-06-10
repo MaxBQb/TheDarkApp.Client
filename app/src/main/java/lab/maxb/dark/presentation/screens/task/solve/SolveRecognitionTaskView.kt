@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.fadeIn
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -115,6 +116,7 @@ fun SolveRecognitionTaskRootStatelessPreview() = SolveRecognitionTaskRootStatele
 )
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SolveRecognitionTaskRootStateless(
     uiState: TaskSolveUiState,
