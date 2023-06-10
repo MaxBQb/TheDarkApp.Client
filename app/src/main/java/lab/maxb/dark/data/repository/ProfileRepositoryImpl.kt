@@ -55,5 +55,8 @@ class ProfileRepositoryImpl(
         return profile.firstOrNull()
     }
 
-    override suspend fun clear() = localDataSource.clear()
+    override suspend fun clear() {
+        _credentials.value = null
+        localDataSource.clear()
+    }
 }
