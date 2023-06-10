@@ -22,7 +22,7 @@ class ImageLoader(context: Context) {
 
     suspend fun fromUri(uri: Uri): MultipartBody.Part = withContext(Dispatchers.IO) {
         val contentResolver = context.applicationContext.contentResolver
-        val content = contentResolver.openInputStream(uri)!!.readBytes()
+        val content = contentResolver.openInputStream(uri)!!.use { it.readBytes() }
         return@withContext MultipartBody.Part.createFormData(
             "file",
             "filename.png",
