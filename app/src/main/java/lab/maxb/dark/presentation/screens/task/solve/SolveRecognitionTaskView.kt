@@ -1,8 +1,13 @@
 package lab.maxb.dark.presentation.screens.task.solve
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -69,7 +74,12 @@ fun SolveRecognitionTaskScreen(
         navController = navController,
         topBar = {
             TopBar(
-                title = stringResource(id = R.string.nav_solveTask_title),
+                title = stringResource(
+                    if (uiState.isReviewMode)
+                        R.string.nav_taskReview_title
+                    else
+                        R.string.nav_solveTask_title
+                ),
                 navigationIcon = { NavBackIcon(navController = navController) },
                 actions = {
                     ZoomIcon(value = uiState.zoomEnabled) {
@@ -152,32 +162,41 @@ fun SolveRecognitionTaskRootStateless(
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun ModeratorReviewPanel(isReviewed: Boolean, onReviewChanged: (Boolean) -> Unit) {
-    Row(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.small)) {
-        AnimatedVisibility(visible = !isReviewed) {
+    AnimatedContent(targetState = isReviewed) { reviewedState ->
+        Row(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.small)) {
+            if (!reviewedState) {
+                Button(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(MaterialTheme.spacing.small)
+                        .animateEnterExit(enter = fadeIn()),
+                    colors = ButtonDefaults.buttonColors(
+                        Color(0xAF736721),
+                        Color.Black,
+                    ),
+                    onClick = { onReviewChanged(true) }
+                ) {
+                    Text(stringResource(R.string.solveTask_moderator_mark_reviewed))
+                }
+                Spacer(modifier = Modifier
+                    .weight(0.25f)
+                    .animateEnterExit())
+            }
+
             Button(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(MaterialTheme.spacing.small),
-                colors = ButtonDefaults.buttonColors(
-                    Color(0xAF736721),
-                    Color.Black,
-                ),
-                onClick = { onReviewChanged(true) }) {
-                Text(stringResource(id = R.string.solveTask_moderator_mark_reviewed))
-            }
-        }
-        Button(
-            modifier = Modifier
-                .weight(1f)
-                .padding(MaterialTheme.spacing.small),
-            colors = ButtonDefaults.buttonColors(Color(0xAFC90A0A)),
-            onClick = { onReviewChanged(false) }) {
-            Text(
-                stringResource(
-                    if (!isReviewed) R.string.solveTask_moderator_delete
-                    else R.string.solveTask_moderator_revoke_reviewed
+                    .padding(MaterialTheme.spacing.small)
+                    .animateContentSize(),
+                colors = ButtonDefaults.buttonColors(Color(0xAFC90A0A)),
+                onClick = { onReviewChanged(false) }) {
+                Text(
+                    stringResource(
+                        if (!reviewedState) R.string.solveTask_moderator_delete
+                        else R.string.solveTask_moderator_revoke_reviewed
+                    )
                 )
-            )
+            }
         }
     }
 }

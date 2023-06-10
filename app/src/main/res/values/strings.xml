@@ -21,6 +21,7 @@
     <string name="nav_articles_title">Стоит знать</string>
     <string name="nav_addTask_title">Добавление задачи</string>
     <string name="nav_solveTask_title">Что это?</string>
+    <string name="nav_taskReview_title">Модерация</string>
     <string name="nav_home_title">Профиль</string>
     <string name="nav_settings_title">Настройки</string>
 
