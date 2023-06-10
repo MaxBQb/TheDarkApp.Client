@@ -3,7 +3,6 @@ package lab.maxb.dark.presentation.screens.welcome
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import lab.maxb.dark.domain.model.Role
 import lab.maxb.dark.domain.usecase.article.GetDailyArticleUseCase
 import lab.maxb.dark.domain.usecase.auth.SignOutUseCase
 import lab.maxb.dark.domain.usecase.profile.GetProfileUseCase
@@ -42,7 +41,7 @@ class WelcomeViewModel(
         else
             Result.Success(state.copy(
                 user = userResult.valueOrNull,
-                role = profileResult.valueOrNull?.role ?: Role.USER,
+                role = profileResult.valueOrNull?.role,
                 dailyArticle = dailyArticleResult.valueOrNull?.body,
             ))
     }.stateIn()

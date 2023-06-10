@@ -81,9 +81,12 @@ fun WelcomeRootStateless(
         Column {
             Greeting(uiState.user?.name)
             RoleName(uiState.role)
-            if (uiState.role.isUser)
+            if (uiState.role?.isUser == true)
                 UserRating(uiState.user?.rating ?: 0)
-            AnimatedVisibility(uiState.dailyArticle != null && uiState.role.isUser) {
+            AnimatedVisibility(
+                uiState.dailyArticle != null
+                        && uiState.role?.isUser == true
+            ) {
                 DailyArticle(uiState.dailyArticle ?: "")
             }
         }
@@ -100,7 +103,7 @@ fun WelcomeRootStateless(
 
 @Composable
 private fun DailyArticle(text: String) {
-    Column(modifier=Modifier.padding(top=MaterialTheme.spacing.large)) {
+    Column(modifier = Modifier.padding(top = MaterialTheme.spacing.large)) {
         Text(
             text = stringResource(R.string.welcome_dailyArticle_title),
             fontWeight = FontWeight.Bold,
@@ -109,7 +112,7 @@ private fun DailyArticle(text: String) {
         val scrollableState = rememberScrollState(0)
         Text(
             modifier = Modifier
-                .height((24*8).sdp)
+                .height((24 * 8).sdp)
                 .verticalScroll(scrollableState),
             text = text,
             textAlign = TextAlign.Justify,
@@ -120,12 +123,12 @@ private fun DailyArticle(text: String) {
 @Composable
 fun Exit(modifier: Modifier = Modifier, onExit: () -> Unit) = Button(
     onClick = onExit,
-    modifier = modifier.padding(horizontal=MaterialTheme.spacing.normal)
+    modifier = modifier.padding(horizontal = MaterialTheme.spacing.normal)
 ) {
     Icon(
         Icons.Filled.ExitToApp,
         "",
-        modifier=Modifier
+        modifier = Modifier
             .size(ButtonDefaults.IconSize)
     )
     Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
@@ -154,29 +157,35 @@ fun Greeting(name: String?) {
             stringResource(id = R.string.welcome_welcome, it)
         } ?: stringResource(id = R.string.welcome_anonymousWelcome),
         fontSize = MaterialTheme.fontSize.normalHeader,
-        modifier = Modifier.fillMaxWidth().padding(
-            top = MaterialTheme.spacing.extraSmall,
-            bottom = MaterialTheme.spacing.normal,
-        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                top = MaterialTheme.spacing.extraSmall,
+                bottom = MaterialTheme.spacing.normal,
+            ),
         textAlign = TextAlign.Center,
         fontWeight = FontWeight.Bold,
     )
 }
 
 @Composable
-fun RoleName(role: Role) {
+fun RoleName(role: Role?) = AnimatedVisibility(role != null) {
     Text(
         buildAnnotatedString {
             append(stringResource(id = R.string.welcome_role))
             append(": ")
             withStyle(SpanStyle(Color.LightGray)) {
-                append(stringResource(id = when (role) {
-                    Role.USER -> R.string.role_user
-                    Role.PREMIUM_USER -> R.string.role_premium_user
-                    Role.MODERATOR -> R.string.role_moderator
-                    Role.ADMINISTRATOR -> R.string.role_admin
-                    Role.CONSULTOR -> R.string.role_consultor
-                }))
+                append(
+                    stringResource(
+                        when (role ?: Role.USER) {
+                            Role.USER -> R.string.role_user
+                            Role.PREMIUM_USER -> R.string.role_premium_user
+                            Role.MODERATOR -> R.string.role_moderator
+                            Role.ADMINISTRATOR -> R.string.role_admin
+                            Role.CONSULTOR -> R.string.role_consultor
+                        }
+                    )
+                )
             }
         },
         modifier = Modifier.fillMaxWidth()

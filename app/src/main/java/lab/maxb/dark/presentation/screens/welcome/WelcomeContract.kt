@@ -7,7 +7,7 @@ import lab.maxb.dark.presentation.screens.core.UiState
 
 data class WelcomeUiState(
     val user: User? = null,
-    val role: Role = Role.USER,
+    val role: Role? = null,
     val dailyArticle: String? = null,
 ) : UiState
 
