@@ -99,8 +99,6 @@ dependencies {
     // Coroutines + LiveData
     def coroutines_version = '1.7.1'
     def lifecycle_version = '2.6.1'
-    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
@@ -155,7 +153,7 @@ dependencies {
     implementation "com.intuit.ssp:ssp-android:$scalable_units_version"
 
     // Desugaring (Time-related features support for API 21+)
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.0'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
 
     // Images with Coil by landscapist JC version
     def landscapist_version = '2.2.1'
@@ -184,7 +182,6 @@ dependencies {
         implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1'
         // ViewPager
         def accompanist_version = '0.31.3-beta'
-        implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
         implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
         implementation "com.google.accompanist:accompanist-adaptive:$accompanist_version"
 
