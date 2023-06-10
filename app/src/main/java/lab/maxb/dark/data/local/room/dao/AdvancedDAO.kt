@@ -6,11 +6,15 @@ import androidx.room.OnConflictStrategy
 import androidx.room.RawQuery
 import androidx.room.Transaction
 import androidx.room.Update
+import androidx.room.withTransaction
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
+import lab.maxb.dark.data.local.room.LocalDatabase
 import lab.maxb.dark.data.model.local.BaseLocalDTO
 import lab.maxb.dark.data.model.local.markCreated
 import lab.maxb.dark.data.model.local.markModified
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 interface BaseDAO<DTO: BaseLocalDTO> {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -25,7 +29,9 @@ interface BaseDAO<DTO: BaseLocalDTO> {
 
 abstract class AdvancedDAO<DTO: BaseLocalDTO>(
     private val tableName: String,
-) : BaseDAO<DTO> {
+) : BaseDAO<DTO>, KoinComponent {
+    protected val db by inject<LocalDatabase>()
+
     suspend fun clear() = run(SimpleSQLiteQuery("DELETE FROM $tableName"))
 
     suspend fun getById(id: String) = runForResult(SimpleSQLiteQuery(
@@ -33,10 +39,12 @@ abstract class AdvancedDAO<DTO: BaseLocalDTO>(
         arrayOf(id),
     ))
 
-    suspend fun delete(id: String) = run(SimpleSQLiteQuery(
-        "DELETE FROM $tableName WHERE id = :id",
-        arrayOf(id),
-    ))
+    suspend fun delete(id: String) = db.withTransaction {
+        run(SimpleSQLiteQuery(
+            "DELETE FROM $tableName WHERE id = :id",
+            arrayOf(id),
+        ))
+    }
 
     @Transaction
     open suspend fun save(vararg value: DTO) {

@@ -28,7 +28,6 @@ import androidx.navigation.NavController
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.FULL_ROUTE_PLACEHOLDER
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import lab.maxb.dark.R
 import lab.maxb.dark.domain.operations.shareLink
 import lab.maxb.dark.presentation.components.FavoriteIcon
@@ -57,7 +56,6 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun SolveRecognitionTaskScreen(
     id: String,
-    navigator: DestinationsNavigator,
     navController: NavController,
     viewModel: SolveRecognitionTaskViewModel = getViewModel(),
 ) {
@@ -96,7 +94,7 @@ fun SolveRecognitionTaskScreen(
     }
 
     uiState.taskNotFound.ChangedEffect(onConsumed = onEvent) {
-        navigator.navigateUp()
+        navController.navigateUp()
     }
 }
 
@@ -151,6 +149,7 @@ fun SolveRecognitionTaskRootStateless(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun ModeratorReviewPanel(isReviewed: Boolean, onReviewChanged: (Boolean) -> Unit) {
     Row(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.small)) {
