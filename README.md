@@ -13,7 +13,4 @@
 - Адрес: `https://thedarkapp.eu.org/docs/`
 
 ## Демонстрация функционала
-
 https://github.com/MaxBQb/TheDarkApp.Client/assets/27343275/e36779e2-8957-405d-af64-d3ecaf0b041d
-
-  
