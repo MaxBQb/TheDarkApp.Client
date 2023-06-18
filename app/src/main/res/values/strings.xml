@@ -32,7 +32,6 @@
     <string name="auth_loginHint">Логин</string>
     <string name="auth_passwordHint">Пароль</string>
     <string name="auth_passwordRepeatHint">Повторите пароль</string>
-    <string name="auth_showPassword">Показать пароль</string>
     <string name="auth_login_button">Войти</string>
     <string name="auth_signup_button">Зарегистрироваться</string>
     <string name="auth_menu_signOut">Выйти из аккаунта</string>

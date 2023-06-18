@@ -3,10 +3,12 @@ package lab.maxb.dark.presentation.components.utils
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 
@@ -50,3 +52,5 @@ val keyboardClose: InputOptions
         }
     )
 }
+
+fun Modifier.withInputOptions(options: InputOptions) = onPreviewKeyEvent(options.event)

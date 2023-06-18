@@ -32,7 +32,6 @@
     <string name="auth_loginHint">Login</string>
     <string name="auth_passwordHint">Password</string>
     <string name="auth_passwordRepeatHint">Repeat password</string>
-    <string name="auth_showPassword">Show password</string>
     <string name="auth_login_button">Submit</string>
     <string name="auth_signup_button">Create account</string>
     <string name="auth_menu_signOut">Sign out from account</string>

@@ -54,6 +54,7 @@ fun DarkAppTheme(
     CompositionLocalProvider(
         LocalSpacing provides defaultScalableSpacing(),
         LocalFontSize provides defaultScalableFontSize(),
+        LocalAnimationDurations provides defaultAnimationDuration(),
     ) {
         androidx.compose.material.MaterialTheme(
             colors = materialColors,
