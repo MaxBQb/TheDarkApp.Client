@@ -1,5 +1,6 @@
 package lab.maxb.dark.presentation.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.tooling.preview.Preview
 import lab.maxb.dark.presentation.extra.Result
 import lab.maxb.dark.presentation.extra.asString
@@ -22,20 +24,43 @@ import lab.maxb.dark.ui.theme.spacing
 @Composable
 fun <T> LoadingComponent(
     result: Result<T>,
-    onLoading: @Composable () -> Unit = { LoadingScreen(true) },
+    onLoading: @Composable () -> Unit = { DefaultOnLoading() },
     onError: @Composable (Result.Error) -> Unit = { DefaultOnLoadingError(it) },
     content: @Composable (T) -> Unit = {},
-) = when(result) {
-    is Result.Loading -> onLoading()
-    is Result.Error -> AnimateAppearance {
-        onError(result)
+) = AnimatedContent(
+    targetState = result,
+    contentAlignment = Alignment.Center,
+    contentKey = {
+        when (it) {
+            is Result.Loading -> 0
+            is Result.Error -> -1
+            is Result.Success -> 1
+        }
     }
-    is Result.Success<T> -> AnimateAppearance(
-        enter = fadeIn(),
-        exit = fadeOut(),
-    ) {
-        content(result.value)
+) {
+    when (it) {
+        is Result.Loading -> onLoading()
+        is Result.Error -> AnimateAppearance {
+            onError(it)
+        }
+
+        is Result.Success<T> -> AnimateAppearance(
+            enter = fadeIn(),
+            exit = fadeOut(),
+        ) {
+            content(it.value)
+        }
     }
+}
+
+@Composable
+private fun DefaultOnLoading() {
+    LoadingCircle(
+        width = 7,
+        modifier = Modifier
+            .alpha(0.5f)
+            .fillMaxSize(0.5f)
+    )
 }
 
 @Composable
