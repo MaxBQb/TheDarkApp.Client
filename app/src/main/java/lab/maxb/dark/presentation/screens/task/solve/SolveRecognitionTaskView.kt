@@ -17,6 +17,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -28,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -36,6 +39,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.FULL_ROUTE_PLACEHOLDER
 import lab.maxb.dark.R
 import lab.maxb.dark.domain.operations.shareLink
+import lab.maxb.dark.presentation.components.AnimatedScaleToggle
 import lab.maxb.dark.presentation.components.FavoriteIcon
 import lab.maxb.dark.presentation.components.ImageSlider
 import lab.maxb.dark.presentation.components.LoadingScreen
@@ -43,7 +47,6 @@ import lab.maxb.dark.presentation.components.NavBackIcon
 import lab.maxb.dark.presentation.components.ScaffoldWithDrawer
 import lab.maxb.dark.presentation.components.ShareIcon
 import lab.maxb.dark.presentation.components.TopBar
-import lab.maxb.dark.presentation.components.ZoomIcon
 import lab.maxb.dark.presentation.components.rememberSnackbarHostState
 import lab.maxb.dark.presentation.extra.ChangedEffect
 import lab.maxb.dark.presentation.extra.show
@@ -83,8 +86,17 @@ fun SolveRecognitionTaskScreen(
                 ),
                 navigationIcon = { NavBackIcon(navController = navController) },
                 actions = {
-                    ZoomIcon(value = uiState.zoomEnabled) {
-                        onEvent(TaskSolveUiEvent.ZoomToggled(uiState.zoomEnabled))
+                    IconButton(
+                        onClick = { onEvent(TaskSolveUiEvent.ZoomToggled(uiState.zoomEnabled)) }
+                    ) {
+                        AnimatedScaleToggle(uiState.zoomEnabled) {
+                            Icon(
+                                painterResource(
+                                    if (it) R.drawable.ic_zoom_on
+                                    else R.drawable.ic_zoom_off
+                                ), null
+                            )
+                        }
                     }
                     AnimatedVisibility(!uiState.isReviewMode && uiState.isFavorite != null) {
                         FavoriteIcon(uiState.isFavorite ?: false) {
@@ -180,9 +192,11 @@ private fun ModeratorReviewPanel(isReviewed: Boolean, onReviewChanged: (Boolean)
                 ) {
                     Text(stringResource(R.string.solveTask_moderator_mark_reviewed))
                 }
-                Spacer(modifier = Modifier
-                    .weight(0.25f)
-                    .animateEnterExit())
+                Spacer(
+                    modifier = Modifier
+                        .weight(0.25f)
+                        .animateEnterExit()
+                )
             }
 
             Button(

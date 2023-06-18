@@ -17,16 +17,14 @@ fun AnimatedScaleToggle(
     value: Boolean,
     duration: Int = LocalAnimationDurations.current.default,
     content: @Composable (Boolean) -> Unit,
-) {
-    AnimatedContent(
-        targetState = value,
-        contentAlignment = Alignment.Center,
-        transitionSpec = {
-            val fadeSpec = tween<Float>(duration)
-            val scaleSpec = tween<Float>(2 * duration)
-            fadeIn(scaleSpec) + scaleIn(fadeSpec) togetherWith
-                    fadeOut(scaleSpec) + scaleOut(fadeSpec)
-        },
-        content = { content(it) },
-    )
-}
+) = AnimatedContent(
+    targetState = value,
+    contentAlignment = Alignment.Center,
+    transitionSpec = {
+        val fadeSpec = tween<Float>(duration)
+        val scaleSpec = tween<Float>(2 * duration)
+        fadeIn(scaleSpec) + scaleIn(fadeSpec) togetherWith
+                fadeOut(scaleSpec) + scaleOut(fadeSpec)
+    },
+    content = { content(it) },
+)
