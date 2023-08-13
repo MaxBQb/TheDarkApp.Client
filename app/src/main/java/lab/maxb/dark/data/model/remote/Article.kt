@@ -1,6 +1,7 @@
 package lab.maxb.dark.data.model.remote
 
 import lab.maxb.dark.domain.model.Article
+import lab.maxb.dark.domain.model.modelRefOf
 
 
 class ArticleNetworkDTO (
@@ -23,6 +24,6 @@ fun Article.toNetworkDTO() = ArticleCreationNetworkDTO(
 fun ArticleNetworkDTO.toDomain() = Article(
     title,
     body,
-    authorId,
+    modelRefOf(authorId),
     id,
 )

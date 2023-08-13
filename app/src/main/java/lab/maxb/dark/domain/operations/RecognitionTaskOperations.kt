@@ -2,6 +2,7 @@ package lab.maxb.dark.domain.operations
 
 import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.domain.model.User
+import lab.maxb.dark.domain.model.modelRefOf
 
 fun createRecognitionTask(
     names: List<String>,
@@ -18,7 +19,7 @@ fun createRecognitionTask(
     return RecognitionTask(
         namesSet,
         images,
-        owner.id,
+        modelRefOf(owner),
     )
 }
 

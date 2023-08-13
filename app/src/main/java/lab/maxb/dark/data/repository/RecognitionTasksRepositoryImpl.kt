@@ -47,7 +47,7 @@ class RecognitionTasksRepositoryImpl(
                 coroutineScope {
                     it.map {
                         async {
-                            getUser(it.ownerId)
+                            getUser(it.owner.id)
                         }
                     }.let { awaitAll(*it.toTypedArray()) }
                 }
@@ -128,7 +128,7 @@ class RecognitionTasksRepositoryImpl(
         refreshController = DbRefreshController(),
         fetchRemote = { id ->
             networkDataSource.getTask(id)?.toDomain()?.also {
-                getUser(it.ownerId)
+                getUser(it.owner.id)
             }
         },
         fetchLocal = { localDataSource.get(it) },

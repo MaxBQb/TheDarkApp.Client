@@ -45,7 +45,7 @@ class ArticlesRepositoryImpl(
                 coroutineScope {
                     it.map {
                         async {
-                            getUser(it.authorId)
+                            getUser(it.author.id)
                         }
                     }.let { awaitAll(*it.toTypedArray()) }
                 }

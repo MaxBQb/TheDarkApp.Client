@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import lab.maxb.dark.domain.model.RecognitionTask
+import lab.maxb.dark.domain.model.modelRefOf
 import lab.maxb.dark.domain.operations.randomUUID
 
 @Entity(
@@ -38,7 +39,7 @@ data class RecognitionTaskLocalDTO(
 fun RecognitionTask.toLocalDTO() = RecognitionTaskLocalDTO(
     names = names,
     images = images,
-    owner_id = ownerId,
+    owner_id = owner.id,
     reviewed = reviewed,
     favorite = favorite,
     id = id,
@@ -47,7 +48,7 @@ fun RecognitionTask.toLocalDTO() = RecognitionTaskLocalDTO(
 fun RecognitionTaskLocalDTO.toDomain() = RecognitionTask(
     names = names,
     images = images,
-    ownerId = owner_id,
+    owner = modelRefOf(owner_id),
     reviewed = reviewed,
     favorite = favorite,
     id = id,

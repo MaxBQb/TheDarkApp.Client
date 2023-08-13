@@ -6,9 +6,9 @@ import java.util.Locale
 data class Article(
     val title: String,
     val body: String,
-    val authorId: String,
-    val id: String = randomUUID,
-) {
+    val author: ModelRef<User>,
+    override val id: String = randomUUID,
+): BaseModel {
     companion object {
         const val MAX_TITLE_LENGTH = 60
         const val MIN_TITLE_LENGTH = 3
@@ -31,6 +31,6 @@ fun createArticle(
     return Article(
         trimmedTitle.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
         trimmedBody,
-        authorId,
+        modelRefOf(authorId),
     )
 }

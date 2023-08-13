@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import lab.maxb.dark.domain.model.Article
+import lab.maxb.dark.domain.model.modelRefOf
 import lab.maxb.dark.domain.operations.randomUUID
 
 @Entity(
@@ -37,13 +38,13 @@ data class ArticleLocalDTO(
 fun Article.toLocalDTO() = ArticleLocalDTO(
     title,
     body,
-    authorId,
+    author.id,
     id,
 )
 
 fun ArticleLocalDTO.toDomain() = Article(
     title,
     body,
-    authorId,
+    modelRefOf(authorId),
     id,
 )
