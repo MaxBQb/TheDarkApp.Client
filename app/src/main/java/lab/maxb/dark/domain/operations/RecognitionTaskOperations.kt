@@ -1,6 +1,7 @@
 package lab.maxb.dark.domain.operations
 
 import lab.maxb.dark.domain.model.RecognitionTask
+import lab.maxb.dark.domain.model.RecognitionTaskComplete
 import lab.maxb.dark.domain.model.User
 import lab.maxb.dark.domain.model.modelRefOf
 
@@ -8,7 +9,7 @@ fun createRecognitionTask(
     names: List<String>,
     images: List<String>,
     owner: User
-): RecognitionTask? {
+): RecognitionTaskComplete? {
     val namesSet = names.map { prepareRecognitionTaskName(it) }
         .filter { it.isNotBlank() }
         .toSet()
@@ -16,7 +17,7 @@ fun createRecognitionTask(
     if (namesSet.isEmpty() or images.isEmpty())
         return null
 
-    return RecognitionTask(
+    return RecognitionTaskComplete(
         namesSet,
         images,
         modelRefOf(owner),

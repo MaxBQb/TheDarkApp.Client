@@ -1,7 +1,6 @@
 package lab.maxb.dark.presentation.model
 
-import lab.maxb.dark.domain.model.RecognitionTask
-import lab.maxb.dark.domain.model.requireValue
+import lab.maxb.dark.domain.model.RecognitionTaskComplete
 
 data class RecognitionTaskListItem(
     val image: String,
@@ -11,9 +10,9 @@ data class RecognitionTaskListItem(
     val id: String,
 )
 
-fun RecognitionTask.toPresentation() = RecognitionTaskListItem(
+fun RecognitionTaskComplete.toPresentation() = RecognitionTaskListItem(
     image = images.firstOrNull() ?: "",
-    ownerName = owner.requireValue().name,
+    ownerName = owner.value.name,
     reviewed = reviewed,
     favorite = favorite ?: false,
     id = id,
