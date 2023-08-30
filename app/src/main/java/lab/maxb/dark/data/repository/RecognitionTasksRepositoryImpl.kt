@@ -43,13 +43,11 @@ class RecognitionTasksRepositoryImpl(
         fetchRemote = { page ->
             networkDataSource.getAllTasks(page.page, page.size)?.map {
                 it.toDomain()
-            }?.also {
+            }?.also { tasks ->
                 coroutineScope {
-                    it.map {
-                        async {
-                            getUser(it.owner.id)
-                        }
-                    }.let { awaitAll(*it.toTypedArray()) }
+                    tasks.map {
+                        async { getUser(it.owner.id) }
+                    }.awaitAll()
                 }
             }
         },
