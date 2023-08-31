@@ -1,6 +1,5 @@
 package lab.maxb.dark.presentation.screens.task.solve
 
-import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import lab.maxb.dark.domain.model.Profile
@@ -13,6 +12,7 @@ import lab.maxb.dark.domain.usecase.task.MarkRecognitionTaskUseCase
 import lab.maxb.dark.domain.usecase.task.SolveRecognitionTaskUseCase
 import lab.maxb.dark.presentation.extra.*
 import lab.maxb.dark.presentation.screens.core.BaseViewModel
+import lab.maxb.dark.presentation.screens.core.effects.withEffectTriggered
 import org.koin.android.annotation.KoinViewModel
 
 
@@ -25,14 +25,14 @@ class SolveRecognitionTaskViewModel(
     private val markFavoriteRecognitionTaskUseCase: MarkFavoriteRecognitionTaskUseCase,
     getProfileUseCase: GetProfileUseCase,
     getRecognitionTaskUseCase: GetRecognitionTaskUseCase,
-) : BaseViewModel<TaskSolveUiState, TaskSolveUiEvent>, ViewModel() {
+) : BaseViewModel<TaskSolveUiState, TaskSolveUiEvent, TaskSolveUiSideEffect>() {
     private val taskId = MutableStateFlow("")
     private val profile = getProfileUseCase().stateInAsResult()
     private val task = taskId.filter { it.isNotEmpty() }.flatMapLatest {
         getRecognitionTaskUseCase(it).asResult()
     }.stateIn()
 
-    private val _uiState = MutableStateFlow(TaskSolveUiState())
+    override fun getInitialState() = TaskSolveUiState()
     override val uiState = combine(_uiState, profile, task) { state, profileResult, taskResult ->
         val profile = profileResult.valueOrNull
         val task = taskResult.valueOrNull
@@ -42,35 +42,28 @@ class SolveRecognitionTaskViewModel(
             isReviewed = task?.reviewed ?: false,
             isFavorite = task?.favorite,
             images = task?.images?.map { getImage(it) } ?: emptyList(),
-            taskNotFound = if (task == null && !taskResult.isLoading)
-                TaskSolveUiEvent.NoSuchTask else null,
-        )
+        ).let {
+            if (task == null && !taskResult.isLoading)
+                it.withEffectTriggered(TaskSolveUiSideEffect.NoSuchTask)
+            else it
+        }
     }.stateIn(TaskSolveUiState())
 
     fun init(id: String) {
         taskId.value = id
     }
 
-    override fun onEvent(event: TaskSolveUiEvent): Unit = with(event) {
+    override fun handleEvent(event: TaskSolveUiEvent): Unit = with(event) {
         when (this) {
-            is TaskSolveUiEvent.AnswerChanged -> _uiState.update {
+            is TaskSolveUiEvent.AnswerChanged -> setState {
                 it.copy(answer = answer)
             }
-
             is TaskSolveUiEvent.SubmitTaskSolveSolution
-            -> solveRecognitionTask(_uiState.value.answer)
-
+                -> solveRecognitionTask(_uiState.value.answer)
             is TaskSolveUiEvent.MarkChanged -> mark(isAllowed)
-            is TaskSolveUiEvent.UserMessage -> _uiState.update {
-                it.copy(userMessages = it.userMessages - this)
-            }
-
-            TaskSolveUiEvent.NoSuchTask -> _uiState.update {
-                it.copy(taskNotFound = null)
-            }
-
             is TaskSolveUiEvent.MarkFavorite -> markFavorite(id, isFavorite)
-            is TaskSolveUiEvent.ZoomToggled -> _uiState.update {it.copy(zoomEnabled = !zoomEnabled) }
+            is TaskSolveUiEvent.ZoomToggled -> setState { it.copy(zoomEnabled = !zoomEnabled) }
+            is TaskSolveUiEvent.EffectConsumed -> handleEffectConsumption(this)
         }
     }
 
@@ -83,7 +76,7 @@ class SolveRecognitionTaskViewModel(
         }
     }
 
-    private fun setLoading(isLoading: Boolean = true) = _uiState.update { state ->
+    private fun setLoading(isLoading: Boolean = true) = setState { state ->
         state.copy(isLoading = isLoading)
     }
 
@@ -120,11 +113,8 @@ class SolveRecognitionTaskViewModel(
         }
     }
 
-    private fun showMessage(message: UiText) = _uiState.update { state ->
-        state.copy(
-            userMessages = state.userMessages +
-                    TaskSolveUiEvent.UserMessage(message)
-        )
+    private fun showMessage(message: UiText) = setState {
+        it.withEffectTriggered(TaskSolveUiSideEffect.UserMessage(message))
     }
 
     private fun getImage(path: String) = getRecognitionTaskImageUseCase(path)

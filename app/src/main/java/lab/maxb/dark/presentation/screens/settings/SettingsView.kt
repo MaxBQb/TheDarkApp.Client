@@ -36,7 +36,7 @@ import lab.maxb.dark.presentation.components.ScaffoldWithDrawer
 import lab.maxb.dark.presentation.components.TopBar
 import lab.maxb.dark.presentation.components.getLanguageCode
 import lab.maxb.dark.presentation.components.getLanguageName
-import lab.maxb.dark.presentation.extra.ChangedEffect
+import lab.maxb.dark.presentation.screens.core.effects.SideEffect
 import lab.maxb.dark.ui.theme.spacing
 import org.koin.androidx.compose.getViewModel
 
@@ -50,7 +50,11 @@ fun SettingsScreen(
     val uiState by viewModel.uiState.collectAsState()
     val onEvent = viewModel::onEvent
 
-    uiState.localeUpdated.ChangedEffect(onConsumed = onEvent) {
+    SideEffect<SettingsUiSideEffect.LocaleUpdated>(
+        uiState.sideEffectsHolder,
+        { onEvent(SettingsUiEvent.EffectConsumed(it)) },
+        true,
+    ) {
         AppCompatDelegate.setApplicationLocales(
             LocaleListCompat.forLanguageTags(it.locale)
         )

@@ -1,10 +1,13 @@
 package lab.maxb.dark.presentation.screens.auth.form
 
 import lab.maxb.dark.presentation.extra.UiText
-import lab.maxb.dark.presentation.extra.UiTrigger
-import lab.maxb.dark.presentation.extra.UiTriggers
 import lab.maxb.dark.presentation.screens.core.UiEvent
-import lab.maxb.dark.presentation.screens.core.UiState
+import lab.maxb.dark.presentation.screens.core.effects.EffectKey
+import lab.maxb.dark.presentation.screens.core.effects.EmptyEffectsHolder
+import lab.maxb.dark.presentation.screens.core.effects.UiEffectAwareState
+import lab.maxb.dark.presentation.screens.core.effects.UiSideEffect
+import lab.maxb.dark.presentation.screens.core.effects.UiSideEffectConsumed
+import lab.maxb.dark.presentation.screens.core.effects.UiSideEffectsHolder
 
 data class AuthUiState(
     val login: String = "",
@@ -14,10 +17,11 @@ data class AuthUiState(
     val locale: String = "",
     val isAccountNew: Boolean = false,
     val isLoading: Boolean = false,
-    val errors: UiTriggers<AuthUiEvent.Error> = UiTriggers(),
-    val authorized: AuthUiEvent.Authorized? = null,
-    val localeUpdated: AuthUiEvent.LocaleUpdated? = null,
-) : UiState
+    override val sideEffectsHolder: UiSideEffectsHolder = EmptyEffectsHolder,
+) : UiEffectAwareState {
+    override fun clone(sideEffectsHolder: UiSideEffectsHolder)
+        = copy(sideEffectsHolder=sideEffectsHolder)
+}
 
 sealed interface AuthUiEvent : UiEvent {
     data class LoginChanged(val login: String) : AuthUiEvent
@@ -28,8 +32,11 @@ sealed interface AuthUiEvent : UiEvent {
     data class RegistrationNeededChanged(val isAccountNew: Boolean) : AuthUiEvent
     object Submit : AuthUiEvent
 
-    // UiTriggers
-    data class Error(val message: UiText) : UiTrigger(), AuthUiEvent
-    data class LocaleUpdated(val locale: String) : UiTrigger(), AuthUiEvent
-    object Authorized : UiTrigger(), AuthUiEvent
+    data class EffectConsumed(override val effect: EffectKey): UiSideEffectConsumed, AuthUiEvent
+}
+
+sealed interface AuthUiSideEffect: UiSideEffect {
+    data class Error(val message: UiText) : AuthUiSideEffect
+    data class LocaleUpdated(val locale: String) : AuthUiSideEffect
+    object Authorized : AuthUiSideEffect
 }

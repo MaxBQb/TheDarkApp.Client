@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -49,10 +50,12 @@ import lab.maxb.dark.presentation.components.LoadingScreen
 import lab.maxb.dark.presentation.components.ScaffoldWithDrawer
 import lab.maxb.dark.presentation.components.TopBar
 import lab.maxb.dark.presentation.components.rememberSnackbarHostState
-import lab.maxb.dark.presentation.extra.ChangedEffect
 import lab.maxb.dark.presentation.extra.ItemHolder
 import lab.maxb.dark.presentation.extra.show
 import lab.maxb.dark.presentation.extra.takePersistablePermission
+import lab.maxb.dark.presentation.screens.core.effects.EffectKey
+import lab.maxb.dark.presentation.screens.core.effects.SideEffect
+import lab.maxb.dark.presentation.screens.core.effects.UiSideEffectsHolder
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
 import org.koin.androidx.compose.getViewModel
@@ -92,10 +95,27 @@ fun AddRecognitionTaskScreen(
     ) {
         AddRecognitionTaskRootStateless(uiState, onEvent)
     }
-    uiState.userMessages.ChangedEffect(snackbarState, onConsumed = onEvent) {
-        snackbarState show it.message
+
+    ApplySideEffects(
+        uiState.sideEffectsHolder,
+        { onEvent(AddTaskUiEvent.EffectConsumed(it)) },
+        snackbarState,
+        navController,
+    )
+}
+
+@Composable
+private fun ApplySideEffects(
+    effects: UiSideEffectsHolder,
+    onConsumed: (EffectKey) -> Unit,
+    snackbarState: SnackbarHostState,
+    navController: NavController,
+) {
+    val context = LocalContext.current.applicationContext
+    SideEffect<AddTaskUiSideEffect.UserMessage>(effects, onConsumed) {
+        it.message.show(snackbarState, context)
     }
-    uiState.submitSuccess.ChangedEffect(onConsumed = onEvent) {
+    SideEffect<AddTaskUiSideEffect.SubmitSuccess>(effects, onConsumed, true) {
         navController.navigateUp()
     }
 }
@@ -209,7 +229,7 @@ fun AddRecognitionTaskRootStateless(
                         painterResource(R.drawable.ic_add_photo_alternative),
                         "",
                         modifier = Modifier
-                            .padding(bottom=MaterialTheme.spacing.normal)
+                            .padding(bottom = MaterialTheme.spacing.normal)
                             .fillMaxSize()
                             .clickable(onClick = getImages),
                     )

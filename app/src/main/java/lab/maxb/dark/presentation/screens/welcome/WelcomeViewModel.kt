@@ -1,7 +1,5 @@
 package lab.maxb.dark.presentation.screens.welcome
 
-import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import lab.maxb.dark.domain.usecase.article.GetDailyArticleUseCase
 import lab.maxb.dark.domain.usecase.auth.SignOutUseCase
@@ -15,7 +13,7 @@ import lab.maxb.dark.presentation.extra.launch
 import lab.maxb.dark.presentation.extra.stateIn
 import lab.maxb.dark.presentation.extra.stateInAsResult
 import lab.maxb.dark.presentation.extra.valueOrNull
-import lab.maxb.dark.presentation.screens.core.BaseViewModel
+import lab.maxb.dark.presentation.screens.core.PureInteractiveViewModel
 import org.koin.android.annotation.KoinViewModel
 
 
@@ -25,13 +23,13 @@ class WelcomeViewModel(
     getCurrentUserUseCase: GetCurrentUserUseCase,
     getProfileUseCase: GetProfileUseCase,
     getDailyArticleUseCase: GetDailyArticleUseCase,
-) : BaseViewModel<Result<WelcomeUiState>, WelcomeUiEvent>, ViewModel() {
+) : PureInteractiveViewModel<Result<WelcomeUiState>, WelcomeUiEvent>() {
     private var signOutRequest by FirstOnly()
     private val profile = getProfileUseCase().stateInAsResult()
     private val user = getCurrentUserUseCase().stateInAsResult()
     private val dailyArticle = getDailyArticleUseCase().stateInAsResult()
 
-    private val _uiState = MutableStateFlow(WelcomeUiState())
+    override fun getInitialState() = Result.Success(WelcomeUiState())
     override val uiState = combine(_uiState, profile, user, dailyArticle)
     { state, profileResult, userResult, dailyArticleResult ->
         if (anyLoading(profileResult, userResult))
@@ -39,14 +37,14 @@ class WelcomeViewModel(
         else if (anyError(profileResult, userResult))
             Result.Error(null)
         else
-            Result.Success(state.copy(
+            Result.Success(state.valueOrNull!!.copy(
                 user = userResult.valueOrNull,
                 role = profileResult.valueOrNull?.role,
                 dailyArticle = dailyArticleResult.valueOrNull?.body,
             ))
     }.stateIn()
 
-    override fun onEvent(event: WelcomeUiEvent): Unit = with(event) {
+    override fun handleEvent(event: WelcomeUiEvent): Unit = with(event) {
         when (this) {
             is WelcomeUiEvent.SignOut -> signOut()
         }

@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,8 +50,10 @@ import lab.maxb.dark.presentation.components.ScaffoldWithDrawer
 import lab.maxb.dark.presentation.components.ShareIcon
 import lab.maxb.dark.presentation.components.TopBar
 import lab.maxb.dark.presentation.components.rememberSnackbarHostState
-import lab.maxb.dark.presentation.extra.ChangedEffect
 import lab.maxb.dark.presentation.extra.show
+import lab.maxb.dark.presentation.screens.core.effects.EffectKey
+import lab.maxb.dark.presentation.screens.core.effects.SideEffect
+import lab.maxb.dark.presentation.screens.core.effects.UiSideEffectsHolder
 import lab.maxb.dark.presentation.screens.destinations.SolveRecognitionTaskScreenDestination
 import lab.maxb.dark.ui.theme.DarkAppTheme
 import lab.maxb.dark.ui.theme.spacing
@@ -112,11 +116,26 @@ fun SolveRecognitionTaskScreen(
         SolveRecognitionTaskRootStateless(uiState, onEvent)
     }
 
-    uiState.userMessages.ChangedEffect(snackbarState, onConsumed = onEvent) {
-        snackbarState show it.message
-    }
+    ApplySideEffects(
+        uiState.sideEffectsHolder,
+        { onEvent(TaskSolveUiEvent.EffectConsumed(it)) },
+        snackbarState,
+        navController,
+    )
+}
 
-    uiState.taskNotFound.ChangedEffect(onConsumed = onEvent) {
+@Composable
+private fun ApplySideEffects(
+    effects: UiSideEffectsHolder,
+    onConsumed: (EffectKey) -> Unit,
+    snackbarState: SnackbarHostState,
+    navController: NavController,
+) {
+    val context = LocalContext.current.applicationContext
+    SideEffect<TaskSolveUiSideEffect.UserMessage>(effects, onConsumed) {
+        it.message.show(snackbarState, context)
+    }
+    SideEffect<TaskSolveUiSideEffect.NoSuchTask>(effects, onConsumed, true) {
         navController.navigateUp()
     }
 }

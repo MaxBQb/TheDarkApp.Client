@@ -32,6 +32,5 @@ fun UiText.asString() = asString(this@Context)
 inline val UiText.isEmpty get() = this is UiText.Empty
 inline val UiText.isNotEmpty get() = this !is UiText.Empty
 
-context(Context)
-suspend infix fun SnackbarHostState.show(message: UiText)
-    = showSnackbar(message.asString())
+suspend fun UiText.show(state: SnackbarHostState, context: Context)
+        = state.showSnackbar(asString(context))

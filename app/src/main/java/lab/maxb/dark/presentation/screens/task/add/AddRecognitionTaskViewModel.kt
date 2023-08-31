@@ -1,10 +1,7 @@
 package lab.maxb.dark.presentation.screens.task.add
 
 import android.net.Uri
-import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import lab.maxb.dark.R
 import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.domain.usecase.task.CreateRecognitionTaskUseCase
@@ -17,6 +14,7 @@ import lab.maxb.dark.presentation.extra.map
 import lab.maxb.dark.presentation.extra.throwIfCancellation
 import lab.maxb.dark.presentation.extra.uiTextOf
 import lab.maxb.dark.presentation.screens.core.BaseViewModel
+import lab.maxb.dark.presentation.screens.core.effects.withEffectTriggered
 import org.koin.android.annotation.KoinViewModel
 import kotlin.math.max
 
@@ -25,54 +23,51 @@ import kotlin.math.max
 class AddRecognitionTaskViewModel(
     private val getTaskNameSynonymsUseCase: GetTaskNameSynonymsUseCase,
     private val createRecognitionTaskUseCase: CreateRecognitionTaskUseCase,
-) : BaseViewModel<AddTaskUiState, AddTaskUiEvent>, ViewModel() {
+) : BaseViewModel<AddTaskUiState, AddTaskUiEvent, AddTaskUiSideEffect>() {
     private var suggestionsRequest by LatestOnly()
     private var addTaskRequest by FirstOnly()
 
-    override fun onEvent(event: AddTaskUiEvent): Unit = with(event) {
+    override fun handleEvent(event: AddTaskUiEvent): Unit = with(event) {
         when (this) {
             is AddTaskUiEvent.NameChanged -> setTexts(answer)
             is AddTaskUiEvent.ImagesAdded -> addImages(images)
             is AddTaskUiEvent.ImageChanged -> updateImage(position, image)
             is AddTaskUiEvent.ImageRemoved -> deleteImage(position)
             AddTaskUiEvent.Submit -> createRecognitionTask()
-            AddTaskUiEvent.SubmitSuccess -> _uiState.update { it.copy(submitSuccess = null) }
-            is AddTaskUiEvent.UserMessage -> _uiState.update {
-                it.copy(userMessages = it.userMessages - this)
-            }
+            is AddTaskUiEvent.EffectConsumed -> handleEffectConsumption(this)
         }
     }
 
-    private val _uiState = MutableStateFlow(AddTaskUiState())
+    override fun getInitialState() = AddTaskUiState()
     override val uiState = _uiState.asStateFlow()
 
     private fun createRecognitionTask() {
         addTaskRequest = launch {
             try {
                 val state = uiState.value
-                _uiState.update { it.copy(isLoading = true) }
+                setState { it.copy(isLoading = true) }
                 createRecognitionTaskUseCase(
                     state.names.map { it.value.trim() },
                     state.images.map { it.toString() },
                 )
-                _uiState.update { it.copy(submitSuccess = AddTaskUiEvent.SubmitSuccess) }
+                setState { it.withEffectTriggered(AddTaskUiSideEffect.SubmitSuccess) }
             } catch (e: Throwable) {
                 e.throwIfCancellation()
                 e.printStackTrace()
-                _uiState.update {
-                    it.copy(
-                        userMessages = it.userMessages + AddTaskUiEvent.UserMessage(
+                setState {
+                    it.withEffectTriggered(
+                        AddTaskUiSideEffect.UserMessage(
                             uiTextOf(R.string.addTask_message_notEnoughDataProvided)
                         )
                     )
                 }
             } finally {
-                _uiState.update { it.copy(isLoading = false) }
+                setState { it.copy(isLoading = false) }
             }
         }
     }
 
-    private fun setTexts(text: ItemHolder<String>) = _uiState.update { state ->
+    private fun setTexts(text: ItemHolder<String>) = setState { state ->
         val names = getInputList(state.names, text.map { it.trimStart() })
         requestSuggestions(names.map { it.value })
         state.copy(names = names)
@@ -99,25 +94,25 @@ class AddRecognitionTaskViewModel(
     private fun requestSuggestions(names: List<String>) {
         suggestionsRequest = launch {
             val suggestions = getTaskNameSynonymsUseCase(names)
-            _uiState.update {
+            setState {
                 it.copy(suggestions = suggestions.toList())
             }
         }
     }
 
-    private fun deleteImage(position: Int) = _uiState.update { state ->
+    private fun deleteImage(position: Int) = setState { state ->
         state.withImages(
             state.images.filterIndexed { pos, _ -> position != pos }
         )
     }
 
-    private fun addImages(uris: List<Uri>) = _uiState.update { state ->
+    private fun addImages(uris: List<Uri>) = setState { state ->
         state.withImages(
             state.images + uris.take(state.allowedImageCount)
         )
     }
 
-    private fun updateImage(position: Int, uri: Uri) = _uiState.update { state ->
+    private fun updateImage(position: Int, uri: Uri) = setState { state ->
         state.withImages(
             state.images.mapIndexed { pos, it ->
                 if (position == pos) uri

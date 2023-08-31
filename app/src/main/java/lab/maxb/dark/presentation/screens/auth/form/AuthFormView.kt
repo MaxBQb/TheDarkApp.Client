@@ -21,6 +21,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +31,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -55,9 +57,11 @@ import lab.maxb.dark.presentation.components.utils.getPasswordTransformation
 import lab.maxb.dark.presentation.components.utils.keyboardClose
 import lab.maxb.dark.presentation.components.utils.keyboardNext
 import lab.maxb.dark.presentation.components.utils.withInputOptions
-import lab.maxb.dark.presentation.extra.ChangedEffect
 import lab.maxb.dark.presentation.extra.initialNavigate
 import lab.maxb.dark.presentation.extra.show
+import lab.maxb.dark.presentation.screens.core.effects.EffectKey
+import lab.maxb.dark.presentation.screens.core.effects.SideEffect
+import lab.maxb.dark.presentation.screens.core.effects.UiSideEffectsHolder
 import lab.maxb.dark.presentation.screens.destinations.AuthScreenDestination
 import lab.maxb.dark.presentation.screens.destinations.WelcomeScreenDestination
 import lab.maxb.dark.ui.theme.DarkAppTheme
@@ -91,13 +95,29 @@ fun AuthScreen(
         }
     }
 
-    uiState.errors.ChangedEffect(snackbarState, onConsumed = onEvent) {
-        snackbarState show it.message
+    ApplySideEffects(
+        uiState.sideEffectsHolder,
+        { onEvent(AuthUiEvent.EffectConsumed(it)) },
+        snackbarState,
+        navigator,
+    )
+}
+
+@Composable
+private fun ApplySideEffects(
+    effects: UiSideEffectsHolder,
+    onConsumed: (EffectKey) -> Unit,
+    snackbarState: SnackbarHostState,
+    navigator: DestinationsNavigator,
+) {
+    val context = LocalContext.current.applicationContext
+    SideEffect<AuthUiSideEffect.Error>(effects, onConsumed) {
+        it.message.show(snackbarState, context)
     }
-    uiState.authorized.ChangedEffect(onConsumed = onEvent) {
+    SideEffect<AuthUiSideEffect.Authorized>(effects, onConsumed, true) {
         navigator.initialNavigate(WelcomeScreenDestination, AuthScreenDestination)
     }
-    uiState.localeUpdated.ChangedEffect(onConsumed = onEvent) {
+    SideEffect<AuthUiSideEffect.LocaleUpdated>(effects, onConsumed, true) {
         AppCompatDelegate.setApplicationLocales(
             LocaleListCompat.forLanguageTags(it.locale)
         )

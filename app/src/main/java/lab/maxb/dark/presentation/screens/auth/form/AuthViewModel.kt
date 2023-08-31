@@ -1,9 +1,6 @@
 package lab.maxb.dark.presentation.screens.auth.form
 
-import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.update
 import lab.maxb.dark.R
 import lab.maxb.dark.domain.model.AuthCredentials
 import lab.maxb.dark.domain.model.Profile
@@ -17,6 +14,7 @@ import lab.maxb.dark.presentation.extra.launch
 import lab.maxb.dark.presentation.extra.stateIn
 import lab.maxb.dark.presentation.extra.uiTextOf
 import lab.maxb.dark.presentation.screens.core.BaseViewModel
+import lab.maxb.dark.presentation.screens.core.effects.withEffectTriggered
 import org.koin.android.annotation.KoinViewModel
 
 
@@ -25,57 +23,44 @@ class AuthViewModel(
     private val authorizeUseCase: AuthorizeUseCase,
     getCurrentLocaleUseCase: GetCurrentLocaleUseCase,
     private val changeLocaleUseCase: ChangeLocaleUseCase,
-) : BaseViewModel<AuthUiState, AuthUiEvent>, ViewModel() {
+) : BaseViewModel<AuthUiState, AuthUiEvent, AuthUiSideEffect>() {
     private var authRequest by FirstOnly()
 
-    private val _uiState = MutableStateFlow(AuthUiState())
+    override fun getInitialState() = AuthUiState()
     override val uiState = combine(_uiState, getCurrentLocaleUseCase()) { state, locale ->
         state.copy(locale=locale)
     }.stateIn(AuthUiState())
 
-    override fun onEvent(event: AuthUiEvent) = with(event) {
+    override fun handleEvent(event: AuthUiEvent) = with(event) {
         when (this) {
-            is AuthUiEvent.LoginChanged -> _uiState.update {
+            is AuthUiEvent.LoginChanged -> setState {
                 it.copy(login = login)
             }
-            is AuthUiEvent.PasswordChanged -> _uiState.update {
+            is AuthUiEvent.PasswordChanged -> setState {
                 it.copy(password = password)
             }
-            is AuthUiEvent.PasswordRepeatChanged -> _uiState.update {
+            is AuthUiEvent.PasswordRepeatChanged -> setState {
                 it.copy(passwordRepeat = password)
             }
-            is AuthUiEvent.PasswordVisibilityChanged -> _uiState.update {
+            is AuthUiEvent.PasswordVisibilityChanged -> setState {
                 it.copy(showPassword = showPassword)
             }
-            is AuthUiEvent.RegistrationNeededChanged -> _uiState.update {
+            is AuthUiEvent.RegistrationNeededChanged -> setState {
                 it.copy(isAccountNew = isAccountNew)
             }
             is AuthUiEvent.Submit -> authorize()
-            is AuthUiEvent.Error -> _uiState.update {
-                it.copy(errors = it.errors - this)
-            }
-            is AuthUiEvent.Authorized -> _uiState.update {
-                it.copy(authorized = null)
-            }
             is AuthUiEvent.LocaleChanged -> changeLocale(locale)
-            is AuthUiEvent.LocaleUpdated -> _uiState.update {
-                it.copy(localeUpdated = null)
-            }
+            is AuthUiEvent.EffectConsumed -> handleEffectConsumption(this)
         }
     }
 
-    private fun setLoading() = _uiState.update {
+    private fun setLoading() = setState {
         it.copy(isLoading = true)
-    }
-
-    private fun setError(error: UiText) = _uiState.update {
-        it.withError(error)
     }
 
     private fun AuthUiState.withError(error: UiText) = copy(
         isLoading = false,
-        errors = errors + AuthUiEvent.Error(error)
-    )
+    ).withEffectTriggered(AuthUiSideEffect.Error(error))
 
     private fun getFieldsErrors() = when {
         hasEmptyFields() -> uiTextOf(R.string.auth_message_hasEmptyFields)
@@ -89,7 +74,7 @@ class AuthViewModel(
             return
         val error = getFieldsErrors()
         if (error.isNotEmpty)
-            return setError(error)
+            return setState { it.withError(error) }
         setLoading()
         authRequest = launch {
             val profile = authorizeUseCase(
@@ -112,14 +97,13 @@ class AuthViewModel(
         isAccountNew && password != passwordRepeat
     }
 
-    private fun handleAuthResult(profile: Profile?) = _uiState.update { state ->
+    private fun handleAuthResult(profile: Profile?) = setState { state ->
         if (!state.isLoading)
-            return@update state
+            return@setState state
         profile?.let {
-            return@update AuthUiState(
+            return@setState AuthUiState(
                 login = it.login,
-                authorized = AuthUiEvent.Authorized,
-            )
+            ).withEffectTriggered(AuthUiSideEffect.Authorized)
         }
         val message = if (state.isAccountNew)
             R.string.auth_message_signup_incorrectCredentials
@@ -131,8 +115,8 @@ class AuthViewModel(
     private fun changeLocale(locale: String) {
         launch {
             val newLocale = changeLocaleUseCase(locale)
-            _uiState.update {
-                it.copy(localeUpdated = AuthUiEvent.LocaleUpdated(newLocale))
+            setState {
+                it.withEffectTriggered(AuthUiSideEffect.LocaleUpdated(newLocale))
             }
         }
     }

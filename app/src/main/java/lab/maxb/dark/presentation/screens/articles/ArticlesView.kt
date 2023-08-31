@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -57,10 +58,10 @@ import lab.maxb.dark.presentation.components.TopScaffold
 import lab.maxb.dark.presentation.components.rememberSnackbarHostState
 import lab.maxb.dark.presentation.components.utils.keyboardClose
 import lab.maxb.dark.presentation.components.utils.keyboardNext
-import lab.maxb.dark.presentation.extra.ChangedEffect
 import lab.maxb.dark.presentation.extra.show
 import lab.maxb.dark.presentation.extra.synchronizeChanges
 import lab.maxb.dark.presentation.model.ArticleListItem
+import lab.maxb.dark.presentation.screens.core.effects.SideEffect
 import lab.maxb.dark.ui.theme.DarkAppTheme
 import lab.maxb.dark.ui.theme.spacing
 import org.koin.androidx.compose.getViewModel
@@ -84,9 +85,10 @@ fun ArticlesScreen(
     ) {
         ArticlesRootStateless(items, uiState, onEvent)
     }
-
-    uiState.userMessages.ChangedEffect(snackbarState, onConsumed = onEvent) {
-        snackbarState show it.message
+    val context = LocalContext.current.applicationContext
+    SideEffect<ArticlesUiSideEffect.UserMessage>(
+        uiState.sideEffectsHolder, { onEvent(ArticlesUiEvent.EffectConsumed(it)) }) {
+        it.message.show(snackbarState, context)
     }
 }
 
