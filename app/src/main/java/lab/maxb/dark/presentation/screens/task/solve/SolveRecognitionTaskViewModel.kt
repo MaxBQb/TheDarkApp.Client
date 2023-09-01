@@ -68,19 +68,6 @@ class SolveRecognitionTaskViewModel(
         }
     }
 
-    private inline fun withLoading(block: () -> Unit) {
-        try {
-            setLoading(true)
-            block()
-        } finally {
-            setLoading(false)
-        }
-    }
-
-    private fun setLoading(isLoading: Boolean = true) = setState { state ->
-        state.copy(isLoading = isLoading)
-    }
-
     private fun isReviewMode(profile: Profile?) = when (profile?.role) {
         Role.MODERATOR, Role.ADMINISTRATOR -> true
         else -> false

@@ -1,6 +1,7 @@
 package lab.maxb.dark.presentation.screens.task.solve
 
 import lab.maxb.dark.presentation.extra.UiText
+import lab.maxb.dark.presentation.screens.common.LoadableState
 import lab.maxb.dark.presentation.screens.core.UiEvent
 import lab.maxb.dark.presentation.screens.core.effects.EffectKey
 import lab.maxb.dark.presentation.screens.core.effects.EmptyEffectsHolder
@@ -12,16 +13,18 @@ import lab.maxb.dark.presentation.screens.core.effects.UiSideEffectsHolder
 interface TaskSolveUiContract {
     data class State(
         val answer: String = "",
-        val isLoading: Boolean = false,
+        override val isLoading: Boolean = false,
         val isReviewMode: Boolean = false,
         val isReviewed: Boolean = false,
         val isFavorite: Boolean? = null,
         val zoomEnabled: Boolean = false,
         val images: List<Any?> = emptyList(),
         override val sideEffectsHolder: UiSideEffectsHolder = EmptyEffectsHolder,
-    ) : UiEffectAwareState {
+    ) : UiEffectAwareState, LoadableState {
         override fun clone(sideEffectsHolder: UiSideEffectsHolder) =
             copy(sideEffectsHolder = sideEffectsHolder)
+
+        override fun clone(isLoading: Boolean) = copy(isLoading = isLoading)
     }
 
     sealed interface Event : UiEvent {

@@ -6,6 +6,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import lab.maxb.dark.presentation.extra.launch
+import lab.maxb.dark.presentation.screens.common.LoadableState
+import lab.maxb.dark.presentation.screens.common.Loaded
+import lab.maxb.dark.presentation.screens.common.Loading
 import lab.maxb.dark.presentation.screens.core.effects.UiEffectAwareState
 import lab.maxb.dark.presentation.screens.core.effects.UiSideEffect
 import lab.maxb.dark.presentation.screens.core.effects.UiSideEffectConsumed
@@ -19,6 +22,15 @@ abstract class StatefulViewModel<S : UiState> : ViewModel() {
     open val uiState = _uiState.asStateFlow()
     protected abstract fun getInitialState(): S
     protected inline fun setState(function: (S) -> S) = _uiState.update(function)
+
+    protected inline fun <reified S : LoadableState> StatefulViewModel<S>.withLoading(block: () -> Unit) {
+        try {
+            setState { it.Loading }
+            block()
+        } finally {
+            setState { it.Loaded }
+        }
+    }
 }
 
 abstract class PureInteractiveViewModel<S : UiState, E : UiEvent> : StatefulViewModel<S>() {

@@ -13,6 +13,8 @@ import lab.maxb.dark.presentation.extra.isNotEmpty
 import lab.maxb.dark.presentation.extra.launch
 import lab.maxb.dark.presentation.extra.stateIn
 import lab.maxb.dark.presentation.extra.uiTextOf
+import lab.maxb.dark.presentation.screens.common.Loaded
+import lab.maxb.dark.presentation.screens.common.Loading
 import lab.maxb.dark.presentation.screens.core.BaseViewModel
 import lab.maxb.dark.presentation.screens.core.effects.withEffect
 import org.koin.android.annotation.KoinViewModel
@@ -29,7 +31,7 @@ class AuthViewModel(
 
     override fun getInitialState() = Ui.State()
     override val uiState = combine(_uiState, getCurrentLocaleUseCase()) { state, locale ->
-        state.copy(locale=locale)
+        state.copy(locale = locale)
     }.stateIn(Ui.State())
 
     override fun handleEvent(event: Ui.Event) = with(event) {
@@ -37,31 +39,31 @@ class AuthViewModel(
             is Ui.Event.LoginChanged -> setState {
                 it.copy(login = login)
             }
+
             is Ui.Event.PasswordChanged -> setState {
                 it.copy(password = password)
             }
+
             is Ui.Event.PasswordRepeatChanged -> setState {
                 it.copy(passwordRepeat = password)
             }
+
             is Ui.Event.PasswordVisibilityChanged -> setState {
                 it.copy(showPassword = showPassword)
             }
+
             is Ui.Event.RegistrationNeededChanged -> setState {
                 it.copy(isAccountNew = isAccountNew)
             }
+
             is Ui.Event.Submit -> authorize()
             is Ui.Event.LocaleChanged -> changeLocale(locale)
             is Ui.Event.EffectConsumed -> handleEffectConsumption(this)
         }
     }
 
-    private fun setLoading() = setState {
-        it.copy(isLoading = true)
-    }
-
-    private fun Ui.State.withError(error: UiText) = copy(
-        isLoading = false,
-    ).withEffect(Ui.SideEffect.Error(error))
+    private fun Ui.State.withError(error: UiText)
+        = Loaded.withEffect(Ui.SideEffect.Error(error))
 
     private fun getFieldsErrors() = when {
         hasEmptyFields() -> uiTextOf(R.string.auth_message_hasEmptyFields)
@@ -76,7 +78,7 @@ class AuthViewModel(
         val error = getFieldsErrors()
         if (error.isNotEmpty)
             return setState { it.withError(error) }
-        setLoading()
+        setState { it.Loading }
         authRequest = launch {
             val profile = authorizeUseCase(
                 AuthCredentials(
@@ -91,7 +93,7 @@ class AuthViewModel(
 
     private fun hasEmptyFields() = with(uiState.value) {
         login.isEmpty() || password.isEmpty()
-        || isAccountNew && passwordRepeat.isEmpty()
+                || isAccountNew && passwordRepeat.isEmpty()
     }
 
     private fun isPasswordsNotMatch() = with(uiState.value) {

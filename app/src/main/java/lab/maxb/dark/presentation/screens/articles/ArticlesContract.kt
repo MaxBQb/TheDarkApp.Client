@@ -3,6 +3,7 @@ package lab.maxb.dark.presentation.screens.articles
 import androidx.paging.PagingData
 import lab.maxb.dark.presentation.extra.UiText
 import lab.maxb.dark.presentation.model.ArticleListItem
+import lab.maxb.dark.presentation.screens.common.LoadableState
 import lab.maxb.dark.presentation.screens.core.UiEvent
 import lab.maxb.dark.presentation.screens.core.effects.EffectKey
 import lab.maxb.dark.presentation.screens.core.effects.EmptyEffectsHolder
@@ -19,11 +20,13 @@ interface ArticlesUiContract {
         val isEditMode: Boolean = false,
         val isCreationMode: Boolean = false,
         val isMutable: Boolean = false,
-        val isLoading: Boolean = false,
+        override val isLoading: Boolean = false,
         override val sideEffectsHolder: UiSideEffectsHolder = EmptyEffectsHolder,
-    ) : UiEffectAwareState {
-        override fun clone(sideEffectsHolder: UiSideEffectsHolder)
-                = copy(sideEffectsHolder=sideEffectsHolder)
+    ) : UiEffectAwareState, LoadableState {
+        override fun clone(sideEffectsHolder: UiSideEffectsHolder) =
+            copy(sideEffectsHolder = sideEffectsHolder)
+
+        override fun clone(isLoading: Boolean) = copy(isLoading = isLoading)
     }
 
     sealed interface Event : UiEvent {
@@ -37,7 +40,7 @@ interface ArticlesUiContract {
         data class EffectConsumed(override val effect: EffectKey) : UiSideEffectConsumed, Event
     }
 
-    sealed interface SideEffect: UiSideEffect {
+    sealed interface SideEffect : UiSideEffect {
         data class UserMessage(val message: UiText) : SideEffect
     }
 }

@@ -4,6 +4,7 @@ import android.net.Uri
 import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.presentation.extra.ItemHolder
 import lab.maxb.dark.presentation.extra.UiText
+import lab.maxb.dark.presentation.screens.common.LoadableState
 import lab.maxb.dark.presentation.screens.core.UiEvent
 import lab.maxb.dark.presentation.screens.core.effects.EffectKey
 import lab.maxb.dark.presentation.screens.core.effects.EmptyEffectsHolder
@@ -18,11 +19,13 @@ interface AddTaskUiContract {
         val images: List<Uri> = emptyList(),
         val suggestions: List<String> = emptyList(),
         val allowedImageCount: Int = RecognitionTask.MAX_IMAGES_COUNT,
-        val isLoading: Boolean = false,
+        override val isLoading: Boolean = false,
         override val sideEffectsHolder: UiSideEffectsHolder = EmptyEffectsHolder,
-    ) : UiEffectAwareState {
+    ) : UiEffectAwareState, LoadableState {
         override fun clone(sideEffectsHolder: UiSideEffectsHolder) =
             copy(sideEffectsHolder = sideEffectsHolder)
+
+        override fun clone(isLoading: Boolean) = copy(isLoading = isLoading)
     }
 
     sealed interface Event : UiEvent {

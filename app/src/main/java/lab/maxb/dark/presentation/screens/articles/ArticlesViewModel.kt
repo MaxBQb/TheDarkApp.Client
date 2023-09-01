@@ -26,6 +26,8 @@ import lab.maxb.dark.presentation.extra.uiTextOf
 import lab.maxb.dark.presentation.extra.valueOrNull
 import lab.maxb.dark.presentation.model.ArticleListItem
 import lab.maxb.dark.presentation.model.toPresentation
+import lab.maxb.dark.presentation.screens.common.Loaded
+import lab.maxb.dark.presentation.screens.common.Loading
 import lab.maxb.dark.presentation.screens.core.BaseViewModel
 import org.koin.android.annotation.KoinViewModel
 import lab.maxb.dark.presentation.screens.articles.ArticlesUiContract as Ui
@@ -106,7 +108,7 @@ class ArticlesViewModel(
     private fun updateArticle(article: ArticleListItem) {
         updateArticleRequest = launch {
             try {
-                setState { it.copy(isLoading = true) }
+                setState { it.Loading }
                 val (title, body, id) = article
                 updateArticleUseCase(title, body, id)
                 setState { it.withEditEnded() }
@@ -119,7 +121,7 @@ class ArticlesViewModel(
                     )
                 }
             } finally {
-                setState { it.copy(isLoading = false) }
+                setState { it.Loaded }
             }
         }
     }
@@ -127,8 +129,9 @@ class ArticlesViewModel(
     private fun createArticle(article: ArticleListItem) {
         createArticleRequest = launch {
             try {
-                setState { it.copy(isLoading = true) }
-                createArticleUseCase(article.title, article.body)
+                withLoading {
+                    createArticleUseCase(article.title, article.body)
+                }
                 setState { it.withEditEnded() }
             } catch (e: Throwable) {
                 e.throwIfCancellation()
@@ -138,8 +141,6 @@ class ArticlesViewModel(
                         uiTextOf(R.string.articles_message_saveError)
                     )
                 }
-            } finally {
-                setState { it.copy(isLoading = false) }
             }
         }
     }

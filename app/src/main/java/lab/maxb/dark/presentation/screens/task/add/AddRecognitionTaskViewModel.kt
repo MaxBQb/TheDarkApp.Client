@@ -45,11 +45,12 @@ class AddRecognitionTaskViewModel(
         addTaskRequest = launch {
             try {
                 val state = uiState.value
-                setState { it.copy(isLoading = true) }
-                createRecognitionTaskUseCase(
-                    state.names.map { it.value.trim() },
-                    state.images.map { it.toString() },
-                )
+                withLoading {
+                    createRecognitionTaskUseCase(
+                        state.names.map { it.value.trim() },
+                        state.images.map { it.toString() },
+                    )
+                }
                 setEffect { Ui.SideEffect.SubmitSuccess }
             } catch (e: Throwable) {
                 e.throwIfCancellation()
@@ -59,8 +60,6 @@ class AddRecognitionTaskViewModel(
                         uiTextOf(R.string.addTask_message_notEnoughDataProvided)
                     )
                 }
-            } finally {
-                setState { it.copy(isLoading = false) }
             }
         }
     }
