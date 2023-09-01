@@ -15,6 +15,7 @@ import lab.maxb.dark.presentation.extra.stateInAsResult
 import lab.maxb.dark.presentation.extra.valueOrNull
 import lab.maxb.dark.presentation.screens.core.PureInteractiveViewModel
 import org.koin.android.annotation.KoinViewModel
+import lab.maxb.dark.presentation.screens.welcome.WelcomeUiContract as Ui
 
 
 @KoinViewModel
@@ -23,13 +24,13 @@ class WelcomeViewModel(
     getCurrentUserUseCase: GetCurrentUserUseCase,
     getProfileUseCase: GetProfileUseCase,
     getDailyArticleUseCase: GetDailyArticleUseCase,
-) : PureInteractiveViewModel<Result<WelcomeUiState>, WelcomeUiEvent>() {
+) : PureInteractiveViewModel<Result<Ui.State>, Ui.Event>() {
     private var signOutRequest by FirstOnly()
     private val profile = getProfileUseCase().stateInAsResult()
     private val user = getCurrentUserUseCase().stateInAsResult()
     private val dailyArticle = getDailyArticleUseCase().stateInAsResult()
 
-    override fun getInitialState() = Result.Success(WelcomeUiState())
+    override fun getInitialState() = Result.Success(Ui.State())
     override val uiState = combine(_uiState, profile, user, dailyArticle)
     { state, profileResult, userResult, dailyArticleResult ->
         if (anyLoading(profileResult, userResult))
@@ -44,9 +45,9 @@ class WelcomeViewModel(
             ))
     }.stateIn()
 
-    override fun handleEvent(event: WelcomeUiEvent): Unit = with(event) {
+    override fun handleEvent(event: Ui.Event): Unit = with(event) {
         when (this) {
-            is WelcomeUiEvent.SignOut -> signOut()
+            is Ui.Event.SignOut -> signOut()
         }
     }
 

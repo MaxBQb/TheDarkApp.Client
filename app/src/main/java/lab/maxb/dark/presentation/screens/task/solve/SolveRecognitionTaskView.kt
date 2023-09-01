@@ -59,6 +59,7 @@ import lab.maxb.dark.ui.theme.DarkAppTheme
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
 import org.koin.androidx.compose.getViewModel
+import lab.maxb.dark.presentation.screens.task.solve.TaskSolveUiContract as Ui
 
 
 @Destination(
@@ -91,7 +92,7 @@ fun SolveRecognitionTaskScreen(
                 navigationIcon = { NavBackIcon(navController = navController) },
                 actions = {
                     IconButton(
-                        onClick = { onEvent(TaskSolveUiEvent.ZoomToggled(uiState.zoomEnabled)) }
+                        onClick = { onEvent(Ui.Event.ZoomToggled(uiState.zoomEnabled)) }
                     ) {
                         AnimatedScaleToggle(uiState.zoomEnabled) {
                             Icon(
@@ -104,7 +105,7 @@ fun SolveRecognitionTaskScreen(
                     }
                     AnimatedVisibility(!uiState.isReviewMode && uiState.isFavorite != null) {
                         FavoriteIcon(uiState.isFavorite ?: false) {
-                            onEvent(TaskSolveUiEvent.MarkFavorite(id, it))
+                            onEvent(Ui.Event.MarkFavorite(id, it))
                         }
                     }
                     ShareIcon(shareLink + SolveRecognitionTaskScreenDestination(id).route)
@@ -118,7 +119,7 @@ fun SolveRecognitionTaskScreen(
 
     ApplySideEffects(
         uiState.sideEffectsHolder,
-        { onEvent(TaskSolveUiEvent.EffectConsumed(it)) },
+        { onEvent(Ui.Event.EffectConsumed(it)) },
         snackbarState,
         navController,
     )
@@ -132,10 +133,10 @@ private fun ApplySideEffects(
     navController: NavController,
 ) {
     val context = LocalContext.current.applicationContext
-    SideEffect<TaskSolveUiSideEffect.UserMessage>(effects, onConsumed) {
+    SideEffect<Ui.SideEffect.UserMessage>(effects, onConsumed) {
         it.message.show(snackbarState, context)
     }
-    SideEffect<TaskSolveUiSideEffect.NoSuchTask>(effects, onConsumed, true) {
+    SideEffect<Ui.SideEffect.NoSuchTask>(effects, onConsumed, true) {
         navController.navigateUp()
     }
 }
@@ -143,15 +144,15 @@ private fun ApplySideEffects(
 @Preview
 @Composable
 fun SolveRecognitionTaskRootStatelessPreview() = SolveRecognitionTaskRootStateless(
-    TaskSolveUiState(isReviewMode = true),
+    Ui.State(isReviewMode = true),
 )
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SolveRecognitionTaskRootStateless(
-    uiState: TaskSolveUiState,
-    onEvent: (TaskSolveUiEvent) -> Unit = {},
+    uiState: Ui.State,
+    onEvent: (Ui.Event) -> Unit = {},
 ) = DarkAppTheme {
     Surface {
         Column(
@@ -169,12 +170,12 @@ fun SolveRecognitionTaskRootStateless(
             )
             if (uiState.isReviewMode) {
                 ModeratorReviewPanel(uiState.isReviewed) {
-                    onEvent(TaskSolveUiEvent.MarkChanged(it))
+                    onEvent(Ui.Event.MarkChanged(it))
                 }
             } else {
                 OutlinedTextField(
                     value = uiState.answer,
-                    onValueChange = { onEvent(TaskSolveUiEvent.AnswerChanged(it)) },
+                    onValueChange = { onEvent(Ui.Event.AnswerChanged(it)) },
                     label = { Text(stringResource(R.string.solveTask_answer)) },
                     maxLines = 1,
                     singleLine = true,
@@ -183,7 +184,7 @@ fun SolveRecognitionTaskRootStateless(
                 )
                 Button(
                     modifier = Modifier.padding(MaterialTheme.spacing.normal),
-                    onClick = { onEvent(TaskSolveUiEvent.SubmitTaskSolveSolution) }) {
+                    onClick = { onEvent(Ui.Event.SubmitTaskSolveSolution) }) {
                     Text(stringResource(id = R.string.solveTask_checkSolution))
                 }
             }

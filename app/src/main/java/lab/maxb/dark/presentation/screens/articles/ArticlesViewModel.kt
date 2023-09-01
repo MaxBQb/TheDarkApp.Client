@@ -29,6 +29,7 @@ import lab.maxb.dark.presentation.model.toPresentation
 import lab.maxb.dark.presentation.screens.core.BaseViewModel
 import lab.maxb.dark.presentation.screens.core.effects.withEffectTriggered
 import org.koin.android.annotation.KoinViewModel
+import lab.maxb.dark.presentation.screens.articles.ArticlesUiContract as Ui
 
 @KoinViewModel
 class ArticlesViewModel(
@@ -36,7 +37,7 @@ class ArticlesViewModel(
     getArticlesUseCase: GetArticlesListUseCase,
     val updateArticleUseCase: UpdateArticleUseCase,
     val createArticleUseCase: CreateArticleUseCase,
-) : BaseViewModel<ArticlesUiState, ArticlesUiEvent, ArticlesUiSideEffect>() {
+) : BaseViewModel<Ui.State, Ui.Event, Ui.SideEffect>() {
     private val profile = getProfileUseCase().stateInAsResult()
     private var createArticleRequest by FirstOnly()
     private var updateArticleRequest by FirstOnly()
@@ -46,7 +47,7 @@ class ArticlesViewModel(
         page.map { it.toPresentation() }
     }.cachedIn(viewModelScope).stateInAsResult()
 
-    override fun getInitialState() = ArticlesUiState()
+    override fun getInitialState() = Ui.State()
     override val uiState =
         combine(_uiState, profile, _articles) { state, profileResult, articlesResult ->
             state.copy(
@@ -55,15 +56,15 @@ class ArticlesViewModel(
                 isMutable = profileResult.valueOrNull?.role?.hasModifyArticlePermission ?: false,
                 isLoading = anyLoading(profileResult, articlesResult) || state.isLoading,
             )
-        }.stateIn(ArticlesUiState())
+        }.stateIn(Ui.State())
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val articles = uiState.mapLatest { it.articles }.cachedIn(viewModelScope)
 
-    override fun handleEvent(event: ArticlesUiEvent): Unit = with(event) {
+    override fun handleEvent(event: Ui.Event): Unit = with(event) {
         when (this) {
-            is ArticlesUiEvent.ArticleToggled -> toggleArticle(id)
-            ArticlesUiEvent.ArticleCreationStarted -> setState {
+            is Ui.Event.ArticleToggled -> toggleArticle(id)
+            Ui.Event.ArticleCreationStarted -> setState {
                 val article = ArticleListItem("", "", "new")
                 it.copy(
                     openedArticleId = article.id,
@@ -73,7 +74,7 @@ class ArticlesViewModel(
                 )
             }
 
-            is ArticlesUiEvent.ArticleEditStarted -> setState {
+            is Ui.Event.ArticleEditStarted -> setState {
                 it.copy(
                     openedArticleId = article.id,
                     openedArticle = article,
@@ -81,17 +82,17 @@ class ArticlesViewModel(
                 )
             }
 
-            is ArticlesUiEvent.TitleChanged -> updateOpenedArticle {
+            is Ui.Event.TitleChanged -> updateOpenedArticle {
                 it.copy(title = title.take(Article.MAX_TITLE_LENGTH))
             }
 
-            is ArticlesUiEvent.BodyChanged -> updateOpenedArticle {
+            is Ui.Event.BodyChanged -> updateOpenedArticle {
                 it.copy(body = body.take(Article.MAX_BODY_LENGTH))
             }
 
-            ArticlesUiEvent.Cancel -> onCancelled()
-            ArticlesUiEvent.Submit -> onSubmit()
-            is ArticlesUiEvent.EffectConsumed -> handleEffectConsumption(this)
+            Ui.Event.Cancel -> onCancelled()
+            Ui.Event.Submit -> onSubmit()
+            is Ui.Event.EffectConsumed -> handleEffectConsumption(this)
         }
     }
 
@@ -115,7 +116,7 @@ class ArticlesViewModel(
                 e.printStackTrace()
                 setState {
                     it.withEffectTriggered(
-                        ArticlesUiSideEffect.UserMessage(
+                        Ui.SideEffect.UserMessage(
                             uiTextOf(R.string.articles_message_saveError)
                         )
                     )
@@ -137,7 +138,7 @@ class ArticlesViewModel(
                 e.printStackTrace()
                 setState {
                     it.withEffectTriggered(
-                        ArticlesUiSideEffect.UserMessage(
+                        Ui.SideEffect.UserMessage(
                             uiTextOf(R.string.articles_message_saveError)
                         )
                     )
@@ -150,12 +151,12 @@ class ArticlesViewModel(
 
     private fun onCancelled() = setState { it.withEditEnded() }
 
-    private fun ArticlesUiState.withClosedArticle() = copy(
+    private fun Ui.State.withClosedArticle() = copy(
         openedArticleId = null,
         openedArticle = null,
     )
 
-    private fun ArticlesUiState.withEditEnded() = copy(
+    private fun Ui.State.withEditEnded() = copy(
         isEditMode = false,
         isCreationMode = false,
     ).withClosedArticle()
@@ -189,7 +190,7 @@ class ArticlesViewModel(
             else -> false
         }
 
-    private fun PagingData<ArticleListItem>.withExtraArticle(state: ArticlesUiState) = when {
+    private fun PagingData<ArticleListItem>.withExtraArticle(state: Ui.State) = when {
         state.isCreationMode && state.openedArticle != null -> this.insertHeaderItem(item = state.openedArticle)
         state.isEditMode -> replace(state.openedArticle) { x, y -> x.id == y.id }
         else -> this

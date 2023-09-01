@@ -34,6 +34,7 @@ import lab.maxb.dark.ui.theme.fontSize
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
 import org.koin.androidx.compose.getViewModel
+import lab.maxb.dark.presentation.screens.auth.handle.AuthHandleUiContract as Ui
 
 
 @RootNavGraph(start = true)
@@ -49,7 +50,7 @@ fun AuthHandleScreen(
         result = uiState.authorized,
         onLoading = { AuthHandleLoading() },
         onError = { AuthHandleError {
-            onEvent(AuthHandleUiEvent.Retry)
+            onEvent(Ui.Event.Retry)
         } },
     ) 
 

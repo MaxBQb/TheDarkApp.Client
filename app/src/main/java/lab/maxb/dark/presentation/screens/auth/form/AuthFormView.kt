@@ -70,6 +70,7 @@ import lab.maxb.dark.ui.theme.animationDurations
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
 import org.koin.androidx.compose.getViewModel
+import lab.maxb.dark.presentation.screens.auth.form.AuthUiContract as Ui
 
 
 @Destination
@@ -97,7 +98,7 @@ fun AuthScreen(
 
     ApplySideEffects(
         uiState.sideEffectsHolder,
-        { onEvent(AuthUiEvent.EffectConsumed(it)) },
+        { onEvent(Ui.Event.EffectConsumed(it)) },
         snackbarState,
         navigator,
     )
@@ -111,13 +112,13 @@ private fun ApplySideEffects(
     navigator: DestinationsNavigator,
 ) {
     val context = LocalContext.current.applicationContext
-    SideEffect<AuthUiSideEffect.Error>(effects, onConsumed) {
+    SideEffect<Ui.SideEffect.Error>(effects, onConsumed) {
         it.message.show(snackbarState, context)
     }
-    SideEffect<AuthUiSideEffect.Authorized>(effects, onConsumed, true) {
+    SideEffect<Ui.SideEffect.Authorized>(effects, onConsumed, true) {
         navigator.initialNavigate(WelcomeScreenDestination, AuthScreenDestination)
     }
-    SideEffect<AuthUiSideEffect.LocaleUpdated>(effects, onConsumed, true) {
+    SideEffect<Ui.SideEffect.LocaleUpdated>(effects, onConsumed, true) {
         AppCompatDelegate.setApplicationLocales(
             LocaleListCompat.forLanguageTags(it.locale)
         )
@@ -125,21 +126,21 @@ private fun ApplySideEffects(
 }
 
 @Composable
-fun AuthRootPreview(uiState: AuthUiState) = DarkAppTheme {
+fun AuthRootPreview(uiState: Ui.State) = DarkAppTheme {
     Surface {
         AuthRootStateless(uiState)
     }
 }
 
-private class AuthUiStatePreviewParameterProvider : PreviewParameterProvider<AuthUiState> {
+private class AuthUiStatePreviewParameterProvider : PreviewParameterProvider<Ui.State> {
     override val values = sequenceOf(
-        AuthUiState(
+        Ui.State(
             isAccountNew = false,
         ),
-        AuthUiState(
+        Ui.State(
             isAccountNew = true,
         ),
-        AuthUiState(
+        Ui.State(
             isLoading = true,
         ),
     )
@@ -148,14 +149,14 @@ private class AuthUiStatePreviewParameterProvider : PreviewParameterProvider<Aut
 @Preview
 @Composable
 fun AuthRootPreviewAll(
-    @PreviewParameter(AuthUiStatePreviewParameterProvider::class) state: AuthUiState
+    @PreviewParameter(AuthUiStatePreviewParameterProvider::class) state: Ui.State
 ) = AuthRootPreview(state)
 
 
 @Composable
 fun AuthRootStateless(
-    uiState: AuthUiState,
-    onEvent: ((AuthUiEvent) -> Unit) = {},
+    uiState: Ui.State,
+    onEvent: ((Ui.Event) -> Unit) = {},
 ) {
     val localFocus = LocalFocusManager.current
     LaunchedEffect(true) {
@@ -209,7 +210,7 @@ fun AuthRootStateless(
             LabelledSwitch(
                 checked = uiState.isAccountNew,
                 onCheckedChange = {
-                    onEvent(AuthUiEvent.RegistrationNeededChanged(it))
+                    onEvent(Ui.Event.RegistrationNeededChanged(it))
                 },
                 label = stringResource(R.string.auth_isAccountNew),
                 modifier = padding,
@@ -217,7 +218,7 @@ fun AuthRootStateless(
             OutlinedTextField(
                 value = uiState.login,
                 onValueChange = {
-                    onEvent(AuthUiEvent.LoginChanged(it))
+                    onEvent(Ui.Event.LoginChanged(it))
                 },
                 label = { Text(stringResource(R.string.auth_loginHint)) },
                 modifier = padding.withInputOptions(keyboardNext),
@@ -229,21 +230,21 @@ fun AuthRootStateless(
                 modifier = padding,
                 password = uiState.password,
                 onPasswordChanged = {
-                    onEvent(AuthUiEvent.PasswordChanged(it))
+                    onEvent(Ui.Event.PasswordChanged(it))
                 },
                 showPassword = uiState.showPassword,
                 onPasswordVisibilityChange = {
-                    onEvent(AuthUiEvent.PasswordVisibilityChanged(it))
+                    onEvent(Ui.Event.PasswordVisibilityChanged(it))
                 },
                 repeatRequired = uiState.isAccountNew,
                 passwordRepeat = uiState.passwordRepeat,
                 onPasswordRepeatChange = {
-                    onEvent(AuthUiEvent.PasswordRepeatChanged(it))
+                    onEvent(Ui.Event.PasswordRepeatChanged(it))
                 },
             )
         }
         AuthButton(uiState.isAccountNew) {
-            onEvent(AuthUiEvent.Submit)
+            onEvent(Ui.Event.Submit)
         }
     }
 
@@ -251,7 +252,7 @@ fun AuthRootStateless(
         dialogState,
         uiState.locale,
     ) {
-        onEvent(AuthUiEvent.LocaleChanged(it))
+        onEvent(Ui.Event.LocaleChanged(it))
     }
     LoadingScreen(uiState.isLoading)
 }

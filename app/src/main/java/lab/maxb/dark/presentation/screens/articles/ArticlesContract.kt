@@ -11,31 +11,33 @@ import lab.maxb.dark.presentation.screens.core.effects.UiSideEffect
 import lab.maxb.dark.presentation.screens.core.effects.UiSideEffectConsumed
 import lab.maxb.dark.presentation.screens.core.effects.UiSideEffectsHolder
 
-data class ArticlesUiState(
-    val articles: PagingData<ArticleListItem> = PagingData.empty(),
-    val openedArticleId: String? = null,
-    val openedArticle: ArticleListItem? = null,
-    val isEditMode: Boolean = false,
-    val isCreationMode: Boolean = false,
-    val isMutable: Boolean = false,
-    val isLoading: Boolean = false,
-    override val sideEffectsHolder: UiSideEffectsHolder = EmptyEffectsHolder,
-) : UiEffectAwareState {
-    override fun clone(sideEffectsHolder: UiSideEffectsHolder)
-        = copy(sideEffectsHolder=sideEffectsHolder)
-}
+interface ArticlesUiContract {
+    data class State(
+        val articles: PagingData<ArticleListItem> = PagingData.empty(),
+        val openedArticleId: String? = null,
+        val openedArticle: ArticleListItem? = null,
+        val isEditMode: Boolean = false,
+        val isCreationMode: Boolean = false,
+        val isMutable: Boolean = false,
+        val isLoading: Boolean = false,
+        override val sideEffectsHolder: UiSideEffectsHolder = EmptyEffectsHolder,
+    ) : UiEffectAwareState {
+        override fun clone(sideEffectsHolder: UiSideEffectsHolder)
+                = copy(sideEffectsHolder=sideEffectsHolder)
+    }
 
-sealed interface ArticlesUiEvent : UiEvent {
-    data class ArticleToggled(val id: String) : ArticlesUiEvent
-    data class ArticleEditStarted(val article: ArticleListItem) : ArticlesUiEvent
-    object ArticleCreationStarted : ArticlesUiEvent
-    data class TitleChanged(val title: String) : ArticlesUiEvent
-    data class BodyChanged(val body: String) : ArticlesUiEvent
-    object Submit : ArticlesUiEvent
-    object Cancel : ArticlesUiEvent
-    data class EffectConsumed(override val effect: EffectKey) : UiSideEffectConsumed, ArticlesUiEvent
-}
+    sealed interface Event : UiEvent {
+        data class ArticleToggled(val id: String) : Event
+        data class ArticleEditStarted(val article: ArticleListItem) : Event
+        object ArticleCreationStarted : Event
+        data class TitleChanged(val title: String) : Event
+        data class BodyChanged(val body: String) : Event
+        object Submit : Event
+        object Cancel : Event
+        data class EffectConsumed(override val effect: EffectKey) : UiSideEffectConsumed, Event
+    }
 
-sealed interface ArticlesUiSideEffect: UiSideEffect {
-    data class UserMessage(val message: UiText) : ArticlesUiSideEffect
+    sealed interface SideEffect: UiSideEffect {
+        data class UserMessage(val message: UiText) : SideEffect
+    }
 }

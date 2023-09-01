@@ -39,6 +39,7 @@ import lab.maxb.dark.presentation.components.getLanguageName
 import lab.maxb.dark.presentation.screens.core.effects.SideEffect
 import lab.maxb.dark.ui.theme.spacing
 import org.koin.androidx.compose.getViewModel
+import lab.maxb.dark.presentation.screens.settings.SettingsUiContract as Ui
 
 
 @Destination
@@ -50,9 +51,9 @@ fun SettingsScreen(
     val uiState by viewModel.uiState.collectAsState()
     val onEvent = viewModel::onEvent
 
-    SideEffect<SettingsUiSideEffect.LocaleUpdated>(
+    SideEffect<Ui.SideEffect.LocaleUpdated>(
         uiState.sideEffectsHolder,
-        { onEvent(SettingsUiEvent.EffectConsumed(it)) },
+        { onEvent(Ui.Event.EffectConsumed(it)) },
         true,
     ) {
         AppCompatDelegate.setApplicationLocales(
@@ -75,8 +76,8 @@ fun SettingsScreen(
 
 @Composable
 fun SettingsRootStateless(
-    uiState: SettingsUiState,
-    onEvent: (SettingsUiEvent) -> Unit = {},
+    uiState: Ui.State,
+    onEvent: (Ui.Event) -> Unit = {},
 ) {
     val chooseLocaleDialogState = rememberMaterialDialogState()
     val currentLanguage = getLanguageCode()
@@ -110,7 +111,7 @@ fun SettingsRootStateless(
                     uncheckedThumbColor = androidx.compose.material.MaterialTheme.colors.primary,
                     checkedThumbColor = androidx.compose.material.MaterialTheme.colors.error,
                 ),
-                onCheckedChange = { onEvent(SettingsUiEvent.UseExternalSuggestionsToggled) },
+                onCheckedChange = { onEvent(Ui.Event.UseExternalSuggestionsToggled) },
             )
         }
         val uriHandler = LocalUriHandler.current
@@ -139,6 +140,6 @@ fun SettingsRootStateless(
         chooseLocaleDialogState,
         uiState.locale,
     ) {
-        onEvent(SettingsUiEvent.LocaleChanged(it))
+        onEvent(Ui.Event.LocaleChanged(it))
     }
 }

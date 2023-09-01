@@ -65,6 +65,7 @@ import lab.maxb.dark.presentation.screens.core.effects.SideEffect
 import lab.maxb.dark.ui.theme.DarkAppTheme
 import lab.maxb.dark.ui.theme.spacing
 import org.koin.androidx.compose.getViewModel
+import lab.maxb.dark.presentation.screens.articles.ArticlesUiContract as Ui
 
 
 @Destination
@@ -86,8 +87,8 @@ fun ArticlesScreen(
         ArticlesRootStateless(items, uiState, onEvent)
     }
     val context = LocalContext.current.applicationContext
-    SideEffect<ArticlesUiSideEffect.UserMessage>(
-        uiState.sideEffectsHolder, { onEvent(ArticlesUiEvent.EffectConsumed(it)) }) {
+    SideEffect<Ui.SideEffect.UserMessage>(
+        uiState.sideEffectsHolder, { onEvent(Ui.Event.EffectConsumed(it)) }) {
         it.message.show(snackbarState, context)
     }
 }
@@ -95,8 +96,8 @@ fun ArticlesScreen(
 @Composable
 fun ArticlesRootStateless(
     items: LazyPagingItems<ArticleListItem>,
-    uiState: ArticlesUiState,
-    onEvent: (ArticlesUiEvent) -> Unit = {},
+    uiState: Ui.State,
+    onEvent: (Ui.Event) -> Unit = {},
 ) = DarkAppTheme {
     Surface {
         ArticleList(
@@ -104,12 +105,12 @@ fun ArticlesRootStateless(
             uiState.openedArticleId,
             uiState.isMutable,
             uiState.isEditMode,
-            onItemClick = { onEvent(ArticlesUiEvent.ArticleToggled(it)) },
-            onItemEditClick = { onEvent(ArticlesUiEvent.ArticleEditStarted(it)) },
-            onItemTitleChanged = { onEvent(ArticlesUiEvent.TitleChanged(it)) },
-            onItemBodyChanged = { onEvent(ArticlesUiEvent.BodyChanged(it)) },
-            onSubmit = { onEvent(ArticlesUiEvent.Submit) },
-            onCancel = { onEvent(ArticlesUiEvent.Cancel) },
+            onItemClick = { onEvent(Ui.Event.ArticleToggled(it)) },
+            onItemEditClick = { onEvent(Ui.Event.ArticleEditStarted(it)) },
+            onItemTitleChanged = { onEvent(Ui.Event.TitleChanged(it)) },
+            onItemBodyChanged = { onEvent(Ui.Event.BodyChanged(it)) },
+            onSubmit = { onEvent(Ui.Event.Submit) },
+            onCancel = { onEvent(Ui.Event.Cancel) },
         )
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -117,7 +118,7 @@ fun ArticlesRootStateless(
         ) {
             AnimatedVisibility(uiState.isMutable && !uiState.isEditMode) {
                 FloatingActionButton(
-                    onClick = { onEvent(ArticlesUiEvent.ArticleCreationStarted) },
+                    onClick = { onEvent(Ui.Event.ArticleCreationStarted) },
                     shape = CircleShape,
                     containerColor = colorScheme.secondaryContainer,
                     modifier = Modifier
@@ -140,7 +141,7 @@ fun ArticlesRootStatelessPreview() = Box(Modifier.fillMaxSize()) {
             ArticleListItem("Title here 2", "Long text here 2", ""),
             ArticleListItem("Title here 3", "Long text here 3", ""),
         ).let { flowOf(PagingData.from(it)).collectAsLazyPagingItems() },
-        uiState = ArticlesUiState()
+        uiState = Ui.State()
     )
 }
 

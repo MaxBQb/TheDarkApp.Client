@@ -59,6 +59,7 @@ import lab.maxb.dark.presentation.screens.core.effects.UiSideEffectsHolder
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
 import org.koin.androidx.compose.getViewModel
+import lab.maxb.dark.presentation.screens.task.add.AddTaskUiContract as Ui
 
 
 @Destination
@@ -83,7 +84,7 @@ fun AddRecognitionTaskScreen(
                 },
                 actions = {
                     IconButton(
-                        onClick = { onEvent(AddTaskUiEvent.Submit) },
+                        onClick = { onEvent(Ui.Event.Submit) },
                         enabled = !uiState.isLoading,
                     ) {
                         Icon(Icons.Filled.Done, null)
@@ -98,7 +99,7 @@ fun AddRecognitionTaskScreen(
 
     ApplySideEffects(
         uiState.sideEffectsHolder,
-        { onEvent(AddTaskUiEvent.EffectConsumed(it)) },
+        { onEvent(Ui.Event.EffectConsumed(it)) },
         snackbarState,
         navController,
     )
@@ -112,10 +113,10 @@ private fun ApplySideEffects(
     navController: NavController,
 ) {
     val context = LocalContext.current.applicationContext
-    SideEffect<AddTaskUiSideEffect.UserMessage>(effects, onConsumed) {
+    SideEffect<Ui.SideEffect.UserMessage>(effects, onConsumed) {
         it.message.show(snackbarState, context)
     }
-    SideEffect<AddTaskUiSideEffect.SubmitSuccess>(effects, onConsumed, true) {
+    SideEffect<Ui.SideEffect.SubmitSuccess>(effects, onConsumed, true) {
         navController.navigateUp()
     }
 }
@@ -124,7 +125,7 @@ private fun ApplySideEffects(
 @Preview
 @Composable
 fun AddRecognitionTaskRootStatelessPreview() = AddRecognitionTaskRootStateless(
-    AddTaskUiState(
+    Ui.State(
         names = listOf(
             ItemHolder("Some text"),
             ItemHolder(""),
@@ -135,8 +136,8 @@ fun AddRecognitionTaskRootStatelessPreview() = AddRecognitionTaskRootStateless(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AddRecognitionTaskRootStateless(
-    uiState: AddTaskUiState,
-    onEvent: (AddTaskUiEvent) -> Unit = {}
+    uiState: Ui.State,
+    onEvent: (Ui.Event) -> Unit = {}
 ) {
     val isVerticalOrientation = LocalConfiguration.current.orientation ==
             Configuration.ORIENTATION_PORTRAIT
@@ -150,7 +151,7 @@ fun AddRecognitionTaskRootStateless(
             InputList(
                 values = uiState.names,
                 onValueChanged = {
-                    onEvent(AddTaskUiEvent.NameChanged(it))
+                    onEvent(Ui.Event.NameChanged(it))
                 },
                 suggestions = uiState.suggestions,
                 queryLabel = {
@@ -172,7 +173,7 @@ fun AddRecognitionTaskRootStateless(
                     it
                 }
                 if (!list.isNullOrEmpty())
-                    onEvent(AddTaskUiEvent.ImagesAdded(list))
+                    onEvent(Ui.Event.ImagesAdded(list))
             }
             val pagerState = rememberPagerState(
                 initialPage = 0,
@@ -180,7 +181,7 @@ fun AddRecognitionTaskRootStateless(
             ) { uiState.images.size }
             val updateImage = rememberImageRequest {
                 it?.let { image ->
-                    onEvent(AddTaskUiEvent.ImageChanged(pagerState.currentPage, image))
+                    onEvent(Ui.Event.ImageChanged(pagerState.currentPage, image))
                 }
             }
 
@@ -217,7 +218,7 @@ fun AddRecognitionTaskRootStateless(
                         onAdd = getImages,
                         onEdit = updateImage,
                         onDelete = {
-                            onEvent(AddTaskUiEvent.ImageRemoved(pagerState.currentPage))
+                            onEvent(Ui.Event.ImageRemoved(pagerState.currentPage))
                         },
                         allowAddition = uiState.allowedImageCount > 0
                     )

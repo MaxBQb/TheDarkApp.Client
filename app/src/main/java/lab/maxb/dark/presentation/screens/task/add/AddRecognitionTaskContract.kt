@@ -12,28 +12,30 @@ import lab.maxb.dark.presentation.screens.core.effects.UiSideEffect
 import lab.maxb.dark.presentation.screens.core.effects.UiSideEffectConsumed
 import lab.maxb.dark.presentation.screens.core.effects.UiSideEffectsHolder
 
-data class AddTaskUiState(
-    val names: List<ItemHolder<String>> = listOf(ItemHolder("")),
-    val images: List<Uri> = emptyList(),
-    val suggestions: List<String> = emptyList(),
-    val allowedImageCount: Int = RecognitionTask.MAX_IMAGES_COUNT,
-    val isLoading: Boolean = false,
-    override val sideEffectsHolder: UiSideEffectsHolder = EmptyEffectsHolder,
-) : UiEffectAwareState {
-    override fun clone(sideEffectsHolder: UiSideEffectsHolder)
-        = copy(sideEffectsHolder = sideEffectsHolder)
-}
+interface AddTaskUiContract {
+    data class State(
+        val names: List<ItemHolder<String>> = listOf(ItemHolder("")),
+        val images: List<Uri> = emptyList(),
+        val suggestions: List<String> = emptyList(),
+        val allowedImageCount: Int = RecognitionTask.MAX_IMAGES_COUNT,
+        val isLoading: Boolean = false,
+        override val sideEffectsHolder: UiSideEffectsHolder = EmptyEffectsHolder,
+    ) : UiEffectAwareState {
+        override fun clone(sideEffectsHolder: UiSideEffectsHolder) =
+            copy(sideEffectsHolder = sideEffectsHolder)
+    }
 
-sealed interface AddTaskUiEvent : UiEvent {
-    data class NameChanged(val answer: ItemHolder<String>) : AddTaskUiEvent
-    data class ImageChanged(val position: Int, val image: Uri) : AddTaskUiEvent
-    data class ImageRemoved(val position: Int) : AddTaskUiEvent
-    data class ImagesAdded(val images: List<Uri>) : AddTaskUiEvent
-    object Submit : AddTaskUiEvent
-    data class EffectConsumed(override val effect: EffectKey) : UiSideEffectConsumed, AddTaskUiEvent
-}
+    sealed interface Event : UiEvent {
+        data class NameChanged(val answer: ItemHolder<String>) : Event
+        data class ImageChanged(val position: Int, val image: Uri) : Event
+        data class ImageRemoved(val position: Int) : Event
+        data class ImagesAdded(val images: List<Uri>) : Event
+        object Submit : Event
+        data class EffectConsumed(override val effect: EffectKey) : UiSideEffectConsumed, Event
+    }
 
-sealed interface AddTaskUiSideEffect: UiSideEffect {
-    data class UserMessage(val message: UiText) : AddTaskUiSideEffect
-    object SubmitSuccess : AddTaskUiSideEffect
+    sealed interface SideEffect : UiSideEffect {
+        data class UserMessage(val message: UiText) : SideEffect
+        object SubmitSuccess : SideEffect
+    }
 }

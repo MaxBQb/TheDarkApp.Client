@@ -9,6 +9,7 @@ import lab.maxb.dark.presentation.extra.stateIn
 import lab.maxb.dark.presentation.screens.core.BaseViewModel
 import lab.maxb.dark.presentation.screens.core.effects.withEffectTriggered
 import org.koin.android.annotation.KoinViewModel
+import lab.maxb.dark.presentation.screens.settings.SettingsUiContract as Ui
 
 
 @KoinViewModel
@@ -16,9 +17,9 @@ class SettingsViewModel(
     getCurrentLocaleUseCase: GetCurrentLocaleUseCase,
     private val changeLocaleUseCase: ChangeLocaleUseCase,
     private val useExternalSuggestionsUseCases: UseExternalSuggestionsUseCases,
-) : BaseViewModel<SettingsUiState, SettingsUiEvent, SettingsUiSideEffect>() {
+) : BaseViewModel<Ui.State, Ui.Event, Ui.SideEffect>() {
 
-    override fun getInitialState() = SettingsUiState()
+    override fun getInitialState() = Ui.State()
     override val uiState = combine(
         _uiState,
         getCurrentLocaleUseCase(),
@@ -28,13 +29,13 @@ class SettingsViewModel(
             locale = locale,
             useExternalSuggestions = useExternalSuggestions,
         )
-    }.stateIn(SettingsUiState())
+    }.stateIn(Ui.State())
 
-    override fun handleEvent(event: SettingsUiEvent): Unit = with(event) {
+    override fun handleEvent(event: Ui.Event): Unit = with(event) {
         when (this) {
-            is SettingsUiEvent.LocaleChanged -> changeLocale(locale)
-            SettingsUiEvent.UseExternalSuggestionsToggled -> launch { useExternalSuggestionsUseCases.toggle() }
-            is SettingsUiEvent.EffectConsumed -> handleEffectConsumption(this)
+            is Ui.Event.LocaleChanged -> changeLocale(locale)
+            Ui.Event.UseExternalSuggestionsToggled -> launch { useExternalSuggestionsUseCases.toggle() }
+            is Ui.Event.EffectConsumed -> handleEffectConsumption(this)
         }
     }
 
@@ -42,7 +43,7 @@ class SettingsViewModel(
         launch {
             val newLocale = changeLocaleUseCase(locale)
             setState {
-                it.withEffectTriggered(SettingsUiSideEffect.LocaleUpdated(newLocale))
+                it.withEffectTriggered(Ui.SideEffect.LocaleUpdated(newLocale))
             }
         }
     }

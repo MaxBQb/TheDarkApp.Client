@@ -45,6 +45,7 @@ import lab.maxb.dark.ui.theme.fontSize
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
 import org.koin.androidx.compose.getViewModel
+import lab.maxb.dark.presentation.screens.welcome.WelcomeUiContract as Ui
 
 
 @Destination
@@ -69,8 +70,8 @@ fun WelcomeScreen(
 
 @Composable
 fun WelcomeRootStateless(
-    uiState: WelcomeUiState,
-    onEvent: (WelcomeUiEvent) -> Unit = {},
+    uiState: Ui.State,
+    onEvent: (Ui.Event) -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -95,7 +96,7 @@ fun WelcomeRootStateless(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Exit { onEvent(WelcomeUiEvent.SignOut) }
+                Exit { onEvent(Ui.Event.SignOut) }
             }
         }
     }

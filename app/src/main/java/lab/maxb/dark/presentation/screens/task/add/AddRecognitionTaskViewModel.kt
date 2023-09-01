@@ -17,28 +17,29 @@ import lab.maxb.dark.presentation.screens.core.BaseViewModel
 import lab.maxb.dark.presentation.screens.core.effects.withEffectTriggered
 import org.koin.android.annotation.KoinViewModel
 import kotlin.math.max
+import lab.maxb.dark.presentation.screens.task.add.AddTaskUiContract as Ui
 
 
 @KoinViewModel
 class AddRecognitionTaskViewModel(
     private val getTaskNameSynonymsUseCase: GetTaskNameSynonymsUseCase,
     private val createRecognitionTaskUseCase: CreateRecognitionTaskUseCase,
-) : BaseViewModel<AddTaskUiState, AddTaskUiEvent, AddTaskUiSideEffect>() {
+) : BaseViewModel<Ui.State, Ui.Event, Ui.SideEffect>() {
     private var suggestionsRequest by LatestOnly()
     private var addTaskRequest by FirstOnly()
 
-    override fun handleEvent(event: AddTaskUiEvent): Unit = with(event) {
+    override fun handleEvent(event: Ui.Event): Unit = with(event) {
         when (this) {
-            is AddTaskUiEvent.NameChanged -> setTexts(answer)
-            is AddTaskUiEvent.ImagesAdded -> addImages(images)
-            is AddTaskUiEvent.ImageChanged -> updateImage(position, image)
-            is AddTaskUiEvent.ImageRemoved -> deleteImage(position)
-            AddTaskUiEvent.Submit -> createRecognitionTask()
-            is AddTaskUiEvent.EffectConsumed -> handleEffectConsumption(this)
+            is Ui.Event.NameChanged -> setTexts(answer)
+            is Ui.Event.ImagesAdded -> addImages(images)
+            is Ui.Event.ImageChanged -> updateImage(position, image)
+            is Ui.Event.ImageRemoved -> deleteImage(position)
+            Ui.Event.Submit -> createRecognitionTask()
+            is Ui.Event.EffectConsumed -> handleEffectConsumption(this)
         }
     }
 
-    override fun getInitialState() = AddTaskUiState()
+    override fun getInitialState() = Ui.State()
     override val uiState = _uiState.asStateFlow()
 
     private fun createRecognitionTask() {
@@ -50,13 +51,13 @@ class AddRecognitionTaskViewModel(
                     state.names.map { it.value.trim() },
                     state.images.map { it.toString() },
                 )
-                setState { it.withEffectTriggered(AddTaskUiSideEffect.SubmitSuccess) }
+                setState { it.withEffectTriggered(Ui.SideEffect.SubmitSuccess) }
             } catch (e: Throwable) {
                 e.throwIfCancellation()
                 e.printStackTrace()
                 setState {
                     it.withEffectTriggered(
-                        AddTaskUiSideEffect.UserMessage(
+                        Ui.SideEffect.UserMessage(
                             uiTextOf(R.string.addTask_message_notEnoughDataProvided)
                         )
                     )
@@ -121,7 +122,7 @@ class AddRecognitionTaskViewModel(
         )
     }
 
-    private fun AddTaskUiState.withImages(images: List<Uri>) = copy(
+    private fun Ui.State.withImages(images: List<Uri>) = copy(
         images = images,
         allowedImageCount = max(RecognitionTask.MAX_IMAGES_COUNT - images.size, 0),
     )

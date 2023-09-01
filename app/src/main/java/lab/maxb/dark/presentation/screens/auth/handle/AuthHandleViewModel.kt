@@ -9,23 +9,24 @@ import lab.maxb.dark.presentation.extra.stateIn
 import lab.maxb.dark.presentation.extra.stateInAsResult
 import lab.maxb.dark.presentation.screens.core.PureInteractiveViewModel
 import org.koin.android.annotation.KoinViewModel
+import lab.maxb.dark.presentation.screens.auth.handle.AuthHandleUiContract as Ui
 
 
 @KoinViewModel
 class AuthHandleViewModel(
     handleInitialAuthUseCase: HandleInitialAuthUseCase,
     private val refreshProfileUseCase: RefreshProfileUseCase,
-) : PureInteractiveViewModel<AuthHandleUiState, AuthHandleUiEvent>() {
+) : PureInteractiveViewModel<Ui.State, Ui.Event>() {
     private val isAuthorized = handleInitialAuthUseCase().stateInAsResult()
     private var retryRequest by FirstOnly()
 
-    override fun getInitialState() = AuthHandleUiState()
+    override fun getInitialState() = Ui.State()
     override val uiState = combine(_uiState, isAuthorized) { state, isAuthorized ->
         state.copy(authorized = isAuthorized)
-    }.stateIn(AuthHandleUiState())
+    }.stateIn(Ui.State())
 
-    override fun handleEvent(event: AuthHandleUiEvent) = when(event) {
-        is AuthHandleUiEvent.Retry -> retry()
+    override fun handleEvent(event: Ui.Event) = when(event) {
+        is Ui.Event.Retry -> retry()
     }
 
     private fun retry() { retryRequest = launch {
