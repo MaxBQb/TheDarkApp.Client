@@ -12,7 +12,7 @@ import lab.maxb.dark.domain.usecase.task.MarkRecognitionTaskUseCase
 import lab.maxb.dark.domain.usecase.task.SolveRecognitionTaskUseCase
 import lab.maxb.dark.presentation.extra.*
 import lab.maxb.dark.presentation.screens.core.BaseViewModel
-import lab.maxb.dark.presentation.screens.core.effects.withEffectTriggered
+import lab.maxb.dark.presentation.screens.core.effects.withEffect
 import org.koin.android.annotation.KoinViewModel
 import lab.maxb.dark.presentation.screens.task.solve.TaskSolveUiContract as Ui
 
@@ -45,7 +45,7 @@ class SolveRecognitionTaskViewModel(
             images = task?.images?.map { getImage(it) } ?: emptyList(),
         ).let {
             if (task == null && !taskResult.isLoading)
-                it.withEffectTriggered(Ui.SideEffect.NoSuchTask)
+                it.withEffect(Ui.SideEffect.NoSuchTask)
             else it
         }
     }.stateIn(Ui.State())
@@ -114,9 +114,8 @@ class SolveRecognitionTaskViewModel(
         }
     }
 
-    private fun showMessage(message: UiText) = setState {
-        it.withEffectTriggered(Ui.SideEffect.UserMessage(message))
-    }
+    private fun showMessage(message: UiText)
+        = setEffect { Ui.SideEffect.UserMessage(message) }
 
     private fun getImage(path: String) = getRecognitionTaskImageUseCase(path)
 }

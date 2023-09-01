@@ -9,6 +9,8 @@ import lab.maxb.dark.presentation.extra.launch
 import lab.maxb.dark.presentation.screens.core.effects.UiEffectAwareState
 import lab.maxb.dark.presentation.screens.core.effects.UiSideEffect
 import lab.maxb.dark.presentation.screens.core.effects.UiSideEffectConsumed
+import lab.maxb.dark.presentation.screens.core.effects.withEffect
+import lab.maxb.dark.presentation.screens.core.effects.withoutEffect
 
 
 abstract class StatefulViewModel<S : UiState> : ViewModel() {
@@ -39,8 +41,11 @@ abstract class PureInteractiveViewModel<S : UiState, E : UiEvent> : StatefulView
 
 abstract class BaseViewModel<S : UiEffectAwareState, E : UiEvent, SE: UiSideEffect> :
     PureInteractiveViewModel<S, E>() {
-    @Suppress("UNCHECKED_CAST")
+
     protected fun handleEffectConsumption(
         event: UiSideEffectConsumed
-    ) = setState { it.clone(it.sideEffectsHolder.consume(event.effect)) as S }
+    ) = setState { it.withoutEffect(event.effect) }
+
+    protected inline fun <reified E: SE> setEffect(effect: () -> E)
+        = setState { it.withEffect(effect()) }
 }

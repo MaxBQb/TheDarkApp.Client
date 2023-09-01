@@ -1,5 +1,8 @@
 package lab.maxb.dark.presentation.screens.core.effects
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 interface UiSideEffectsHolder {
     fun get(key: EffectKey): UiSideEffect?
     fun <T: UiSideEffect> trigger(value: T, key: EffectKey): UiSideEffectsHolder
@@ -23,6 +26,7 @@ val EmptyEffectsHolder = UiSideEffectsHolderImpl(emptyMap())
 fun <T: Map<EffectKey, UiSideEffect>> effectsHolderOf(value: T): UiSideEffectsHolder
     = UiSideEffectsHolderImpl(value as Map<EffectKey, UiSideEffect>)
 
+@Immutable
 @JvmInline
 value class UiSideEffectsHolderImpl(
     private val storage: Map<EffectKey, UiSideEffect>

@@ -60,7 +60,8 @@ import lab.maxb.dark.presentation.components.utils.withInputOptions
 import lab.maxb.dark.presentation.extra.initialNavigate
 import lab.maxb.dark.presentation.extra.show
 import lab.maxb.dark.presentation.screens.core.effects.EffectKey
-import lab.maxb.dark.presentation.screens.core.effects.SideEffect
+import lab.maxb.dark.presentation.screens.core.effects.On
+import lab.maxb.dark.presentation.screens.core.effects.SideEffects
 import lab.maxb.dark.presentation.screens.core.effects.UiSideEffectsHolder
 import lab.maxb.dark.presentation.screens.destinations.AuthScreenDestination
 import lab.maxb.dark.presentation.screens.destinations.WelcomeScreenDestination
@@ -112,16 +113,18 @@ private fun ApplySideEffects(
     navigator: DestinationsNavigator,
 ) {
     val context = LocalContext.current.applicationContext
-    SideEffect<Ui.SideEffect.Error>(effects, onConsumed) {
-        it.message.show(snackbarState, context)
-    }
-    SideEffect<Ui.SideEffect.Authorized>(effects, onConsumed, true) {
-        navigator.initialNavigate(WelcomeScreenDestination, AuthScreenDestination)
-    }
-    SideEffect<Ui.SideEffect.LocaleUpdated>(effects, onConsumed, true) {
-        AppCompatDelegate.setApplicationLocales(
-            LocaleListCompat.forLanguageTags(it.locale)
-        )
+    SideEffects(effects, onConsumed) {
+        On<Ui.SideEffect.Error>(false, snackbarState) {
+            it.message.show(snackbarState, context)
+        }
+        On<Ui.SideEffect.Authorized>(true) {
+            navigator.initialNavigate(WelcomeScreenDestination, AuthScreenDestination)
+        }
+        On<Ui.SideEffect.LocaleUpdated>(true) {
+            AppCompatDelegate.setApplicationLocales(
+                LocaleListCompat.forLanguageTags(it.locale)
+            )
+        }
     }
 }
 

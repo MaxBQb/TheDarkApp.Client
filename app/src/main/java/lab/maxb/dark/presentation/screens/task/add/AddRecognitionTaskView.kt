@@ -54,7 +54,8 @@ import lab.maxb.dark.presentation.extra.ItemHolder
 import lab.maxb.dark.presentation.extra.show
 import lab.maxb.dark.presentation.extra.takePersistablePermission
 import lab.maxb.dark.presentation.screens.core.effects.EffectKey
-import lab.maxb.dark.presentation.screens.core.effects.SideEffect
+import lab.maxb.dark.presentation.screens.core.effects.On
+import lab.maxb.dark.presentation.screens.core.effects.SideEffects
 import lab.maxb.dark.presentation.screens.core.effects.UiSideEffectsHolder
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
@@ -113,11 +114,13 @@ private fun ApplySideEffects(
     navController: NavController,
 ) {
     val context = LocalContext.current.applicationContext
-    SideEffect<Ui.SideEffect.UserMessage>(effects, onConsumed) {
-        it.message.show(snackbarState, context)
-    }
-    SideEffect<Ui.SideEffect.SubmitSuccess>(effects, onConsumed, true) {
-        navController.navigateUp()
+    SideEffects(effects, onConsumed) {
+        On<Ui.SideEffect.UserMessage>(false, snackbarState) {
+            it.message.show(snackbarState, context)
+        }
+        On<Ui.SideEffect.SubmitSuccess>(true) {
+            navController.navigateUp()
+        }
     }
 }
 

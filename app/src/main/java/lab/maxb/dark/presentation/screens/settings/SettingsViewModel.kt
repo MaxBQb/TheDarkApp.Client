@@ -7,7 +7,6 @@ import lab.maxb.dark.domain.usecase.settings.locale.GetCurrentLocaleUseCase
 import lab.maxb.dark.presentation.extra.launch
 import lab.maxb.dark.presentation.extra.stateIn
 import lab.maxb.dark.presentation.screens.core.BaseViewModel
-import lab.maxb.dark.presentation.screens.core.effects.withEffectTriggered
 import org.koin.android.annotation.KoinViewModel
 import lab.maxb.dark.presentation.screens.settings.SettingsUiContract as Ui
 
@@ -42,9 +41,7 @@ class SettingsViewModel(
     private fun changeLocale(locale: String) {
         launch {
             val newLocale = changeLocaleUseCase(locale)
-            setState {
-                it.withEffectTriggered(Ui.SideEffect.LocaleUpdated(newLocale))
-            }
+            setEffect { Ui.SideEffect.LocaleUpdated(newLocale) }
         }
     }
 }

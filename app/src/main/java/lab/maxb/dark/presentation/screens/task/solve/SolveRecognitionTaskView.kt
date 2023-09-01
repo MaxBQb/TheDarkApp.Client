@@ -52,7 +52,8 @@ import lab.maxb.dark.presentation.components.TopBar
 import lab.maxb.dark.presentation.components.rememberSnackbarHostState
 import lab.maxb.dark.presentation.extra.show
 import lab.maxb.dark.presentation.screens.core.effects.EffectKey
-import lab.maxb.dark.presentation.screens.core.effects.SideEffect
+import lab.maxb.dark.presentation.screens.core.effects.On
+import lab.maxb.dark.presentation.screens.core.effects.SideEffects
 import lab.maxb.dark.presentation.screens.core.effects.UiSideEffectsHolder
 import lab.maxb.dark.presentation.screens.destinations.SolveRecognitionTaskScreenDestination
 import lab.maxb.dark.ui.theme.DarkAppTheme
@@ -133,11 +134,13 @@ private fun ApplySideEffects(
     navController: NavController,
 ) {
     val context = LocalContext.current.applicationContext
-    SideEffect<Ui.SideEffect.UserMessage>(effects, onConsumed) {
-        it.message.show(snackbarState, context)
-    }
-    SideEffect<Ui.SideEffect.NoSuchTask>(effects, onConsumed, true) {
-        navController.navigateUp()
+    SideEffects(effects, onConsumed) {
+        On<Ui.SideEffect.UserMessage>(false, snackbarState) {
+            it.message.show(snackbarState, context)
+        }
+        On<Ui.SideEffect.NoSuchTask>(true) {
+            navController.navigateUp()
+        }
     }
 }
 

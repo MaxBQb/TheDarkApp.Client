@@ -14,7 +14,7 @@ import lab.maxb.dark.presentation.extra.launch
 import lab.maxb.dark.presentation.extra.stateIn
 import lab.maxb.dark.presentation.extra.uiTextOf
 import lab.maxb.dark.presentation.screens.core.BaseViewModel
-import lab.maxb.dark.presentation.screens.core.effects.withEffectTriggered
+import lab.maxb.dark.presentation.screens.core.effects.withEffect
 import org.koin.android.annotation.KoinViewModel
 import lab.maxb.dark.presentation.screens.auth.form.AuthUiContract as Ui
 
@@ -61,7 +61,7 @@ class AuthViewModel(
 
     private fun Ui.State.withError(error: UiText) = copy(
         isLoading = false,
-    ).withEffectTriggered(Ui.SideEffect.Error(error))
+    ).withEffect(Ui.SideEffect.Error(error))
 
     private fun getFieldsErrors() = when {
         hasEmptyFields() -> uiTextOf(R.string.auth_message_hasEmptyFields)
@@ -104,7 +104,7 @@ class AuthViewModel(
         profile?.let {
             return@setState Ui.State(
                 login = it.login,
-            ).withEffectTriggered(Ui.SideEffect.Authorized)
+            ).withEffect(Ui.SideEffect.Authorized)
         }
         val message = if (state.isAccountNew)
             R.string.auth_message_signup_incorrectCredentials
@@ -116,9 +116,7 @@ class AuthViewModel(
     private fun changeLocale(locale: String) {
         launch {
             val newLocale = changeLocaleUseCase(locale)
-            setState {
-                it.withEffectTriggered(Ui.SideEffect.LocaleUpdated(newLocale))
-            }
+            setEffect { Ui.SideEffect.LocaleUpdated(newLocale) }
         }
     }
 }

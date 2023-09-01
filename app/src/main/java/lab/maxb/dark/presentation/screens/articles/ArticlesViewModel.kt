@@ -27,7 +27,6 @@ import lab.maxb.dark.presentation.extra.valueOrNull
 import lab.maxb.dark.presentation.model.ArticleListItem
 import lab.maxb.dark.presentation.model.toPresentation
 import lab.maxb.dark.presentation.screens.core.BaseViewModel
-import lab.maxb.dark.presentation.screens.core.effects.withEffectTriggered
 import org.koin.android.annotation.KoinViewModel
 import lab.maxb.dark.presentation.screens.articles.ArticlesUiContract as Ui
 
@@ -114,11 +113,9 @@ class ArticlesViewModel(
             } catch (e: Throwable) {
                 e.throwIfCancellation()
                 e.printStackTrace()
-                setState {
-                    it.withEffectTriggered(
-                        Ui.SideEffect.UserMessage(
-                            uiTextOf(R.string.articles_message_saveError)
-                        )
+                setEffect {
+                    Ui.SideEffect.UserMessage(
+                        uiTextOf(R.string.articles_message_saveError)
                     )
                 }
             } finally {
@@ -136,11 +133,9 @@ class ArticlesViewModel(
             } catch (e: Throwable) {
                 e.throwIfCancellation()
                 e.printStackTrace()
-                setState {
-                    it.withEffectTriggered(
-                        Ui.SideEffect.UserMessage(
-                            uiTextOf(R.string.articles_message_saveError)
-                        )
+                setEffect {
+                    Ui.SideEffect.UserMessage(
+                        uiTextOf(R.string.articles_message_saveError)
                     )
                 }
             } finally {

@@ -14,7 +14,6 @@ import lab.maxb.dark.presentation.extra.map
 import lab.maxb.dark.presentation.extra.throwIfCancellation
 import lab.maxb.dark.presentation.extra.uiTextOf
 import lab.maxb.dark.presentation.screens.core.BaseViewModel
-import lab.maxb.dark.presentation.screens.core.effects.withEffectTriggered
 import org.koin.android.annotation.KoinViewModel
 import kotlin.math.max
 import lab.maxb.dark.presentation.screens.task.add.AddTaskUiContract as Ui
@@ -51,15 +50,13 @@ class AddRecognitionTaskViewModel(
                     state.names.map { it.value.trim() },
                     state.images.map { it.toString() },
                 )
-                setState { it.withEffectTriggered(Ui.SideEffect.SubmitSuccess) }
+                setEffect { Ui.SideEffect.SubmitSuccess }
             } catch (e: Throwable) {
                 e.throwIfCancellation()
                 e.printStackTrace()
-                setState {
-                    it.withEffectTriggered(
-                        Ui.SideEffect.UserMessage(
-                            uiTextOf(R.string.addTask_message_notEnoughDataProvided)
-                        )
+                setEffect {
+                    Ui.SideEffect.UserMessage(
+                        uiTextOf(R.string.addTask_message_notEnoughDataProvided)
                     )
                 }
             } finally {

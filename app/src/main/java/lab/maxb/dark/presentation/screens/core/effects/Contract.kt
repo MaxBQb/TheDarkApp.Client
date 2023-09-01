@@ -14,14 +14,19 @@ interface UiEffectAwareState : UiState {
     fun clone(sideEffectsHolder: UiSideEffectsHolder): UiEffectAwareState
 }
 
-inline fun <reified T : UiEffectAwareState> T.copy(sideEffectsHolder: UiSideEffectsHolder): T
+@Suppress("UNCHECKED_CAST")
+fun <T : UiEffectAwareState> T.copy(sideEffectsHolder: UiSideEffectsHolder): T
     = clone(sideEffectsHolder) as T
 
-inline fun <reified S: UiEffectAwareState, reified E: UiSideEffect> S.withEffectTriggered(effect: E)
-    = copy(sideEffectsHolder.trigger(effect))
+fun <S: UiEffectAwareState> S.withEffects(
+    builder: (UiSideEffectsHolder) -> UiSideEffectsHolder
+) = copy(sideEffectsHolder=builder(sideEffectsHolder))
 
-inline fun <reified S: UiEffectAwareState> S.withEffectConsumed(key: EffectKey)
-    = copy(sideEffectsHolder.consume(key))
+inline fun <S: UiEffectAwareState, reified E: UiSideEffect> S.withEffect(effect: E)
+    = withEffects { it.trigger(effect) }
 
-inline fun <reified S: UiEffectAwareState, reified E: UiSideEffect> S.withEffectConsumed(effect: E)
-    = copy(sideEffectsHolder.consume(effect))
+fun <S: UiEffectAwareState> S.withoutEffect(key: EffectKey)
+    = withEffects { it.consume(key) }
+
+inline fun <S: UiEffectAwareState, reified E: UiSideEffect> S.withoutEffect(effect: E)
+    = withEffects { it.consume(effect) }

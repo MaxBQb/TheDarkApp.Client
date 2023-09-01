@@ -88,7 +88,10 @@ fun ArticlesScreen(
     }
     val context = LocalContext.current.applicationContext
     SideEffect<Ui.SideEffect.UserMessage>(
-        uiState.sideEffectsHolder, { onEvent(Ui.Event.EffectConsumed(it)) }) {
+        uiState.sideEffectsHolder,
+        { onEvent(Ui.Event.EffectConsumed(it)) },
+        false, snackbarState
+    ) {
         it.message.show(snackbarState, context)
     }
 }
