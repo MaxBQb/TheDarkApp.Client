@@ -29,6 +29,7 @@ fun <T> LoadingComponent(
     content: @Composable (T) -> Unit = {},
 ) = AnimatedContent(
     targetState = result,
+    modifier=Modifier.fillMaxSize(),
     contentAlignment = Alignment.Center,
     contentKey = {
         when (it) {
