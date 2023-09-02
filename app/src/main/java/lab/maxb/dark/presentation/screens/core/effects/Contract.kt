@@ -23,10 +23,10 @@ fun <S: UiEffectAwareState> S.withEffects(
 ) = copy(sideEffectsHolder=builder(sideEffectsHolder))
 
 inline fun <S: UiEffectAwareState, reified E: UiSideEffect> S.withEffect(effect: E)
-    = withEffects { it.trigger(effect) }
+    = withEffects { it + effect }
 
 fun <S: UiEffectAwareState> S.withoutEffect(key: EffectKey)
-    = withEffects { it.consume(key) }
+    = withEffects { it - key }
 
 inline fun <S: UiEffectAwareState, reified E: UiSideEffect> S.withoutEffect(effect: E)
-    = withEffects { it.consume(effect) }
+    = withEffects { it - effect }
