@@ -19,6 +19,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -31,15 +32,18 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import lab.maxb.dark.R
 import lab.maxb.dark.domain.model.Role
+import lab.maxb.dark.domain.model.User
 import lab.maxb.dark.domain.model.isUser
 import lab.maxb.dark.presentation.components.LoadingComponent
 import lab.maxb.dark.presentation.components.SettingsButton
 import lab.maxb.dark.presentation.components.TopScaffold
+import lab.maxb.dark.ui.theme.DarkAppTheme
 import lab.maxb.dark.ui.theme.Golden
 import lab.maxb.dark.ui.theme.fontSize
 import lab.maxb.dark.ui.theme.spacing
@@ -191,4 +195,19 @@ fun RoleName(role: Role?) = AnimatedVisibility(role != null) {
         },
         modifier = Modifier.fillMaxWidth()
     )
+}
+
+
+@Preview
+@Composable
+fun WelcomePreview() = DarkAppTheme {
+    Surface {
+        WelcomeRootStateless(
+            Ui.State(
+                User("TesterName", 42),
+                Role.USER,
+                "Hello here is some article text for you! ".repeat(80)
+            )
+        )
+    }
 }
