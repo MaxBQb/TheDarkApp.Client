@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -40,6 +41,7 @@ import lab.maxb.dark.R
 import lab.maxb.dark.domain.model.Role
 import lab.maxb.dark.domain.model.User
 import lab.maxb.dark.domain.model.isUser
+import lab.maxb.dark.presentation.components.LoadingCircle
 import lab.maxb.dark.presentation.components.LoadingComponent
 import lab.maxb.dark.presentation.components.SettingsButton
 import lab.maxb.dark.presentation.components.TopScaffold
@@ -66,7 +68,14 @@ fun WelcomeScreen(
         title = stringResource(R.string.nav_home_title),
         actions = { SettingsButton(navigator) }
     ) {
-        LoadingComponent(result = uiState) {
+        LoadingComponent(result = uiState, onLoading = {
+            LoadingCircle(
+                width = 8,
+                modifier = Modifier
+                    .alpha(0.5f)
+                    .padding(32.sdp)
+            )
+        }) {
             WelcomeRootStateless(it, onEvent)
         }
     }
