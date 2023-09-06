@@ -96,7 +96,7 @@ dependencies {
     implementation "io.insert-koin:koin-annotations:$koin_annotations_version"
     ksp "io.insert-koin:koin-ksp-compiler:$koin_annotations_version"
 
-    // Coroutines + LiveData
+    // Coroutines
     def coroutines_version = '1.7.1'
     def lifecycle_version = '2.6.1'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
