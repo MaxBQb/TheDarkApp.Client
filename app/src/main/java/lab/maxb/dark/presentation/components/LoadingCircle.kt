@@ -6,7 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
-import lab.maxb.dark.ui.theme.units.sdp
+import lab.maxb.dark.presentation.theme.units.sdp
 
 @Composable
 fun LoadingCircle(modifier: Modifier = Modifier, width: Int = 5) {

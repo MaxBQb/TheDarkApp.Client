@@ -20,7 +20,7 @@ import com.skydoves.landscapist.components.rememberImageComponent
 import lab.maxb.dark.R
 import lab.maxb.dark.data.remote.dark.AuthInterceptor
 import lab.maxb.dark.data.remote.logger
-import lab.maxb.dark.ui.theme.units.sdp
+import lab.maxb.dark.presentation.theme.units.sdp
 import okhttp3.OkHttpClient
 import org.koin.compose.koinInject
 

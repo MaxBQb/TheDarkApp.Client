@@ -9,7 +9,7 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import lab.maxb.dark.ui.theme.LocalAnimationDurations
+import lab.maxb.dark.presentation.theme.LocalAnimationDurations
 
 
 @Composable

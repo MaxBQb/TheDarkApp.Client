@@ -30,9 +30,9 @@ import lab.maxb.dark.presentation.extra.require
 import lab.maxb.dark.presentation.screens.destinations.AuthHandleScreenDestination
 import lab.maxb.dark.presentation.screens.destinations.AuthScreenDestination
 import lab.maxb.dark.presentation.screens.destinations.WelcomeScreenDestination
-import lab.maxb.dark.ui.theme.fontSize
-import lab.maxb.dark.ui.theme.spacing
-import lab.maxb.dark.ui.theme.units.sdp
+import lab.maxb.dark.presentation.theme.fontSize
+import lab.maxb.dark.presentation.theme.spacing
+import lab.maxb.dark.presentation.theme.units.sdp
 import org.koin.androidx.compose.getViewModel
 import lab.maxb.dark.presentation.screens.auth.handle.AuthHandleUiContract as Ui
 

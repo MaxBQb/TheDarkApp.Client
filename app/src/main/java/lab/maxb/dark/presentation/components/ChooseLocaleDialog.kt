@@ -14,7 +14,7 @@ import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.title
 import lab.maxb.dark.BuildConfig
 import lab.maxb.dark.R
-import lab.maxb.dark.ui.theme.DarkAppTheme
+import lab.maxb.dark.presentation.theme.DarkAppTheme
 import java.util.Locale
 
 

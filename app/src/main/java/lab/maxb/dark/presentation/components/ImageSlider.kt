@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.util.lerp
 import com.google.accompanist.pager.HorizontalPagerIndicator
-import lab.maxb.dark.ui.theme.spacing
+import lab.maxb.dark.presentation.theme.spacing
 import kotlin.math.absoluteValue
 
 

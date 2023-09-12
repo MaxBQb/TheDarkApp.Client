@@ -18,8 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import lab.maxb.dark.presentation.extra.Result
 import lab.maxb.dark.presentation.extra.asString
 import lab.maxb.dark.presentation.extra.uiTextOf
-import lab.maxb.dark.ui.theme.DarkAppTheme
-import lab.maxb.dark.ui.theme.spacing
+import lab.maxb.dark.presentation.theme.DarkAppTheme
+import lab.maxb.dark.presentation.theme.spacing
 
 @Composable
 fun <T> LoadingComponent(

@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import lab.maxb.dark.ui.theme.units.sdp
+import lab.maxb.dark.presentation.theme.units.sdp
 
 @Composable
 fun LoadingScreen(show: Boolean, alpha: Float = 0.7f) = AnimatedVisibility(

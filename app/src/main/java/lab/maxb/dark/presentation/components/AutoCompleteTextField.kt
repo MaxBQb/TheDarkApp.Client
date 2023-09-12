@@ -15,7 +15,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
-import lab.maxb.dark.ui.theme.spacing
+import lab.maxb.dark.presentation.theme.spacing
 
 
 @Composable

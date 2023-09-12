@@ -1,4 +1,4 @@
-package lab.maxb.dark.ui.theme
+package lab.maxb.dark.presentation.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -6,7 +6,7 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import lab.maxb.dark.ui.theme.units.sdp
+import lab.maxb.dark.presentation.theme.units.sdp
 
 
 data class Spacing(

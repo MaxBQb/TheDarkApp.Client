@@ -62,8 +62,8 @@ import lab.maxb.dark.presentation.extra.show
 import lab.maxb.dark.presentation.extra.synchronizeChanges
 import lab.maxb.dark.presentation.model.ArticleListItem
 import lab.maxb.dark.presentation.screens.core.effects.SideEffect
-import lab.maxb.dark.ui.theme.DarkAppTheme
-import lab.maxb.dark.ui.theme.spacing
+import lab.maxb.dark.presentation.theme.DarkAppTheme
+import lab.maxb.dark.presentation.theme.spacing
 import org.koin.androidx.compose.getViewModel
 import lab.maxb.dark.presentation.screens.articles.ArticlesUiContract as Ui
 

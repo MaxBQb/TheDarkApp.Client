@@ -44,8 +44,8 @@ import lab.maxb.dark.presentation.components.TopScaffold
 import lab.maxb.dark.presentation.model.RecognitionTaskListItem
 import lab.maxb.dark.presentation.screens.destinations.AddRecognitionTaskScreenDestination
 import lab.maxb.dark.presentation.screens.destinations.SolveRecognitionTaskScreenDestination
-import lab.maxb.dark.ui.theme.spacing
-import lab.maxb.dark.ui.theme.units.sdp
+import lab.maxb.dark.presentation.theme.spacing
+import lab.maxb.dark.presentation.theme.units.sdp
 import org.koin.androidx.compose.getViewModel
 
 

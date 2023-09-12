@@ -13,7 +13,7 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import lab.maxb.dark.presentation.components.utils.keyboardClose
 import lab.maxb.dark.presentation.components.utils.keyboardNext
 import lab.maxb.dark.presentation.extra.ItemHolder
-import lab.maxb.dark.ui.theme.spacing
+import lab.maxb.dark.presentation.theme.spacing
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

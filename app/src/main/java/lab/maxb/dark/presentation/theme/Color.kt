@@ -1,4 +1,4 @@
-package lab.maxb.dark.ui.theme
+package lab.maxb.dark.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

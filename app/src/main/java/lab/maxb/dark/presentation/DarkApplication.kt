@@ -1,4 +1,4 @@
-package lab.maxb.dark
+package lab.maxb.dark.presentation
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate

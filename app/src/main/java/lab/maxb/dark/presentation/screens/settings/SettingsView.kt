@@ -37,7 +37,7 @@ import lab.maxb.dark.presentation.components.TopBar
 import lab.maxb.dark.presentation.components.getLanguageCode
 import lab.maxb.dark.presentation.components.getLanguageName
 import lab.maxb.dark.presentation.screens.core.effects.SideEffect
-import lab.maxb.dark.ui.theme.spacing
+import lab.maxb.dark.presentation.theme.spacing
 import org.koin.androidx.compose.getViewModel
 import lab.maxb.dark.presentation.screens.settings.SettingsUiContract as Ui
 

@@ -15,7 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.intl.Locale
 import lab.maxb.dark.R
-import lab.maxb.dark.ui.theme.spacing
+import lab.maxb.dark.presentation.theme.spacing
 
 @Composable
 fun LanguageToggleButton(onClick: () -> Unit = {}) {

@@ -26,7 +26,7 @@ import lab.maxb.dark.presentation.extra.require
 import lab.maxb.dark.presentation.screens.NavGraphs
 import lab.maxb.dark.presentation.screens.destinations.AuthHandleScreenDestination
 import lab.maxb.dark.presentation.screens.destinations.AuthScreenDestination
-import lab.maxb.dark.ui.theme.DarkAppTheme
+import lab.maxb.dark.presentation.theme.DarkAppTheme
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import java.util.Locale
 

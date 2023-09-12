@@ -57,8 +57,8 @@ import lab.maxb.dark.presentation.screens.core.effects.EffectKey
 import lab.maxb.dark.presentation.screens.core.effects.On
 import lab.maxb.dark.presentation.screens.core.effects.SideEffects
 import lab.maxb.dark.presentation.screens.core.effects.UiSideEffectsHolder
-import lab.maxb.dark.ui.theme.spacing
-import lab.maxb.dark.ui.theme.units.sdp
+import lab.maxb.dark.presentation.theme.spacing
+import lab.maxb.dark.presentation.theme.units.sdp
 import org.koin.androidx.compose.getViewModel
 import lab.maxb.dark.presentation.screens.task.add.AddTaskUiContract as Ui
 

@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:name=".DarkApplication"
+        android:name=".presentation.DarkApplication"
         android:allowBackup="true"
         android:fullBackupOnly="true"
         android:localeConfig="@xml/locales_config"

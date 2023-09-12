@@ -65,11 +65,11 @@ import lab.maxb.dark.presentation.screens.core.effects.SideEffects
 import lab.maxb.dark.presentation.screens.core.effects.UiSideEffectsHolder
 import lab.maxb.dark.presentation.screens.destinations.AuthScreenDestination
 import lab.maxb.dark.presentation.screens.destinations.WelcomeScreenDestination
-import lab.maxb.dark.ui.theme.DarkAppTheme
-import lab.maxb.dark.ui.theme.LocalAnimationDurations
-import lab.maxb.dark.ui.theme.animationDurations
-import lab.maxb.dark.ui.theme.spacing
-import lab.maxb.dark.ui.theme.units.sdp
+import lab.maxb.dark.presentation.theme.DarkAppTheme
+import lab.maxb.dark.presentation.theme.LocalAnimationDurations
+import lab.maxb.dark.presentation.theme.animationDurations
+import lab.maxb.dark.presentation.theme.spacing
+import lab.maxb.dark.presentation.theme.units.sdp
 import org.koin.androidx.compose.getViewModel
 import lab.maxb.dark.presentation.screens.auth.form.AuthUiContract as Ui
 

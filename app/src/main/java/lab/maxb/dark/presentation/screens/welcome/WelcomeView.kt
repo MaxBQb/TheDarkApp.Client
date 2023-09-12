@@ -45,11 +45,11 @@ import lab.maxb.dark.presentation.components.LoadingCircle
 import lab.maxb.dark.presentation.components.LoadingComponent
 import lab.maxb.dark.presentation.components.SettingsButton
 import lab.maxb.dark.presentation.components.TopScaffold
-import lab.maxb.dark.ui.theme.DarkAppTheme
-import lab.maxb.dark.ui.theme.Golden
-import lab.maxb.dark.ui.theme.fontSize
-import lab.maxb.dark.ui.theme.spacing
-import lab.maxb.dark.ui.theme.units.sdp
+import lab.maxb.dark.presentation.theme.DarkAppTheme
+import lab.maxb.dark.presentation.theme.Golden
+import lab.maxb.dark.presentation.theme.fontSize
+import lab.maxb.dark.presentation.theme.spacing
+import lab.maxb.dark.presentation.theme.units.sdp
 import org.koin.androidx.compose.getViewModel
 import lab.maxb.dark.presentation.screens.welcome.WelcomeUiContract as Ui
 

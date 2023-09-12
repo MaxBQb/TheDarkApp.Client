@@ -1,4 +1,4 @@
-package lab.maxb.dark.ui.theme
+package lab.maxb.dark.presentation.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
@@ -6,7 +6,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import lab.maxb.dark.ui.theme.units.ssp
+import lab.maxb.dark.presentation.theme.units.ssp
 
 // Set of Material typography styles to start with
 
