@@ -1,6 +1,6 @@
 package lab.maxb.dark.data.model.local
 
-import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import lab.maxb.dark.domain.model.User
@@ -13,13 +13,10 @@ data class UserLocalDTO(
 
     @PrimaryKey
     override val id: String = randomUUID,
-): BaseLocalDTO(), TimeContainer {
-    @ColumnInfo(name = TimeContainer.createdAt)
-    override var createdAt: Long = 0
 
-    @ColumnInfo(name = TimeContainer.modifiedAt)
-    override var modifiedAt: Long = 0
-}
+    @Embedded
+    val time: TimeContainerImpl = TimeContainerImpl(),
+): BaseLocalDTO(), TimeContainer by time
 
 fun User.toLocalDTO() = UserLocalDTO(
     name,

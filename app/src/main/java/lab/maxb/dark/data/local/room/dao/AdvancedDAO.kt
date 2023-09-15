@@ -11,8 +11,7 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import lab.maxb.dark.data.local.room.LocalDatabase
 import lab.maxb.dark.data.model.local.BaseLocalDTO
-import lab.maxb.dark.data.model.local.markCreated
-import lab.maxb.dark.data.model.local.markModified
+import lab.maxb.dark.data.model.local.updateTimeStamps
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -56,9 +55,9 @@ abstract class AdvancedDAO<DTO: BaseLocalDTO>(
     open suspend fun save(value: DTO) {
         val storedValue = getById(value.id)
         if (storedValue == null)
-            add(value.withLocalsDefault().markCreated())
+            add(value.withLocalsDefault().updateTimeStamps())
         else
-            update(value.withLocalsPreserved(storedValue).markModified())
+            update(value.withLocalsPreserved(storedValue).updateTimeStamps())
     }
 
     @RawQuery

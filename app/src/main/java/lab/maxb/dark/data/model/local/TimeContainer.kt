@@ -1,32 +1,25 @@
 package lab.maxb.dark.data.model.local
 
+import androidx.room.ColumnInfo
+
 interface TimeContainer {
     var createdAt: Long
     var modifiedAt: Long
-
-    companion object {
-        const val createdAt = "creation_time"
-        const val modifiedAt = "modification_time"
-    }
-}
-/*
-TimeContainer Implementation: TimeContainer {
-    @ColumnInfo(name = TimeContainer.createdAt)
-    override var createdAt: Long = 0
-
-    @ColumnInfo(name = TimeContainer.modifiedAt)
-    override var modifiedAt: Long = 0
-}
-*/
-
-private fun <T:BaseLocalDTO> T.modifyIfTimeContainer(block: TimeContainer.() -> Unit)
-    = if (this is TimeContainer) apply(block) else this
-
-fun <T:BaseLocalDTO> T.markModified() = modifyIfTimeContainer {
-    modifiedAt = System.currentTimeMillis()
 }
 
-fun <T:BaseLocalDTO> T.markCreated() = modifyIfTimeContainer {
-    createdAt = System.currentTimeMillis()
+data class TimeContainerImpl(
+    @ColumnInfo("creation_time")
+    override var createdAt: Long = 0,
+
+    @ColumnInfo("modification_time")
+    override var modifiedAt: Long = 0,
+) : TimeContainer
+
+private fun <T : BaseLocalDTO> T.modifyIfTimeContainer(block: TimeContainer.() -> Unit) =
+    if (this is TimeContainer) apply(block) else this
+
+fun <T : BaseLocalDTO> T.updateTimeStamps() = modifyIfTimeContainer {
+    if (createdAt == 0L)
+        createdAt = System.currentTimeMillis()
     modifiedAt = System.currentTimeMillis()
 }
