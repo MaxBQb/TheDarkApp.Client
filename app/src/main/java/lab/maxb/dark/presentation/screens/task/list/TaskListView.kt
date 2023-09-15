@@ -33,7 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import lab.maxb.dark.R
@@ -103,8 +104,12 @@ fun RecognitionTaskList(
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(MaterialTheme.spacing.zero, MaterialTheme.spacing.small)
     ) {
-        items(items = items, itemContent = { item ->
-            item?.let {
+        items(
+            count = items.itemCount,
+            key = items.itemKey(),
+            contentType = items.itemContentType()
+        ) { i ->
+            items[i]?.let {
                 RecognitionTaskCard(
                     it,
                     onClick = { onItemClick(it.id) },
@@ -121,7 +126,7 @@ fun RecognitionTaskList(
                     5
                 )
             }
-        })
+        }
     }
 }
 
