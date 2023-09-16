@@ -38,6 +38,7 @@ class ArticlesRepositoryImpl(
     private val articlesResource = ResourceImpl<Page, List<Article>, List<ArticleLocalDTO>>(
         fetchLocal = { localDataSource.getAll() },
         localMapper = { x -> x?.map { it.toDomain() } },
+        reversedLocalMapper = { x -> x.map { it.toLocalDTO() } },
         fetchRemote = { page ->
             networkDataSource.getAllArticles(page.page, page.size)?.map {
                 it.toDomain()
@@ -53,13 +54,7 @@ class ArticlesRepositoryImpl(
         },
         isEmptyResponse = { it.isNullOrEmpty() },
         isEmptyCache = { it.isNullOrEmpty() },
-        localStore = { articles ->
-            articles.map {
-                it.toLocalDTO()
-            }.toTypedArray().let {
-                localDataSource.save(*it)
-            }
-        },
+        localStore = { localDataSource.save(*it.toTypedArray()) },
         clearLocalStore = { page ->
             if (page.page == 0)
                 localDataSource.clear()
@@ -95,12 +90,13 @@ class ArticlesRepositoryImpl(
         localDataSource.save(localModel)
     }
 
-    override val articleResource = ResourceImpl<String, Article, ArticleLocalDTO>(
+    override val articleResource = ResourceImpl(
         refreshController = DbRefreshController(),
         fetchRemote = { id -> throw UnableToObtainResource() },
-        fetchLocal = { localDataSource.get(it) },
+        fetchLocal = localDataSource::get,
         localMapper = { it?.toDomain() },
-        localStore = { localDataSource.save(it.toLocalDTO()) },
+        reversedLocalMapper = { it.toLocalDTO() },
+        localStore = localDataSource::save,
     )
 
     private suspend fun getUser(id: String)

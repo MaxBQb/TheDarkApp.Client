@@ -9,7 +9,9 @@ import lab.maxb.dark.data.remote.dark.DarkService
 import lab.maxb.dark.data.utils.InMemRefreshController
 import lab.maxb.dark.data.utils.ResourceImpl
 import lab.maxb.dark.domain.model.AuthCredentials
+import lab.maxb.dark.domain.model.Mapper
 import lab.maxb.dark.domain.model.Profile
+import lab.maxb.dark.domain.model.getCastMapper
 import lab.maxb.dark.domain.operations.toProfile
 import lab.maxb.dark.domain.repository.ProfileRepository
 import org.koin.core.annotation.Single
@@ -42,6 +44,8 @@ class ProfileRepositoryImpl(
                 networkDataSource.login(request)).toDomain(it)
             response.toProfile()
         },
+        localMapper = Mapper.getCastMapper(),
+        reversedLocalMapper = Mapper.getCastMapper(),
         localStore = { value -> localDataSource.updateData { value } },
     )
 

@@ -53,13 +53,8 @@ class RecognitionTasksRepositoryImpl(
         },
         isEmptyResponse = { it.isNullOrEmpty() },
         isEmptyCache = { it.isNullOrEmpty() },
-        localStore = { tasks ->
-            tasks.map {
-                it.toLocalDTO()
-            }.toTypedArray().let {
-                localDataSource.saveOnly(*it)
-            }
-        },
+        localStore = { localDataSource.saveOnly(*it.toTypedArray()) },
+        reversedLocalMapper = { tasks -> tasks.map { it.toLocalDTO() } },
         clearLocalStore = { page ->
             if (page.page == 0)
                 localDataSource.clear()
@@ -121,18 +116,18 @@ class RecognitionTasksRepositoryImpl(
             false
         }
 
-    override val recognitionTaskResource = ResourceImpl<String, RecognitionTask,
-            RecognitionTaskLocalDTO>(
+    override val recognitionTaskResource = ResourceImpl(
         refreshController = DbRefreshController(),
         fetchRemote = { id ->
             networkDataSource.getTask(id)?.toDomain()?.also {
                 getUser(it.owner.id)
             }
         },
-        fetchLocal = { localDataSource.get(it) },
+        fetchLocal = localDataSource::get,
         localMapper = { it?.toDomain() },
-        localStore = { localDataSource.save(it.toLocalDTO()) },
-        clearLocalStore = { localDataSource.delete(it) },
+        reversedLocalMapper = { it.toLocalDTO() },
+        localStore = localDataSource::save,
+        clearLocalStore = localDataSource::delete,
     )
 
     override fun getRecognitionTaskImage(path: String)
