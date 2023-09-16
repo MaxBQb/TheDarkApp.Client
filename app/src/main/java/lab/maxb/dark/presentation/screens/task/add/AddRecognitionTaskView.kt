@@ -113,10 +113,9 @@ private fun ApplySideEffects(
     snackbarState: SnackbarHostState,
     navController: NavController,
 ) {
-    val context = LocalContext.current.applicationContext
     SideEffects(effects, onConsumed) {
         On<Ui.SideEffect.UserMessage>(false, snackbarState) {
-            it.message.show(snackbarState, context)
+            it.message.show(snackbarState)
         }
         On<Ui.SideEffect.SubmitSuccess>(true) {
             navController.navigateUp()

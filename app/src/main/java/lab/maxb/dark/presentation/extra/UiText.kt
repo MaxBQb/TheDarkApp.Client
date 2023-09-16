@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import org.koin.java.KoinJavaComponent.get
 
 sealed class UiText {
     class Text(val text: String): UiText()
@@ -32,5 +33,5 @@ fun UiText.asString() = asString(this@Context)
 inline val UiText.isEmpty get() = this is UiText.Empty
 inline val UiText.isNotEmpty get() = this !is UiText.Empty
 
-suspend fun UiText.show(state: SnackbarHostState, context: Context)
-        = state.showSnackbar(asString(context))
+suspend fun UiText.show(state: SnackbarHostState, context: Context = get(Context::class.java))
+    = state.showSnackbar(asString(context))

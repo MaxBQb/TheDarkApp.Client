@@ -31,7 +31,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -112,10 +111,9 @@ private fun ApplySideEffects(
     snackbarState: SnackbarHostState,
     navigator: DestinationsNavigator,
 ) {
-    val context = LocalContext.current.applicationContext
     SideEffects(effects, onConsumed) {
         On<Ui.SideEffect.Error>(false, snackbarState) {
-            it.message.show(snackbarState, context)
+            it.message.show(snackbarState)
         }
         On<Ui.SideEffect.Authorized>(true) {
             navigator.initialNavigate(WelcomeScreenDestination, AuthScreenDestination)
