@@ -12,8 +12,8 @@ ext {
 }
 
 android {
-    compileSdkVersion 33
-    buildToolsVersion "30.0.3"
+    compileSdk 33
+    buildToolsVersion = "30.0.3"
 
     def keystorePropertiesFile = rootProject.file("keystore.properties")
     def keystoreProperties = new Properties()
@@ -90,9 +90,10 @@ android {
 dependencies {
     // Dependency Injection
     def koin_annotations_version = '1.0.1'
-    def koin_version = '3.4.2'
-    implementation "io.insert-koin:koin-android:$koin_version"
-    implementation "io.insert-koin:koin-androidx-compose:3.4.5"
+    def koin_version = '3.5.1'
+    implementation "io.insert-koin:koin-bom:$koin_version"
+    implementation "io.insert-koin:koin-android"
+    implementation "io.insert-koin:koin-androidx-compose"
     implementation "io.insert-koin:koin-annotations:$koin_annotations_version"
     ksp "io.insert-koin:koin-ksp-compiler:$koin_annotations_version"
 
@@ -189,9 +190,8 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
         // Koin
-        testImplementation "io.insert-koin:koin-test:$koin_version"
-        testImplementation "io.insert-koin:koin-test-junit4:$koin_version"
-        testImplementation "io.insert-koin:koin-test-junit5:$koin_version"
+        testImplementation "io.insert-koin:koin-test"
+        testImplementation "io.insert-koin:koin-test-junit5"
         // JetpackCompose UI
         androidTestImplementation "androidx.compose.ui:ui-test-junit4:$composeVersion"
 }
