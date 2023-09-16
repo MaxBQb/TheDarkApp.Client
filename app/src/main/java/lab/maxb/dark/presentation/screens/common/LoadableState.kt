@@ -11,7 +11,7 @@ inline fun <reified T: LoadableState> T.copy(isLoading: Boolean)
     = clone(isLoading) as T
 
 inline val <reified T: LoadableState> T.Loaded
-    get() = copy(true)
+    get() = copy(false)
 
 inline val <reified T: LoadableState> T.Loading
     get() = copy(true)
