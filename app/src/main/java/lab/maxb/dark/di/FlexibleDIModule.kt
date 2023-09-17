@@ -11,6 +11,10 @@ import org.koin.dsl.module
 internal val flexibleDIModule = module {
     single { LocalDatabase.build(androidApplication()) }
     single<LocalStorage> { get<LocalDatabase>() }
+    factory { get<LocalDatabase>().articles() }
+    factory { get<LocalDatabase>().recognitionTasks() }
+    factory { get<LocalDatabase>().remoteKeys() }
+    factory { get<LocalDatabase>().users() }
     single<DarkService> { DarkServiceImpl(get()) }
     single { getAead(androidApplication()) }
 }

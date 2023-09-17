@@ -10,7 +10,8 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
-import lab.maxb.dark.data.local.room.LocalDatabase
+import lab.maxb.dark.data.local.room.dao.RecognitionTasksDAO
+import lab.maxb.dark.data.local.room.dao.RemoteKeysDAO
 import lab.maxb.dark.data.local.room.relations.toDomain
 import lab.maxb.dark.data.model.local.RecognitionTaskLocalDTO
 import lab.maxb.dark.data.model.local.toDomain
@@ -30,12 +31,12 @@ import org.koin.core.annotation.Single
 
 @Single
 class RecognitionTasksRepositoryImpl(
-    db: LocalDatabase,
     private val networkDataSource: DarkService,
     private val usersRepository: UsersRepository,
     private val imageLoader: ImageLoader,
+    private val localDataSource: RecognitionTasksDAO,
+    private val remoteKeys: RemoteKeysDAO,
 ) : RecognitionTasksRepository {
-    private val localDataSource = db.recognitionTasks()
 
     private val tasksResource = ResourceImpl<Page, List<RecognitionTask>, List<RecognitionTaskLocalDTO>>(
         fetchLocal = { localDataSource.getAll() },
@@ -64,7 +65,7 @@ class RecognitionTasksRepositoryImpl(
     @OptIn(ExperimentalPagingApi::class)
     private val pager = Pager(
         config = PagingConfig(pageSize = 50),
-        remoteMediator = RecognitionTaskMediator(tasksResource, db.remoteKeys()),
+        remoteMediator = RecognitionTaskMediator(tasksResource, remoteKeys),
     ) {
         localDataSource.getAllPaged()
     }.flow.map { page ->

@@ -10,7 +10,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
-import lab.maxb.dark.data.local.room.LocalDatabase
+import lab.maxb.dark.data.local.room.dao.ArticlesDAO
+import lab.maxb.dark.data.local.room.dao.RemoteKeysDAO
 import lab.maxb.dark.data.model.local.ArticleLocalDTO
 import lab.maxb.dark.data.model.local.toDomain
 import lab.maxb.dark.data.model.local.toLocalDTO
@@ -29,11 +30,11 @@ import org.koin.core.annotation.Single
 
 @Single
 class ArticlesRepositoryImpl(
-    db: LocalDatabase,
     private val networkDataSource: DarkService,
     private val usersRepository: UsersRepository,
+    private val localDataSource: ArticlesDAO,
+    private val remoteKeys: RemoteKeysDAO,
 ) : ArticlesRepository {
-    private val localDataSource = db.articles()
 
     private val articlesResource = ResourceImpl<Page, List<Article>, List<ArticleLocalDTO>>(
         fetchLocal = { localDataSource.getAll() },
@@ -64,7 +65,7 @@ class ArticlesRepositoryImpl(
     @OptIn(ExperimentalPagingApi::class)
     private val pager = Pager(
         config = PagingConfig(pageSize = 50),
-        remoteMediator = ArticleMediator(articlesResource, db.remoteKeys()),
+        remoteMediator = ArticleMediator(articlesResource, remoteKeys),
     ) {
         localDataSource.getAllPaged()
     }.flow.map { page ->
