@@ -109,7 +109,6 @@ dependencies {
 
     // Room persistence
     implementation libs.room.runtime
-    annotationProcessor libs.room.ksp
     implementation libs.room.ktx
     ksp libs.room.ksp
     implementation libs.room.paging
