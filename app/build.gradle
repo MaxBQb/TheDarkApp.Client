@@ -153,24 +153,19 @@ dependencies {
     implementation platform(libs.compose.bom)
     implementation libs.compose.runtime
     implementation libs.compose.ui.core
+    implementation libs.compose.ui.util
+    implementation libs.compose.ui.tooling
     implementation libs.compose.foundation.core
     implementation libs.compose.foundation.layout
-        // Integration with activities
-        implementation libs.androidx.activity.compose
-        // Theme
-        implementation libs.compose.theme.adapter
-        // Compose Material Design
-        implementation libs.compose.ui.util
-        implementation libs.compose.material3
-        // Animations
-        implementation libs.compose.animation
-        // Tooling support (Previews, etc.)
-        implementation libs.compose.ui.tooling
-        // Integration with ViewModels
-        implementation libs.lifecycle.viewmodel.compose
-        // ViewPager
-        implementation libs.accompanist.pager.indicators
-        implementation libs.accompanist.adaptive
+    implementation libs.androidx.activity.compose
+    implementation libs.compose.theme.adapter
+    implementation libs.compose.material3
+    implementation libs.compose.animation
+    implementation libs.lifecycle.viewmodel.compose
+
+    // JC Accompanist
+    implementation libs.accompanist.pager.indicators
+    implementation libs.accompanist.adaptive
 
     // Tests
     testImplementation libs.junit.core
