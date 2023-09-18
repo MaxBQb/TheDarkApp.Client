@@ -1,13 +1,13 @@
 package lab.maxb.dark.data.remote.dark.routes
 
-import lab.maxb.dark.BuildConfig
+import lab.maxb.dark.data.datasource.ImagesRemoteDataSource
 import okhttp3.MultipartBody
 import retrofit2.http.*
 
-interface Images {
+interface ImagesAPI : ImagesRemoteDataSource {
     @Multipart
     @POST("$path/")
-    suspend fun addImage(
+    override suspend fun addImage(
         @Part filePart: MultipartBody.Part
     ): String?
 
@@ -15,6 +15,3 @@ interface Images {
         const val path = "/images"
     }
 }
-
-@Suppress("UnusedReceiverParameter")
-fun Images.getImage(id: String) = "${BuildConfig.DARK_API_URL}${Images.path}/$id"

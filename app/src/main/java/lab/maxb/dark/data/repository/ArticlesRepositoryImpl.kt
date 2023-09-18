@@ -10,6 +10,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import lab.maxb.dark.data.datasource.ArticlesRemoteDataSource
 import lab.maxb.dark.data.local.room.dao.ArticlesDAO
 import lab.maxb.dark.data.local.room.dao.RemoteKeysDAO
 import lab.maxb.dark.data.model.local.ArticleLocalDTO
@@ -17,7 +18,6 @@ import lab.maxb.dark.data.model.local.toDomain
 import lab.maxb.dark.data.model.local.toLocalDTO
 import lab.maxb.dark.data.model.remote.toDomain
 import lab.maxb.dark.data.model.remote.toNetworkDTO
-import lab.maxb.dark.data.remote.dark.DarkService
 import lab.maxb.dark.data.remote.dark.UnableToObtainResource
 import lab.maxb.dark.data.utils.DbRefreshController
 import lab.maxb.dark.data.utils.ResourceImpl
@@ -30,10 +30,10 @@ import org.koin.core.annotation.Single
 
 @Single
 class ArticlesRepositoryImpl(
-    private val networkDataSource: DarkService,
+    private val remoteDataSource: ArticlesRemoteDataSource,
     private val usersRepository: UsersRepository,
     private val localDataSource: ArticlesDAO,
-    private val remoteKeys: RemoteKeysDAO,
+    remoteKeys: RemoteKeysDAO,
 ) : ArticlesRepository {
 
     private val articlesResource = ResourceImpl<Page, List<Article>, List<ArticleLocalDTO>>(
@@ -41,7 +41,7 @@ class ArticlesRepositoryImpl(
         localMapper = { x -> x?.map { it.toDomain() } },
         reversedLocalMapper = { x -> x.map { it.toLocalDTO() } },
         fetchRemote = { page ->
-            networkDataSource.getAllArticles(page.page, page.size)?.map {
+            remoteDataSource.getAllArticles(page.page, page.size)?.map {
                 it.toDomain()
             }?.also {
                 coroutineScope {
@@ -79,14 +79,14 @@ class ArticlesRepositoryImpl(
 
     override suspend fun addArticle(article: Article) {
         val newArticle = article.toNetworkDTO()
-        val response = networkDataSource.addArticle(newArticle)!!
+        val response = remoteDataSource.addArticle(newArticle)!!
         val localModel = response.toDomain().toLocalDTO()
         localDataSource.save(localModel)
     }
 
     override suspend fun updateArticle(article: Article) {
         val requestModel = article.toNetworkDTO()
-        val response = networkDataSource.updateArticle(article.id, requestModel)!!
+        val response = remoteDataSource.updateArticle(article.id, requestModel)!!
         val localModel = response.toDomain().toLocalDTO()
         localDataSource.save(localModel)
     }

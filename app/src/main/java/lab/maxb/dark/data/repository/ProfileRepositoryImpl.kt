@@ -2,13 +2,14 @@ package lab.maxb.dark.data.repository
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
+import lab.maxb.dark.data.datasource.AuthRemoteDataSource
 import lab.maxb.dark.data.local.dataStore.ProfileDataSource
 import lab.maxb.dark.data.model.remote.toDomain
 import lab.maxb.dark.data.model.remote.toNetworkDTO
-import lab.maxb.dark.data.remote.dark.DarkService
 import lab.maxb.dark.data.utils.InMemRefreshController
 import lab.maxb.dark.data.utils.ResourceImpl
 import lab.maxb.dark.domain.model.AuthCredentials
+import lab.maxb.dark.domain.model.AuthState
 import lab.maxb.dark.domain.model.Mapper
 import lab.maxb.dark.domain.model.Profile
 import lab.maxb.dark.domain.model.getCastMapper
@@ -19,18 +20,14 @@ import java.time.Duration
 
 @Single
 class ProfileRepositoryImpl(
-    private val networkDataSource: DarkService,
+    private val remoteDataSource: AuthRemoteDataSource,
     private val localDataSource: ProfileDataSource,
 ) : ProfileRepository {
-    private val _isTokenExpired = MutableStateFlow(false)
-    private val _credentials = MutableStateFlow<AuthCredentials?>(null)
-    override val isTokenExpired = _isTokenExpired.asStateFlow()
-
-    init {
-        networkDataSource.onAuthRequired = {
-            _isTokenExpired.value = true
-        }
+    override val isTokenExpired = remoteDataSource.authState.map {
+        it is AuthState.NotAuthorized
     }
+    private val _credentials = MutableStateFlow<AuthCredentials?>(null)
+
 
     override val profileResource = ResourceImpl<AuthCredentials?, Profile, Profile>(
         refreshController = InMemRefreshController(Duration.ofHours(12).toMillis()),
@@ -39,9 +36,9 @@ class ProfileRepositoryImpl(
             it ?: return@remote null
             val request = it.toNetworkDTO()
             val response = (if (it.initial)
-                networkDataSource.signup(request)
+                remoteDataSource.signup(request)
             else
-                networkDataSource.login(request)).toDomain(it)
+                remoteDataSource.login(request)).toDomain(it)
             response.toProfile()
         },
         localMapper = Mapper.getCastMapper(),

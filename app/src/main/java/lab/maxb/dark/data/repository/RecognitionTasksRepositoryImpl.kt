@@ -10,6 +10,8 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import lab.maxb.dark.data.datasource.ImagesRemoteDataSource
+import lab.maxb.dark.data.datasource.RecognitionTasksRemoteDataSource
 import lab.maxb.dark.data.local.room.dao.RecognitionTasksDAO
 import lab.maxb.dark.data.local.room.dao.RemoteKeysDAO
 import lab.maxb.dark.data.local.room.relations.toDomain
@@ -18,7 +20,6 @@ import lab.maxb.dark.data.model.local.toDomain
 import lab.maxb.dark.data.model.local.toLocalDTO
 import lab.maxb.dark.data.model.remote.toDomain
 import lab.maxb.dark.data.model.remote.toNetworkDTO
-import lab.maxb.dark.data.remote.dark.DarkService
 import lab.maxb.dark.data.utils.DbRefreshController
 import lab.maxb.dark.data.utils.ResourceImpl
 import lab.maxb.dark.data.utils.pagination.Page
@@ -31,18 +32,19 @@ import org.koin.core.annotation.Single
 
 @Single
 class RecognitionTasksRepositoryImpl(
-    private val networkDataSource: DarkService,
+    private val remoteDataSource: RecognitionTasksRemoteDataSource,
+    private val imagesRemoteDataSource: ImagesRemoteDataSource,
     private val usersRepository: UsersRepository,
     private val imageLoader: ImageLoader,
     private val localDataSource: RecognitionTasksDAO,
-    private val remoteKeys: RemoteKeysDAO,
+    remoteKeys: RemoteKeysDAO,
 ) : RecognitionTasksRepository {
 
     private val tasksResource = ResourceImpl<Page, List<RecognitionTask>, List<RecognitionTaskLocalDTO>>(
         fetchLocal = { localDataSource.getAll() },
         localMapper = { x -> x?.map { it.toDomain() } },
         fetchRemote = { page ->
-            networkDataSource.getAllTasks(page.page, page.size)?.map {
+            remoteDataSource.getAllTasks(page.page, page.size)?.map {
                 it.toDomain()
             }?.also { tasks ->
                 coroutineScope {
@@ -86,18 +88,18 @@ class RecognitionTasksRepositoryImpl(
 
     override suspend fun addRecognitionTask(task: RecognitionTask) {
         val newTask = task.copy(images=task.images.map {
-            networkDataSource.addImage(
+            imagesRemoteDataSource.addImage(
                 imageLoader.fromUri(it.toUri())
             )!!
         }).toNetworkDTO()
-        val taskResponse = networkDataSource.addTask(newTask)!!
+        val taskResponse = remoteDataSource.addTask(newTask)!!
         val taskLocal = taskResponse.toDomain().toLocalDTO()
         localDataSource.save(taskLocal)
     }
 
     override suspend fun markRecognitionTask(task: RecognitionTask)
         = try {
-            networkDataSource.markTask(task.id, task.reviewed).also {
+            remoteDataSource.markTask(task.id, task.reviewed).also {
                 if (it) recognitionTaskResource.refresh(task.id)
             }
         } catch (e: Throwable) {
@@ -111,7 +113,7 @@ class RecognitionTasksRepositoryImpl(
 
     override suspend fun solveRecognitionTask(id: String, answer: String)
         = try {
-            networkDataSource.solveTask(id, answer)
+            remoteDataSource.solveTask(id, answer)
         } catch (e: Throwable) {
             e.printStackTrace()
             false
@@ -120,7 +122,7 @@ class RecognitionTasksRepositoryImpl(
     override val recognitionTaskResource = ResourceImpl(
         refreshController = DbRefreshController(),
         fetchRemote = { id ->
-            networkDataSource.getTask(id)?.toDomain()?.also {
+            remoteDataSource.getTask(id)?.toDomain()?.also {
                 getUser(it.owner.id)
             }
         },
@@ -132,7 +134,7 @@ class RecognitionTasksRepositoryImpl(
     )
 
     override fun getRecognitionTaskImage(path: String)
-        = networkDataSource.getImageSource(path)
+        = imagesRemoteDataSource.getImageSource(path)
 
     private suspend fun getUser(id: String)
         = usersRepository.userResource.query(id).firstOrNull()!!

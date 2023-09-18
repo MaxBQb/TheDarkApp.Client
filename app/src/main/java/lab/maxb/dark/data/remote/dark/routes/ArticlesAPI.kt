@@ -1,24 +1,25 @@
 package lab.maxb.dark.data.remote.dark.routes
 
+import lab.maxb.dark.data.datasource.ArticlesRemoteDataSource
 import lab.maxb.dark.data.model.remote.ArticleCreationNetworkDTO
 import lab.maxb.dark.data.model.remote.ArticleNetworkDTO
 import retrofit2.http.*
 
-interface Article {
+interface ArticlesAPI : ArticlesRemoteDataSource {
     @GET("$path/")
-    suspend fun getAllArticles(
-        @Query("page") page: Int = 0,
-        @Query("size") size: Int = 2,
+    override suspend fun getAllArticles(
+        @Query("page") page: Int,
+        @Query("size") size: Int,
     ): List<ArticleNetworkDTO>?
 
     @PUT("$path/{id}")
-    suspend fun updateArticle(
+    override suspend fun updateArticle(
         @Path("id") id: String,
         @Body article: ArticleCreationNetworkDTO,
     ): ArticleNetworkDTO?
 
     @POST("$path/")
-    suspend fun addArticle(@Body article: ArticleCreationNetworkDTO): ArticleNetworkDTO?
+    override suspend fun addArticle(@Body article: ArticleCreationNetworkDTO): ArticleNetworkDTO?
 
     companion object {
         const val path = "/articles"

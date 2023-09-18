@@ -1,14 +1,14 @@
 package lab.maxb.dark.data.remote.dark
 
-import lab.maxb.dark.data.remote.dark.routes.Article
-import lab.maxb.dark.data.remote.dark.routes.Auth
-import lab.maxb.dark.data.remote.dark.routes.Images
-import lab.maxb.dark.data.remote.dark.routes.RecognitionTask
-import lab.maxb.dark.data.remote.dark.routes.User
+import lab.maxb.dark.data.remote.dark.routes.ArticlesAPI
+import lab.maxb.dark.data.remote.dark.routes.AuthAPI
+import lab.maxb.dark.data.remote.dark.routes.ImagesAPI
+import lab.maxb.dark.data.remote.dark.routes.RecognitionTasksAPI
+import lab.maxb.dark.data.remote.dark.routes.UsersAPI
 
 interface DarkServiceAPI :
-    Article,
-    RecognitionTask,
-    Images,
-    User,
-    Auth
+    ArticlesAPI,
+    RecognitionTasksAPI,
+    ImagesAPI,
+    UsersAPI,
+    AuthAPI
