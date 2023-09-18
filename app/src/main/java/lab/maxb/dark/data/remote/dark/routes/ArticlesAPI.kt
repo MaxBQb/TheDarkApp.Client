@@ -1,6 +1,6 @@
 package lab.maxb.dark.data.remote.dark.routes
 
-import lab.maxb.dark.data.datasource.ArticlesRemoteDataSource
+import lab.maxb.dark.data.datasource.remote.ArticlesRemoteDataSource
 import lab.maxb.dark.data.model.remote.ArticleCreationNetworkDTO
 import lab.maxb.dark.data.model.remote.ArticleNetworkDTO
 import retrofit2.http.*

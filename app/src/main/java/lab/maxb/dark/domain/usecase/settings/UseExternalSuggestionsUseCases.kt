@@ -11,8 +11,8 @@ open class UseExternalSuggestionsUseCases(
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
     open fun get() = settingsRepository.settings.mapLatest { it.useExternalSuggestions }
-    open suspend fun set(value: Boolean) = settingsRepository.change { it.copy(useExternalSuggestions = value) }
-    open suspend fun toggle() = settingsRepository.change {
+    open suspend fun set(value: Boolean) = settingsRepository.update { it.copy(useExternalSuggestions = value) }
+    open suspend fun toggle() = settingsRepository.update {
         it.copy(useExternalSuggestions = it.useExternalSuggestions.not())
     }
 }

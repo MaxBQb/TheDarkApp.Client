@@ -1,6 +1,6 @@
 package lab.maxb.dark.data.remote.dark.routes
 
-import lab.maxb.dark.data.datasource.RecognitionTasksRemoteDataSource
+import lab.maxb.dark.data.datasource.remote.RecognitionTasksRemoteDataSource
 import lab.maxb.dark.data.model.remote.RecognitionTaskCreationNetworkDTO
 import lab.maxb.dark.data.model.remote.RecognitionTaskFullViewNetworkDTO
 import lab.maxb.dark.data.model.remote.RecognitionTaskListViewNetworkDTO

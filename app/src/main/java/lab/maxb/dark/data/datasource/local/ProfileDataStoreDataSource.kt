@@ -1,7 +1,6 @@
-package lab.maxb.dark.data.local.dataStore
+package lab.maxb.dark.data.datasource.local
 
 import android.content.Context
-import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import com.google.crypto.tink.Aead
@@ -11,16 +10,10 @@ import lab.maxb.dark.domain.model.Profile
 import org.koin.core.annotation.Singleton
 
 @Singleton
-class ProfileDataSourceImpl(
+class ProfileDataStoreDataSource(
     private val context: Context,
     serializers: SerializersFactory,
     aead: Aead,
-) : ProfileDataSource, DataStore<Profile?> by (
-    DataStoreFactory.create(serializers.getFor<Profile?>().encrypted(aead)) {
-        context.dataStoreFile("darkStore")
-    }
-) {
-    override suspend fun clear() {
-        updateData { null }
-    }
-}
+) : ProfileLocalDataSource, BaseDataStoreDataSource<Profile?>(DataStoreFactory.create(serializers.getFor<Profile?>().encrypted(aead)) {
+    context.dataStoreFile("darkStore")
+})

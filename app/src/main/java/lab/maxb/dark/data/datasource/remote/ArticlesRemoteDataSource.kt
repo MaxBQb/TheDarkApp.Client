@@ -1,4 +1,4 @@
-package lab.maxb.dark.data.datasource
+package lab.maxb.dark.data.datasource.remote
 
 import lab.maxb.dark.data.model.remote.ArticleCreationNetworkDTO
 import lab.maxb.dark.data.model.remote.ArticleNetworkDTO

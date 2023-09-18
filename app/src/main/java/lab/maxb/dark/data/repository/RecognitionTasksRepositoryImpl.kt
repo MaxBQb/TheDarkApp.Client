@@ -10,10 +10,10 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
-import lab.maxb.dark.data.datasource.ImagesRemoteDataSource
-import lab.maxb.dark.data.datasource.RecognitionTasksRemoteDataSource
-import lab.maxb.dark.data.local.room.dao.RecognitionTasksDAO
-import lab.maxb.dark.data.local.room.dao.RemoteKeysDAO
+import lab.maxb.dark.data.datasource.local.RecognitionTasksLocalDataSource
+import lab.maxb.dark.data.datasource.local.RemoteKeysLocalDataSource
+import lab.maxb.dark.data.datasource.remote.ImagesRemoteDataSource
+import lab.maxb.dark.data.datasource.remote.RecognitionTasksRemoteDataSource
 import lab.maxb.dark.data.local.room.relations.toDomain
 import lab.maxb.dark.data.model.local.RecognitionTaskLocalDTO
 import lab.maxb.dark.data.model.local.toDomain
@@ -36,8 +36,8 @@ class RecognitionTasksRepositoryImpl(
     private val imagesRemoteDataSource: ImagesRemoteDataSource,
     private val usersRepository: UsersRepository,
     private val imageLoader: ImageLoader,
-    private val localDataSource: RecognitionTasksDAO,
-    remoteKeys: RemoteKeysDAO,
+    private val localDataSource: RecognitionTasksLocalDataSource,
+    remoteKeys: RemoteKeysLocalDataSource,
 ) : RecognitionTasksRepository {
 
     private val tasksResource = ResourceImpl<Page, List<RecognitionTask>, List<RecognitionTaskLocalDTO>>(

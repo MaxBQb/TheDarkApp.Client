@@ -1,6 +1,6 @@
 package lab.maxb.dark.data.remote.dark.routes
 
-import lab.maxb.dark.data.datasource.ImagesRemoteDataSource
+import lab.maxb.dark.data.datasource.remote.ImagesRemoteDataSource
 import okhttp3.MultipartBody
 import retrofit2.http.*
 

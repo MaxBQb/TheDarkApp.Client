@@ -32,7 +32,7 @@ abstract class RecognitionTasksDAO: AdvancedDAO<RecognitionTaskLocalDTO>(
     abstract fun get(id: String): Flow<RecognitionTaskLocalDTO?>
 
     @Query("DELETE FROM recognition_task WHERE NOT (id in (:id))")
-    abstract fun deleteOther(id: List<String>)
+    abstract suspend fun deleteOther(id: List<String>)
 
     @Transaction
     open suspend fun saveOnly(vararg value: RecognitionTaskLocalDTO) {

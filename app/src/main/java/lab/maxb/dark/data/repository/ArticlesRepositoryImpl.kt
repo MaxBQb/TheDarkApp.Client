@@ -10,9 +10,9 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
-import lab.maxb.dark.data.datasource.ArticlesRemoteDataSource
-import lab.maxb.dark.data.local.room.dao.ArticlesDAO
-import lab.maxb.dark.data.local.room.dao.RemoteKeysDAO
+import lab.maxb.dark.data.datasource.local.ArticlesLocalDataSource
+import lab.maxb.dark.data.datasource.local.RemoteKeysLocalDataSource
+import lab.maxb.dark.data.datasource.remote.ArticlesRemoteDataSource
 import lab.maxb.dark.data.model.local.ArticleLocalDTO
 import lab.maxb.dark.data.model.local.toDomain
 import lab.maxb.dark.data.model.local.toLocalDTO
@@ -32,8 +32,8 @@ import org.koin.core.annotation.Single
 class ArticlesRepositoryImpl(
     private val remoteDataSource: ArticlesRemoteDataSource,
     private val usersRepository: UsersRepository,
-    private val localDataSource: ArticlesDAO,
-    remoteKeys: RemoteKeysDAO,
+    private val localDataSource: ArticlesLocalDataSource,
+    remoteKeys: RemoteKeysLocalDataSource,
 ) : ArticlesRepository {
 
     private val articlesResource = ResourceImpl<Page, List<Article>, List<ArticleLocalDTO>>(

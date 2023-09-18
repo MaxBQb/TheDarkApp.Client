@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import lab.maxb.dark.data.local.dataStore.ProfileDataSource
+import lab.maxb.dark.data.datasource.local.ProfileLocalDataSource
 import lab.maxb.dark.domain.model.AuthState
 import lab.maxb.dark.domain.model.withToken
 import lab.maxb.dark.domain.model.withoutToken
@@ -20,7 +20,7 @@ import org.koin.core.annotation.Single
 
 @Single
 class AuthInterceptor(
-    profileDataSource: ProfileDataSource,
+    profileDataSource: ProfileLocalDataSource,
 ): Interceptor {
     @OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
     private val token = profileDataSource.data.mapLatest { it?.token ?: "" }

@@ -1,4 +1,4 @@
-package lab.maxb.dark.data.datasource
+package lab.maxb.dark.data.datasource.remote
 
 import kotlinx.coroutines.flow.SharedFlow
 import lab.maxb.dark.data.model.remote.AuthRequest

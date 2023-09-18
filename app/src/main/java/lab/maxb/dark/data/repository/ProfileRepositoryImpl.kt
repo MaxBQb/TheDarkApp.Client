@@ -2,8 +2,10 @@ package lab.maxb.dark.data.repository
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
-import lab.maxb.dark.data.datasource.AuthRemoteDataSource
-import lab.maxb.dark.data.local.dataStore.ProfileDataSource
+import lab.maxb.dark.data.datasource.local.ProfileLocalDataSource
+import lab.maxb.dark.data.datasource.local.clear
+import lab.maxb.dark.data.datasource.local.save
+import lab.maxb.dark.data.datasource.remote.AuthRemoteDataSource
 import lab.maxb.dark.data.model.remote.toDomain
 import lab.maxb.dark.data.model.remote.toNetworkDTO
 import lab.maxb.dark.data.utils.InMemRefreshController
@@ -21,7 +23,7 @@ import java.time.Duration
 @Single
 class ProfileRepositoryImpl(
     private val remoteDataSource: AuthRemoteDataSource,
-    private val localDataSource: ProfileDataSource,
+    private val localDataSource: ProfileLocalDataSource,
 ) : ProfileRepository {
     override val isTokenExpired = remoteDataSource.authState.map {
         it is AuthState.NotAuthorized
@@ -43,7 +45,7 @@ class ProfileRepositoryImpl(
         },
         localMapper = Mapper.getCastMapper(),
         reversedLocalMapper = Mapper.getCastMapper(),
-        localStore = { value -> localDataSource.updateData { value } },
+        localStore = localDataSource::save,
     )
 
     @OptIn(ExperimentalCoroutinesApi::class)

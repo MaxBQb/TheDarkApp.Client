@@ -1,7 +1,7 @@
 package lab.maxb.dark.data.repository
 
-import lab.maxb.dark.data.datasource.UsersRemoteDataSource
-import lab.maxb.dark.data.local.room.dao.UsersDAO
+import lab.maxb.dark.data.datasource.local.UsersLocalDataSource
+import lab.maxb.dark.data.datasource.remote.UsersRemoteDataSource
 import lab.maxb.dark.data.model.local.toDomain
 import lab.maxb.dark.data.model.local.toLocalDTO
 import lab.maxb.dark.data.utils.DbRefreshController
@@ -12,7 +12,7 @@ import org.koin.core.annotation.Single
 @Single
 class UsersRepositoryImpl(
     private val remoteDataSource: UsersRemoteDataSource,
-    private val localDataSource: UsersDAO,
+    private val localDataSource: UsersLocalDataSource,
 ) : UsersRepository {
 
     override val userResource = ResourceImpl(

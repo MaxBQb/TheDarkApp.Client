@@ -1,6 +1,6 @@
 package lab.maxb.dark.data.remote.dark.routes
 
-import lab.maxb.dark.data.datasource.UsersRemoteDataSource
+import lab.maxb.dark.data.datasource.remote.UsersRemoteDataSource
 import lab.maxb.dark.domain.model.User
 import retrofit2.http.GET
 import retrofit2.http.Path

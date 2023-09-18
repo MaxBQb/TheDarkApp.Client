@@ -14,7 +14,7 @@ open class HandleCurrentLocaleUseCase(
                 val locale = if (settings.systemLocale.isEmpty())
                     current.ifEmpty { system }
                     else system
-                settingsRepository.change {
+                settingsRepository.update {
                     it.copy(systemLocale = locale)
                 }
                 locale

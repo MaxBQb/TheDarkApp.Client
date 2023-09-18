@@ -5,7 +5,7 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.flow.firstOrNull
-import lab.maxb.dark.data.local.room.dao.RemoteKeysDAO
+import lab.maxb.dark.data.datasource.local.RemoteKeysLocalDataSource
 import lab.maxb.dark.data.model.local.ArticleLocalDTO
 import lab.maxb.dark.data.model.local.RemoteKey
 import lab.maxb.dark.domain.model.Article
@@ -18,7 +18,7 @@ import java.io.InvalidObjectException
 @OptIn(ExperimentalPagingApi::class)
 class ArticleMediator(
     private val resource: Resource<Page, List<Article>>,
-    private val remoteKeys: RemoteKeysDAO,
+    private val remoteKeys: RemoteKeysLocalDataSource,
 ) : RemoteMediator<Int, ArticleLocalDTO>() {
 
     override suspend fun initialize() = if (

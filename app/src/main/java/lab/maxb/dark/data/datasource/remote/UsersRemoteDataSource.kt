@@ -1,4 +1,4 @@
-package lab.maxb.dark.data.datasource
+package lab.maxb.dark.data.datasource.remote
 
 import lab.maxb.dark.domain.model.User
 

@@ -1,4 +1,4 @@
-package lab.maxb.dark.data.datasource
+package lab.maxb.dark.data.datasource.remote
 
 import lab.maxb.dark.data.remote.dark.routes.UsersAPI
 import org.koin.core.annotation.Singleton

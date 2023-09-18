@@ -5,7 +5,6 @@ import kotlinx.coroutines.CancellationException
 import lab.maxb.dark.BuildConfig
 import lab.maxb.dark.data.remote.logger
 import okhttp3.OkHttpClient
-import org.koin.core.annotation.Single
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import retrofit2.Retrofit
@@ -17,7 +16,6 @@ import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
 
 
-@Single
 object RetrofitDarkClient : KoinComponent {
     const val TIMEOUT = 90L
     private val authInterceptor: AuthInterceptor by inject()
