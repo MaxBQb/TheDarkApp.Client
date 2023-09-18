@@ -3,8 +3,15 @@ package lab.maxb.dark.data.remote.dark
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CancellationException
 import lab.maxb.dark.BuildConfig
+import lab.maxb.dark.data.remote.dark.RetrofitDarkClient.buildDarkService
+import lab.maxb.dark.data.remote.dark.routes.ArticlesAPI
+import lab.maxb.dark.data.remote.dark.routes.AuthAPI
+import lab.maxb.dark.data.remote.dark.routes.ImagesAPI
+import lab.maxb.dark.data.remote.dark.routes.RecognitionTasksAPI
+import lab.maxb.dark.data.remote.dark.routes.UsersAPI
 import lab.maxb.dark.data.remote.logger
 import okhttp3.OkHttpClient
+import org.koin.core.annotation.Singleton
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import retrofit2.Retrofit
@@ -72,7 +79,18 @@ object RetrofitDarkClient : KoinComponent {
             .apply { setLenient() }
             .create()
             .let { GsonConverterFactory.create(it) }
+
 }
+
+@Singleton([
+    DarkServiceAPI::class,
+    ArticlesAPI::class,
+    RecognitionTasksAPI::class,
+    ImagesAPI::class,
+    UsersAPI::class,
+    AuthAPI::class,
+])
+class DarkServiceImpl: DarkServiceAPI by buildDarkService()
 
 
 class UnableToObtainResource : Exception()

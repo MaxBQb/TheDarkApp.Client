@@ -7,7 +7,7 @@ ksp = "1.9.10-1.0.13"
 #region Domain
 coroutines = "1.7.1"
 koin = "3.5.1"
-koin-annotations = "1.0.1"
+koin-annotations = "1.0.3"
 desugaring = "2.0.3" # (Time-related features support for API 21+)
 #endregion Domain
 #region Data
