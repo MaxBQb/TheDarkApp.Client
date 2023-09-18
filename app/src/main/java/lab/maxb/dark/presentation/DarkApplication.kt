@@ -11,7 +11,6 @@ import org.koin.core.logger.Level
 import org.koin.ksp.generated.*
 
 
-@Suppress("unused") // Used by AndroidManifest.xml
 class DarkApplication : Application() {
     override fun onCreate() {
         super.onCreate()

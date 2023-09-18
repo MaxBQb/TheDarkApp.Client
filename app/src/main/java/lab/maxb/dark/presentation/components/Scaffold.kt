@@ -55,7 +55,7 @@ fun AppScaffold(
     modifier: Modifier = Modifier,
     topBar: @Composable () -> Unit = {},
     snackbarState: SnackbarHostState = rememberSnackbarHostState(),
-    content: @Composable() (BoxScope.() -> Unit) = {}
+    content: @Composable (BoxScope.() -> Unit) = {}
 ) = Scaffold(
     modifier = modifier,
     topBar = topBar,
@@ -83,8 +83,8 @@ fun TopScaffold(
     modifier: Modifier = Modifier,
     title: String = "",
     snackbarState: SnackbarHostState = rememberSnackbarHostState(),
-    actions: @Composable() (RowScope.() -> Unit) = {},
-    content: @Composable() (BoxScope.() -> Unit) = {},
+    actions: @Composable (RowScope.() -> Unit) = {},
+    content: @Composable (BoxScope.() -> Unit) = {},
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()

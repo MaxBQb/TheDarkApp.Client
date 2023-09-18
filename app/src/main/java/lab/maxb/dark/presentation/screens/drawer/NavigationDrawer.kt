@@ -3,7 +3,6 @@ package lab.maxb.dark.presentation.screens.drawer
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -56,7 +55,7 @@ enum class DrawerDestination(
 }
 
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Drawer(
     navController: NavController,

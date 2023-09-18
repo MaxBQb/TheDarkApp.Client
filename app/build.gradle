@@ -11,7 +11,7 @@ ext {
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
     buildToolsVersion = "30.0.3"
 
     def keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -21,7 +21,7 @@ android {
     defaultConfig {
         applicationId "lab.maxb.dark"
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode 4
         versionName "0.4.0"
 
@@ -60,7 +60,7 @@ android {
         targetCompatibility JavaVersion.VERSION_11
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.7'
+        kotlinCompilerExtensionVersion '1.5.3'
     }
     kotlin {
         jvmToolchain(11)
