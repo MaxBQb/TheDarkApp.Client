@@ -89,7 +89,6 @@ compose-theme-adapter = { module = "com.google.android.material:compose-theme-ad
 compose-ui-core = { module = "androidx.compose.ui:ui" }
 compose-ui-util = { module = "androidx.compose.ui:ui-util" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
-compose-ui-test = { module = "androidx.compose.ui:ui-test-junit4" }
 compose-material3 = { module = "androidx.compose.material3:material3" }
 compose-animation = { module = "androidx.compose.animation:animation" }
 compose-foundation-core = { module = "androidx.compose.foundation:foundation" }
@@ -117,6 +116,7 @@ junit-core = { module = "junit:junit", version.ref = "junit" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit-jupiter-api" }
 koin-test-core = { module = "io.insert-koin:koin-test" }
 koin-test-junit5 = { module = "io.insert-koin:koin-test-junit5" }
+compose-ui-test = { module = "androidx.compose.ui:ui-test-junit4" }
 #endregion
 
 [plugins]

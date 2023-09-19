@@ -173,5 +173,6 @@ dependencies {
         testImplementation libs.koin.test.core
         testImplementation libs.koin.test.junit5
         // JetpackCompose UI Tests
+        androidTestImplementation platform(libs.compose.bom)
         androidTestImplementation libs.compose.ui.test
 }
