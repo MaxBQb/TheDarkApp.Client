@@ -1,7 +1,7 @@
 package lab.maxb.dark.data.remote.dark
 
+import android.util.Log
 import com.google.gson.GsonBuilder
-import kotlinx.coroutines.CancellationException
 import lab.maxb.dark.BuildConfig
 import lab.maxb.dark.data.remote.dark.RetrofitDarkClient.buildDarkService
 import lab.maxb.dark.data.remote.dark.routes.ArticlesAPI
@@ -14,6 +14,7 @@ import okhttp3.OkHttpClient
 import org.koin.core.annotation.Singleton
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.EOFException
@@ -27,39 +28,38 @@ object RetrofitDarkClient : KoinComponent {
     const val TIMEOUT = 90L
     private val authInterceptor: AuthInterceptor by inject()
 
-    private inline fun <reified T> catchAll(
-        crossinline block: () -> T,
-    ): T {
-        try {
-            return block()
-        } catch (e: EOFException) {
-            return null as T
-        } catch (e: UnableToObtainResource) {
-            throw e
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: retrofit2.HttpException) {
-            when (e.code()) {
-                404 -> return null as T
+    val errorHandler = buildDelegatedCallAdapterFactory {
+        it.onSuccess { response ->
+            if (response.isSuccessful)
+                onResponse(Response.success(response.code(), response.body()))
+            when (response.code()) {
+                401, 403 -> {}
+                404 -> onResponse(Response.success(null))
                 // TODO: Handle 400 and 422
-                else -> e.printStackTrace()
+                else -> Log.e(
+                    "Retrofit",
+                    "Error ${response.code()}, resolved as 'Unable to obtain resource'."
+                )
             }
-            throw UnableToObtainResource()
-        } catch (e: Throwable) {
+            onFailure(UnableToObtainResource())
+        }.onFailure { e ->
             when (e) {
+                is EOFException -> onResponse(Response.success(null))
                 is UnknownHostException,
                 is SocketTimeoutException,
                 is ConnectException,
-                -> throw UnableToObtainResource()
+                -> onFailure(UnableToObtainResource())
+
+                else -> onFailure(e)
             }
-            e.printStackTrace()
-            throw e
         }
     }
+
 
     internal fun buildDarkService() = Retrofit.Builder()
         .baseUrl(BuildConfig.DARK_API_URL)
         .addConverterFactory(converter)
+        .addCallAdapterFactory(errorHandler)
         .client(okhttpClient)
         .build()
         .create(DarkServiceAPI::class.java)
@@ -68,7 +68,6 @@ object RetrofitDarkClient : KoinComponent {
         get() = OkHttpClient.Builder()
             .addInterceptor(logger)
             .addInterceptor(authInterceptor)
-            .addInterceptor { catchAll { it.proceed(it.request()) } }
             .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
             .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(TIMEOUT, TimeUnit.SECONDS)
@@ -90,7 +89,4 @@ object RetrofitDarkClient : KoinComponent {
     UsersAPI::class,
     AuthAPI::class,
 ])
-class DarkServiceImpl: DarkServiceAPI by buildDarkService()
-
-
-class UnableToObtainResource : Exception()
+class DarkServiceImpl : DarkServiceAPI by buildDarkService()

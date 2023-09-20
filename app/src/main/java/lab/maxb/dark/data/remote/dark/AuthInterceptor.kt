@@ -36,16 +36,14 @@ class AuthInterceptor(
     private val _authState = MutableStateFlow<AuthState>(AuthState.Loading)
     val authState = _authState.asSharedFlow()
 
-    override fun intercept(chain: Interceptor.Chain): Response
-        = with(chain.request().newBuilder()) {
-            addHeader(header, value)
-            try {
-                chain.proceed(build())
-            } catch (e: retrofit2.HttpException) {
-                when (e.code()) {
-                    401, 403 -> _authState.update { it.withoutToken() }
-                }
-                throw e
-            }
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val request = chain.request().newBuilder()
+            .addHeader(header, value)
+            .build()
+        val result = chain.proceed(request)
+        when (result.code) {
+            401, 403 -> _authState.update { it.withoutToken() }
+        }
+        return result
     }
 }
