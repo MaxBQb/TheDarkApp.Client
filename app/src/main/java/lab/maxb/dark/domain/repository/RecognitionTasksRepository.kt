@@ -1,15 +1,16 @@
 package lab.maxb.dark.domain.repository
 
-import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
+import lab.maxb.dark.domain.model.LayerSpecific
+import lab.maxb.dark.domain.model.Pageable
 import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.domain.model.RecognitionTaskComplete
 import lab.maxb.dark.domain.repository.utils.Resource
 
 interface RecognitionTasksRepository {
     val recognitionTaskResource: Resource<String, RecognitionTask>
-    fun getAllRecognitionTasks(): Flow<PagingData<RecognitionTaskComplete>>
-    fun getFavoriteRecognitionTasks(): Flow<PagingData<RecognitionTaskComplete>>
+    fun getAllRecognitionTasks(): Flow<LayerSpecific<Pageable<RecognitionTaskComplete>>>
+    fun getFavoriteRecognitionTasks(): Flow<LayerSpecific<Pageable<RecognitionTaskComplete>>>
     fun hasFavoriteRecognitionTasks(): Flow<Boolean>
     fun getRecognitionTaskImage(path: String): String
     suspend fun addRecognitionTask(task: RecognitionTask)

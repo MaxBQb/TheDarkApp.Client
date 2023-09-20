@@ -72,7 +72,7 @@ class ArticlesRepositoryImpl(
         page.map { it.toDomain() }
     }
 
-    override fun getPagedArticles() = pager
+    override fun getPagedArticles() = pager.map { it.toDomain() }
     override fun getArticles() =
         articlesResource.query(Page(0, 50), useCache = true).filterNotNull()
 

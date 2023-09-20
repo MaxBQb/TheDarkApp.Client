@@ -82,8 +82,10 @@ class RecognitionTasksRepositoryImpl(
         page.map { it.toDomain() }
     }
 
-    override fun getAllRecognitionTasks() = pager
-    override fun getFavoriteRecognitionTasks() = favoritePager
+    override fun getAllRecognitionTasks()
+        = pager.map { it.toDomain() }
+    override fun getFavoriteRecognitionTasks()
+        = favoritePager.map { it.toDomain() }
     override fun hasFavoriteRecognitionTasks() = localDataSource.hasFavorites()
 
     override suspend fun addRecognitionTask(task: RecognitionTask) {

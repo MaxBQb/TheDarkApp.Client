@@ -45,7 +45,7 @@ class ArticlesViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _articles = getArticlesUseCase().mapLatest { page ->
-        page.map { it.toPresentation() }
+        page.toPresentation().map { it.toPresentation() }
     }.cachedIn(viewModelScope).stateInAsResult()
 
     override fun getInitialState() = Ui.State()
