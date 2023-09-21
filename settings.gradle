@@ -1,2 +1,5 @@
-include ':app'
 rootProject.name = "Dark"
+include ':app'
+include ':core:domain'
+include ':core:data'
+include ':core:ui'
