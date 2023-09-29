@@ -5,7 +5,7 @@
     <uses-permission android:minSdkVersion="33" android:name="android.permission.READ_MEDIA_IMAGES"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:name=".DarkApplication"
+        android:name="lab.maxb.dark.ui.DarkApplication"
         android:allowBackup="true"
         android:fullBackupOnly="true"
         android:localeConfig="@xml/locales_config"
@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Dark">
-        <activity android:name=".ui.screens.main.MainActivity"
+        <activity android:name="lab.maxb.dark.ui.screens.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

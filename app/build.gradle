@@ -83,13 +83,22 @@ android {
             useJUnitPlatform()
         }
     }
-    namespace 'lab.maxb.dark'
+    namespace 'lab.maxb.dark.ui.app'
 }
 
 dependencies {
     implementation project(path: ':core:domain')
     implementation project(path: ':core:data')
     implementation project(path: ':core:ui')
+    implementation project(path: ':feature:articles:ui')
+    implementation project(path: ':feature:welcome:ui')
+    implementation project(path: ':feature:navigation:impl')
+    implementation project(path: ':feature:settings:ui')
+    implementation project(path: ':feature:auth:ui')
+    implementation project(path: ':feature:tasks:ui:add')
+    implementation project(path: ':feature:tasks:ui:solve')
+    implementation project(path: ':feature:tasks:ui:list')
+    implementation project(path: ':feature:navigation-drawer:ui')
 
     // Dependency Injection
     implementation libs.koin.bom
@@ -135,7 +144,6 @@ dependencies {
 
     // JC Navigation
     implementation libs.compose.destinations.core
-    ksp libs.compose.destinations.ksp
 
     // Android X/KTX
     implementation libs.androidx.core

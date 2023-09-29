@@ -25,7 +25,7 @@ accompanist = "0.31.3-beta" # Compose accomponist libs
 activity-compose = "1.7.2"
 androidx-appcompat = "1.7.0-alpha02"
 compose-settings = "0.27.0"
-compose-destinations = "1.8.42-beta" # Latest compatible with JC 1.4.x
+compose-destinations = "1.9.53" # Latest compatible with JC 1.5.x
 androidx-core = "1.10.1"
 compose-theme-adapter = "1.2.1"
 landscapist = "2.2.1" # Compose accomponist.landscapist libs
@@ -93,6 +93,7 @@ compose-theme-adapter = { module = "com.google.android.material:compose-theme-ad
 compose-ui-core = { module = "androidx.compose.ui:ui" }
 compose-ui-util = { module = "androidx.compose.ui:ui-util" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+compose-material = { module = "androidx.compose.material:material-android" }
 compose-material3 = { module = "androidx.compose.material3:material3" }
 compose-animation = { module = "androidx.compose.animation:animation" }
 compose-foundation-core = { module = "androidx.compose.foundation:foundation" }

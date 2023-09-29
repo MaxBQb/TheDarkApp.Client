@@ -10,6 +10,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import lab.maxb.dark.data.UnableToObtainResource
 import lab.maxb.dark.data.datasource.local.ArticlesLocalDataSource
 import lab.maxb.dark.data.datasource.local.RemoteKeysLocalDataSource
 import lab.maxb.dark.data.datasource.remote.ArticlesRemoteDataSource
@@ -18,7 +19,6 @@ import lab.maxb.dark.data.model.local.toDomain
 import lab.maxb.dark.data.model.local.toLocalDTO
 import lab.maxb.dark.data.model.remote.toDomain
 import lab.maxb.dark.data.model.remote.toNetworkDTO
-import lab.maxb.dark.data.UnableToObtainResource
 import lab.maxb.dark.data.utils.DbRefreshController
 import lab.maxb.dark.data.utils.ResourceImpl
 import lab.maxb.dark.data.utils.pagination.ArticleMediator
