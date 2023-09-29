@@ -3,6 +3,7 @@ package lab.maxb.dark.ui.screens.drawer
 import kotlinx.coroutines.flow.combine
 import lab.maxb.dark.domain.usecase.task.GetFavoriteRecognitionTaskListUseCase
 import lab.maxb.dark.ui.extra.stateIn
+import lab.maxb.dark.ui.model.DrawerDestination
 import lab.maxb.dark.ui.screens.core.StatefulViewModel
 import org.koin.android.annotation.KoinViewModel
 import lab.maxb.dark.ui.screens.drawer.DrawerUiContract as Ui

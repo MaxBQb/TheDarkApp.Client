@@ -1,0 +1,11 @@
+<resources>
+    <!-- Navigation -->
+    <string name="nav_taskList_title">Tasks</string>
+    <string name="nav_favoriteTaskList_title">Favorite</string>
+    <string name="nav_articles_title">Worth to know</string>
+    <string name="nav_addTask_title">Task creation</string>
+    <string name="nav_solveTask_title">What is it?</string>
+    <string name="nav_taskReview_title">Review</string>
+    <string name="nav_home_title">Profile</string>
+    <string name="nav_settings_title">Settings</string>
+</resources>

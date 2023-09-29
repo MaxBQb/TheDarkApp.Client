@@ -1,0 +1,7 @@
+<resources>
+    <!-- Settings -->
+    <string name="settings_language_title">Язык интерфейса</string>
+    <string name="settings_language_auto">Системное значение (%s)</string>
+    <string name="settings_version_info" translatable="false">%s   |   %s</string>
+    <string name="settings_useExternalSuggestions">Использовать онлайн-синонимайзер</string>
+</resources>

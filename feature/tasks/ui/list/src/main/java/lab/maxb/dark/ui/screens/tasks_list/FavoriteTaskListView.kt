@@ -9,7 +9,7 @@ import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
 import lab.maxb.dark.ui.components.TopScaffold
-import lab.maxb.dark.ui.core.R
+import lab.maxb.dark.ui.model.DrawerDestination
 import org.koin.androidx.compose.getViewModel
 
 
@@ -21,7 +21,7 @@ fun FavoriteRecognitionTaskListScreen(
     viewModel: RecognitionTaskListViewModel = getViewModel(),
 ) = TopScaffold(
     navController = navController,
-    title = stringResource(id = R.string.nav_favoriteTaskList_title),
+    title = stringResource(DrawerDestination.FavoriteTasks.label),
 ) {
     val hasFavorites by viewModel.hasFavorites.collectAsState()
     LaunchedEffect(hasFavorites) {

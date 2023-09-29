@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.domain.usecase.task.CreateRecognitionTaskUseCase
 import lab.maxb.dark.domain.usecase.task.GetTaskNameSynonymsUseCase
-import lab.maxb.dark.ui.core.R
 import lab.maxb.dark.ui.extra.FirstOnly
 import lab.maxb.dark.ui.extra.ItemHolder
 import lab.maxb.dark.ui.extra.LatestOnly
@@ -14,6 +13,7 @@ import lab.maxb.dark.ui.extra.map
 import lab.maxb.dark.ui.extra.throwIfCancellation
 import lab.maxb.dark.ui.extra.uiTextOf
 import lab.maxb.dark.ui.screens.core.BaseViewModel
+import lab.maxb.dark.ui.tasks.add.R
 import org.koin.android.annotation.KoinViewModel
 import kotlin.math.max
 import lab.maxb.dark.ui.screens.add_task.AddTaskUiContract as Ui

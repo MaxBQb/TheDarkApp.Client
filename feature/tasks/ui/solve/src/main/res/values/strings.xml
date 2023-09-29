@@ -1,0 +1,10 @@
+<resources>
+    <!-- Solve Recognition Task -->
+    <string name="solveTask_checkSolution">Проверить</string>
+    <string name="solveTask_answer">Ваш ответ</string>
+
+    <!-- Moderator actions -->
+    <string name="solveTask_moderator_mark_reviewed">Одобрить</string>
+    <string name="solveTask_moderator_delete">Удалить</string>
+    <string name="solveTask_moderator_revoke_reviewed">Отозвать разрешение</string>
+</resources>

@@ -51,6 +51,8 @@ dependencies {
     implementation(project(mapOf("path" to ":core:data")))
     implementation(project(mapOf("path" to ":core:ui")))
     implementation(project(mapOf("path" to ":core:components")))
+    implementation(project(mapOf("path" to ":feature:navigation-drawer:ui")))
+    api(project(":feature:navigation:api"))
 
     // Dependency Injection
     implementation(libs.koin.bom)

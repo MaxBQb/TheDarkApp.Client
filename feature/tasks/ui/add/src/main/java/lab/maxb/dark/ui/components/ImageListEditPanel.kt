@@ -11,8 +11,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import lab.maxb.dark.ui.core.R
+import lab.maxb.dark.ui.tasks.add.R
 import lab.maxb.dark.ui.theme.spacing
+import lab.maxb.dark.ui.core.R as coreR
 
 @Composable
 fun ImageListEditPanel(
@@ -26,14 +27,14 @@ fun ImageListEditPanel(
         modifier = Modifier.fillMaxWidth()
     ) {
         Image(
-            painterResource(R.drawable.ic_delete),
+            painterResource(coreR.drawable.ic_delete),
             "",
             modifier = Modifier
                 .padding(MaterialTheme.spacing.small)
                 .clickable(onClick = onDelete),
         )
         Image(
-            painterResource(R.drawable.ic_edit),
+            painterResource(coreR.drawable.ic_edit),
             "",
             modifier = Modifier
                 .padding(MaterialTheme.spacing.small)

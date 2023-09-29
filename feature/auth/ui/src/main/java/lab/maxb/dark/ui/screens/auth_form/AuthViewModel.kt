@@ -6,7 +6,7 @@ import lab.maxb.dark.domain.model.Profile
 import lab.maxb.dark.domain.usecase.auth.AuthorizeUseCase
 import lab.maxb.dark.domain.usecase.settings.locale.ChangeLocaleUseCase
 import lab.maxb.dark.domain.usecase.settings.locale.GetCurrentLocaleUseCase
-import lab.maxb.dark.ui.core.R
+import lab.maxb.dark.ui.auth.R
 import lab.maxb.dark.ui.extra.FirstOnly
 import lab.maxb.dark.ui.extra.UiText
 import lab.maxb.dark.ui.extra.isNotEmpty

@@ -1,8 +1,6 @@
 package lab.maxb.dark.ui.screens.drawer
 
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,19 +30,10 @@ import com.ramcosta.composedestinations.spec.DestinationSpec
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import lab.maxb.dark.ui.BaseNavigator
 import lab.maxb.dark.ui.asNavigator
-import lab.maxb.dark.ui.core.R
+import lab.maxb.dark.ui.model.DrawerDestination
 import org.koin.androidx.compose.getViewModel
+import lab.maxb.dark.ui.core.R as coreR
 
-
-enum class DrawerDestination(
-    @DrawableRes val icon: Int,
-    @StringRes val label: Int,
-) {
-    Welcome(R.drawable.ic_home, R.string.nav_home_title),
-    Tasks(R.drawable.ic_list, R.string.nav_taskList_title),
-    FavoriteTasks(R.drawable.ic_favorite, R.string.nav_favoriteTaskList_title),
-    Articles(R.drawable.ic_articles, R.string.nav_articles_title),
-}
 
 interface DrawerNavigator : BaseNavigator {
     fun flatNavigate(to: DestinationSpec<*>)
@@ -71,7 +60,7 @@ fun Drawer(
         drawerContent = {
             ModalDrawerSheet(modifier = Modifier.fillMaxWidth(0.75f)) {
                 Image(
-                    painterResource(R.drawable.ic_launcher_foreground),
+                    painterResource(coreR.drawable.ic_launcher_foreground),
                     null,
                     modifier = Modifier
                         .fillMaxWidth()

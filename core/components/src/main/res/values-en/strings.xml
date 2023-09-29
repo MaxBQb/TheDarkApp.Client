@@ -1,0 +1,7 @@
+<resources>
+    <!-- Choose Locale Dialog -->
+    <string name="dialogChooseLocale_title">List of languages</string>
+    <string name="dialogChooseLocale_systemDefault">System default</string>
+    <string name="dialogChooseLocale_button_apply">Apply</string>
+    <string name="dialogChooseLocale_button_cancel">Cancel</string>
+</resources>

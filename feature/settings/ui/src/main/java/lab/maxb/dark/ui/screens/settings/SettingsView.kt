@@ -36,10 +36,12 @@ import lab.maxb.dark.ui.components.TopBar
 import lab.maxb.dark.ui.components.getLanguageCode
 import lab.maxb.dark.ui.components.getLanguageName
 import lab.maxb.dark.ui.core.BuildConfig
-import lab.maxb.dark.ui.core.R
 import lab.maxb.dark.ui.screens.core.effects.SideEffect
+import lab.maxb.dark.ui.settings.R
 import lab.maxb.dark.ui.theme.spacing
 import org.koin.androidx.compose.getViewModel
+import lab.maxb.dark.ui.core.R as coreR
+import lab.maxb.dark.ui.navigation.api.R as navR
 import lab.maxb.dark.ui.screens.settings.SettingsUiContract as Ui
 
 
@@ -71,7 +73,7 @@ fun SettingsScreen(
         navController = navController,
         topBar = {
             TopBar(
-                title = stringResource(id = R.string.nav_settings_title),
+                title = stringResource(id = navR.string.nav_settings_title),
                 navigationIcon = { NavBackIcon(navController = navController) },
             )
         }
@@ -93,7 +95,7 @@ fun SettingsRootStateless(
     ) {
         Column {
             SettingsMenuLink(
-                icon = { Icon(painterResource(R.drawable.ic_language), null) },
+                icon = { Icon(painterResource(coreR.drawable.ic_language), null) },
                 title = { Text(stringResource(R.string.settings_language_title)) },
                 subtitle = {
                     Text(
@@ -132,7 +134,7 @@ fun SettingsRootStateless(
             Text(
                 text = stringResource(
                     R.string.settings_version_info,
-                    stringResource(R.string.app_name),
+                    stringResource(coreR.string.app_name),
                     getAppVersion(),
                 ),
                 textAlign = TextAlign.Center,

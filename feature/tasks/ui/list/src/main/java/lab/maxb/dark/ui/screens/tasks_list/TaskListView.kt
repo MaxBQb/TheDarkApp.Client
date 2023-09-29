@@ -40,11 +40,12 @@ import lab.maxb.dark.ui.components.FavoriteIcon
 import lab.maxb.dark.ui.components.LoadingCircle
 import lab.maxb.dark.ui.components.RecognitionTaskImage
 import lab.maxb.dark.ui.components.TopScaffold
-import lab.maxb.dark.ui.core.R
+import lab.maxb.dark.ui.model.DrawerDestination
 import lab.maxb.dark.ui.model.RecognitionTaskListItem
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
 import org.koin.androidx.compose.getViewModel
+import lab.maxb.dark.ui.core.R as coreR
 
 interface TaskListNavigator {
     fun navigateSolveTask(id: String)
@@ -59,7 +60,7 @@ fun RecognitionTaskListScreen(
     viewModel: RecognitionTaskListViewModel = getViewModel(),
 ) = TopScaffold(
     navController = navController,
-    title = stringResource(id = R.string.nav_taskList_title),
+    title = stringResource(DrawerDestination.Tasks.label),
     content = {
         val items = viewModel.recognitionTaskList.collectAsLazyPagingItems()
         val isTaskCreationAllowed by viewModel.isTaskCreationAllowed.collectAsState()
@@ -83,7 +84,7 @@ fun RecognitionTaskListScreen(
                     .padding(MaterialTheme.spacing.large)
                     .align(Alignment.BottomEnd)
             ) {
-                Image(painterResource(id = R.drawable.ic_plus), null)
+                Image(painterResource(coreR.drawable.ic_plus), null)
             }
         }
     },

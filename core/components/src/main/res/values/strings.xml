@@ -1,0 +1,7 @@
+<resources>
+    <!-- Choose Locale Dialog -->
+    <string name="dialogChooseLocale_title">Список языков</string>
+    <string name="dialogChooseLocale_systemDefault">Системное значение</string>
+    <string name="dialogChooseLocale_button_apply">Применить</string>
+    <string name="dialogChooseLocale_button_cancel">Отмена</string>
+</resources>

@@ -44,12 +44,14 @@ import lab.maxb.dark.ui.components.LoadingCircle
 import lab.maxb.dark.ui.components.LoadingComponent
 import lab.maxb.dark.ui.components.SettingsButton
 import lab.maxb.dark.ui.components.TopScaffold
-import lab.maxb.dark.ui.core.R
+import lab.maxb.dark.ui.model.DrawerDestination
+import lab.maxb.dark.ui.models.toStringResource
 import lab.maxb.dark.ui.theme.DarkAppTheme
 import lab.maxb.dark.ui.theme.Golden
 import lab.maxb.dark.ui.theme.fontSize
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
+import lab.maxb.dark.ui.welcome.R
 import org.koin.androidx.compose.getViewModel
 import lab.maxb.dark.ui.screens.welcome.WelcomeUiContract as Ui
 
@@ -68,7 +70,7 @@ fun WelcomeScreen(
     val onEvent = viewModel::onEvent
     TopScaffold(
         navController = navController,
-        title = stringResource(R.string.nav_home_title),
+        title = stringResource(DrawerDestination.Welcome.label),
         actions = { SettingsButton { navigator.navigateSettings() } }
     ) {
         LoadingComponent(result = uiState, onLoading = {
@@ -149,7 +151,7 @@ fun Exit(modifier: Modifier = Modifier, onExit: () -> Unit) = Button(
             .size(ButtonDefaults.IconSize)
     )
     Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-    Text(text = stringResource(id = R.string.auth_menu_signOut))
+    Text(text = stringResource(id = R.string.welcome_signOut))
 }
 
 @Composable
@@ -189,20 +191,10 @@ fun Greeting(name: String?) {
 fun RoleName(role: Role?) = AnimatedVisibility(role != null) {
     Text(
         buildAnnotatedString {
-            append(stringResource(id = R.string.welcome_role))
+            append(stringResource(R.string.welcome_role))
             append(": ")
             withStyle(SpanStyle(Color.LightGray)) {
-                append(
-                    stringResource(
-                        when (role ?: Role.USER) {
-                            Role.USER -> R.string.role_user
-                            Role.PREMIUM_USER -> R.string.role_premium_user
-                            Role.MODERATOR -> R.string.role_moderator
-                            Role.ADMINISTRATOR -> R.string.role_admin
-                            Role.CONSULTOR -> R.string.role_consultor
-                        }
-                    )
-                )
+                append((role ?: Role.USER).toStringResource())
             }
         },
         modifier = Modifier.fillMaxWidth()

@@ -1,0 +1,6 @@
+<resources>
+    <!-- Settings -->
+    <string name="settings_language_title">Interface language</string>
+    <string name="settings_language_auto">System default (%s)</string>
+    <string name="settings_useExternalSuggestions">Use online-synonymizer</string>
+</resources>

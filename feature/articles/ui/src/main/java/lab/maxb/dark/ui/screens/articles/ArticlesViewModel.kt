@@ -15,7 +15,7 @@ import lab.maxb.dark.domain.usecase.article.CreateArticleUseCase
 import lab.maxb.dark.domain.usecase.article.GetArticlesListUseCase
 import lab.maxb.dark.domain.usecase.article.UpdateArticleUseCase
 import lab.maxb.dark.domain.usecase.profile.GetProfileUseCase
-import lab.maxb.dark.ui.core.R
+import lab.maxb.dark.ui.articles.R
 import lab.maxb.dark.ui.extra.FirstOnly
 import lab.maxb.dark.ui.extra.anyLoading
 import lab.maxb.dark.ui.extra.launch

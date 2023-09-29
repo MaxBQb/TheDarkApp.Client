@@ -19,11 +19,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.spec.DestinationSpec
 import lab.maxb.dark.ui.BaseNavigator
+import lab.maxb.dark.ui.auth.R
 import lab.maxb.dark.ui.components.AnimateAppearance
 import lab.maxb.dark.ui.components.LoadingCircle
 import lab.maxb.dark.ui.components.LoadingComponent
 import lab.maxb.dark.ui.components.LoadingError
-import lab.maxb.dark.ui.core.R
 import lab.maxb.dark.ui.extra.isSuccess
 import lab.maxb.dark.ui.extra.require
 import lab.maxb.dark.ui.screens.destinations.AuthHandleScreenDestination

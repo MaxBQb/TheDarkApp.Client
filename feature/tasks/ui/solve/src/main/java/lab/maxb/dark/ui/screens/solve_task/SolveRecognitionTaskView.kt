@@ -48,17 +48,18 @@ import lab.maxb.dark.ui.components.ScaffoldWithDrawer
 import lab.maxb.dark.ui.components.ShareIcon
 import lab.maxb.dark.ui.components.TopBar
 import lab.maxb.dark.ui.components.rememberSnackbarHostState
-import lab.maxb.dark.ui.core.R
 import lab.maxb.dark.ui.extra.show
 import lab.maxb.dark.ui.screens.core.effects.EffectKey
 import lab.maxb.dark.ui.screens.core.effects.On
 import lab.maxb.dark.ui.screens.core.effects.SideEffects
 import lab.maxb.dark.ui.screens.core.effects.UiSideEffectsHolder
 import lab.maxb.dark.ui.screens.solve_task.destinations.SolveRecognitionTaskScreenDestination
+import lab.maxb.dark.ui.tasks.solve.R
 import lab.maxb.dark.ui.theme.DarkAppTheme
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
 import org.koin.androidx.compose.getViewModel
+import lab.maxb.dark.ui.navigation.api.R as navR
 import lab.maxb.dark.ui.screens.solve_task.TaskSolveUiContract as Ui
 
 
@@ -85,9 +86,9 @@ fun SolveRecognitionTaskScreen(
             TopBar(
                 title = stringResource(
                     if (uiState.isReviewMode)
-                        R.string.nav_taskReview_title
+                        navR.string.nav_taskReview_title
                     else
-                        R.string.nav_solveTask_title
+                        navR.string.nav_solveTask_title
                 ),
                 navigationIcon = { NavBackIcon(navController) },
                 actions = {

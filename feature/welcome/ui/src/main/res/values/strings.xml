@@ -1,0 +1,16 @@
+<resources>
+    <!-- Welcome -->
+    <string name="welcome_welcome">Добро пожаловать, %s!</string>
+    <string name="welcome_anonymousWelcome">Вы не авторизованы!</string>
+    <string name="welcome_rating">Набрано очков</string>
+    <string name="welcome_dailyArticle_title">Факт дня</string>
+    <string name="welcome_role">Роль</string>
+    <string name="welcome_signOut">Выйти из аккаунта</string>
+
+    <!-- Roles -->
+    <string name="role_admin">Администратор</string>
+    <string name="role_moderator">Модератор</string>
+    <string name="role_user">Обычный пользователь</string>
+    <string name="role_premium_user">Премиальный пользователь</string>
+    <string name="role_consultor">Консультант</string>
+</resources>

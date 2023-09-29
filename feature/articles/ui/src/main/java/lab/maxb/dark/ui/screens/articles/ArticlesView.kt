@@ -47,6 +47,7 @@ import androidx.paging.compose.itemKey
 import com.ramcosta.composedestinations.annotation.Destination
 import kotlinx.coroutines.flow.flowOf
 import lab.maxb.dark.domain.model.Article
+import lab.maxb.dark.ui.articles.R
 import lab.maxb.dark.ui.components.AnimateAppearance
 import lab.maxb.dark.ui.components.AnimatedElementSwitch
 import lab.maxb.dark.ui.components.ExpandableCard
@@ -57,6 +58,7 @@ import lab.maxb.dark.ui.components.rememberSnackbarHostState
 import lab.maxb.dark.ui.extra.show
 import lab.maxb.dark.ui.extra.synchronizeChanges
 import lab.maxb.dark.ui.model.ArticleListItem
+import lab.maxb.dark.ui.model.DrawerDestination
 import lab.maxb.dark.ui.screens.core.effects.SideEffect
 import lab.maxb.dark.ui.theme.DarkAppTheme
 import lab.maxb.dark.ui.theme.spacing
@@ -81,7 +83,7 @@ fun ArticlesScreen(
     TopScaffold(
         navController = navController,
         snackbarState = snackbarState,
-        title = stringResource(id = coreR.string.nav_articles_title),
+        title = stringResource(DrawerDestination.Articles.label),
     ) {
         ArticlesRootStateless(items, uiState, onEvent)
     }
@@ -293,7 +295,7 @@ fun EditableArticleCard(
                     top = MaterialTheme.spacing.small,
                 )
                 .onPreviewKeyEvent(keyboardNext.event),
-            label = { Text(stringResource(coreR.string.articles_titleHint)) },
+            label = { Text(stringResource(R.string.articles_titleHint)) },
             keyboardOptions = keyboardNext.options,
             keyboardActions = keyboardNext.actions,
         )
@@ -312,14 +314,14 @@ fun EditableArticleCard(
             keyboardActions = keyboardClose.actions,
             label = {
                 Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(stringResource(coreR.string.articles_bodyHint))
+                    Text(stringResource(R.string.articles_bodyHint))
                     val showLength = item.body.length >= 100
                     if (showLength)
                         Spacer(modifier = Modifier.weight(2f))
                     AnimatedVisibility(showLength) {
                         Text(
                             stringResource(
-                                id = coreR.string.articles_bodyLength,
+                                R.string.articles_bodyLength,
                                 item.body.length,
                                 Article.MAX_BODY_LENGTH,
                             ),

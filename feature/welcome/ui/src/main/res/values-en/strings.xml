@@ -1,0 +1,16 @@
+<resources>
+    <!-- Welcome -->
+    <string name="welcome_welcome">Welcome, %s!</string>
+    <string name="welcome_anonymousWelcome">How did you get there?!</string>
+    <string name="welcome_rating">Score</string>
+    <string name="welcome_dailyArticle_title">Tip of the day</string>
+    <string name="welcome_role">Role</string>
+    <string name="welcome_signOut">Sign out from account</string>
+
+    <!-- Roles -->
+    <string name="role_admin">Administrator</string>
+    <string name="role_moderator">Moderator</string>
+    <string name="role_user">User</string>
+    <string name="role_premium_user">Premium user</string>
+    <string name="role_consultor">Consultor</string>
+</resources>

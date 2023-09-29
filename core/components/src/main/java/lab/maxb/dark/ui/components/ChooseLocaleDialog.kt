@@ -13,7 +13,6 @@ import com.vanpra.composematerialdialogs.listItemsSingleChoice
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.title
 import lab.maxb.dark.ui.core.BuildConfig
-import lab.maxb.dark.ui.core.R
 import lab.maxb.dark.ui.theme.DarkAppTheme
 import java.util.Locale
 

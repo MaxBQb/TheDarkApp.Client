@@ -1,0 +1,11 @@
+<resources>
+    <!-- Articles -->
+    <string name="articles_titleHint">Title</string>
+    <string name="articles_bodyHint">Description</string>
+    <string name="articles_bodyLength">%s/%s</string>
+
+    <!-- Messages -->
+    <string name="articles_message_saveError">Error, changes not saved</string>
+    <string name="articles_message_tooShortTitle">Minimum title length: %s chars</string>
+    <string name="articles_message_tooShortBody">Minimum description length: %s chars</string>
+</resources>

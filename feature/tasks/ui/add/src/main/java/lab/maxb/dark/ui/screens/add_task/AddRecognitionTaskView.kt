@@ -50,16 +50,17 @@ import lab.maxb.dark.ui.components.LoadingScreen
 import lab.maxb.dark.ui.components.ScaffoldWithDrawer
 import lab.maxb.dark.ui.components.TopBar
 import lab.maxb.dark.ui.components.rememberSnackbarHostState
-import lab.maxb.dark.ui.core.R
 import lab.maxb.dark.ui.extra.ItemHolder
 import lab.maxb.dark.ui.extra.show
 import lab.maxb.dark.ui.screens.core.effects.EffectKey
 import lab.maxb.dark.ui.screens.core.effects.On
 import lab.maxb.dark.ui.screens.core.effects.SideEffects
 import lab.maxb.dark.ui.screens.core.effects.UiSideEffectsHolder
+import lab.maxb.dark.ui.tasks.add.R
 import lab.maxb.dark.ui.theme.spacing
 import lab.maxb.dark.ui.theme.units.sdp
 import org.koin.androidx.compose.getViewModel
+import lab.maxb.dark.ui.navigation.api.R as navR
 import lab.maxb.dark.ui.screens.add_task.AddTaskUiContract as Ui
 
 
@@ -77,7 +78,7 @@ fun AddRecognitionTaskScreen(
         navController = navController,
         topBar = {
             TopBar(
-                title = stringResource(id = R.string.nav_addTask_title),
+                title = stringResource(id = navR.string.nav_addTask_title),
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(Icons.Filled.Close, null)

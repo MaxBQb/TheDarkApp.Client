@@ -10,13 +10,13 @@ import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import com.ramcosta.composedestinations.utils.currentDestinationAsState
 import com.ramcosta.composedestinations.utils.navGraph
 import com.ramcosta.composedestinations.utils.startDestination
+import lab.maxb.dark.ui.model.DrawerDestination
+import lab.maxb.dark.ui.model.DrawerDestination.*
 import lab.maxb.dark.ui.screens.add_task.destinations.AddRecognitionTaskScreenDestination
 import lab.maxb.dark.ui.screens.articles.destinations.ArticlesScreenDestination
 import lab.maxb.dark.ui.screens.auth_form.AuthNavigator
 import lab.maxb.dark.ui.screens.auth_handle.AuthHandleNavigator
 import lab.maxb.dark.ui.screens.destinations.AuthScreenDestination
-import lab.maxb.dark.ui.screens.drawer.DrawerDestination
-import lab.maxb.dark.ui.screens.drawer.DrawerDestination.*
 import lab.maxb.dark.ui.screens.drawer.DrawerNavigator
 import lab.maxb.dark.ui.screens.settings.destinations.SettingsScreenDestination
 import lab.maxb.dark.ui.screens.solve_task.destinations.SolveRecognitionTaskScreenDestination

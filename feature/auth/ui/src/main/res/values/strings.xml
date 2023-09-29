@@ -1,0 +1,21 @@
+<resources>
+    <!-- Authorization -->
+    <string name="auth_login_label">Вход</string>
+    <string name="auth_signup_label">Регистрация</string>
+    <string name="auth_isAccountNew">Ещё нет аккаунта</string>
+    <string name="auth_loginHint">Логин</string>
+    <string name="auth_passwordHint">Пароль</string>
+    <string name="auth_passwordRepeatHint">Повторите пароль</string>
+    <string name="auth_login_button">Войти</string>
+    <string name="auth_signup_button">Зарегистрироваться</string>
+        <!-- Messages -->
+        <string name="auth_message_signup_incorrectCredentials">Данные не корректны или такой пользователь уже существует</string>
+        <string name="auth_message_login_incorrectCredentials">Неверный логин или пароль</string>
+        <string name="auth_message_hasEmptyFields">Не все данные введены</string>
+        <string name="auth_message_passwordsNotMatch">Пароли не совпадают</string>
+
+    <!-- Authorization handling -->
+    <string name="handleAuth_pleaseWait">Идёт подключение…</string>
+    <string name="handleAuth_message_ProfileNotFound">Не удалось получить данные профиля, попробуйте позже…</string>
+    <string name="handleAuth_retry">Попробовать снова</string>
+</resources>

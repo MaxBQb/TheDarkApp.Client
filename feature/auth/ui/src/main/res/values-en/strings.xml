@@ -1,0 +1,21 @@
+<resources>
+    <!-- Authorization -->
+    <string name="auth_login_label">Sign in</string>
+    <string name="auth_signup_label">Sign up</string>
+    <string name="auth_isAccountNew">No account yet</string>
+    <string name="auth_loginHint">Login</string>
+    <string name="auth_passwordHint">Password</string>
+    <string name="auth_passwordRepeatHint">Repeat password</string>
+    <string name="auth_login_button">Submit</string>
+    <string name="auth_signup_button">Create account</string>
+        <!-- Messages -->
+        <string name="auth_message_signup_incorrectCredentials">The data is invalid or the user already exists</string>
+        <string name="auth_message_login_incorrectCredentials">Wrong login or password</string>
+        <string name="auth_message_hasEmptyFields">Some fields are empty</string>
+        <string name="auth_message_passwordsNotMatch">Passwords do not match</string>
+
+    <!-- Authorization handling -->
+    <string name="handleAuth_pleaseWait">Connection in progress…</string>
+    <string name="handleAuth_message_ProfileNotFound">Failed to get profile data, please try again later…</string>
+    <string name="handleAuth_retry">Retry</string>
+</resources>

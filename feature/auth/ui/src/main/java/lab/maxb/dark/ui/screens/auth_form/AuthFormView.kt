@@ -44,6 +44,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.spec.DestinationSpec
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import lab.maxb.dark.ui.BaseNavigator
+import lab.maxb.dark.ui.auth.R
 import lab.maxb.dark.ui.components.AnimatedScaleToggle
 import lab.maxb.dark.ui.components.AppScaffold
 import lab.maxb.dark.ui.components.ChooseLocaleDialog
@@ -51,7 +52,6 @@ import lab.maxb.dark.ui.components.LabelledSwitch
 import lab.maxb.dark.ui.components.LanguageToggleButton
 import lab.maxb.dark.ui.components.LoadingScreen
 import lab.maxb.dark.ui.components.rememberSnackbarHostState
-import lab.maxb.dark.ui.core.R
 import lab.maxb.dark.ui.extra.show
 import lab.maxb.dark.ui.screens.core.effects.EffectKey
 import lab.maxb.dark.ui.screens.core.effects.On
@@ -69,6 +69,7 @@ import lab.maxb.dark.ui.utils.keyboardClose
 import lab.maxb.dark.ui.utils.keyboardNext
 import lab.maxb.dark.ui.utils.withInputOptions
 import org.koin.androidx.compose.getViewModel
+import lab.maxb.dark.ui.core.R as coreR
 import lab.maxb.dark.ui.screens.auth_form.AuthUiContract as Ui
 
 interface AuthNavigator : BaseNavigator {
@@ -357,9 +358,9 @@ private fun ShowPasswordIcon(
         Icon(
             painterResource(
                 if (it)
-                    R.drawable.ic_visible
+                    coreR.drawable.ic_visible
                 else
-                    R.drawable.ic_invisible
+                    coreR.drawable.ic_invisible
             ),
             null,
             tint = MaterialTheme.colorScheme.onSurface,
