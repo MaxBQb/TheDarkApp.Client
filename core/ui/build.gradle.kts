@@ -68,6 +68,7 @@ android {
 
 dependencies {
     implementation(project(":core:domain"))
+    implementation(project(":feature:paging:domain"))
 
     // Dependency Injection
     implementation(libs.koin.bom)

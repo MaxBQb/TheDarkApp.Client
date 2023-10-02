@@ -11,20 +11,26 @@ internal class RecognitionTaskOperationsKtTest {
 
     @Test
     fun createRecognitionTask() {
-        assertNotNull(createRecognitionTask(
-            listOf("1"),
-            listOf(""),
-            user
-        ))
-        assertNull(createRecognitionTask(
-            listOf(),
-            listOf(""),
-            user
-        ))
-        assertNull(createRecognitionTask(
-            listOf(""),
-            listOf(),
-            user
-        ))
+        assertNotNull(
+            lab.maxb.dark.domain.operation.createRecognitionTask(
+                listOf("1"),
+                listOf(""),
+                user
+            )
+        )
+        assertNull(
+            lab.maxb.dark.domain.operation.createRecognitionTask(
+                listOf(),
+                listOf(""),
+                user
+            )
+        )
+        assertNull(
+            lab.maxb.dark.domain.operation.createRecognitionTask(
+                listOf(""),
+                listOf(),
+                user
+            )
+        )
     }
 }

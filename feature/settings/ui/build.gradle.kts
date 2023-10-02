@@ -48,7 +48,7 @@ android {
 
 dependencies {
     implementation(project(mapOf("path" to ":core:domain")))
-    implementation(project(mapOf("path" to ":core:data")))
+    implementation(project(":feature:settings:domain"))
     implementation(project(mapOf("path" to ":core:ui")))
     implementation(project(mapOf("path" to ":core:components")))
     api(project(":feature:navigation:api"))

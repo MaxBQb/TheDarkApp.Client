@@ -4,7 +4,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     id("java-library")
     id("org.jetbrains.kotlin.jvm")
-    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
 }
 
@@ -21,7 +20,7 @@ kotlin {
 
 dependencies {
     implementation(libs.coroutines.core)
-    implementation(libs.kotlinx.serialization.json)
+
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(libs.koin.annotations)

@@ -37,7 +37,10 @@ android {
 
 dependencies {
     implementation(project(mapOf("path" to ":core:domain")))
+    implementation(project(":feature:articles:domain"))
+    api(project(":feature:users:domain"))
     implementation(project(mapOf("path" to ":core:data")))
+    api(project(":feature:paging:domain"))
     implementation(project(":feature:paging:data"))
     api(project(":feature:users:data"))
 

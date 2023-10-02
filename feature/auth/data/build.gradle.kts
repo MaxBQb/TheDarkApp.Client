@@ -39,6 +39,7 @@ android {
 
 dependencies {
     implementation(project(mapOf("path" to ":core:domain")))
+    implementation(project(":feature:auth:domain"))
     implementation(project(mapOf("path" to ":core:data")))
 
     // Dependency Injection

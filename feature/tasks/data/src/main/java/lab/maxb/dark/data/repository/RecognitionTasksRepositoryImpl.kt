@@ -23,7 +23,7 @@ import lab.maxb.dark.data.remote.model.toNetworkDTO
 import lab.maxb.dark.data.utils.DbRefreshController
 import lab.maxb.dark.data.utils.ImageLoader
 import lab.maxb.dark.data.utils.ResourceImpl
-import lab.maxb.dark.data.local.model.Page
+import lab.maxb.dark.domain.model.Page
 import lab.maxb.dark.data.pagination.RecognitionTaskMediator
 import lab.maxb.dark.domain.model.RecognitionTask
 import lab.maxb.dark.domain.repository.RecognitionTasksRepository

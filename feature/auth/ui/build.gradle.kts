@@ -48,6 +48,8 @@ android {
 
 dependencies {
     implementation(project(mapOf("path" to ":core:domain")))
+    implementation(project(":feature:settings:domain"))
+    implementation(project(":feature:auth:domain"))
     implementation(project(mapOf("path" to ":core:data")))
     implementation(project(mapOf("path" to ":core:ui")))
     implementation(project(mapOf("path" to ":core:components")))

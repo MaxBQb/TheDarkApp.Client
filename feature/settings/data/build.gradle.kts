@@ -40,6 +40,7 @@ android {
 dependencies {
     implementation(project(mapOf("path" to ":core:domain")))
     implementation(project(mapOf("path" to ":core:data")))
+    implementation(project(":feature:settings:domain"))
 
     // Dependency Injection
     implementation(libs.koin.bom)

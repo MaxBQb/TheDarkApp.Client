@@ -50,6 +50,7 @@ dependencies {
     implementation(project(mapOf("path" to ":core:domain")))
     implementation(project(mapOf("path" to ":core:data")))
     implementation(project(mapOf("path" to ":core:ui")))
+    implementation(project(":feature:users:domain"))
     implementation(project(mapOf("path" to ":core:components")))
     implementation(project(mapOf("path" to ":feature:navigation-drawer:ui")))
     api(project(":feature:navigation:api"))
@@ -59,6 +60,8 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
     implementation(libs.koin.annotations)
+    implementation(project(mapOf("path" to ":feature:articles:domain")))
+    implementation(project(mapOf("path" to ":feature:articles:domain")))
     ksp(libs.koin.ksp)
 
     // Coroutines

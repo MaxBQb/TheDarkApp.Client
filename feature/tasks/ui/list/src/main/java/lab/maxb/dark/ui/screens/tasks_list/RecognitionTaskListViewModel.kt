@@ -9,11 +9,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.mapLatest
 import lab.maxb.dark.domain.model.isUser
-import lab.maxb.dark.domain.usecase.profile.GetProfileUseCase
-import lab.maxb.dark.domain.usecase.task.GetFavoriteRecognitionTaskListUseCase
-import lab.maxb.dark.domain.usecase.task.GetRecognitionTaskImageUseCase
-import lab.maxb.dark.domain.usecase.task.GetRecognitionTaskListUseCase
-import lab.maxb.dark.domain.usecase.task.MarkFavoriteRecognitionTaskUseCase
+import lab.maxb.dark.domain.usecase.GetProfileUseCase
+import lab.maxb.dark.domain.usecase.GetFavoriteRecognitionTaskListUseCase
+import lab.maxb.dark.domain.usecase.GetRecognitionTaskImageUseCase
+import lab.maxb.dark.domain.usecase.GetRecognitionTaskListUseCase
+import lab.maxb.dark.domain.usecase.MarkFavoriteRecognitionTaskUseCase
 import lab.maxb.dark.ui.extra.launch
 import lab.maxb.dark.ui.extra.stateIn
 import lab.maxb.dark.ui.model.toDomain

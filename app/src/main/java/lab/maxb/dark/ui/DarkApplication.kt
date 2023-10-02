@@ -10,7 +10,11 @@ import lab.maxb.dark.data.FeaturePagingDataModule
 import lab.maxb.dark.data.FeatureSettingsDataModule
 import lab.maxb.dark.data.FeatureTasksDataModule
 import lab.maxb.dark.data.FeatureUsersDataModule
-import lab.maxb.dark.domain.CoreDomainModule
+import lab.maxb.dark.domain.FeatureArticlesDomainModule
+import lab.maxb.dark.domain.FeatureAuthDomainModule
+import lab.maxb.dark.domain.FeatureSettingsDomainModule
+import lab.maxb.dark.domain.FeatureTasksDomainModule
+import lab.maxb.dark.domain.FeatureUsersDomainModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -28,13 +32,13 @@ class DarkApplication : Application() {
             modules(
                 AppModule().module,
                 FeatureDataModule().module,
-                CoreDomainModule().module, CoreDataModule().module,
+                CoreDataModule().module,
                 FeatureNavigationUIModule().module,
-                FeatureArticlesDataModule().module, FeatureArticlesUIModule().module,
-                FeatureUsersDataModule().module, FeatureWelcomeUIModule().module,
-                FeatureSettingsDataModule().module, FeatureSettingsUIModule().module,
-                FeatureAuthDataModule().module, FeatureAuthUIModule().module,
-                FeatureTasksDataModule().module,
+                FeatureArticlesDomainModule().module, FeatureArticlesDataModule().module, FeatureArticlesUIModule().module,
+                FeatureUsersDomainModule().module, FeatureUsersDataModule().module, FeatureWelcomeUIModule().module,
+                FeatureSettingsDomainModule().module, FeatureSettingsDataModule().module, FeatureSettingsUIModule().module,
+                FeatureAuthDomainModule().module, FeatureAuthDataModule().module, FeatureAuthUIModule().module,
+                FeatureTasksDomainModule().module, FeatureTasksDataModule().module,
                 FeatureAddTaskUIModule().module,
                 FeatureSolveTaskUIModule().module,
                 FeatureTasksListUIModule().module,

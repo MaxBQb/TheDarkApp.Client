@@ -1,8 +1,8 @@
 package lab.maxb.dark.ui.screens.auth_handle
 
 import kotlinx.coroutines.flow.combine
-import lab.maxb.dark.domain.usecase.auth.HandleInitialAuthUseCase
-import lab.maxb.dark.domain.usecase.profile.RefreshProfileUseCase
+import lab.maxb.dark.domain.usecase.HandleInitialAuthUseCase
+import lab.maxb.dark.domain.usecase.RefreshProfileUseCase
 import lab.maxb.dark.ui.extra.FirstOnly
 import lab.maxb.dark.ui.extra.launch
 import lab.maxb.dark.ui.extra.stateIn

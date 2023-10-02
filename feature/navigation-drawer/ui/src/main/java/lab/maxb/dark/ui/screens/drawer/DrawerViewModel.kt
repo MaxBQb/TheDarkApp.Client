@@ -1,7 +1,7 @@
 package lab.maxb.dark.ui.screens.drawer
 
 import kotlinx.coroutines.flow.combine
-import lab.maxb.dark.domain.usecase.task.GetFavoriteRecognitionTaskListUseCase
+import lab.maxb.dark.domain.usecase.GetFavoriteRecognitionTaskListUseCase
 import lab.maxb.dark.ui.extra.stateIn
 import lab.maxb.dark.ui.model.DrawerDestination
 import lab.maxb.dark.ui.screens.core.StatefulViewModel

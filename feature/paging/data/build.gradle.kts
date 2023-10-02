@@ -37,6 +37,7 @@ android {
 
 dependencies {
     implementation(project(mapOf("path" to ":core:domain")))
+    implementation(project(":feature:paging:domain"))
     implementation(project(mapOf("path" to ":core:data")))
 
     // Dependency Injection

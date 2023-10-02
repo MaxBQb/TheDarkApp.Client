@@ -47,6 +47,7 @@ android {
 
 dependencies {
     implementation(project(mapOf("path" to ":core:domain")))
+    api(project(":feature:auth:domain"))
 
     // Dependency Injection
     implementation(libs.koin.bom)

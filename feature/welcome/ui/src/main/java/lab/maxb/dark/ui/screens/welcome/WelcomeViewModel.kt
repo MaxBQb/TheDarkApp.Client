@@ -1,10 +1,10 @@
 package lab.maxb.dark.ui.screens.welcome
 
 import kotlinx.coroutines.flow.combine
-import lab.maxb.dark.domain.usecase.article.GetDailyArticleUseCase
-import lab.maxb.dark.domain.usecase.auth.SignOutUseCase
-import lab.maxb.dark.domain.usecase.profile.GetProfileUseCase
-import lab.maxb.dark.domain.usecase.user.GetCurrentUserUseCase
+import lab.maxb.dark.domain.usecase.GetDailyArticleUseCase
+import lab.maxb.dark.domain.usecase.SignOutUseCase
+import lab.maxb.dark.domain.usecase.GetProfileUseCase
+import lab.maxb.dark.domain.usecase.GetCurrentUserUseCase
 import lab.maxb.dark.ui.extra.FirstOnly
 import lab.maxb.dark.ui.extra.Result
 import lab.maxb.dark.ui.extra.anyError

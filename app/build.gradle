@@ -99,12 +99,6 @@ dependencies {
     implementation project(path: ':feature:tasks:ui:solve')
     implementation project(path: ':feature:tasks:ui:list')
     implementation project(path: ':feature:navigation-drawer:ui')
-
-    // Dependency Injection
-    implementation libs.koin.bom
-    implementation libs.koin.android
-    implementation libs.koin.compose
-    implementation libs.koin.annotations
     implementation project(path: ':feature:articles:data')
     implementation project(path: ':feature:data')
     implementation project(path: ':feature:auth:data')
@@ -112,6 +106,16 @@ dependencies {
     implementation project(path: ':feature:tasks:data')
     implementation project(path: ':feature:users:data')
     implementation project(path: ':feature:paging:data')
+    implementation project(path: ':feature:settings:domain')
+    implementation project(path: ':feature:tasks:domain')
+    implementation project(path: ':feature:articles:domain')
+    implementation project(path: ':feature:users:domain')
+
+    // Dependency Injection
+    implementation libs.koin.bom
+    implementation libs.koin.android
+    implementation libs.koin.compose
+    implementation libs.koin.annotations
     ksp libs.koin.ksp
 
     // Coroutines

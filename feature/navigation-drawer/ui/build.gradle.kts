@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
     implementation(libs.koin.annotations)
+    implementation(project(mapOf("path" to ":feature:tasks:domain")))
     ksp(libs.koin.ksp)
 
     // Coroutines

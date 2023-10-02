@@ -38,7 +38,7 @@ import androidx.navigation.NavController
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.FULL_ROUTE_PLACEHOLDER
-import lab.maxb.dark.domain.operations.shareLink
+import lab.maxb.dark.domain.operation.shareLink
 import lab.maxb.dark.ui.components.AnimatedScaleToggle
 import lab.maxb.dark.ui.components.FavoriteIcon
 import lab.maxb.dark.ui.components.ImageSlider

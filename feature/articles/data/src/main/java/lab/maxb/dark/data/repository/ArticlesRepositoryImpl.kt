@@ -22,7 +22,7 @@ import lab.maxb.dark.data.remote.model.toNetworkDTO
 import lab.maxb.dark.data.utils.DbRefreshController
 import lab.maxb.dark.data.utils.ResourceImpl
 import lab.maxb.dark.data.pagination.ArticleMediator
-import lab.maxb.dark.data.local.model.Page
+import lab.maxb.dark.domain.model.Page
 import lab.maxb.dark.domain.model.Article
 import lab.maxb.dark.domain.repository.ArticlesRepository
 import lab.maxb.dark.domain.repository.UsersRepository

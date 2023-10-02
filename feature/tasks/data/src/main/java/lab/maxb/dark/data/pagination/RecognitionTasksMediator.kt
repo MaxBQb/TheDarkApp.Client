@@ -6,7 +6,7 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.flow.firstOrNull
 import lab.maxb.dark.data.local.datasource.RemoteKeysLocalDataSource
-import lab.maxb.dark.data.local.model.Page
+import lab.maxb.dark.domain.model.Page
 import lab.maxb.dark.data.local.relations.FullRecognitionTaskDTO
 import lab.maxb.dark.data.local.model.RemoteKey
 import lab.maxb.dark.domain.model.RecognitionTask

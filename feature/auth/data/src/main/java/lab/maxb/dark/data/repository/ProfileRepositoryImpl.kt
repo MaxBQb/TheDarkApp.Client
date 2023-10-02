@@ -15,7 +15,7 @@ import lab.maxb.dark.domain.model.AuthState
 import lab.maxb.dark.domain.model.Mapper
 import lab.maxb.dark.domain.model.Profile
 import lab.maxb.dark.domain.model.getCastMapper
-import lab.maxb.dark.domain.operations.toProfile
+import lab.maxb.dark.domain.model.toProfile
 import lab.maxb.dark.domain.repository.ProfileRepository
 import org.koin.core.annotation.Single
 import java.time.Duration

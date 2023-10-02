@@ -3,9 +3,9 @@ package lab.maxb.dark.ui.screens.auth_form
 import kotlinx.coroutines.flow.combine
 import lab.maxb.dark.domain.model.AuthCredentials
 import lab.maxb.dark.domain.model.Profile
-import lab.maxb.dark.domain.usecase.auth.AuthorizeUseCase
-import lab.maxb.dark.domain.usecase.settings.locale.ChangeLocaleUseCase
-import lab.maxb.dark.domain.usecase.settings.locale.GetCurrentLocaleUseCase
+import lab.maxb.dark.domain.usecase.AuthorizeUseCase
+import lab.maxb.dark.domain.usecase.ChangeLocaleUseCase
+import lab.maxb.dark.domain.usecase.GetCurrentLocaleUseCase
 import lab.maxb.dark.ui.auth.R
 import lab.maxb.dark.ui.extra.FirstOnly
 import lab.maxb.dark.ui.extra.UiText

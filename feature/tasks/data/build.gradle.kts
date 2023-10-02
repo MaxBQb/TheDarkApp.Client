@@ -38,6 +38,9 @@ android {
 dependencies {
     implementation(project(mapOf("path" to ":core:domain")))
     implementation(project(mapOf("path" to ":core:data")))
+    implementation(project(":feature:tasks:domain"))
+    api(project(":feature:auth:domain"))
+    api(project(":feature:paging:domain"))
     implementation(project(":feature:paging:data"))
     api(project(":feature:users:data"))
 

@@ -3,8 +3,8 @@ package lab.maxb.dark.ui.screens.add_task
 import android.net.Uri
 import kotlinx.coroutines.flow.asStateFlow
 import lab.maxb.dark.domain.model.RecognitionTask
-import lab.maxb.dark.domain.usecase.task.CreateRecognitionTaskUseCase
-import lab.maxb.dark.domain.usecase.task.GetTaskNameSynonymsUseCase
+import lab.maxb.dark.domain.usecase.CreateRecognitionTaskUseCase
+import lab.maxb.dark.domain.usecase.GetTaskNameSynonymsUseCase
 import lab.maxb.dark.ui.extra.FirstOnly
 import lab.maxb.dark.ui.extra.ItemHolder
 import lab.maxb.dark.ui.extra.LatestOnly
