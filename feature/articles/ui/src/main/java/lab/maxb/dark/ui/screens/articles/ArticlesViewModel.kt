@@ -8,7 +8,7 @@ import androidx.paging.map
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapLatest
-import lab.maxb.dark.data.utils.pagination.replace
+import lab.maxb.dark.data.utils.replace
 import lab.maxb.dark.domain.model.Article
 import lab.maxb.dark.domain.model.Role
 import lab.maxb.dark.domain.usecase.article.CreateArticleUseCase

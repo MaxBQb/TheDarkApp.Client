@@ -2,7 +2,7 @@ package lab.maxb.dark.data.utils
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
-import lab.maxb.dark.data.UnableToObtainResource
+import lab.maxb.dark.data.exception.UnableToObtainResource
 import lab.maxb.dark.domain.model.Mapper
 import lab.maxb.dark.domain.model.NullableMapper
 import lab.maxb.dark.domain.repository.utils.Resource

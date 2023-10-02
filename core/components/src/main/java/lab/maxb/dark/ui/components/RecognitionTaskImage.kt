@@ -17,7 +17,7 @@ import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.animation.crossfade.CrossfadePlugin
 import com.skydoves.landscapist.coil.CoilImage
 import com.skydoves.landscapist.components.rememberImageComponent
-import lab.maxb.dark.data.remote.dark.AuthInterceptor
+import lab.maxb.dark.data.remote.interceptor.AuthInterceptor
 import lab.maxb.dark.ui.core.R
 import lab.maxb.dark.ui.theme.units.sdp
 import okhttp3.OkHttpClient

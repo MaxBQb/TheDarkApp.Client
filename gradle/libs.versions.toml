@@ -74,6 +74,7 @@ datastore-encrypted = { module = "io.github.osipxd:encrypted-datastore", version
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-paging = { module = "androidx.room:room-paging", version.ref = "room" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-common = { module = "androidx.room:room-common", version.ref = "room" }
 room-ksp = { module = "androidx.room:room-compiler", version.ref = "room" }
 #endregion
 #region Paging

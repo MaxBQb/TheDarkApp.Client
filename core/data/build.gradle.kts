@@ -5,12 +5,11 @@ import java.util.*
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
 }
 
 android {
-    namespace = "lab.maxb.dark.data"
+    namespace = "lab.maxb.dark.data.core"
     compileSdk = 34
 
     val prop = Properties().apply {
@@ -63,21 +62,14 @@ dependencies {
 
     // Datastore
     implementation(libs.datastore.preferences)
-    implementation(libs.datastore.encrypted)
 
     // Room persistence
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.ksp)
-    implementation(libs.room.paging)
-
-    // Paging
-    implementation(libs.paging.runtime)
 
     // Retrofit2 Networking
     implementation(libs.retrofit.core)
-    implementation(libs.retrofit.converter.gson)
-    implementation(libs.gson)
     implementation(libs.logging.interceptor)
 
     // Desugaring (Time-related features support for API 21+)
@@ -87,5 +79,4 @@ dependencies {
     implementation(libs.androidx.appcompat)
     testImplementation(libs.junit.core)
     androidTestImplementation(libs.junit)
-    androidTestImplementation(libs.espresso.core)
 }

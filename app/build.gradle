@@ -105,6 +105,13 @@ dependencies {
     implementation libs.koin.android
     implementation libs.koin.compose
     implementation libs.koin.annotations
+    implementation project(path: ':feature:articles:data')
+    implementation project(path: ':feature:data')
+    implementation project(path: ':feature:auth:data')
+    implementation project(path: ':feature:settings:data')
+    implementation project(path: ':feature:tasks:data')
+    implementation project(path: ':feature:users:data')
+    implementation project(path: ':feature:paging:data')
     ksp libs.koin.ksp
 
     // Coroutines

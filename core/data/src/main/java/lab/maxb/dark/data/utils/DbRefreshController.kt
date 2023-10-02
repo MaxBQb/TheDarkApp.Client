@@ -1,6 +1,6 @@
 package lab.maxb.dark.data.utils
 
-import lab.maxb.dark.data.model.local.TimeContainer
+import lab.maxb.dark.data.local.model.TimeContainer
 import java.util.concurrent.TimeUnit
 
 class DbRefreshController<T: TimeContainer>(
