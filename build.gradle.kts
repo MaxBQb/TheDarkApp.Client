@@ -5,8 +5,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath libs.gradle.plugin
-        classpath libs.kotlin.gradle.plugin
+        classpath(libs.gradle.plugin)
+        classpath(libs.kotlin.gradle.plugin)
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -16,11 +16,13 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://www.jitpack.io" }
-        maven { url "https://kotlin.bintray.com/kotlinx" }
+        maven {
+            setUrl("https://www.jitpack.io")
+            setUrl("https://kotlin.bintray.com/kotlinx")
+        }
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+tasks.register("clean", Delete::class) {
+    delete(rootProject.buildDir)
 }
