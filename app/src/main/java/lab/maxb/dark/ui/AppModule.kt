@@ -16,8 +16,8 @@ import lab.maxb.dark.domain.FeatureUsersDomainModule
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.module.Module
 import org.koin.dsl.module
-import org.koin.core.annotation.Module as AModule
 import org.koin.ksp.generated.*
+import org.koin.core.annotation.Module as AModule
 
 @AModule
 @ComponentScan("lab.maxb.dark")

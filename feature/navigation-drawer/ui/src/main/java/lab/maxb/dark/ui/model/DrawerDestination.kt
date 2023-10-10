@@ -3,8 +3,8 @@ package lab.maxb.dark.ui.model
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import lab.maxb.dark.ui.navigation_drawer.R
-import lab.maxb.dark.ui.navigation.api.R as navR
 import lab.maxb.dark.ui.core.R as coreR
+import lab.maxb.dark.ui.navigation.api.R as navR
 
 enum class DrawerDestination(
     @DrawableRes val icon: Int,

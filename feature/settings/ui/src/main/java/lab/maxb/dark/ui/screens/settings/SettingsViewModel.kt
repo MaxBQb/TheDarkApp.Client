@@ -1,9 +1,9 @@
 package lab.maxb.dark.ui.screens.settings
 
 import kotlinx.coroutines.flow.combine
-import lab.maxb.dark.domain.usecase.UseExternalSuggestionsUseCases
 import lab.maxb.dark.domain.usecase.ChangeLocaleUseCase
 import lab.maxb.dark.domain.usecase.GetCurrentLocaleUseCase
+import lab.maxb.dark.domain.usecase.UseExternalSuggestionsUseCases
 import lab.maxb.dark.ui.extra.launch
 import lab.maxb.dark.ui.extra.stateIn
 import lab.maxb.dark.ui.screens.core.BaseViewModel

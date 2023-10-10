@@ -3,13 +3,13 @@
 package lab.maxb.dark.plugin
 
 
-import org.gradle.api.Plugin
-import org.gradle.api.Project
-import org.gradle.kotlin.dsl.configure
 import com.google.devtools.ksp.gradle.KspExtension
 import lab.maxb.dark.plugin.common.id
 import lab.maxb.dark.plugin.common.libs
 import lab.maxb.dark.plugin.components.moduleName
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.configure
 
 
 class AndroidNavigationConventionPlugin : Plugin<Project> {

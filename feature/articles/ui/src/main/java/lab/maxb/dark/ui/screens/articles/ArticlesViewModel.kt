@@ -13,8 +13,8 @@ import lab.maxb.dark.domain.model.Article
 import lab.maxb.dark.domain.model.Role
 import lab.maxb.dark.domain.usecase.CreateArticleUseCase
 import lab.maxb.dark.domain.usecase.GetArticlesListUseCase
-import lab.maxb.dark.domain.usecase.UpdateArticleUseCase
 import lab.maxb.dark.domain.usecase.GetProfileUseCase
+import lab.maxb.dark.domain.usecase.UpdateArticleUseCase
 import lab.maxb.dark.ui.articles.R
 import lab.maxb.dark.ui.extra.FirstOnly
 import lab.maxb.dark.ui.extra.anyLoading

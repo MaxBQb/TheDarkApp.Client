@@ -2,8 +2,8 @@ package lab.maxb.dark.ui.screens.main
 
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.runBlocking
-import lab.maxb.dark.domain.usecase.HandleInitialAuthUseCase
 import lab.maxb.dark.domain.usecase.HandleCurrentLocaleUseCase
+import lab.maxb.dark.domain.usecase.HandleInitialAuthUseCase
 import lab.maxb.dark.ui.extra.stateIn
 import lab.maxb.dark.ui.extra.stateInAsResult
 import lab.maxb.dark.ui.screens.core.StatefulViewModel

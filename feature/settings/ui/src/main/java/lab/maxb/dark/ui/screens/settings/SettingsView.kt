@@ -35,8 +35,8 @@ import lab.maxb.dark.ui.components.ScaffoldWithDrawer
 import lab.maxb.dark.ui.components.TopBar
 import lab.maxb.dark.ui.components.getLanguageCode
 import lab.maxb.dark.ui.components.getLanguageName
-import lab.maxb.dark.ui.settings.BuildConfig
 import lab.maxb.dark.ui.screens.core.effects.SideEffect
+import lab.maxb.dark.ui.settings.BuildConfig
 import lab.maxb.dark.ui.settings.R
 import lab.maxb.dark.ui.theme.spacing
 import org.koin.androidx.compose.getViewModel

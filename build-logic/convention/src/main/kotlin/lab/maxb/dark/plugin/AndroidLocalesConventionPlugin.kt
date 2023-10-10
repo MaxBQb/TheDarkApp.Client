@@ -3,10 +3,10 @@
 package lab.maxb.dark.plugin
 
 import com.android.build.gradle.LibraryExtension
+import lab.maxb.dark.plugin.components.localProperties
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
-import lab.maxb.dark.plugin.components.localProperties
 
 
 class AndroidLocalesConventionPlugin : Plugin<Project> {

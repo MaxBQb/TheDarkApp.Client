@@ -5,10 +5,10 @@ package lab.maxb.dark.plugin
 import com.android.build.gradle.LibraryExtension
 import lab.maxb.dark.plugin.common.id
 import lab.maxb.dark.plugin.common.libs
+import lab.maxb.dark.plugin.components.configureKotlinAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
-import lab.maxb.dark.plugin.components.configureKotlinAndroid
 
 
 class AndroidLibraryDataConventionPlugin : Plugin<Project> {
