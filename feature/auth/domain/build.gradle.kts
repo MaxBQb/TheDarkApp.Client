@@ -1,33 +1,16 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
-    id("java-library")
-    id("org.jetbrains.kotlin.jvm")
-    alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.convention.jvm.library)
+    alias(libs.plugins.convention.dependencies.domain)
+    id(libs.plugins.kotlin.serialization.id)
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
+domainModule {
+    dependencies {
+        implementation(projects.core.domain)
 
-kotlin {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_1_8)
+        implementation(libs.kotlinx.serialization.json)
+
+        defaultDependencies()
     }
-}
-
-dependencies {
-    implementation(project(":core:domain"))
-
-    implementation(libs.coroutines.core)
-
-    implementation(libs.kotlinx.serialization.json)
-
-    implementation(platform(libs.koin.bom))
-    implementation(libs.koin.core)
-    implementation(libs.koin.annotations)
-    ksp(libs.koin.ksp)
 }

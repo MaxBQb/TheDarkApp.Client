@@ -5,6 +5,7 @@ import com.google.crypto.tink.Aead
 import com.google.crypto.tink.KeyTemplates
 import com.google.crypto.tink.aead.AeadConfig
 import com.google.crypto.tink.integration.android.AndroidKeysetManager
+import lab.maxb.dark.data.BuildConfig
 
 
 internal fun getAead(context: Context): Aead {
@@ -16,7 +17,7 @@ internal fun getAead(context: Context): Aead {
             "secure_dark.preferences"
         )
         .withKeyTemplate(KeyTemplates.get("AES256_GCM"))
-        .withMasterKeyUri("android-keystore://master_key")
+        .withMasterKeyUri("android-keystore://${BuildConfig.SECURE_PREFS_MASTER_KEY}")
         .build()
         .keysetHandle
         .getPrimitive(Aead::class.java)

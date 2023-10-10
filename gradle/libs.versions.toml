@@ -3,6 +3,7 @@
 kotlin = "1.9.10"
 gradle-plugin = "8.1.1"
 ksp = "1.9.10-1.0.13"
+secrets = "2.0.1"
 #endregion
 #region Domain
 coroutines = "1.7.1"
@@ -49,6 +50,8 @@ material = "1.9.0"
 gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "gradle-plugin" }
 classpath-kotlin-serialization = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+ksp-gradle-plugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref="secrets" }
 #endregion
 #region Domain
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -131,6 +134,25 @@ material = { group = "com.google.android.material", name = "material", version.r
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref="kotlin" }
+android-application = { id = "com.android.application", version.ref = "gradle-plugin" }
+android-library = { id = "com.android.library", version.ref = "gradle-plugin" }
+jvm-library = { id = "java-library", version = "unspecified" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "unspecified" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets" }
+
+#region Convention plugins
+convention-android-application = { id = "lab.maxb.dark.plugin.androidApplication", version="unspecified" }
+convention-android-library-ui = { id = "lab.maxb.dark.plugin.androidUiLibrary", version="unspecified" }
+convention-android-library-data = { id = "lab.maxb.dark.plugin.androidDataLibrary", version="unspecified" }
+convention-android-navigation = { id = "lab.maxb.dark.plugin.androidNavigation", version="unspecified" }
+convention-android-room = { id = "lab.maxb.dark.plugin.androidRoom", version="unspecified" }
+convention-android-locales = { id = "lab.maxb.dark.plugin.androidLocales", version="unspecified" }
+convention-jvm-library = { id = "lab.maxb.dark.plugin.jvmLibrary", version="unspecified" }
+convention-dependencies-ui = { id = "lab.maxb.dark.plugin.dependenciesUi", version="unspecified" }
+convention-dependencies-data = { id = "lab.maxb.dark.plugin.dependenciesData", version="unspecified" }
+convention-dependencies-domain = { id = "lab.maxb.dark.plugin.dependenciesDomain", version="unspecified" }
+#endregion
 
 [bundles]
 

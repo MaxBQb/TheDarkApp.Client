@@ -1,4 +1,15 @@
 rootProject.name = "Dark"
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
+pluginManagement {
+    includeBuild("build-logic")
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
 include(":app")
 include(":core:domain")
 include(":core:data")

@@ -1,7 +1,7 @@
 package lab.maxb.dark.data.remote.datasource
 
-import lab.maxb.dark.data.core.BuildConfig
 import lab.maxb.dark.data.remote.route.ImagesAPI
+import lab.maxb.dark.data.tasks.BuildConfig
 import org.koin.core.annotation.Single
 
 @Single
