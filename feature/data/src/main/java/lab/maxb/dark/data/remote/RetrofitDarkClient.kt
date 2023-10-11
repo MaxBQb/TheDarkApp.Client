@@ -33,8 +33,10 @@ object RetrofitDarkClient : KoinComponent {
 
     val errorHandler = buildDelegatedCallAdapterFactory {
         it.onSuccess { response ->
-            if (response.isSuccessful)
+            if (response.isSuccessful) {
                 onResponse(Response.success(response.code(), response.body()))
+                return@onSuccess
+            }
             when (response.code()) {
                 401, 403 -> {}
                 404 -> onResponse(Response.success(null))
