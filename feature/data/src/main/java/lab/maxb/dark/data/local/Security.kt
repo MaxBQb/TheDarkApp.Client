@@ -6,8 +6,9 @@ import com.google.crypto.tink.KeyTemplates
 import com.google.crypto.tink.aead.AeadConfig
 import com.google.crypto.tink.integration.android.AndroidKeysetManager
 import lab.maxb.dark.data.BuildConfig
+import org.koin.core.annotation.Singleton
 
-
+@Singleton
 internal fun getAead(context: Context): Aead {
     AeadConfig.register()
     return AndroidKeysetManager.Builder()

@@ -25,20 +25,25 @@ import lab.maxb.dark.ui.extra.require
 import lab.maxb.dark.ui.screens.destinations.AuthHandleScreenDestination
 import lab.maxb.dark.ui.screens.destinations.AuthScreenDestination
 import lab.maxb.dark.ui.theme.DarkAppTheme
+import org.koin.androidx.compose.KoinAndroidContext
 import org.koin.androidx.viewmodel.ext.android.getViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 import java.util.Locale
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
 
+    @OptIn(KoinExperimentalAPI::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         handleLocale()
         super.onCreate(savedInstanceState)
         setContent {
             DarkAppTheme {
                 Surface {
-                    MainRoot()
+                    KoinAndroidContext {
+                        MainRoot()
+                    }
                 }
             }
         }

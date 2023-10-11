@@ -34,9 +34,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 versionCode = ProjectConfig.version.code
                 versionName = ProjectConfig.version.name
             }
-            sourceSets.all {
-                java.srcDirs("src/$name/kotlin")
-            }
         }
     }
 }

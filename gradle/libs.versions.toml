@@ -9,7 +9,7 @@ dependencyAnalysis = "1.25.0"
 #region Domain
 coroutines = "1.7.1"
 koin = "3.5.1"
-koin-annotations = "1.0.3"
+koin-annotations = "1.3.0"
 desugaring = "2.0.3" # (Time-related features support for API 21+)
 #endregion Domain
 #region Data

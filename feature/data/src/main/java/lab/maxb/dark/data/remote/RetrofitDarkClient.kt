@@ -60,7 +60,6 @@ object RetrofitDarkClient : KoinComponent {
         }
     }
 
-
     internal fun buildDarkService() = Retrofit.Builder()
         .baseUrl(BuildConfig.DARK_API_URL)
         .addConverterFactory(converter)
@@ -94,4 +93,4 @@ object RetrofitDarkClient : KoinComponent {
     UsersAPI::class,
     AuthAPI::class,
 ])
-class DarkServiceImpl : DarkServiceAPI by buildDarkService()
+internal fun buildDarkService() : DarkServiceAPI = buildDarkService()
