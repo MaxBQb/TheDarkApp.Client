@@ -59,8 +59,8 @@ abstract class LayerDependencyHandler<F : LayerFeatures> (
             ksp(libs.koin.ksp)
         }
 
-        testImplementation(libs.koin.test.core)
-        testImplementation(libs.koin.test.junit5)
+        testImplementation(libs.test.koin.core)
+        testImplementation(libs.test.koin.junit5)
     }
 
     open fun coroutines() {
@@ -68,8 +68,8 @@ abstract class LayerDependencyHandler<F : LayerFeatures> (
     }
 
     open fun tests() {
-        testImplementation(libs.junit.core)
-        testImplementation(libs.junit.jupiter.api)
+        testImplementation(libs.test.junit.core)
+        testImplementation(libs.test.junit.jupiter.api)
     }
 
     open fun defaultDependencies(processKoin: Boolean = true) {

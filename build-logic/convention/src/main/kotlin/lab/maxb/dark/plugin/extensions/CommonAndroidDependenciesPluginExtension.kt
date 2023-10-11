@@ -24,7 +24,7 @@ abstract class CommonAndroidLayerDependencyHandler<T: CommonAndroidLayerFeatures
 
     override fun tests() {
         super.tests()
-        androidTestImplementation(libs.junit)
+        androidTestImplementation(libs.test.junit.android)
     }
 
     override fun defaultDependencies(

@@ -49,11 +49,6 @@ open class UILayerDependencyHandler(project: Project, features: UILayerFeatures)
         features.hasPaging = true
     }
 
-    fun scalableUnits() {
-        implementation(libs.scalable.dp)
-        implementation(libs.scalable.sp)
-    }
-
     fun compose() {
         implementation(platform(libs.compose.bom))
         implementation(libs.compose.runtime)
@@ -67,7 +62,7 @@ open class UILayerDependencyHandler(project: Project, features: UILayerFeatures)
         implementation(libs.lifecycle.viewmodel.compose)
 
         androidTestImplementation(platform(libs.compose.bom))
-        androidTestImplementation(libs.compose.ui.test)
+        androidTestImplementation(libs.test.compose.ui)
     }
 
     fun images() {
@@ -88,13 +83,13 @@ open class UILayerDependencyHandler(project: Project, features: UILayerFeatures)
     }
 
     fun espresso() {
-        androidTestImplementation(libs.espresso.core)
+        androidTestImplementation(libs.test.espresso.core)
     }
 
     override fun defaultDependencies(processKoin: Boolean) {
         super.defaultDependencies(processKoin)
         compose()
-        scalableUnits()
+        implementation(libs.bundles.scalableUnits)
     }
 
     fun pagingFeature() {

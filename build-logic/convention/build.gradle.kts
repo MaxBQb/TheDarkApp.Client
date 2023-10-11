@@ -8,9 +8,9 @@ group = "lab.maxb.dark.plugin"
 
 dependencies {
     implementation(gradleApi())
-    implementation(libs.gradle.plugin)
-    implementation(libs.kotlin.gradle.plugin)
-    implementation(libs.ksp.gradle.plugin)
+    implementation(libs.gradlePlugin.core)
+    implementation(libs.gradlePlugin.kotlin)
+    implementation(libs.gradlePlugin.ksp)
 
     // https://github.com/gradle/gradle/issues/15383
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))

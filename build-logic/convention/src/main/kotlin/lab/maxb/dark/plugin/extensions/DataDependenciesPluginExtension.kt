@@ -50,23 +50,19 @@ open class DataLayerDependencyHandler(project: Project, features: DataLayerFeatu
 
     fun retrofit() {
         implementation(libs.retrofit.core)
-        jsonGson()
+        api(libs.serialization.json.gson)
     }
 
     fun dataStore(encrypted: Boolean = false) {
         implementation(libs.datastore.preferences)
         if (encrypted)
             implementation(libs.datastore.encrypted)
-        jsonKtx()
+        serializationJsonKtx()
     }
 
-    fun jsonKtx() {
+    fun serializationJsonKtx() {
         features.hasSerializationKtx = true
-        implementation(libs.kotlinx.serialization.json)
-    }
-
-    fun jsonGson() {
-        implementation(libs.gson)
+        implementation(libs.serialization.json.kotlinx)
     }
 
     fun pagingFeature() {
