@@ -6,8 +6,6 @@ plugins {
 
 domainModule {
     dependencies {
-        implementation(projects.core.domain)
-
         defaultDependencies()
     }
 }

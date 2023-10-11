@@ -6,8 +6,8 @@ plugins {
 
 domainModule {
     dependencies {
-        implementation(projects.core.domain)
-        implementation(projects.feature.auth.domain)
+        api(projects.core.domain)
+        api(projects.feature.auth.domain)
 
         defaultDependencies()
     }

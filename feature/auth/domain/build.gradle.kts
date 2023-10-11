@@ -7,9 +7,9 @@ plugins {
 
 domainModule {
     dependencies {
-        implementation(projects.core.domain)
+        api(projects.core.domain)
 
-        implementation(libs.kotlinx.serialization.json)
+        api(libs.kotlinx.serialization.json)
 
         defaultDependencies()
     }

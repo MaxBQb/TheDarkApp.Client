@@ -7,7 +7,7 @@ plugins {
 dataModule {
     dependencies {
         implementation(projects.core.domain)
-        implementation(projects.core.data)
+        api(projects.core.data)
         implementation(projects.feature.paging.domain)
 
         defaultDependencies()

@@ -6,10 +6,12 @@ plugins {
 
 domainModule {
     dependencies {
-        implementation(projects.core.domain)
-        api(projects.feature.users.domain)
-        implementation(projects.feature.settings.domain)
-        api(projects.feature.auth.domain)
+        api(projects.core.domain)
+        projects.feature {
+            api(users.domain)
+            api(settings.domain)
+            api(auth.domain)
+        }
 
         defaultDependencies()
         pagingFeature()

@@ -6,7 +6,7 @@ plugins {
 
 dataModule {
     dependencies {
-        implementation(projects.core.domain)
+        api(projects.core.domain)
         api(projects.feature.auth.domain)
 
         defaultDependencies()

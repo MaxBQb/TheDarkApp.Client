@@ -7,13 +7,16 @@ plugins {
 
 dataModule {
     dependencies {
-        implementation(projects.core.domain)
-        implementation(projects.core.data)
-        implementation(projects.feature.paging.data)
-        api(projects.feature.articles.data)
-        api(projects.feature.auth.data)
-        api(projects.feature.tasks.data)
-        api(projects.feature.users.data)
+        projects.core { apis(domain, data) }
+        projects.feature {
+            apis(
+                paging.data,
+                articles.data,
+                auth.data,
+                tasks.data,
+                users.data,
+            )
+        }
 
         defaultDependencies()
         room(true)

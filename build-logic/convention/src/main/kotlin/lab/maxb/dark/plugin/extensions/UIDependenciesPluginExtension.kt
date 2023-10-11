@@ -7,6 +7,7 @@ import lab.maxb.dark.plugin.common.api
 import lab.maxb.dark.plugin.common.id
 import lab.maxb.dark.plugin.common.implementation
 import lab.maxb.dark.plugin.common.libs
+import lab.maxb.dark.plugin.common.runtimeOnly
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.project
 
@@ -78,7 +79,7 @@ open class UILayerDependencyHandler(project: Project, features: UILayerFeatures)
         super.coroutines()
         implementation(libs.lifecycle.viewmodel.ktx)
         implementation(libs.lifecycle.runtime)
-        implementation(libs.coroutines.android)
+        runtimeOnly(libs.coroutines.android)
     }
 
     override fun koin(process: Boolean) {

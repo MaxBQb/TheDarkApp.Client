@@ -10,9 +10,10 @@ uiModule {
     }
     dependencies {
         projects.core {
-            implementations(domain, data, ui, components)
+            api(ui)
+            implementations(domain, data, components)
         }
-        implementation(projects.feature.articles.domain)
+        api(projects.feature.articles.domain)
         implementation(projects.feature.navigationDrawer.ui)
 
         defaultDependencies()

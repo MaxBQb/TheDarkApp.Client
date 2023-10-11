@@ -12,7 +12,7 @@ uiModule {
         projects.core {
             implementations(domain, data, ui, components)
         }
-        implementation(projects.feature.tasks.domain)
+        api(projects.feature.tasks.domain)
         implementation(projects.feature.navigationDrawer.ui)
 
         defaultDependencies()

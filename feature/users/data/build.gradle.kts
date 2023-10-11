@@ -6,9 +6,8 @@ plugins {
 
 dataModule {
     dependencies {
-        implementation(projects.core.domain)
-        implementation(projects.core.data)
-        implementation(projects.feature.users.domain)
+        projects.core { apis(domain, data) }
+        api(projects.feature.users.domain)
 
         defaultDependencies()
         room()

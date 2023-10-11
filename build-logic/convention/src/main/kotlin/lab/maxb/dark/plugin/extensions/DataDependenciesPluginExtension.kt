@@ -6,6 +6,7 @@ import lab.maxb.dark.plugin.common.api
 import lab.maxb.dark.plugin.common.id
 import lab.maxb.dark.plugin.common.implementation
 import lab.maxb.dark.plugin.common.libs
+import lab.maxb.dark.plugin.common.runtimeOnly
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.project
 
@@ -39,7 +40,7 @@ open class DataLayerDependencyHandler(project: Project, features: DataLayerFeatu
     }
 
     fun room(paging: Boolean = features.hasPaging) {
-        implementation(libs.room.runtime)
+        runtimeOnly(libs.room.runtime)
         implementation(libs.room.ktx)
         features.hasRoom = true
         ksp(libs.room.ksp)

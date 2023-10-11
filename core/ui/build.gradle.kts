@@ -9,14 +9,10 @@ uiModule {
         implementation(projects.core.domain)
 
         defaultDependencies(false)
-        images()
 
         // Paging
         implementation(libs.paging.runtime)
-        api(projects.feature.paging.domain)
-
-        // JC Navigation
-        implementation(libs.compose.destinations.core)
+        implementation(projects.feature.paging.domain)
 
         // Compose
         implementation(libs.compose.theme.adapter)

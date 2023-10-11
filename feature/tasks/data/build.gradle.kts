@@ -10,11 +10,14 @@ dataModule {
         hasPaging = true
     }
     dependencies {
-        implementation(projects.core.domain)
-        implementation(projects.core.data)
-        implementation(projects.feature.tasks.domain)
-        api(projects.feature.auth.domain)
-        api(projects.feature.users.data)
+        projects {
+            core { apis(domain, data) }
+            feature {
+                api(tasks.domain)
+                api(auth.domain)
+                implementation(users.data)
+            }
+        }
 
         defaultDependencies()
         room()

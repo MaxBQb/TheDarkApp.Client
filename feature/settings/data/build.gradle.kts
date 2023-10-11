@@ -6,9 +6,8 @@ plugins {
 
 dataModule {
     dependencies {
-        implementation(projects.core.domain)
-        implementation(projects.core.data)
-        implementation(projects.feature.settings.domain)
+        api(projects.core.data)
+        api(projects.feature.settings.domain)
 
         defaultDependencies()
         dataStore()

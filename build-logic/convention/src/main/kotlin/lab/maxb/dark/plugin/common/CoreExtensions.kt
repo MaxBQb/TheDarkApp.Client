@@ -17,6 +17,9 @@ internal fun DependencyHandler.api(dependency: Any)
 internal fun DependencyHandler.implementation(dependency: Any)
     = add("implementation", dependency)
 
+internal fun DependencyHandler.runtimeOnly(dependency: Any)
+    = add("runtimeOnly", dependency)
+
 internal fun DependencyHandler.testImplementation(dependency: Any)
     = add("testImplementation", dependency)
 

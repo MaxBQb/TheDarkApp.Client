@@ -8,7 +8,7 @@ plugins {
 uiModule {
     dependencies {
         implementation(projects.core.data)
-        implementation(projects.core.ui)
+        api(projects.core.ui)
         implementation(projects.feature.navigationDrawer.ui)
 
         defaultDependencies(false)

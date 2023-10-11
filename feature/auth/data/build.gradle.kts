@@ -6,9 +6,8 @@ plugins {
 
 dataModule {
     dependencies {
-        implementation(projects.core.domain)
-        implementation(projects.core.data)
-        implementation(projects.feature.auth.domain)
+        projects.core { apis(domain, data) }
+        api(projects.feature.auth.domain)
 
         defaultDependencies()
         retrofit()

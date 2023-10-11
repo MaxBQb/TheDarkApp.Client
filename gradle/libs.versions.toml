@@ -4,6 +4,7 @@ kotlin = "1.9.10"
 gradle-plugin = "8.1.1"
 ksp = "1.9.10-1.0.13"
 secrets = "2.0.1"
+dependencyAnalysis = "1.25.0"
 #endregion
 #region Domain
 coroutines = "1.7.1"
@@ -140,7 +141,7 @@ jvm-library = { id = "java-library", version = "unspecified" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "unspecified" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets" }
-
+dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version.ref= "dependencyAnalysis" }
 #region Convention plugins
 convention-android-application = { id = "lab.maxb.dark.plugin.androidApplication", version="unspecified" }
 convention-android-library-ui = { id = "lab.maxb.dark.plugin.androidUiLibrary", version="unspecified" }

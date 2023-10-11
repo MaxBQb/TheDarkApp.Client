@@ -7,9 +7,10 @@ plugins {
 uiModule {
     dependencies {
         projects.core {
-            implementations(domain, data, ui, components)
+            api(ui)
+            implementations(data, components)
         }
-        implementation(projects.feature.tasks.domain)
+        api(projects.feature.tasks.domain)
 
         defaultDependencies()
         navigation()

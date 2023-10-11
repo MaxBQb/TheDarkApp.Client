@@ -7,9 +7,8 @@ plugins {
 
 uiModule {
     dependencies {
-        projects.core {
-            implementations(domain, ui, components)
-        }
+        api(projects.core.ui)
+        implementation(projects.core.components)
         implementation(projects.feature.settings.domain)
 
         // JC Dialogs

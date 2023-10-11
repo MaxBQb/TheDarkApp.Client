@@ -6,13 +6,12 @@ plugins {
 
 uiModule {
     dependencies {
-        implementation(projects.core.ui)
         projects.feature {
-            api(articles.ui)
+            implementation(articles.ui)
+            implementation(settings.ui)
             api(welcome.ui)
-            api(settings.ui)
             api(auth.ui)
-            tasks { apis(ui.add, ui.solve, ui.list) }
+            tasks.ui { implementations(add, solve, list) }
             api(navigationDrawer.ui)
         }
 

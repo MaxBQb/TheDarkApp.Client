@@ -6,13 +6,15 @@ plugins {
 
 uiModule {
     dependencies {
-        projects.core {
-            implementations(domain, data, ui, components)
+        projects {
+            api(core.ui)
+            implementation(core.components)
+            feature {
+                api(users.domain)
+                api(articles.domain)
+                implementation(navigationDrawer.ui)
+            }
         }
-        implementation(projects.feature.users.domain)
-        implementation(projects.feature.navigationDrawer.ui)
-        implementation(projects.feature.articles.domain)
-
         defaultDependencies()
         navigation()
     }

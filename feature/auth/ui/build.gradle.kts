@@ -6,11 +6,10 @@ plugins {
 
 uiModule {
     dependencies {
-        projects.core {
-            implementations(domain, data, ui, components)
-        }
-        implementation(projects.feature.settings.domain)
-        implementation(projects.feature.auth.domain)
+        api(projects.core.ui)
+        implementation(projects.core.components)
+        api(projects.feature.settings.domain)
+        api(projects.feature.auth.domain)
 
         // JC Dialogs
         implementation(libs.material.dialogs)

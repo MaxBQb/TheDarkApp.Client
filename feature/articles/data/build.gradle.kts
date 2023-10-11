@@ -9,12 +9,14 @@ dataModule {
         hasPaging = true
     }
     dependencies {
-        implementation(projects.core.domain)
-        implementation(projects.core.data)
-        implementation(projects.feature.articles.domain)
-        api(projects.feature.users.domain)
-        api(projects.feature.users.data)
-
+        projects {
+            core { apis(domain, data) }
+            feature {
+                api(articles.domain)
+                api(users.domain)
+                implementation(users.data)
+            }
+        }
         defaultDependencies()
         room()
         retrofit()

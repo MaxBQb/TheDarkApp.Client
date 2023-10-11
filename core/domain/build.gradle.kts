@@ -6,6 +6,6 @@ plugins {
 
 domainModule {
     dependencies {
-        defaultDependencies()
+        defaultDependencies(false)
     }
 }
