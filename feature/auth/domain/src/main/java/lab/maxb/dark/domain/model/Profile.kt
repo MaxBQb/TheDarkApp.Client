@@ -1,6 +1,5 @@
 package lab.maxb.dark.domain.model
 
-@kotlinx.serialization.Serializable
 data class Profile(
     val login: String,
     val userId: String,

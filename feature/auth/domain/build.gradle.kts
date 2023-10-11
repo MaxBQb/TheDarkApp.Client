@@ -2,14 +2,11 @@
 plugins {
     alias(libs.plugins.convention.jvm.library)
     alias(libs.plugins.convention.dependencies.domain)
-    id(libs.plugins.kotlin.serialization.id)
 }
 
 domainModule {
     dependencies {
         api(projects.core.domain)
-
-        api(libs.serialization.json.kotlinx)
 
         defaultDependencies()
     }

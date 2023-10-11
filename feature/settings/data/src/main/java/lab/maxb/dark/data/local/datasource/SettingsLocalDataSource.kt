@@ -1,6 +1,6 @@
 package lab.maxb.dark.data.local.datasource
 
-import lab.maxb.dark.domain.model.Settings
+import lab.maxb.dark.data.local.model.SettingsLocalDTO
 
-interface SettingsLocalDataSource : BaseLocalUniqueDataSource<Settings>
+interface SettingsLocalDataSource : BaseLocalUniqueDataSource<SettingsLocalDTO>
 

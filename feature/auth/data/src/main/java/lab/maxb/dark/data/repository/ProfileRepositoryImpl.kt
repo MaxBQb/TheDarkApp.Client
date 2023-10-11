@@ -5,6 +5,9 @@ import kotlinx.coroutines.flow.*
 import lab.maxb.dark.data.local.datasource.ProfileLocalDataSource
 import lab.maxb.dark.data.local.datasource.clear
 import lab.maxb.dark.data.local.datasource.save
+import lab.maxb.dark.data.local.model.ProfileLocalDTO
+import lab.maxb.dark.data.local.model.toDomain
+import lab.maxb.dark.data.local.model.toLocalDTO
 import lab.maxb.dark.data.remote.datasource.AuthRemoteDataSource
 import lab.maxb.dark.data.remote.model.toDomain
 import lab.maxb.dark.data.remote.model.toNetworkDTO
@@ -12,9 +15,7 @@ import lab.maxb.dark.data.utils.InMemRefreshController
 import lab.maxb.dark.data.utils.ResourceImpl
 import lab.maxb.dark.domain.model.AuthCredentials
 import lab.maxb.dark.domain.model.AuthState
-import lab.maxb.dark.domain.model.Mapper
 import lab.maxb.dark.domain.model.Profile
-import lab.maxb.dark.domain.model.getCastMapper
 import lab.maxb.dark.domain.model.toProfile
 import lab.maxb.dark.domain.repository.ProfileRepository
 import org.koin.core.annotation.Single
@@ -31,7 +32,7 @@ class ProfileRepositoryImpl(
     private val _credentials = MutableStateFlow<AuthCredentials?>(null)
 
 
-    override val profileResource = ResourceImpl<AuthCredentials?, Profile, Profile>(
+    override val profileResource = ResourceImpl<AuthCredentials?, Profile, ProfileLocalDTO>(
         refreshController = InMemRefreshController(Duration.ofHours(12).toMillis()),
         fetchLocal = { localDataSource.data },
         fetchRemote = remote@ {
@@ -43,8 +44,8 @@ class ProfileRepositoryImpl(
                 remoteDataSource.login(request)).toDomain(it)
             response.toProfile()
         },
-        localMapper = Mapper.getCastMapper(),
-        reversedLocalMapper = Mapper.getCastMapper(),
+        localMapper = { it?.toDomain()},
+        reversedLocalMapper = { it.toLocalDTO() },
         localStore = localDataSource::save,
     )
 
